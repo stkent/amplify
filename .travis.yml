@@ -18,5 +18,4 @@ branches:
   only:
     - master
 
-    script:
-    - ./gradlew test
+script: ./gradlew test
