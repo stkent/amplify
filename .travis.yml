@@ -12,7 +12,7 @@ android:
     - android-23
 
     # Additional components
-    - extra-android-support
+    - extra-android-m2repository
 
 branches:
   only:
