@@ -10,9 +10,9 @@ import static android.content.pm.PackageManager.GET_ACTIVITIES;
 import static java.util.concurrent.TimeUnit.DAYS;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
-public class RatingStateTracker {
+public class AmplifyStateTracker {
 
-    private static final String TAG = RatingStateTracker.class.getSimpleName();
+    private static final String TAG = AmplifyStateTracker.class.getSimpleName();
 
     public enum ActionType {
         USER_GAVE_RATING,
@@ -27,14 +27,14 @@ public class RatingStateTracker {
     private static final int DEFAULT_RATED_VERSION_CODE = -1;
     private static final int DEFAULT_LAST_FEEDBACK_VERSION_CODE = -1;
 
-    private static RatingStateTracker instance;
+    private static AmplifyStateTracker instance;
 
-    private RatingStateTracker() {
+    private AmplifyStateTracker() {
     }
 
-    public static RatingStateTracker getInstance() {
+    public static AmplifyStateTracker getInstance() {
         if (instance == null) {
-            instance = new RatingStateTracker();
+            instance = new AmplifyStateTracker();
         }
 
         return instance;
@@ -100,9 +100,9 @@ public class RatingStateTracker {
         final Thread.UncaughtExceptionHandler currentHandler = Thread.getDefaultUncaughtExceptionHandler();
 
         // Don't register again if already set as default handler.
-        if (!(currentHandler instanceof RatingExceptionHandler)) {
+        if (!(currentHandler instanceof AmplifyExceptionHandler)) {
             // Register as default exceptions handler.
-            Thread.setDefaultUncaughtExceptionHandler(new RatingExceptionHandler(currentHandler));
+            Thread.setDefaultUncaughtExceptionHandler(new AmplifyExceptionHandler(currentHandler));
         }
     }
 
