@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="amp_default_rating_view_padding">16dp</dimen>
+
+</resources>

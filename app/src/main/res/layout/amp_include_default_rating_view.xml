@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/amp_title_rating_question_1"
+        android:textColor="@color/amp_default_rating_view_title_text_color"
+        android:lines="2"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp" />
+
+    <LinearLayout
+        android:id="@+id/buttonContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/amp_default_rating_view_padding"
+        android:paddingRight="@dimen/amp_default_rating_view_padding">
+
+        <TextView
+            android:id="@+id/noButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingLeft="0dp"
+            android:paddingRight="0dp"
+            android:text="@string/amp_btn_rating_negative" />
+
+        <Space
+            android:layout_width="@dimen/amp_default_rating_view_padding"
+            android:layout_height="match_parent" />
+
+        <TextView
+            android:id="@+id/yesButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingLeft="0dp"
+            android:paddingRight="0dp"
+            android:text="@string/amp_btn_rating_positive" />
+
+    </LinearLayout>
+
+</merge>
