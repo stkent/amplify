@@ -17,3 +17,6 @@ android:
 branches:
   only:
     - master
+
+    script:
+    - ./gradlew test
