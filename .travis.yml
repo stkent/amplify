@@ -13,3 +13,7 @@ android:
 
     # Additional components
     - extra-android-support
+
+branches:
+  only:
+    - master
