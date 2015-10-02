@@ -1,0 +1,15 @@
+cache:
+  directories:
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
+
+language: android
+android:
+  components:
+    - platform-tools
+    - tools
+    - build-tools-23.0.1
+    - android-23
+
+    # Additional components
+    - extra-android-support
