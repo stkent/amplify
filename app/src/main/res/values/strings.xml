@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Amplify</string>
+    <string name="amp_title_rating_question_2_rating">Would you like to rate it in the Google Play store?</string>
+    <string name="amp_title_rating_question_2_feedback">Would you like to give us feedback?</string>
+    <string name="amp_title_rating_thanks">Thanks for your feedback!</string>
+    <string name="amp_title_rating_question_1">Are you finding this app useful?</string>
+    <string name="amp_btn_rating_positive">Yes</string>
+    <string name="amp_btn_rating_negative">No</string>
 </resources>
