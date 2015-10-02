@@ -1,3 +1,3 @@
 # amplify
 
-https://travis-ci.org/stkent/amplify.svg
+<img src="https://travis-ci.org/stkent/amplify.svg" >
