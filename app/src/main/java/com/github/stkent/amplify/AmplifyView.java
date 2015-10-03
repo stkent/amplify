@@ -18,8 +18,6 @@ import static com.github.stkent.amplify.AmplifyStateTracker.ActionType.USER_GAVE
 
 public class AmplifyView extends LinearLayout {
 
-    private OnClickListener l;
-
     private enum UserOpinion {
         UNKNOWN,
         POSITIVE,
@@ -103,7 +101,7 @@ public class AmplifyView extends LinearLayout {
     }
 
     @NonNull
-    final OnClickListener noButtonOnClickListener = new OnClickListener() {
+    private final OnClickListener yesButtonOnClickListener = new OnClickListener() {
         @Override
         public void onClick(final View v) {
             switch (userOpinion) {
@@ -128,7 +126,7 @@ public class AmplifyView extends LinearLayout {
     };
 
     @NonNull
-    final OnClickListener yesButtonOnClickListener = new OnClickListener() {
+    private final OnClickListener noButtonOnClickListener = new OnClickListener() {
         @Override
         public void onClick(final View v) {
             switch (userOpinion) {

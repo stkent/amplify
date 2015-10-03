@@ -12,8 +12,6 @@ import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 public class AmplifyStateTracker {
 
-    private static final String TAG = AmplifyStateTracker.class.getSimpleName();
-
     public enum ActionType {
         USER_GAVE_RATING,
         USER_DECLINED_RATING,
@@ -42,22 +40,22 @@ public class AmplifyStateTracker {
 
     public boolean shouldAskForRating() {
         if (userHasRatedApp()) {
-            Log.d(TAG, "User has already rated the app. Should not ask for rating/feedback.");
+            Log.d(Constants.LOG_TAG, "User has already rated the app. Should not ask for rating/feedback.");
             return false;
         }
 
         if (!isGooglePlayInstalled(AppProvider.getAppContext())) {
-            Log.d(TAG, "Play Store is not installed. Should not ask for rating/feedback.");
+            Log.d(Constants.LOG_TAG, "Play Store is not installed. Should not ask for rating/feedback.");
             return false;
         }
 
         if (userHasGivenFeedbackForCurrentVersion()) {
-            Log.d(TAG, "User has already given feedback for this app version. Should not ask for rating/feedback.");
+            Log.d(Constants.LOG_TAG, "User has already given feedback for this app version. Should not ask for rating/feedback.");
             return false;
         }
 
         if (isInCooldownMode()) {
-            Log.d(TAG, "Last negative action (crash, rating declined, feedback declined) was less than " + MILLISECONDS.toDays(RATING_PROMPT_COOLDOWN_TIME_MS) + " days ago. Should not ask for rating/feedback.");
+            Log.d(Constants.LOG_TAG, "Last negative action (crash, rating declined, feedback declined) was less than " + MILLISECONDS.toDays(RATING_PROMPT_COOLDOWN_TIME_MS) + " days ago. Should not ask for rating/feedback.");
             return false;
         }
 
@@ -69,15 +67,15 @@ public class AmplifyStateTracker {
 
         switch (actionType) {
             case USER_GAVE_RATING:
-                editor.putInt(Keys.RATED_VERSION_CODE, BuildConfig.VERSION_CODE);
+                editor.putInt(Constants.RATED_VERSION_CODE, BuildConfig.VERSION_CODE);
                 break;
             case USER_GAVE_FEEDBACK:
-                editor.putInt(Keys.LAST_FEEDBACK_VERSION_CODE, BuildConfig.VERSION_CODE);
+                editor.putInt(Constants.LAST_FEEDBACK_VERSION_CODE, BuildConfig.VERSION_CODE);
                 break;
             case USER_DECLINED_RATING:
             case USER_DECLINED_FEEDBACK:
             case APP_CRASHED:
-                editor.putLong(Keys.LAST_NEGATIVE_ACTION_TIME_MS, System.currentTimeMillis());
+                editor.putLong(Constants.LAST_NEGATIVE_ACTION_TIME_MS, System.currentTimeMillis());
                 break;
             default:
                 break;
@@ -89,29 +87,27 @@ public class AmplifyStateTracker {
     public void reset() {
         final SharedPreferences.Editor editor = Settings.editor();
 
-        Log.d(TAG, "Reset rating tracker state.");
-        editor.remove(Keys.RATED_VERSION_CODE);
-        editor.remove(Keys.LAST_FEEDBACK_VERSION_CODE);
-        editor.remove(Keys.LAST_NEGATIVE_ACTION_TIME_MS);
+        Log.d(Constants.LOG_TAG, "Reset rating tracker state.");
+        editor.remove(Constants.RATED_VERSION_CODE);
+        editor.remove(Constants.LAST_FEEDBACK_VERSION_CODE);
+        editor.remove(Constants.LAST_NEGATIVE_ACTION_TIME_MS);
         editor.apply();
     }
 
     public void initRatingExceptionHandler() {
         final Thread.UncaughtExceptionHandler currentHandler = Thread.getDefaultUncaughtExceptionHandler();
 
-        // Don't register again if already set as default handler.
         if (!(currentHandler instanceof AmplifyExceptionHandler)) {
-            // Register as default exceptions handler.
             Thread.setDefaultUncaughtExceptionHandler(new AmplifyExceptionHandler(currentHandler));
         }
     }
 
-    protected boolean userHasRatedApp() {
-        final int ratedVersionCode = Settings.settings().getInt(Keys.RATED_VERSION_CODE, DEFAULT_RATED_VERSION_CODE);
+    private boolean userHasRatedApp() {
+        final int ratedVersionCode = Settings.settings().getInt(Constants.RATED_VERSION_CODE, DEFAULT_RATED_VERSION_CODE);
         return ratedVersionCode != DEFAULT_RATED_VERSION_CODE;
     }
 
-    protected boolean isGooglePlayInstalled(final Context context) {
+    private boolean isGooglePlayInstalled(final Context context) {
         final PackageManager pm = context.getPackageManager();
         boolean playServicesInstalled;
 
@@ -126,13 +122,13 @@ public class AmplifyStateTracker {
         return playServicesInstalled;
     }
 
-    protected boolean userHasGivenFeedbackForCurrentVersion() {
-        final int lastFeedbackVersionCode = Settings.settings().getInt(Keys.LAST_FEEDBACK_VERSION_CODE, DEFAULT_LAST_FEEDBACK_VERSION_CODE);
+    private boolean userHasGivenFeedbackForCurrentVersion() {
+        final int lastFeedbackVersionCode = Settings.settings().getInt(Constants.LAST_FEEDBACK_VERSION_CODE, DEFAULT_LAST_FEEDBACK_VERSION_CODE);
         return lastFeedbackVersionCode < BuildConfig.VERSION_CODE;
     }
 
-    protected boolean isInCooldownMode() {
-        final long timeSinceLastNegativeAction = System.currentTimeMillis() - Settings.settings().getLong(Keys.LAST_NEGATIVE_ACTION_TIME_MS, DEFAULT_LAST_ACTION_TIME_MS);
+    private boolean isInCooldownMode() {
+        final long timeSinceLastNegativeAction = System.currentTimeMillis() - Settings.settings().getLong(Constants.LAST_NEGATIVE_ACTION_TIME_MS, DEFAULT_LAST_ACTION_TIME_MS);
         return timeSinceLastNegativeAction < RATING_PROMPT_COOLDOWN_TIME_MS;
     }
 
