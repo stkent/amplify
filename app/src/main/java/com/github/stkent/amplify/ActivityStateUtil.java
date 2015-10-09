@@ -6,7 +6,7 @@ import android.os.Build;
 
 public final class ActivityStateUtil {
 
-    private ActivityStateUtil() { }
+    private ActivityStateUtil() {}
 
     @SuppressLint("NewApi")
     public static boolean isActivityValid(Activity activity) {
