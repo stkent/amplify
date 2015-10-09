@@ -11,10 +11,10 @@ import android.view.View;
 import android.widget.FrameLayout;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
-import static com.github.stkent.amplify.RatingStateTracker.ActionType.USER_DECLINED_FEEDBACK;
-import static com.github.stkent.amplify.RatingStateTracker.ActionType.USER_DECLINED_RATING;
-import static com.github.stkent.amplify.RatingStateTracker.ActionType.USER_GAVE_FEEDBACK;
-import static com.github.stkent.amplify.RatingStateTracker.ActionType.USER_GAVE_RATING;
+import static com.github.stkent.amplify.AmplifyStateTracker.ActionType.USER_DECLINED_FEEDBACK;
+import static com.github.stkent.amplify.AmplifyStateTracker.ActionType.USER_DECLINED_RATING;
+import static com.github.stkent.amplify.AmplifyStateTracker.ActionType.USER_GAVE_FEEDBACK;
+import static com.github.stkent.amplify.AmplifyStateTracker.ActionType.USER_GAVE_RATING;
 
 public class RatingView2 extends FrameLayout {
 
@@ -32,7 +32,7 @@ public class RatingView2 extends FrameLayout {
     private static final LayoutParams CONTENT_VIEW_LAYOUT_PARAMS
             = new LayoutParams(MATCH_PARENT, MATCH_PARENT);
 
-    private RatingStateTracker ratingStateTracker;
+    private AmplifyStateTracker ratingStateTracker;
     private LayoutState layoutState = LayoutState.QUESTION;
     private UserOpinion userOpinion = UserOpinion.UNKNOWN;
     private Question firstQuestion;
