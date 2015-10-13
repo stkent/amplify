@@ -74,6 +74,9 @@ public class RatingView2 extends FrameLayout {
 
         // inflate a layout if provided in xml
         // inflate a default layout
+        ratingStateTracker = AmplifyStateTracker.getInstance();
+        firstQuestion = new Question("", "", "");
+        secondQuestion = new Question("", "", "");
 
         typedArray.recycle();
     }

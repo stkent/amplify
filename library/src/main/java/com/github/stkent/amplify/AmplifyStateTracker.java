@@ -30,7 +30,7 @@ public final class AmplifyStateTracker {
     private AmplifyStateTracker() {
     }
 
-    public static AmplifyStateTracker getInstance() {
+    public static synchronized AmplifyStateTracker getInstance() {
         if (instance == null) {
             instance = new AmplifyStateTracker();
         }
