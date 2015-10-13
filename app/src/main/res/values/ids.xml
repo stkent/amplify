@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <item name="amplify_title_text_view" type="id" />
-    <item name="amplify_positive_button" type="id" />
-    <item name="amplify_negative_button" type="id" />
+    <item name="amp_title_text_view" type="id" />
+    <item name="amp_positive_button" type="id" />
+    <item name="amp_negative_button" type="id" />
 
 </resources>

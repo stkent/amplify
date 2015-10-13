@@ -22,17 +22,17 @@ public class DefaultQuestionView implements QuestionView {
     public DefaultQuestionView(@NonNull final View view) {
         this.view = view;
 
-        final TextView titleTextView = (TextView) view.findViewById(R.id.amplify_title_text_view);
+        final TextView titleTextView = (TextView) view.findViewById(R.id.amp_title_text_view);
         if (titleTextView == null) {
             throw new IllegalArgumentException("Some string here");
         }
 
-        final Button positiveButton = (Button) view.findViewById(R.id.amplify_positive_button);
+        final Button positiveButton = (Button) view.findViewById(R.id.amp_positive_button);
         if (positiveButton == null) {
             throw new IllegalArgumentException("Some other string here");
         }
 
-        final Button negativeButton = (Button) view.findViewById(R.id.amplify_negative_button);
+        final Button negativeButton = (Button) view.findViewById(R.id.amp_negative_button);
         if (negativeButton == null) {
             throw new IllegalArgumentException("Some other other string here");
         }

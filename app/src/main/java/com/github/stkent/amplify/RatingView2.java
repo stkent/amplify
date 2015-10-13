@@ -68,9 +68,9 @@ public class RatingView2 extends FrameLayout {
 
     private void init(final Context context, @Nullable final AttributeSet attrs) {
         final TypedArray typedArray = context.getTheme().obtainStyledAttributes(
-                attrs, R.styleable.Amplify, 0, 0);
+                attrs, R.styleable.Amp, 0, 0);
 
-        typedArray.getResourceId(R.styleable.Amplify_questionLayout, R.layout.amp_include_default_rating_view);
+        typedArray.getResourceId(R.styleable.Amp_questionLayout, R.layout.amp_include_default_rating_view);
 
         // inflate a layout if provided in xml
         // inflate a default layout
