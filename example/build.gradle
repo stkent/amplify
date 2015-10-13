@@ -1,16 +1,16 @@
-apply plugin: 'com.android.library'
+apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.1"
 
     defaultConfig {
+        applicationId "com.github.stkent.amplify.example"
         minSdkVersion 16
         targetSdkVersion 23
         versionCode 1
-        versionName "1.0.0"
+        versionName "1.0"
     }
-
     buildTypes {
         release {
             minifyEnabled false
@@ -21,6 +21,6 @@ android {
 
 dependencies {
     testCompile 'junit:junit:4.12'
-
+    compile project(':app')
     compile 'com.android.support:appcompat-v7:23.0.1'
 }
