@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="Amp">
+        <attr name="questionLayout" format="reference" />
+        <attr name="confirmationLayout" format="reference" />
+    </declare-styleable>
+
+    <attr name="amp_view_background_color" format="color" />
+    <attr name="amp_view_button_background_color" format="color" />
+    <attr name="amp_view_button_background_color_pressed" format="color" />
+    <attr name="amp_view_title_text_color" format="color" />
+    <attr name="amp_view_button_text_color" format="color" />
+    <attr name="amp_view_button_text_color_pressed" format="color" />
+
+</resources>
