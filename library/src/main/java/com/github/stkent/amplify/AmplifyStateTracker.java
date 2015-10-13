@@ -10,7 +10,7 @@ import static android.content.pm.PackageManager.GET_ACTIVITIES;
 import static java.util.concurrent.TimeUnit.DAYS;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
-public class AmplifyStateTracker {
+public final class AmplifyStateTracker {
 
     public enum ActionType {
         USER_GAVE_RATING,
@@ -55,7 +55,8 @@ public class AmplifyStateTracker {
         }
 
         if (isInCooldownMode()) {
-            Log.d(Constants.LOG_TAG, "Last negative action (crash, rating declined, feedback declined) was less than " + MILLISECONDS.toDays(RATING_PROMPT_COOLDOWN_TIME_MS) + " days ago. Should not ask for rating/feedback.");
+            Log.d(Constants.LOG_TAG, "Last negative action (crash, rating declined, feedback declined) was less than "
+                    + MILLISECONDS.toDays(RATING_PROMPT_COOLDOWN_TIME_MS) + " days ago. Should not ask for rating/feedback.");
             return false;
         }
 
@@ -128,7 +129,8 @@ public class AmplifyStateTracker {
     }
 
     private boolean isInCooldownMode() {
-        final long timeSinceLastNegativeAction = System.currentTimeMillis() - Settings.settings().getLong(Constants.LAST_NEGATIVE_ACTION_TIME_MS, DEFAULT_LAST_ACTION_TIME_MS);
+        final long timeSinceLastNegativeAction = System.currentTimeMillis() - Settings.settings().getLong(Constants.LAST_NEGATIVE_ACTION_TIME_MS,
+                DEFAULT_LAST_ACTION_TIME_MS);
         return timeSinceLastNegativeAction < RATING_PROMPT_COOLDOWN_TIME_MS;
     }
 

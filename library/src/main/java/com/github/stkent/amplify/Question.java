@@ -40,7 +40,8 @@ public class Question {
 
     public static class Builder {
 
-        @NonNull final Question baseQuestion;
+        @NonNull
+        private final Question baseQuestion;
 
         @Nullable
         private String title;

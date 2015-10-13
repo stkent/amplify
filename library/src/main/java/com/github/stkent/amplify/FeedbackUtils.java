@@ -15,7 +15,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class FeedbackUtils {
+public final class FeedbackUtils {
+
+    private FeedbackUtils() {
+
+    }
 
     public static void showFeedbackEmailChooser(final Activity activity) {
         activity.startActivity(Intent.createChooser(getFeedbackEmailIntent(), "Choose an email provider:"));
@@ -23,7 +27,8 @@ public class FeedbackUtils {
     }
 
     public static boolean canHandleFeedbackEmailIntent(final Context context) {
-        final List<ResolveInfo> resolveInfoList = context.getPackageManager().queryIntentActivities(getFeedbackEmailIntent(), PackageManager.MATCH_DEFAULT_ONLY);
+        final List<ResolveInfo> resolveInfoList = context.getPackageManager().queryIntentActivities(getFeedbackEmailIntent(),
+                PackageManager.MATCH_DEFAULT_ONLY);
         return !resolveInfoList.isEmpty();
     }
 
@@ -70,13 +75,13 @@ public class FeedbackUtils {
 
 //        TODO: this
 //        final String email = AppProvider.getAppContext().getString(R.string.feedback_email);
-        final String feedbackMailTo = "mailto:";//+email;
+        final String feedbackMailTo = "mailto:"; //+email;
         final String feedbackEmailSubject = Uri.encode("Android App Feedback", "UTF-8");
         final String appInfo = getAppInfo();
 
-        final String uriString = feedbackMailTo +
-                "?subject=" + feedbackEmailSubject +
-                "&body=" + Uri.encode(appInfo);
+        final String uriString = feedbackMailTo
+                + "?subject=" + feedbackEmailSubject
+                + "&body=" + Uri.encode(appInfo);
 
         final Uri uri = Uri.parse(uriString);
         emailIntent.setData(uri);
@@ -91,13 +96,12 @@ public class FeedbackUtils {
         return bitmap;
     }
 
-
     /**
      * callback methods for when screen capture has taken place. This is required to be able to get a bitmap from a map.
      *
      * @see
      */
-    public interface OnBitmapCapturedListener{
+    public interface OnBitmapCapturedListener {
         void onCapture(Bitmap screenBitmap, Bitmap mapBitmap);
     }
 

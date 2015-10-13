@@ -112,23 +112,23 @@ public class RatingView2 extends FrameLayout {
         setContentLayoutForNewState(LayoutState.CONFIRMATION);
     }
 
-    private void setContentLayoutForNewState(@NonNull final LayoutState layoutState) {
-        switch (layoutState) {
+    private void setContentLayoutForNewState(@NonNull final LayoutState newLayoutState) {
+        switch (newLayoutState) {
             case QUESTION:
-                if (this.layoutState != LayoutState.QUESTION) {
+                if (layoutState != LayoutState.QUESTION) {
                     removeAllViews();
                     addQuestionView();
                 }
 
                 break;
             case CONFIRMATION:
-                if (this.layoutState != LayoutState.CONFIRMATION) {
+                if (layoutState != LayoutState.CONFIRMATION) {
                     removeAllViews();
                     addConfirmationView();
                 }
         }
 
-        this.layoutState = layoutState;
+        layoutState = newLayoutState;
     }
 
     private void addConfirmationView() {
