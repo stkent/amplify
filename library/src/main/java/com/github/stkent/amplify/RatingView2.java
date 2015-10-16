@@ -78,11 +78,11 @@ public class RatingView2 extends FrameLayout {
     }
 
     private void init(final Context context, @Nullable final AttributeSet attrs) {
-        final TypedArray typedArray = context.getTheme().obtainStyledAttributes(attrs, R.styleable.Amp, 0, 0);
+        final TypedArray typedArray = context.getTheme().obtainStyledAttributes(attrs, R.styleable.Amplify, 0, 0);
 
         // TODO: add proper default handling; checking for resource type
-        questionLayoutResId = typedArray.getResourceId(R.styleable.Amp_questionLayout, 0);
-        confirmationLayoutResId = typedArray.getResourceId(R.styleable.Amp_confirmationLayout, 0);
+        questionLayoutResId = typedArray.getResourceId(R.styleable.Amplify_amplify_question_layout, 0);
+        confirmationLayoutResId = typedArray.getResourceId(R.styleable.Amplify_amplify_confirmation_layout, 0);
 
         typedArray.recycle();
 

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <declare-styleable name="Amp">
-        <attr name="questionLayout" format="reference" />
-        <attr name="confirmationLayout" format="reference" />
+    <declare-styleable name="Amplify">
+        <attr name="amplify_question_layout" format="reference" />
+        <attr name="amplify_confirmation_layout" format="reference" />
     </declare-styleable>
 
     <!--<attr name="amp_view_background_color" format="color" />-->
