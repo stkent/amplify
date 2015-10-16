@@ -1,6 +1,7 @@
 package com.github.stkent.amplify;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
@@ -134,8 +135,12 @@ public class RatingView2 extends FrameLayout {
 
     private void addConfirmationView() {
         if (cachedConfirmationView == null) {
-            cachedConfirmationView =
-                    LayoutInflater.from(getContext()).inflate(confirmationLayoutResId, this, false);
+            try {
+                cachedConfirmationView = LayoutInflater.from(getContext()).inflate(confirmationLayoutResId, this, false);
+            } catch (Resources.NotFoundException exception) {
+                // TODO: consolidate and set wording
+                throw new IllegalArgumentException("Must provide a valid layout resource.");
+            }
         }
 
         addView(cachedConfirmationView, CONTENT_VIEW_LAYOUT_PARAMS);
@@ -143,13 +148,17 @@ public class RatingView2 extends FrameLayout {
 
     private void addQuestionView() {
         if (cachedQuestionView == null) {
-            final View view =
-                    LayoutInflater.from(getContext()).inflate(questionLayoutResId, this, false);
+            try {
+                final View view = LayoutInflater.from(getContext()).inflate(questionLayoutResId, this, false);
 
-            cachedQuestionView = new DefaultQuestionView(view);
+                cachedQuestionView = new DefaultQuestionView(view);
 
-            cachedQuestionView.getPositiveButton().setOnClickListener(positiveButtonClickListener);
-            cachedQuestionView.getNegativeButton().setOnClickListener(negativeButtonClickListener);
+                cachedQuestionView.getPositiveButton().setOnClickListener(positiveButtonClickListener);
+                cachedQuestionView.getNegativeButton().setOnClickListener(negativeButtonClickListener);
+            } catch (Resources.NotFoundException exception) {
+                // TODO: consolidate and set wording
+                throw new IllegalArgumentException("Must provide a valid layout resource.");
+            }
         }
 
         addView(cachedQuestionView.getView(), CONTENT_VIEW_LAYOUT_PARAMS);
