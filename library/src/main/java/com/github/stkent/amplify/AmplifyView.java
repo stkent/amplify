@@ -72,10 +72,7 @@ public class AmplifyView extends FrameLayout {
 
     public AmplifyView(final Context context, final AttributeSet attrs, final int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-
-        if (attrs != null) {
-            init(context, attrs);
-        }
+        init(context, attrs);
     }
 
     private void init(final Context context, @Nullable final AttributeSet attrs) {
