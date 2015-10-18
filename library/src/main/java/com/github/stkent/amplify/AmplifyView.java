@@ -82,6 +82,30 @@ public class AmplifyView extends FrameLayout {
         questionLayoutResId = typedArray.getResourceId(R.styleable.Amplify_amplify_question_layout, 0);
         confirmationLayoutResId = typedArray.getResourceId(R.styleable.Amplify_amplify_confirmation_layout, 0);
 
+        final String userOpinionQuestionTitle = typedArray.getString(
+                R.styleable.Amplify_amplify_user_opinion_question);
+        final String positiveFeedbackQuestionTitle = typedArray.getString(
+                R.styleable.Amplify_amplify_positive_feedback_question);
+        final String criticalFeedbackQuestionTitle = typedArray.getString(
+                R.styleable.Amplify_amplify_critical_feedback_question);
+
+        // TODOg: check that all questions are non-null^
+
+        final String userOpinionPositiveButtonText = typedArray.getString(
+                R.styleable.Amplify_amplify_user_opinion_positive_button_text);
+        final String userOpinionNegativeButtonText = typedArray.getString(
+                R.styleable.Amplify_amplify_user_opinion_negative_button_text);
+        final String positiveFeedbackPositiveButtonText = typedArray.getString(
+                R.styleable.Amplify_amplify_positive_feedback_positive_button_text);
+        final String positiveFeedbackNegativeButtonText = typedArray.getString(
+                R.styleable.Amplify_amplify_positive_feedback_negative_button_text);
+        final String criticalFeedbackPositiveButtonText = typedArray.getString(
+                R.styleable.Amplify_amplify_critical_feedback_positive_button_text);
+        final String criticalFeedbackNegativeButtonText = typedArray.getString(
+                R.styleable.Amplify_amplify_critical_feedback_negative_button_text);
+
+        // TODO: initialize all questions here
+
         typedArray.recycle();
 
         askFirstQuestion();
