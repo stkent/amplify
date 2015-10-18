@@ -13,7 +13,7 @@ import android.widget.FrameLayout;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
-public class RatingView2 extends FrameLayout {
+public class AmplifyView extends FrameLayout {
 
     private enum UserOpinion {
         UNKNOWN,
@@ -62,15 +62,15 @@ public class RatingView2 extends FrameLayout {
     @Nullable
     private View cachedConfirmationView;
 
-    public RatingView2(final Context context) {
+    public AmplifyView(final Context context) {
         this(context, null);
     }
 
-    public RatingView2(final Context context, final AttributeSet attrs) {
+    public AmplifyView(final Context context, final AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public RatingView2(final Context context, final AttributeSet attrs, final int defStyleAttr) {
+    public AmplifyView(final Context context, final AttributeSet attrs, final int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
         if (attrs != null) {
