@@ -32,19 +32,19 @@ public class AmplifyView extends FrameLayout {
     private AmplifyStateTracker ratingStateTracker;
     private LayoutState layoutState;
     private UserOpinion userOpinion = UserOpinion.UNKNOWN;
-    private Question firstQuestion = Question.Builder
+    private Question userOpinionQuestion = Question.Builder
             .withTitle("First question title")
             .andPositiveButtonText("Positive button")
             .andNegativeButtonText("Negative button")
             .build();
 
-    private Question secondQuestionForPositiveOpinion = Question.Builder
+    private Question positiveFeedbackQuestion = Question.Builder
             .withTitle("Second question (+ve)")
             .andPositiveButtonText("Positive button")
             .andNegativeButtonText("Negative button")
             .build();
 
-    private Question secondQuestionForNegativeOpinion = Question.Builder
+    private Question criticalFeedbackQuestion = Question.Builder
             .withTitle("Second question (-ve)")
             .andPositiveButtonText("Positive button")
             .andNegativeButtonText("Negative button")
@@ -94,7 +94,7 @@ public class AmplifyView extends FrameLayout {
         setContentLayoutForNewState(LayoutState.QUESTION);
 
         if (cachedQuestionView != null) {
-            cachedQuestionView.setQuestion(firstQuestion);
+            cachedQuestionView.setQuestion(userOpinionQuestion);
         }
     }
 
@@ -103,9 +103,9 @@ public class AmplifyView extends FrameLayout {
 
         if (cachedQuestionView != null) {
             if (userOpinion == UserOpinion.POSITIVE) {
-                cachedQuestionView.setQuestion(secondQuestionForPositiveOpinion);
+                cachedQuestionView.setQuestion(positiveFeedbackQuestion);
             } else if (userOpinion == UserOpinion.NEGATIVE) {
-                cachedQuestionView.setQuestion(secondQuestionForNegativeOpinion);
+                cachedQuestionView.setQuestion(criticalFeedbackQuestion);
             }
         }
     }
