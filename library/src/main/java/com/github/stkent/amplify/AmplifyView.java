@@ -32,23 +32,23 @@ public class AmplifyView extends FrameLayout {
     private AmplifyStateTracker ratingStateTracker;
     private LayoutState layoutState;
     private UserOpinion userOpinion = UserOpinion.UNKNOWN;
-    private Question firstQuestion = new Question(
-            "First question title",
-            "Positive button",
-            "Negative button"
-    );
+    private Question firstQuestion = Question.Builder
+            .withTitle("First question title")
+            .andPositiveButtonText("Positive button")
+            .andNegativeButtonText("Negative button")
+            .build();
 
-    private Question secondQuestionForPositiveOpinion = new Question(
-            "Second question (+ve)",
-            "Positive button",
-            "Negative button"
-    );
+    private Question secondQuestionForPositiveOpinion = Question.Builder
+            .withTitle("Second question (+ve)")
+            .andPositiveButtonText("Positive button")
+            .andNegativeButtonText("Negative button")
+            .build();
 
-    private Question secondQuestionForNegativeOpinion = new Question(
-            "Second question (-ve)",
-            "Positive button",
-            "Negative button"
-    );
+    private Question secondQuestionForNegativeOpinion = Question.Builder
+            .withTitle("Second question (-ve)")
+            .andPositiveButtonText("Positive button")
+            .andNegativeButtonText("Negative button")
+            .build();
 
     @LayoutRes
     private int questionLayoutResId;
