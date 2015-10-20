@@ -28,8 +28,8 @@ public class RatingView2 extends FrameLayout {
     private static final LayoutParams CONTENT_VIEW_LAYOUT_PARAMS
             = new LayoutParams(MATCH_PARENT, MATCH_PARENT);
 
-    private AmplifyStateTracker ratingStateTracker;
-    private LayoutState layoutState;
+    //private AmplifyStateTracker ratingStateTracker;
+    //private LayoutState layoutState;
     private UserOpinion userOpinion = UserOpinion.UNKNOWN;
     private Question firstQuestion = new Question(
             "First question title",
@@ -129,7 +129,7 @@ public class RatingView2 extends FrameLayout {
 //                }
         }
 
-        layoutState = newLayoutState;
+//        layoutState = newLayoutState;
     }
 
     private void addConfirmationView() {
