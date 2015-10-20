@@ -31,19 +31,19 @@ public class RatingView2 extends FrameLayout {
     //private AmplifyStateTracker ratingStateTracker;
     //private LayoutState layoutState;
     private UserOpinion userOpinion = UserOpinion.UNKNOWN;
-    private Question firstQuestion = new Question(
+    private final Question firstQuestion = new Question(
             "First question title",
             "Positive button",
             "Negative button"
     );
 
-    private Question secondQuestionForPositiveOpinion = new Question(
+    private final Question secondQuestionForPositiveOpinion = new Question(
             "Second question (+ve)",
             "Positive button",
             "Negative button"
     );
 
-    private Question secondQuestionForNegativeOpinion = new Question(
+    private final Question secondQuestionForNegativeOpinion = new Question(
             "Second question (-ve)",
             "Positive button",
             "Negative button"
@@ -127,6 +127,7 @@ public class RatingView2 extends FrameLayout {
                     removeAllViews();
                     addConfirmationView();
 //                }
+                break;
         }
 
 //        layoutState = newLayoutState;

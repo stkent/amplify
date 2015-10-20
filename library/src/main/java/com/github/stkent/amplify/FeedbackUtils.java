@@ -17,6 +17,8 @@ import java.util.List;
 
 public final class FeedbackUtils {
 
+    private static final int BASE_MESSAGE_LENGTH = 78;
+
     private FeedbackUtils() {
 
     }
@@ -34,26 +36,25 @@ public final class FeedbackUtils {
 
     public static String getAppInfo() {
         //noinspection StringBufferReplaceableByString
-        StringBuilder messageBuilder = new StringBuilder();
 
-        messageBuilder.append("\n\n\n");
-        messageBuilder.append("---------------------\n");
+        return new StringBuilder(BASE_MESSAGE_LENGTH)
 
-        messageBuilder.append("App Version: ");
-        messageBuilder.append(BuildConfig.VERSION_NAME);
-        messageBuilder.append(" - ");
-        messageBuilder.append(BuildConfig.VERSION_CODE);
-        messageBuilder.append("\n");
+        .append("\n\n\n---------------------\nApp Version: ")
 
-        messageBuilder.append("Android OS Version: ");
-        messageBuilder.append(Build.VERSION.RELEASE);
-        messageBuilder.append(" - ");
-        messageBuilder.append(Build.VERSION.SDK_INT);
+        .append(BuildConfig.VERSION_NAME)
+        .append(" - ")
+        .append(BuildConfig.VERSION_CODE)
+        .append("\n")
 
-        messageBuilder.append("\n");
-        messageBuilder.append("Date: ");
-        messageBuilder.append(System.currentTimeMillis());
-        return messageBuilder.toString();
+        .append("Android OS Version: ")
+        .append(Build.VERSION.RELEASE)
+        .append(" - ")
+        .append(Build.VERSION.SDK_INT)
+
+        .append("\n")
+        .append("Date: ")
+        .append(System.currentTimeMillis())
+        .toString();
     }
 
     /**
@@ -64,10 +65,10 @@ public final class FeedbackUtils {
             bitmapCapturedListener.onCapture(getScreenBitmap(view), null);
     }
 
-    public static ArrayList<Uri> getAttachmentList(Uri... uris) {
-        ArrayList<Uri> arrayList = new ArrayList<>(uris.length);
-        arrayList.addAll(Arrays.asList(uris));
-        return arrayList;
+    public static List<Uri> getAttachmentList(Uri... uris) {
+        List<Uri> list = new ArrayList<>(uris.length);
+        list.addAll(Arrays.asList(uris));
+        return list;
     }
 
     private static Intent getFeedbackEmailIntent() {
@@ -75,7 +76,7 @@ public final class FeedbackUtils {
 
 //        TODO: this
 //        final String email = AppProvider.getAppContext().getString(R.string.feedback_email);
-        final String feedbackMailTo = "mailto:"; //+email;
+        final String feedbackMailTo = "mailto:" + emailIntent.toString(); //+email;
         final String feedbackEmailSubject = Uri.encode("Android App Feedback", "UTF-8");
         final String appInfo = getAppInfo();
 

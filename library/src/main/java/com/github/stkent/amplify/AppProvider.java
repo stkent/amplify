@@ -6,13 +6,6 @@ import android.support.annotation.StringRes;
 
 public final class AppProvider {
 
-    public interface AppHelper {
-        int dpToPixels(final int dpUnits);
-        long getCurrentTimeMillis();
-        void toast(@StringRes final int messageStringRes);
-        void toast(@NonNull final String message);
-    }
-
     private static AppHelper helper;
 
     private AppProvider() {
@@ -33,10 +26,17 @@ public final class AppProvider {
 
     private static Object getHelper() {
         if (helper == null) {
-            throw new RuntimeException("Application helper is null");
+            throw new IllegalStateException("Application helper is null");
         } else {
             return helper;
         }
+    }
+
+    public interface AppHelper {
+        int dpToPixels(final int dpUnits);
+        long getCurrentTimeMillis();
+        void toast(@StringRes final int messageStringRes);
+        void toast(@NonNull final String message);
     }
 
 }

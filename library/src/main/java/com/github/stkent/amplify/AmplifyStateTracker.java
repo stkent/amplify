@@ -30,9 +30,11 @@ public final class AmplifyStateTracker {
     private AmplifyStateTracker() {
     }
 
-    public static synchronized AmplifyStateTracker getInstance() {
-        if (instance == null) {
-            instance = new AmplifyStateTracker();
+    public static AmplifyStateTracker getInstance() {
+        synchronized (AmplifyStateTracker.class) {
+            if (instance == null) {
+                instance = new AmplifyStateTracker();
+            }
         }
 
         return instance;
@@ -64,7 +66,7 @@ public final class AmplifyStateTracker {
     }
 
     public void notify(final ActionType actionType) {
-        final SharedPreferences.Editor editor = Settings.editor();
+        final SharedPreferences.Editor editor = Settings.getEditor();
 
         switch (actionType) {
             case USER_GAVE_RATING:
@@ -86,7 +88,7 @@ public final class AmplifyStateTracker {
     }
 
     public void reset() {
-        final SharedPreferences.Editor editor = Settings.editor();
+        final SharedPreferences.Editor editor = Settings.getEditor();
 
         Log.d(Constants.LOG_TAG, "Reset rating tracker state.");
         editor.remove(Constants.RATED_VERSION_CODE);
@@ -104,7 +106,7 @@ public final class AmplifyStateTracker {
     }
 
     private boolean userHasRatedApp() {
-        final int ratedVersionCode = Settings.settings().getInt(Constants.RATED_VERSION_CODE, DEFAULT_RATED_VERSION_CODE);
+        final int ratedVersionCode = Settings.getSharedPreferences().getInt(Constants.RATED_VERSION_CODE, DEFAULT_RATED_VERSION_CODE);
         return ratedVersionCode != DEFAULT_RATED_VERSION_CODE;
     }
 
@@ -115,7 +117,7 @@ public final class AmplifyStateTracker {
         try {
             final PackageInfo info = pm.getPackageInfo("com.android.vending", GET_ACTIVITIES);
             final String label = (String) info.applicationInfo.loadLabel(pm);
-            playServicesInstalled = (label != null && !label.equals("Market"));
+            playServicesInstalled = label != null && !label.equals("Market");
         } catch (PackageManager.NameNotFoundException e) {
             playServicesInstalled = false;
         }
@@ -124,13 +126,14 @@ public final class AmplifyStateTracker {
     }
 
     private boolean userHasGivenFeedbackForCurrentVersion() {
-        final int lastFeedbackVersionCode = Settings.settings().getInt(Constants.LAST_FEEDBACK_VERSION_CODE, DEFAULT_LAST_FEEDBACK_VERSION_CODE);
+        final int lastFeedbackVersionCode = Settings.getSharedPreferences().getInt(Constants.LAST_FEEDBACK_VERSION_CODE,
+                DEFAULT_LAST_FEEDBACK_VERSION_CODE);
         return lastFeedbackVersionCode < BuildConfig.VERSION_CODE;
     }
 
     private boolean isInCooldownMode() {
-        final long timeSinceLastNegativeAction = System.currentTimeMillis() - Settings.settings().getLong(Constants.LAST_NEGATIVE_ACTION_TIME_MS,
-                DEFAULT_LAST_ACTION_TIME_MS);
+        final long timeSinceLastNegativeAction = System.currentTimeMillis() - Settings.getSharedPreferences().getLong(
+                Constants.LAST_NEGATIVE_ACTION_TIME_MS, DEFAULT_LAST_ACTION_TIME_MS);
         return timeSinceLastNegativeAction < RATING_PROMPT_COOLDOWN_TIME_MS;
     }
 

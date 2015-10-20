@@ -11,7 +11,7 @@ public class ExampleUnitTest {
     private static final int ANSWER = 4;
 
     @Test
-    public void additionIsCorrect() throws Exception {
+    public void additionIsCorrect() {
         Assert.assertEquals(ANSWER, 2 + 2);
     }
 }

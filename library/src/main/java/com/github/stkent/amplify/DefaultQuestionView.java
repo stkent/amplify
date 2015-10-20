@@ -8,16 +8,16 @@ import android.widget.TextView;
 public class DefaultQuestionView implements QuestionView {
 
     @NonNull
-    private View view;
+    private final View view;
 
     @NonNull
-    private TextView titleTextView;
+    private final TextView titleTextView;
 
     @NonNull
-    private Button positiveButton;
+    private final Button positiveButton;
 
     @NonNull
-    private Button negativeButton;
+    private final Button negativeButton;
 
     @SuppressWarnings("ConstantConditions")
     public DefaultQuestionView(@NonNull final View view) {
