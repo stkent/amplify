@@ -7,43 +7,41 @@ import android.content.SharedPreferences.Editor;
 
 public final class Settings {
 
-	public static SharedPreferences settings;
-	public static Editor editor;
+    private static SharedPreferences sharedPreferences;
+    private static Editor editor;
 
-    private Settings() {}
+    private Settings() {
+
+    }
 
     /**
-	 * Returns a SharedPreferences object for reading values from the standard location for SharedPreferences
-	 * @return SharedPreferences settings
-	 */
-	public static SharedPreferences settings() {
-		if (settings != null) {
-            return settings;
+     * Returns a SharedPreferences object for reading values from the standard location for SharedPreferences
+     * @return SharedPreferences sharedPreferences
+     */
+    public static SharedPreferences getSharedPreferences() {
+        synchronized (Settings.class) {
+            if (sharedPreferences == null) {
+                sharedPreferences = AppProvider.getAppContext().getSharedPreferences(AppProvider.getAppContext().getPackageName() + "_prefs",
+                        Context.MODE_PRIVATE);
+            }
         }
-		
-		settings = AppProvider.getAppContext().getSharedPreferences(AppProvider.getAppContext().getPackageName() + "_prefs", Context.MODE_PRIVATE);
-		
-		return settings;
-	}
-	
-	/**
-	 * Returns an editor object linked to the standard location for SharedPreferences. You must call apply to save your changes
-	 * @return Editor editor
-	 */
-	@SuppressLint("CommitPrefEdits")
-	public static Editor editor() {
-		if (editor != null) {
-            return editor;
+
+        return sharedPreferences;
+    }
+
+    /**
+     * Returns an Editor object linked to the standard location for SharedPreferences. You must call apply to save your changes
+     * @return Editor editor
+     */
+    @SuppressLint("CommitPrefEdits")
+    public static Editor getEditor() {
+        synchronized (Settings.class) {
+            if (editor == null) {
+                editor = getSharedPreferences().edit();
+            }
         }
-		
-		if (settings != null) {
-			editor = settings.edit();
-			return editor;
-		}
-		
-		settings();
-		editor = settings.edit();
-		return editor;
-	}
+
+        return editor;
+    }
 
 }

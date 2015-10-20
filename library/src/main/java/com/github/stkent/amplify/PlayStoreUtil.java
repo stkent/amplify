@@ -13,7 +13,9 @@ public final class PlayStoreUtil {
     private static final String ANDROID_MARKET_URI_PREFIX = "market://details?id=";
     private static final String GOOGLE_PLAY_STORE_URI_PREFIX = "https://play.google.com/store/apps/details?id=";
 
-    private PlayStoreUtil() {}
+    private PlayStoreUtil() {
+
+    }
 
     public static void openPlayStoreToRate(@NonNull final Activity activity) {
         if (ActivityStateUtil.isActivityValid(activity)) {

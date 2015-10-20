@@ -12,6 +12,10 @@ android {
         versionName "1.0.0"
     }
 
+    lintOptions {
+        abortOnError true
+    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -24,4 +28,17 @@ dependencies {
     testCompile 'junit:junit:4.12'
 
     compile 'com.android.support:appcompat-v7:23.0.1'
+}
+
+check {
+    abortOnError true
+    checkstyle {
+        config project.file('config/checkstyle.xml')
+    }
+    findbugs {
+        config hard()
+    }
+    pmd {
+        config project.file('config/pmd.xml')
+    }
 }

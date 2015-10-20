@@ -1,15 +1,17 @@
 package com.github.stkent.amplify;
 
+import org.junit.Assert;
 import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 /**
  * To work on unit tests, switch the Test Artifact in the Build Variants view.
  */
 public class ExampleUnitTest {
+
+    private static final int ANSWER = 4;
+
     @Test
-    public void addition_isCorrect() throws Exception {
-        assertEquals(4, 2 + 2);
+    public void additionIsCorrect() {
+        Assert.assertEquals(ANSWER, 2 + 2);
     }
 }

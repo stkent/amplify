@@ -10,7 +10,7 @@ import static android.content.pm.PackageManager.GET_ACTIVITIES;
 import static java.util.concurrent.TimeUnit.DAYS;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
-public class AmplifyStateTracker {
+public final class AmplifyStateTracker {
 
     public enum ActionType {
         USER_GAVE_RATING,
@@ -31,8 +31,10 @@ public class AmplifyStateTracker {
     }
 
     public static AmplifyStateTracker getInstance() {
-        if (instance == null) {
-            instance = new AmplifyStateTracker();
+        synchronized (AmplifyStateTracker.class) {
+            if (instance == null) {
+                instance = new AmplifyStateTracker();
+            }
         }
 
         return instance;
@@ -55,7 +57,8 @@ public class AmplifyStateTracker {
         }
 
         if (isInCooldownMode()) {
-            Log.d(Constants.LOG_TAG, "Last negative action (crash, rating declined, feedback declined) was less than " + MILLISECONDS.toDays(RATING_PROMPT_COOLDOWN_TIME_MS) + " days ago. Should not ask for rating/feedback.");
+            Log.d(Constants.LOG_TAG, "Last negative action (crash, rating declined, feedback declined) was less than "
+                    + MILLISECONDS.toDays(RATING_PROMPT_COOLDOWN_TIME_MS) + " days ago. Should not ask for rating/feedback.");
             return false;
         }
 
@@ -63,7 +66,7 @@ public class AmplifyStateTracker {
     }
 
     public void notify(final ActionType actionType) {
-        final SharedPreferences.Editor editor = Settings.editor();
+        final SharedPreferences.Editor editor = Settings.getEditor();
 
         switch (actionType) {
             case USER_GAVE_RATING:
@@ -85,7 +88,7 @@ public class AmplifyStateTracker {
     }
 
     public void reset() {
-        final SharedPreferences.Editor editor = Settings.editor();
+        final SharedPreferences.Editor editor = Settings.getEditor();
 
         Log.d(Constants.LOG_TAG, "Reset rating tracker state.");
         editor.remove(Constants.RATED_VERSION_CODE);
@@ -103,7 +106,7 @@ public class AmplifyStateTracker {
     }
 
     private boolean userHasRatedApp() {
-        final int ratedVersionCode = Settings.settings().getInt(Constants.RATED_VERSION_CODE, DEFAULT_RATED_VERSION_CODE);
+        final int ratedVersionCode = Settings.getSharedPreferences().getInt(Constants.RATED_VERSION_CODE, DEFAULT_RATED_VERSION_CODE);
         return ratedVersionCode != DEFAULT_RATED_VERSION_CODE;
     }
 
@@ -114,7 +117,7 @@ public class AmplifyStateTracker {
         try {
             final PackageInfo info = pm.getPackageInfo("com.android.vending", GET_ACTIVITIES);
             final String label = (String) info.applicationInfo.loadLabel(pm);
-            playServicesInstalled = (label != null && !label.equals("Market"));
+            playServicesInstalled = label != null && !label.equals("Market");
         } catch (PackageManager.NameNotFoundException e) {
             playServicesInstalled = false;
         }
@@ -123,12 +126,14 @@ public class AmplifyStateTracker {
     }
 
     private boolean userHasGivenFeedbackForCurrentVersion() {
-        final int lastFeedbackVersionCode = Settings.settings().getInt(Constants.LAST_FEEDBACK_VERSION_CODE, DEFAULT_LAST_FEEDBACK_VERSION_CODE);
+        final int lastFeedbackVersionCode = Settings.getSharedPreferences().getInt(Constants.LAST_FEEDBACK_VERSION_CODE,
+                DEFAULT_LAST_FEEDBACK_VERSION_CODE);
         return lastFeedbackVersionCode < BuildConfig.VERSION_CODE;
     }
 
     private boolean isInCooldownMode() {
-        final long timeSinceLastNegativeAction = System.currentTimeMillis() - Settings.settings().getLong(Constants.LAST_NEGATIVE_ACTION_TIME_MS, DEFAULT_LAST_ACTION_TIME_MS);
+        final long timeSinceLastNegativeAction = System.currentTimeMillis() - Settings.getSharedPreferences().getLong(
+                Constants.LAST_NEGATIVE_ACTION_TIME_MS, DEFAULT_LAST_ACTION_TIME_MS);
         return timeSinceLastNegativeAction < RATING_PROMPT_COOLDOWN_TIME_MS;
     }
 
