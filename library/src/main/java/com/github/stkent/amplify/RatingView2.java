@@ -11,10 +11,6 @@ import android.view.View;
 import android.widget.FrameLayout;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
-import static com.github.stkent.amplify.AmplifyStateTracker.ActionType.USER_DECLINED_FEEDBACK;
-import static com.github.stkent.amplify.AmplifyStateTracker.ActionType.USER_DECLINED_RATING;
-import static com.github.stkent.amplify.AmplifyStateTracker.ActionType.USER_GAVE_FEEDBACK;
-import static com.github.stkent.amplify.AmplifyStateTracker.ActionType.USER_GAVE_RATING;
 
 public class RatingView2 extends FrameLayout {
 
@@ -33,10 +29,25 @@ public class RatingView2 extends FrameLayout {
             = new LayoutParams(MATCH_PARENT, MATCH_PARENT);
 
     private AmplifyStateTracker ratingStateTracker;
-    private LayoutState layoutState = LayoutState.QUESTION;
+    private LayoutState layoutState;
     private UserOpinion userOpinion = UserOpinion.UNKNOWN;
-    private Question firstQuestion;
-    private Question secondQuestion;
+    private Question firstQuestion = new Question(
+            "First question title",
+            "Positive button",
+            "Negative button"
+    );
+
+    private Question secondQuestionForPositiveOpinion = new Question(
+            "Second question (+ve)",
+            "Positive button",
+            "Negative button"
+    );
+
+    private Question secondQuestionForNegativeOpinion = new Question(
+            "Second question (-ve)",
+            "Positive button",
+            "Negative button"
+    );
 
     @LayoutRes
     private int questionLayoutResId;
@@ -67,29 +78,15 @@ public class RatingView2 extends FrameLayout {
     }
 
     private void init(final Context context, @Nullable final AttributeSet attrs) {
-        final TypedArray typedArray = context.getTheme().obtainStyledAttributes(
-                attrs, R.styleable.Amp, 0, 0);
+        final TypedArray typedArray = context.getTheme().obtainStyledAttributes(attrs, R.styleable.Amplify, 0, 0);
 
-        typedArray.getResourceId(R.styleable.Amp_questionLayout, R.layout.amp_include_default_rating_view);
-
-        // inflate a layout if provided in xml
-        // inflate a default layout
+        // TODO: add proper default handling; checking for resource type
+        questionLayoutResId = typedArray.getResourceId(R.styleable.Amplify_amplify_question_layout, 0);
+        confirmationLayoutResId = typedArray.getResourceId(R.styleable.Amplify_amplify_confirmation_layout, 0);
 
         typedArray.recycle();
-    }
 
-    private void updateContentView() {
-        switch (layoutState) {
-            case QUESTION:
-                if (userOpinion == UserOpinion.UNKNOWN) {
-                    askFirstQuestion();
-                } else {
-                    askSecondQuestion();
-                }
-                break;
-            case CONFIRMATION:
-                thankUser();
-        }
+        askFirstQuestion();
     }
 
     private void askFirstQuestion() {
@@ -104,7 +101,11 @@ public class RatingView2 extends FrameLayout {
         setContentLayoutForNewState(LayoutState.QUESTION);
 
         if (cachedQuestionView != null) {
-            cachedQuestionView.setQuestion(secondQuestion);
+            if (userOpinion == UserOpinion.POSITIVE) {
+                cachedQuestionView.setQuestion(secondQuestionForPositiveOpinion);
+            } else if (userOpinion == UserOpinion.NEGATIVE) {
+                cachedQuestionView.setQuestion(secondQuestionForNegativeOpinion);
+            }
         }
     }
 
@@ -115,17 +116,17 @@ public class RatingView2 extends FrameLayout {
     private void setContentLayoutForNewState(@NonNull final LayoutState layoutState) {
         switch (layoutState) {
             case QUESTION:
-                if (this.layoutState != LayoutState.QUESTION) {
+//                if (this.layoutState != LayoutState.QUESTION) {
                     removeAllViews();
                     addQuestionView();
-                }
+//                }
 
                 break;
             case CONFIRMATION:
-                if (this.layoutState != LayoutState.CONFIRMATION) {
+//                if (this.layoutState != LayoutState.CONFIRMATION) {
                     removeAllViews();
                     addConfirmationView();
-                }
+//                }
         }
 
         this.layoutState = layoutState;
@@ -169,12 +170,12 @@ public class RatingView2 extends FrameLayout {
                 case POSITIVE:
                     thankUser();
 //                    PlayStoreUtil.openPlayStoreToRate((Activity) getContext());
-                    ratingStateTracker.notify(USER_GAVE_RATING);
+//                    ratingStateTracker.notify(USER_GAVE_RATING);
                     break;
                 case NEGATIVE:
                     thankUser();
 //                    showFeedbackEmailChooser();
-                    ratingStateTracker.notify(USER_GAVE_FEEDBACK);
+//                    ratingStateTracker.notify(USER_GAVE_FEEDBACK);
                     break;
                 default:
                     break;
@@ -192,11 +193,11 @@ public class RatingView2 extends FrameLayout {
                     break;
                 case POSITIVE:
                     hide();
-                    ratingStateTracker.notify(USER_DECLINED_RATING);
+//                    ratingStateTracker.notify(USER_DECLINED_RATING);
                     break;
                 case NEGATIVE:
                     hide();
-                    ratingStateTracker.notify(USER_DECLINED_FEEDBACK);
+//                    ratingStateTracker.notify(USER_DECLINED_FEEDBACK);
                     break;
                 default:
                     break;
