@@ -30,6 +30,7 @@
 
     <rule ref="rulesets/java/comments.xml">
         <exclude name="CommentRequired" />
+        <exclude name="CommentSize" />
     </rule>
 
     <rule ref="rulesets/java/controversial.xml">

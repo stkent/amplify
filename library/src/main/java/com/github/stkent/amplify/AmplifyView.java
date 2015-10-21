@@ -29,22 +29,22 @@ public class AmplifyView extends FrameLayout {
     private static final LayoutParams CONTENT_VIEW_LAYOUT_PARAMS
             = new LayoutParams(MATCH_PARENT, MATCH_PARENT);
 
-    private AmplifyStateTracker ratingStateTracker;
-    private LayoutState layoutState;
+    //private AmplifyStateTracker ratingStateTracker;
+    //private LayoutState layoutState;
     private UserOpinion userOpinion = UserOpinion.UNKNOWN;
-    private Question userOpinionQuestion = Question.Builder
+    private final Question userOpinionQuestion = Question.Builder
             .withTitle("First question title")
             .andPositiveButtonText("Positive button")
             .andNegativeButtonText("Negative button")
             .build();
 
-    private Question positiveFeedbackQuestion = Question.Builder
+    private final Question positiveFeedbackQuestion = Question.Builder
             .withTitle("Second question (+ve)")
             .andPositiveButtonText("Positive button")
             .andNegativeButtonText("Negative button")
             .build();
 
-    private Question criticalFeedbackQuestion = Question.Builder
+    private final Question criticalFeedbackQuestion = Question.Builder
             .withTitle("Second question (-ve)")
             .andPositiveButtonText("Positive button")
             .andNegativeButtonText("Negative button")
@@ -82,27 +82,27 @@ public class AmplifyView extends FrameLayout {
         questionLayoutResId = typedArray.getResourceId(R.styleable.Amplify_amplify_question_layout, 0);
         confirmationLayoutResId = typedArray.getResourceId(R.styleable.Amplify_amplify_confirmation_layout, 0);
 
-        final String userOpinionQuestionTitle = typedArray.getString(
-                R.styleable.Amplify_amplify_user_opinion_question);
-        final String positiveFeedbackQuestionTitle = typedArray.getString(
-                R.styleable.Amplify_amplify_positive_feedback_question);
-        final String criticalFeedbackQuestionTitle = typedArray.getString(
-                R.styleable.Amplify_amplify_critical_feedback_question);
+//        final String userOpinionQuestionTitle = typedArray.getString(
+//                R.styleable.Amplify_amplify_user_opinion_question);
+//        final String positiveFeedbackQuestionTitle = typedArray.getString(
+//                R.styleable.Amplify_amplify_positive_feedback_question);
+//        final String criticalFeedbackQuestionTitle = typedArray.getString(
+//                R.styleable.Amplify_amplify_critical_feedback_question);
 
         // TODOg: check that all questions are non-null^
 
-        final String userOpinionPositiveButtonText = typedArray.getString(
-                R.styleable.Amplify_amplify_user_opinion_positive_button_text);
-        final String userOpinionNegativeButtonText = typedArray.getString(
-                R.styleable.Amplify_amplify_user_opinion_negative_button_text);
-        final String positiveFeedbackPositiveButtonText = typedArray.getString(
-                R.styleable.Amplify_amplify_positive_feedback_positive_button_text);
-        final String positiveFeedbackNegativeButtonText = typedArray.getString(
-                R.styleable.Amplify_amplify_positive_feedback_negative_button_text);
-        final String criticalFeedbackPositiveButtonText = typedArray.getString(
-                R.styleable.Amplify_amplify_critical_feedback_positive_button_text);
-        final String criticalFeedbackNegativeButtonText = typedArray.getString(
-                R.styleable.Amplify_amplify_critical_feedback_negative_button_text);
+//        final String userOpinionPositiveButtonText = typedArray.getString(
+//                R.styleable.Amplify_amplify_user_opinion_positive_button_text);
+//        final String userOpinionNegativeButtonText = typedArray.getString(
+//                R.styleable.Amplify_amplify_user_opinion_negative_button_text);
+//        final String positiveFeedbackPositiveButtonText = typedArray.getString(
+//                R.styleable.Amplify_amplify_positive_feedback_positive_button_text);
+//        final String positiveFeedbackNegativeButtonText = typedArray.getString(
+//                R.styleable.Amplify_amplify_positive_feedback_negative_button_text);
+//        final String criticalFeedbackPositiveButtonText = typedArray.getString(
+//                R.styleable.Amplify_amplify_critical_feedback_positive_button_text);
+//        final String criticalFeedbackNegativeButtonText = typedArray.getString(
+//                R.styleable.Amplify_amplify_critical_feedback_negative_button_text);
 
         // TODO: initialize all questions here
 
@@ -135,8 +135,8 @@ public class AmplifyView extends FrameLayout {
         setContentLayoutForNewState(LayoutState.CONFIRMATION);
     }
 
-    private void setContentLayoutForNewState(@NonNull final LayoutState layoutState) {
-        switch (layoutState) {
+    private void setContentLayoutForNewState(@NonNull final LayoutState newLayoutState) {
+        switch (newLayoutState) {
             case QUESTION:
 //                if (this.layoutState != LayoutState.QUESTION) {
                     removeAllViews();
@@ -149,9 +149,10 @@ public class AmplifyView extends FrameLayout {
                     removeAllViews();
                     addConfirmationView();
 //                }
+                break;
         }
 
-        this.layoutState = layoutState;
+//        layoutState = newLayoutState;
     }
 
     private void addConfirmationView() {
@@ -160,7 +161,7 @@ public class AmplifyView extends FrameLayout {
                 cachedConfirmationView = LayoutInflater.from(getContext()).inflate(confirmationLayoutResId, this, false);
             } catch (Resources.NotFoundException exception) {
                 // TODO: consolidate and set wording
-                throw new IllegalArgumentException("Must provide a valid layout resource.");
+                throw new IllegalArgumentException("Must provide a valid layout resource.", exception);
             }
         }
 
@@ -178,7 +179,7 @@ public class AmplifyView extends FrameLayout {
                 cachedQuestionView.getNegativeButton().setOnClickListener(negativeButtonClickListener);
             } catch (Resources.NotFoundException exception) {
                 // TODO: consolidate and set wording
-                throw new IllegalArgumentException("Must provide a valid layout resource.");
+                throw new IllegalArgumentException("Must provide a valid layout resource.", exception);
             }
         }
 

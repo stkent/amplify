@@ -5,7 +5,7 @@ import static java.lang.Thread.UncaughtExceptionHandler;
 
 public class AmplifyExceptionHandler implements UncaughtExceptionHandler {
 
-    private UncaughtExceptionHandler defaultExceptionHandler;
+    private final UncaughtExceptionHandler defaultExceptionHandler;
 
     public AmplifyExceptionHandler(final UncaughtExceptionHandler uncaughtExceptionHandler) {
         defaultExceptionHandler = uncaughtExceptionHandler;

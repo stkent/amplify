@@ -130,6 +130,7 @@
         <module name="EqualsHashCode" />
         <module name="HiddenField">
             <property name="ignoreConstructorParameter" value="true" />
+            <property name="setterCanReturnItsClass" value="true" />
             <property name="ignoreSetter" value="true" />
             <property name="severity" value="warning" />
         </module>
