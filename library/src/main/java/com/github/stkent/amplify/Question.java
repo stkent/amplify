@@ -3,7 +3,10 @@ package com.github.stkent.amplify;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-public class Question {
+public final class Question {
+
+    private static final String DEFAULT_POSITIVE_BUTTON_TEXT = "Yes";
+    private static final String DEFAULT_NEGATIVE_BUTTON_TEXT = "No";
 
     @NonNull
     private final String title;
@@ -14,7 +17,7 @@ public class Question {
     @NonNull
     private final String negativeButtonText;
 
-    public Question(
+    protected Question(
             @NonNull final String title,
             @NonNull final String positiveButtonText,
             @NonNull final String negativeButtonText) {
@@ -38,51 +41,54 @@ public class Question {
         return negativeButtonText;
     }
 
-    public static class Builder {
+    public static final class Builder {
 
         @NonNull
-        private final Question baseQuestion;
-
-        @Nullable
-        private String title;
+        private final String title;
 
         @Nullable
         private String positiveButtonText;
 
         @Nullable
-        private String negativeButtonText;
+        private String negativeButtonText = DEFAULT_NEGATIVE_BUTTON_TEXT;
 
-        public Builder(@NonNull final Question baseQuestion) {
-            this.baseQuestion = baseQuestion;
+        public static Builder withTitle(@NonNull final String title) {
+            return new Builder(title);
         }
 
-        @NonNull
-        public Builder setTitle(@Nullable final String title) {
+        private Builder(@NonNull final String title) {
             this.title = title;
+        }
+
+        @NonNull
+        public Builder andPositiveButtonText(@Nullable final String newPositiveButtonText) {
+            positiveButtonText = newPositiveButtonText;
             return this;
         }
 
         @NonNull
-        public Builder setPositiveButtonText(@Nullable final String positiveButtonText) {
-            this.positiveButtonText = positiveButtonText;
-            return this;
-        }
-
-        @NonNull
-        public Builder setNegativeButtonText(@Nullable final String negativeButtonText) {
-            this.negativeButtonText = negativeButtonText;
+        public Builder andNegativeButtonText(@Nullable final String newNegativeButtonText) {
+            negativeButtonText = newNegativeButtonText;
             return this;
         }
 
         @NonNull
         public Question build() {
-            final String newTitle = title != null ? title : baseQuestion.title;
-            final String newPositiveButtonText = positiveButtonText != null
-                    ? positiveButtonText : baseQuestion.positiveButtonText;
-            final String newNegativeButtonText = negativeButtonText != null
-                    ? negativeButtonText : baseQuestion.negativeButtonText;
+            final String resolvedPositiveButtonText =
+                    positiveButtonText != null
+                            ? positiveButtonText
+                            : DEFAULT_POSITIVE_BUTTON_TEXT;
 
-            return new Question(newTitle, newPositiveButtonText, newNegativeButtonText);
+
+            final String resolvedNegativeButtonText =
+                    negativeButtonText != null
+                            ? negativeButtonText
+                            : DEFAULT_NEGATIVE_BUTTON_TEXT;
+
+            return new Question(
+                    title,
+                    resolvedPositiveButtonText,
+                    resolvedNegativeButtonText);
         }
 
     }
