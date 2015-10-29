@@ -17,7 +17,7 @@ public final class Question {
     @NonNull
     private final String negativeButtonText;
 
-    private Question(
+    protected Question(
             @NonNull final String title,
             @NonNull final String positiveButtonText,
             @NonNull final String negativeButtonText) {
