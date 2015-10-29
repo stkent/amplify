@@ -4,13 +4,202 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.support.annotation.NonNull;
 import android.util.Log;
+
+import java.util.concurrent.TimeUnit;
 
 import static android.content.pm.PackageManager.GET_ACTIVITIES;
 import static java.util.concurrent.TimeUnit.DAYS;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 public final class AmplifyStateTracker {
+
+    public <T extends IEventType> void incrementEventType(Class<T> eventType) {
+
+    }
+
+    public interface ICooldownEvent {
+        long cooldownTimeMillis();
+    }
+
+//     maybe this should be renamed as a condition?
+    public interface IEventType<T> {
+        @NonNull
+        String getKey();
+
+        @NonNull
+        T getInitialValue();
+
+        @NonNull
+        T increment(@NonNull final T currentValue, @NonNull final Context applicationContext);
+
+        Boolean shouldAskForFeedback(@NonNull final T currentValue, @NonNull final Context applicationContext);
+    }
+
+    public interface IEnvironmentChecker {
+        boolean isSatisfied(@NonNull final Context applicationContext);
+    }
+
+    public class GooglePlayServicesChecker implements IEnvironmentChecker {
+        @Override
+        public boolean isSatisfied(@NonNull final Context applicationContext) {
+            final PackageManager pm = applicationContext.getPackageManager();
+            boolean playServicesInstalled;
+
+            try {
+                final PackageInfo info = pm.getPackageInfo("com.android.vending", GET_ACTIVITIES);
+                final String label = (String) info.applicationInfo.loadLabel(pm);
+                playServicesInstalled = label != null && !label.equals("Market");
+            } catch (final PackageManager.NameNotFoundException e) {
+                playServicesInstalled = false;
+            }
+
+            return playServicesInstalled;
+        }
+    }
+
+    public abstract class CooldownEvent implements IEventType<Long>, ICooldownEvent {
+
+        private Long getCurrentTimeMillis() {
+            return System.currentTimeMillis();
+        }
+
+        @NonNull
+        @Override
+        public Long getInitialValue() {
+            return getCurrentTimeMillis();
+        }
+
+        @NonNull
+        @Override
+        public Long increment(@NonNull final Long currentValue, @NonNull final Context applicationContext) {
+            return getCurrentTimeMillis();
+        }
+
+        @Override
+        public Boolean shouldAskForFeedback(@NonNull final Long currentValue, @NonNull final Context applicationContext) {
+            if (getCurrentTimeMillis() - currentValue < cooldownTimeMillis()) {
+                return false;
+            }
+
+            return null;
+        }
+    }
+
+    public class UserDeclinedFeedbackEvent extends CooldownEvent {
+
+        @NonNull
+        @Override
+        public String getKey() {
+            return "UserDeclinedFeedbackEvent";
+        }
+
+        @Override
+        public long cooldownTimeMillis() {
+            return TimeUnit.DAYS.toMillis(7);
+        }
+    }
+
+    public class AppCrashedEvent extends CooldownEvent {
+
+        @NonNull
+        @Override
+        public String getKey() {
+            return "AppCrashEvent";
+        }
+
+        @Override
+        public long cooldownTimeMillis() {
+            return TimeUnit.DAYS.toMillis(7);
+        }
+    }
+
+    public class UserDeclinedToGiveFeedbackForCurrentVersionEvent implements IEventType<String> {
+
+        private static final String INITIAL_VALUE = "InitialValue";
+        private static final String FAILURE_VALUE = "FailureValue";
+
+        private String getVersionName(@NonNull final Context applicationContext) throws PackageManager.NameNotFoundException {
+            final PackageManager packageManager = applicationContext.getPackageManager();
+            final String applicationPackageName = applicationContext.getPackageName();
+
+            return packageManager.getPackageInfo(applicationPackageName, 0).versionName;
+        }
+
+        @NonNull
+        @Override
+        public String getKey() {
+            return "UserDeclinedToGiveFeedbackForCurrentVersionEvent";
+        }
+
+        @NonNull
+        @Override
+        public String getInitialValue() {
+            return INITIAL_VALUE;
+        }
+
+        @NonNull
+        @Override
+        public String increment(@NonNull final String currentValue, @NonNull final Context applicationContext) {
+            if (currentValue.equals(FAILURE_VALUE)) {
+                return FAILURE_VALUE;
+            }
+
+            try {
+                return getVersionName(applicationContext);
+            } catch (final PackageManager.NameNotFoundException e) {
+                return FAILURE_VALUE;
+            }
+        }
+
+        @Override
+        public Boolean shouldAskForFeedback(@NonNull final String currentValue, @NonNull final Context applicationContext) {
+            if (FAILURE_VALUE.equals(currentValue)) {
+                return false;
+            }
+
+            try {
+                if (currentValue.equals(getVersionName(applicationContext))) {
+                    return false;
+                }
+
+                return null;
+            } catch (final PackageManager.NameNotFoundException e) {
+                return false;
+            }
+        }
+    }
+
+    public class UserRatedAppEvent implements IEventType<Integer> {
+
+        @NonNull
+        @Override
+        public String getKey() {
+            return "UserRatedAppEvent";
+        }
+
+        @NonNull
+        @Override
+        public Integer getInitialValue() {
+            return 0;
+        }
+
+        @NonNull
+        @Override
+        public Integer increment(@NonNull final Integer currentValue, @NonNull final Context applicationContext) {
+            return Math.max(currentValue + 1, Integer.MAX_VALUE);
+        }
+
+        @Override
+        public Boolean shouldAskForFeedback(@NonNull final Integer currentValue, @NonNull final Context applicationContext) {
+            if (currentValue > 0) {
+                return false;
+            }
+
+            return null;
+        }
+    }
 
     public enum ActionType {
         USER_GAVE_RATING,
