@@ -1,6 +1,5 @@
-package com.github.stkent.amplify;
+package com.github.stkent.amplify.tracking;
 
-import static com.github.stkent.amplify.AmplifyStateTracker.ActionType.APP_CRASHED;
 import static java.lang.Thread.UncaughtExceptionHandler;
 
 public class AmplifyExceptionHandler implements UncaughtExceptionHandler {
@@ -13,7 +12,7 @@ public class AmplifyExceptionHandler implements UncaughtExceptionHandler {
 
     @Override
     public void uncaughtException(final Thread thread, final Throwable throwable) {
-        AmplifyStateTracker.getInstance().notify(APP_CRASHED);
+        // TODO: notify of crash here
 
         // Call the original handler.
         defaultExceptionHandler.uncaughtException(thread, throwable);

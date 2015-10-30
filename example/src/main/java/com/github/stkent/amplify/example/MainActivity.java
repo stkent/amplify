@@ -5,7 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
-import com.github.stkent.amplify.AmplifyStateTracker;
+import com.github.stkent.amplify.tracking.AmplifyStateTracker;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
