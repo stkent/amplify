@@ -1,39 +1,31 @@
 package com.github.stkent.amplify.tracking;
 
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
-import com.github.stkent.amplify.Settings;
-import com.github.stkent.amplify.tracking.base.IEnvironmentRequirement;
-import com.github.stkent.amplify.tracking.base.IFlag;
-import com.github.stkent.amplify.tracking.base.IUniqueIdentifierProvider;
+import com.github.stkent.amplify.tracking.interfaces.IEnvironmentCheck;
+import com.github.stkent.amplify.tracking.interfaces.IEvent;
+import com.github.stkent.amplify.tracking.interfaces.IEventCheck;
+import com.github.stkent.amplify.tracking.interfaces.ISettings;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public final class AmplifyStateTracker {
 
+    // static members
+
     private static AmplifyStateTracker sharedInstance;
 
-    private AmplifyStateTracker(@NonNull final Context applicationContext) {
-        this.applicationContext = applicationContext;
-    }
-
-    private final Context applicationContext;
-    private final Map<String, IEnvironmentRequirement> environmentRequirements = new HashMap<>();
-    private final Map<String, IFlag<Boolean>> trackableBooleanFlags = new HashMap<>();
-    private final Map<String, IFlag<Integer>> trackableIntegerFlags = new HashMap<>();
-    private final Map<String, IFlag<Long>> trackableLongFlags = new HashMap<>();
-    private final Map<String, IFlag<String>> trackableStringFlags = new HashMap<>();
-
-    // consumption methods
-
-    public AmplifyStateTracker getSharedInstance(@NonNull final Context context) {
+    public static AmplifyStateTracker get(@NonNull final Context applicationContext) {
         if (sharedInstance == null) {
             synchronized (AmplifyStateTracker.class) {
                 if (sharedInstance == null) {
-                    sharedInstance = new AmplifyStateTracker(context);
+                    sharedInstance = new AmplifyStateTracker(applicationContext);
                 }
             }
         }
@@ -41,92 +33,144 @@ public final class AmplifyStateTracker {
         return sharedInstance;
     }
 
+    // instance members
+
+    private final Context applicationContext;
+    private final List<IEnvironmentCheck> environmentRequirements = new ArrayList<>();
+    private final Map<IEvent, List<IEventCheck<Long>>> lastEventTimePredicates = new HashMap<>();
+    private final Map<IEvent, List<IEventCheck<String>>> lastEventVersionPredicates = new HashMap<>();
+    private final Map<IEvent, List<IEventCheck<Integer>>> totalEventCountPredicates = new HashMap<>();
+
+    // TODO: when writing tests, loosen the visibility and override this method to provide an
+    // alternate implementation
+    private ISettings getSettings() {
+        return Settings.getSharedInstance(applicationContext);
+    }
+
+    // constructors
+
+    private AmplifyStateTracker(@NonNull final Context context) {
+        this.applicationContext = context.getApplicationContext();
+    }
+
+    // configuration methods
+
+    public AmplifyStateTracker trackTotalEventCount(@NonNull final IEvent event, @NonNull final IEventCheck<Integer> predicate) {
+        // todo: check for conflicts here
+        if (!totalEventCountPredicates.containsKey(event)) {
+            totalEventCountPredicates.put(event, new ArrayList<IEventCheck<Integer>>());
+        }
+
+        totalEventCountPredicates.get(event).add(predicate);
+        Log.d("TAG", totalEventCountPredicates.get(event).toString());
+
+        return this;
+    }
+
+    public AmplifyStateTracker trackLastEventTime(@NonNull final IEvent event, @NonNull final IEventCheck<Long> predicate) {
+        // todo: check for conflicts here
+        if (!lastEventTimePredicates.containsKey(event)) {
+            lastEventTimePredicates.put(event, new ArrayList<IEventCheck<Long>>());
+        }
+
+        lastEventTimePredicates.get(event).add(predicate);
+        Log.d("TAG", lastEventTimePredicates.get(event).toString());
+
+        return this;
+    }
+
+    public AmplifyStateTracker trackLastEventVersion(@NonNull final IEvent event, @NonNull final IEventCheck<String> predicate) {
+        // todo: check for conflicts here
+        if (!lastEventVersionPredicates.containsKey(event)) {
+            lastEventVersionPredicates.put(event, new ArrayList<IEventCheck<String>>());
+        }
+
+        lastEventVersionPredicates.get(event).add(predicate);
+        Log.d("TAG", lastEventVersionPredicates.get(event).toString());
+
+        return this;
+    }
+
+    public AmplifyStateTracker addEnvironmentCheck(@NonNull final IEnvironmentCheck requirement) {
+        // todo: check for conflicts here
+        environmentRequirements.add(requirement);
+        return this;
+    }
+
+    // update methods
+
+    public AmplifyStateTracker notifyEventTriggered(@NonNull final IEvent event) {
+        if (totalEventCountPredicates.containsKey(event)) {
+            final Integer cachedCount = getSettings().getTotalEventCount(event);
+            final Integer updatedCount = cachedCount + 1;
+            getSettings().setTotalEventCount(event, updatedCount);
+        }
+
+        if (lastEventTimePredicates.containsKey(event)) {
+            final Long currentTime = System.currentTimeMillis();
+            getSettings().setLastEventTime(event, currentTime);
+        }
+
+        if (lastEventVersionPredicates.containsKey(event)) {
+            try {
+                final String currentVersion = TrackingUtils.getAppVersionName(applicationContext);
+                getSettings().setLastEventVersion(event, currentVersion);
+            } catch (final PackageManager.NameNotFoundException e) {
+                // TODO: log a warning here
+            }
+        }
+
+        return this;
+    }
+
+    // query methods
+
     public boolean shouldAskForRating() {
-        for (final IEnvironmentRequirement environmentRequirement : environmentRequirements.values()) {
+        for (final IEnvironmentCheck environmentRequirement : environmentRequirements) {
             if (!environmentRequirement.isMet(applicationContext)) {
                 return false;
             }
         }
 
-        for (final IFlag<Boolean> flag : trackableBooleanFlags.values()) {
-            final Boolean currentValue = Settings.getSharedPreferences().getBoolean(flag.getUniqueIdentifier(), flag.getInitialTrackedValue());
+        for (final IEvent event : totalEventCountPredicates.keySet()) {
+            final Integer totalEventCount = getSettings().getTotalEventCount(event);
 
-            if (flag.isActive(currentValue, applicationContext)) {
-                return false;
+            for (final IEventCheck<Integer> predicate : totalEventCountPredicates.get(event)) {
+                Log.d("TAG", event.getTrackingKey() + ": " + predicate.getStatusString(totalEventCount, applicationContext));
+
+                if (predicate.shouldBlockFeedbackPrompt(totalEventCount, applicationContext)) {
+                    return false;
+                }
             }
         }
 
-        for (final IFlag<Integer> flag : trackableIntegerFlags.values()) {
-            final Integer currentValue = Settings.getSharedPreferences().getInt(flag.getUniqueIdentifier(), flag.getInitialTrackedValue());
+        for (final IEvent event : lastEventTimePredicates.keySet()) {
+            final Long lastEventTime = getSettings().getLastEventTime(event);
 
-            if (flag.isActive(currentValue, applicationContext)) {
-                return false;
+            for (final IEventCheck<Long> predicate : lastEventTimePredicates.get(event)) {
+                Log.d("TAG", event.getTrackingKey() + ": " + predicate.getStatusString(lastEventTime, applicationContext));
+
+                if (predicate.shouldBlockFeedbackPrompt(lastEventTime, applicationContext)) {
+                    return false;
+                }
             }
         }
 
-        for (final IFlag<Long> flag : trackableLongFlags.values()) {
-            final Long currentValue = Settings.getSharedPreferences().getLong(flag.getUniqueIdentifier(), flag.getInitialTrackedValue());
+        for (final IEvent event : lastEventVersionPredicates.keySet()) {
+            final String lastEventVersion = getSettings().getLastEventVersion(event);
 
-            if (flag.isActive(currentValue, applicationContext)) {
-                return false;
-            }
-        }
+            if (lastEventVersion != null) {
+                for (final IEventCheck<String> predicate : lastEventVersionPredicates.get(event)) {
+                    Log.d("TAG", event.getTrackingKey() + ": " + predicate.getStatusString(lastEventVersion, applicationContext));
 
-        for (final IFlag<String> flag : trackableStringFlags.values()) {
-            final String currentValue = Settings.getSharedPreferences().getString(flag.getUniqueIdentifier(), flag.getInitialTrackedValue());
-
-            if (flag.isActive(currentValue, applicationContext)) {
-                return false;
+                    if (predicate.shouldBlockFeedbackPrompt(lastEventVersion, applicationContext)) {
+                        return false;
+                    }
+                }
             }
         }
 
         return true;
-    }
-
-    // configuration methods
-
-    public void registerAppCrashHandler() {
-        final Thread.UncaughtExceptionHandler currentHandler = Thread.getDefaultUncaughtExceptionHandler();
-
-        if (!(currentHandler instanceof AmplifyExceptionHandler)) {
-            Thread.setDefaultUncaughtExceptionHandler(new AmplifyExceptionHandler(currentHandler));
-        }
-    }
-
-    public void registerEnvironmentRequirement(@NonNull final IEnvironmentRequirement requirement) {
-        checkForConfigurationConflict(requirement, trackableStringFlags.keySet());
-        environmentRequirements.put(requirement.getUniqueIdentifier(), requirement);
-    }
-
-    public <T extends IFlag<Boolean>> void registerTrackableBooleanFlag(@NonNull final T trackableFlag) {
-        checkForConfigurationConflict(trackableFlag, trackableStringFlags.keySet());
-        trackableBooleanFlags.put(trackableFlag.getUniqueIdentifier(), trackableFlag);
-    }
-
-    public <T extends IFlag<Integer>> void registerTrackableIntegerFlag(@NonNull final T trackableFlag) {
-        checkForConfigurationConflict(trackableFlag, trackableStringFlags.keySet());
-        trackableIntegerFlags.put(trackableFlag.getUniqueIdentifier(), trackableFlag);
-    }
-
-    public <T extends IFlag<Long>> void registerTrackableLongFlag(@NonNull final T trackableFlag) {
-        checkForConfigurationConflict(trackableFlag, trackableStringFlags.keySet());
-        trackableLongFlags.put(trackableFlag.getUniqueIdentifier(), trackableFlag);
-    }
-
-    public <T extends IFlag<String>> void registerTrackableStringFlag(@NonNull final T trackableFlag) {
-        checkForConfigurationConflict(trackableFlag, trackableStringFlags.keySet());
-        trackableStringFlags.put(trackableFlag.getUniqueIdentifier(), trackableFlag);
-    }
-
-    // validation methods
-
-    private void checkForConfigurationConflict(
-            @NonNull final IUniqueIdentifierProvider newConfiguration,
-            @NonNull final Set<String> existingConfigurationKeys) {
-        if (existingConfigurationKeys.contains(newConfiguration.getUniqueIdentifier())) {
-            // todo: this message
-            throw new IllegalArgumentException("Some message indicating that this is not allowed.");
-        }
     }
 
 }

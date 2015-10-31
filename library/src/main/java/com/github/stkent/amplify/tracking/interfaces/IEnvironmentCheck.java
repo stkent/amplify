@@ -1,9 +1,9 @@
-package com.github.stkent.amplify.tracking.base;
+package com.github.stkent.amplify.tracking.interfaces;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
 
-public interface IEnvironmentRequirement extends IUniqueIdentifierProvider {
+public interface IEnvironmentCheck {
 
     boolean isMet(@NonNull final Context applicationContext);
 

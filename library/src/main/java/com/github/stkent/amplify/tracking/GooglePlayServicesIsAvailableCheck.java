@@ -5,17 +5,11 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 
-import com.github.stkent.amplify.tracking.base.IEnvironmentRequirement;
+import com.github.stkent.amplify.tracking.interfaces.IEnvironmentCheck;
 
 import static android.content.pm.PackageManager.GET_ACTIVITIES;
 
-public class GooglePlayServicesIsAvailableRequirement implements IEnvironmentRequirement {
-
-    @NonNull
-    @Override
-    public String getUniqueIdentifier() {
-        return getClass().getSimpleName();
-    }
+public class GooglePlayServicesIsAvailableCheck implements IEnvironmentCheck {
 
     @Override
     public boolean isMet(@NonNull final Context applicationContext) {
