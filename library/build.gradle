@@ -1,5 +1,18 @@
+buildscript {
+    repositories {
+        maven {
+            jcenter()
+            url 'http://dl.bintray.com/btkelly/maven'
+        }
+    }
+    dependencies {
+        classpath 'com.btkelly:gnag:0.0.2'
+    }
+}
+
 apply plugin: 'com.android.library'
 apply plugin: 'com.noveogroup.android.check'
+apply plugin: 'gnag-plugin'
 
 android {
     compileSdkVersion 23
@@ -24,13 +37,18 @@ android {
     }
 }
 
+gnag {
+    gitHubRepoName 'stkent/amplify'
+    failBuildOnError true
+}
+
 dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.1.0'
 }
 
 check {
-    abortOnError true
+    abortOnError false
     checkstyle {
         config project.file('config/checkstyle.xml')
     }
