@@ -23,11 +23,11 @@ public final class AmplifyStateTracker {
 
     private static AmplifyStateTracker sharedInstance;
 
-    public static AmplifyStateTracker get(@NonNull final Context applicationContext) {
+    public static AmplifyStateTracker get(@NonNull final Context context) {
         if (sharedInstance == null) {
             synchronized (AmplifyStateTracker.class) {
                 if (sharedInstance == null) {
-                    sharedInstance = new AmplifyStateTracker(applicationContext);
+                    sharedInstance = new AmplifyStateTracker(context);
                 }
             }
         }
