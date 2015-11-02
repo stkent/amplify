@@ -8,11 +8,7 @@ public final class Logger {
     private static final String TAG = "Amplify Library";
 
     private Logger() {
-        try {
-            "t".toCharArray();
-        } catch (Exception e) {
 
-        }
     }
 
     public static void d(@NonNull final String message) {
