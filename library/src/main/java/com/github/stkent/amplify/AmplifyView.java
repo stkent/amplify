@@ -104,7 +104,7 @@ public class AmplifyView extends FrameLayout {
 //        final String criticalFeedbackNegativeButtonText = typedArray.getString(
 //                R.styleable.Amplify_amplify_critical_feedback_negative_button_text);
 
-        // TODO: initialize all questions here
+        // TODO: get all questions here
 
         typedArray.recycle();
 

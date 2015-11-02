@@ -81,6 +81,7 @@
         <exclude name="LongVariable" />
         <exclude name="ShortClassName" />
         <exclude name="ShortVariable" />
+        <exclude name="ShortMethodName" />
     </rule>
 
     <rule ref="rulesets/java/optimizations.xml">
