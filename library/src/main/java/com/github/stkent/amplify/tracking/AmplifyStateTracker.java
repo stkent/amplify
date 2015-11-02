@@ -12,8 +12,10 @@ import com.github.stkent.amplify.tracking.interfaces.ISettings;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public final class AmplifyStateTracker {
 
@@ -57,6 +59,8 @@ public final class AmplifyStateTracker {
 
     public AmplifyStateTracker trackTotalEventCount(@NonNull final IEvent event, @NonNull final IEventCheck<Integer> predicate) {
         // todo: check for conflicts here
+        performEventRelatedInitializationIfRequired(event);
+
         if (!totalEventCountPredicates.containsKey(event)) {
             totalEventCountPredicates.put(event, new ArrayList<IEventCheck<Integer>>());
         }
@@ -69,6 +73,8 @@ public final class AmplifyStateTracker {
 
     public AmplifyStateTracker trackLastEventTime(@NonNull final IEvent event, @NonNull final IEventCheck<Long> predicate) {
         // todo: check for conflicts here
+        performEventRelatedInitializationIfRequired(event);
+
         if (!lastEventTimePredicates.containsKey(event)) {
             lastEventTimePredicates.put(event, new ArrayList<IEventCheck<Long>>());
         }
@@ -81,6 +87,8 @@ public final class AmplifyStateTracker {
 
     public AmplifyStateTracker trackLastEventVersion(@NonNull final IEvent event, @NonNull final IEventCheck<String> predicate) {
         // todo: check for conflicts here
+        performEventRelatedInitializationIfRequired(event);
+
         if (!lastEventVersionPredicates.containsKey(event)) {
             lastEventVersionPredicates.put(event, new ArrayList<IEventCheck<String>>());
         }
@@ -171,6 +179,26 @@ public final class AmplifyStateTracker {
         }
 
         return true;
+    }
+
+    // private implementation:
+
+    private void performEventRelatedInitializationIfRequired(@NonNull final IEvent event) {
+        if (isEventAlreadyTracked(event)) {
+            return;
+        }
+
+        event.performRelatedInitialization(applicationContext);
+    }
+
+    private boolean isEventAlreadyTracked(@NonNull final IEvent event) {
+        final Set<IEvent> allTrackedEvents = new HashSet<>();
+
+        allTrackedEvents.addAll(lastEventTimePredicates.keySet());
+        allTrackedEvents.addAll(lastEventVersionPredicates.keySet());
+        allTrackedEvents.addAll(totalEventCountPredicates.keySet());
+
+        return allTrackedEvents.contains(event);
     }
 
 }
