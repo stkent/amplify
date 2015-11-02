@@ -8,6 +8,7 @@ import com.github.stkent.amplify.Logger;
 import com.github.stkent.amplify.tracking.interfaces.IEnvironmentCheck;
 import com.github.stkent.amplify.tracking.interfaces.IEvent;
 import com.github.stkent.amplify.tracking.interfaces.IEventCheck;
+import com.github.stkent.amplify.tracking.interfaces.ILogger;
 import com.github.stkent.amplify.tracking.interfaces.ISettings;
 
 import java.util.ArrayList;
@@ -30,6 +31,8 @@ public final class AmplifyStateTracker {
     private final Map<IEvent, List<IEventCheck<Long>>> lastEventTimePredicates = new ConcurrentHashMap<>();
     private final Map<IEvent, List<IEventCheck<String>>> lastEventVersionPredicates = new ConcurrentHashMap<>();
     private final Map<IEvent, List<IEventCheck<Integer>>> totalEventCountPredicates = new ConcurrentHashMap<>();
+    ISettings settings;
+    ILogger logger;
 
     public static AmplifyStateTracker get(@NonNull final Context context) {
         synchronized (AmplifyStateTracker.class) {
@@ -41,10 +44,29 @@ public final class AmplifyStateTracker {
         return sharedInstance;
     }
 
+    public AmplifyStateTracker setLogLevel(@NonNull final Logger.LogLevel logLevel) {
+        getLogger().setLogLevel(logLevel);
+        return this;
+    }
+
     // TODO: when writing tests, loosen the visibility and override this method to provide an
     // alternate implementation
     private ISettings getSettings() {
-        return Settings.getSharedInstance(applicationContext);
+        if (settings == null) {
+            settings = Settings.getSharedInstance(applicationContext);
+        }
+
+        return settings;
+    }
+
+    // TODO: when writing tests, loosen the visibility and override this method to provide an
+    // alternate implementation
+    private ILogger getLogger() {
+        if (logger == null) {
+            logger = new Logger();
+        }
+
+        return logger;
     }
 
     // constructors
@@ -64,7 +86,7 @@ public final class AmplifyStateTracker {
         }
 
         totalEventCountPredicates.get(event).add(predicate);
-        Logger.d(totalEventCountPredicates.get(event).toString());
+        getLogger().d(totalEventCountPredicates.get(event).toString());
 
         return this;
     }
@@ -78,7 +100,7 @@ public final class AmplifyStateTracker {
         }
 
         lastEventTimePredicates.get(event).add(predicate);
-        Logger.d(lastEventTimePredicates.get(event).toString());
+        getLogger().d(lastEventTimePredicates.get(event).toString());
 
         return this;
     }
@@ -92,7 +114,7 @@ public final class AmplifyStateTracker {
         }
 
         lastEventVersionPredicates.get(event).add(predicate);
-        Logger.d(lastEventVersionPredicates.get(event).toString());
+        getLogger().d(lastEventVersionPredicates.get(event).toString());
 
         return this;
     }
@@ -122,7 +144,7 @@ public final class AmplifyStateTracker {
                 final String currentVersion = TrackingUtils.getAppVersionName(applicationContext);
                 getSettings().setLastEventVersion(event, currentVersion);
             } catch (final PackageManager.NameNotFoundException e) {
-                Logger.d("Could not read current app version name.");
+                getLogger().d("Could not read current app version name.");
             }
         }
 
@@ -157,7 +179,7 @@ public final class AmplifyStateTracker {
             final Integer totalEventCount = getSettings().getTotalEventCount(event);
 
             for (final IEventCheck<Integer> predicate : eventCheckSet.getValue()) {
-                Logger.d(event.getTrackingKey() + ": " + predicate.getStatusString(totalEventCount, applicationContext));
+                getLogger().d(event.getTrackingKey() + ": " + predicate.getStatusString(totalEventCount, applicationContext));
 
                 if (predicate.shouldBlockFeedbackPrompt(totalEventCount, applicationContext)) {
                     return false;
@@ -175,7 +197,7 @@ public final class AmplifyStateTracker {
             final Long lastEventTime = getSettings().getLastEventTime(event);
 
             for (final IEventCheck<Long> predicate : eventCheckSet.getValue()) {
-                Logger.d(event.getTrackingKey() + ": " + predicate.getStatusString(lastEventTime, applicationContext));
+                getLogger().d(event.getTrackingKey() + ": " + predicate.getStatusString(lastEventTime, applicationContext));
 
                 if (predicate.shouldBlockFeedbackPrompt(lastEventTime, applicationContext)) {
                     return false;
@@ -194,7 +216,7 @@ public final class AmplifyStateTracker {
 
             if (lastEventVersion != null) {
                 for (final IEventCheck<String> predicate : eventCheckSet.getValue()) {
-                    Logger.d(event.getTrackingKey() + ": " + predicate.getStatusString(lastEventVersion, applicationContext));
+                    getLogger().d(event.getTrackingKey() + ": " + predicate.getStatusString(lastEventVersion, applicationContext));
 
                     if (predicate.shouldBlockFeedbackPrompt(lastEventVersion, applicationContext)) {
                         return false;

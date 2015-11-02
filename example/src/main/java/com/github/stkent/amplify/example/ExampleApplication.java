@@ -2,6 +2,7 @@ package com.github.stkent.amplify.example;
 
 import android.app.Application;
 
+import com.github.stkent.amplify.Logger;
 import com.github.stkent.amplify.tracking.AmplifyStateTracker;
 import com.github.stkent.amplify.tracking.CooldownDaysCheck;
 import com.github.stkent.amplify.tracking.GooglePlayServicesIsAvailableCheck;
@@ -21,6 +22,7 @@ public class ExampleApplication extends Application {
         super.onCreate();
 
         AmplifyStateTracker.get(this)
+                .setLogLevel(Logger.LogLevel.DEBUG)
                 .addEnvironmentCheck(new GooglePlayServicesIsAvailableCheck())
                 .trackLastEventTime(APP_INSTALLED, new WarmupDaysCheck(7))
                 .trackTotalEventCount(USER_GAVE_POSITIVE_FEEDBACK, new MaximumCountCheck(1))
