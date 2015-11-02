@@ -3,45 +3,43 @@ package com.github.stkent.amplify.tracking;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
+import com.github.stkent.amplify.Logger;
 import com.github.stkent.amplify.tracking.interfaces.IEnvironmentCheck;
 import com.github.stkent.amplify.tracking.interfaces.IEvent;
 import com.github.stkent.amplify.tracking.interfaces.IEventCheck;
 import com.github.stkent.amplify.tracking.interfaces.ISettings;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 public final class AmplifyStateTracker {
 
-    // static members
+    // static fields
 
     private static AmplifyStateTracker sharedInstance;
 
+    // instance fields
+
+    private final Context applicationContext;
+    private final List<IEnvironmentCheck> environmentRequirements = new ArrayList<>();
+    private final Map<IEvent, List<IEventCheck<Long>>> lastEventTimePredicates = new ConcurrentHashMap<>();
+    private final Map<IEvent, List<IEventCheck<String>>> lastEventVersionPredicates = new ConcurrentHashMap<>();
+    private final Map<IEvent, List<IEventCheck<Integer>>> totalEventCountPredicates = new ConcurrentHashMap<>();
+
     public static AmplifyStateTracker get(@NonNull final Context context) {
-        if (sharedInstance == null) {
-            synchronized (AmplifyStateTracker.class) {
-                if (sharedInstance == null) {
-                    sharedInstance = new AmplifyStateTracker(context);
-                }
+        synchronized (AmplifyStateTracker.class) {
+            if (sharedInstance == null) {
+                sharedInstance = new AmplifyStateTracker(context);
             }
         }
 
         return sharedInstance;
     }
-
-    // instance members
-
-    private final Context applicationContext;
-    private final List<IEnvironmentCheck> environmentRequirements = new ArrayList<>();
-    private final Map<IEvent, List<IEventCheck<Long>>> lastEventTimePredicates = new HashMap<>();
-    private final Map<IEvent, List<IEventCheck<String>>> lastEventVersionPredicates = new HashMap<>();
-    private final Map<IEvent, List<IEventCheck<Integer>>> totalEventCountPredicates = new HashMap<>();
 
     // TODO: when writing tests, loosen the visibility and override this method to provide an
     // alternate implementation
@@ -66,7 +64,7 @@ public final class AmplifyStateTracker {
         }
 
         totalEventCountPredicates.get(event).add(predicate);
-        Log.d("TAG", totalEventCountPredicates.get(event).toString());
+        Logger.d(totalEventCountPredicates.get(event).toString());
 
         return this;
     }
@@ -80,7 +78,7 @@ public final class AmplifyStateTracker {
         }
 
         lastEventTimePredicates.get(event).add(predicate);
-        Log.d("TAG", lastEventTimePredicates.get(event).toString());
+        Logger.d(lastEventTimePredicates.get(event).toString());
 
         return this;
     }
@@ -94,7 +92,7 @@ public final class AmplifyStateTracker {
         }
 
         lastEventVersionPredicates.get(event).add(predicate);
-        Log.d("TAG", lastEventVersionPredicates.get(event).toString());
+        Logger.d(lastEventVersionPredicates.get(event).toString());
 
         return this;
     }
@@ -124,7 +122,7 @@ public final class AmplifyStateTracker {
                 final String currentVersion = TrackingUtils.getAppVersionName(applicationContext);
                 getSettings().setLastEventVersion(event, currentVersion);
             } catch (final PackageManager.NameNotFoundException e) {
-                // TODO: log a warning here
+                Logger.d("Could not read current app version name.");
             }
         }
 
@@ -134,17 +132,32 @@ public final class AmplifyStateTracker {
     // query methods
 
     public boolean shouldAskForRating() {
+        return allEnvironmentRequirementsMet()
+                && allTotalEventCountPredicatesAllowFeedbackPrompt()
+                && allLastEventTimePredicatesAllowFeedbackPrompt()
+                && allLastEventVersionPredicatesAllowFeedbackPrompt();
+    }
+
+    // private implementation:
+
+    private boolean allEnvironmentRequirementsMet() {
         for (final IEnvironmentCheck environmentRequirement : environmentRequirements) {
             if (!environmentRequirement.isMet(applicationContext)) {
                 return false;
             }
         }
 
-        for (final IEvent event : totalEventCountPredicates.keySet()) {
+        return true;
+    }
+
+    private boolean allTotalEventCountPredicatesAllowFeedbackPrompt() {
+        for (final Map.Entry<IEvent, List<IEventCheck<Integer>>> eventCheckSet : totalEventCountPredicates.entrySet()) {
+            final IEvent event = eventCheckSet.getKey();
+
             final Integer totalEventCount = getSettings().getTotalEventCount(event);
 
-            for (final IEventCheck<Integer> predicate : totalEventCountPredicates.get(event)) {
-                Log.d("TAG", event.getTrackingKey() + ": " + predicate.getStatusString(totalEventCount, applicationContext));
+            for (final IEventCheck<Integer> predicate : eventCheckSet.getValue()) {
+                Logger.d(event.getTrackingKey() + ": " + predicate.getStatusString(totalEventCount, applicationContext));
 
                 if (predicate.shouldBlockFeedbackPrompt(totalEventCount, applicationContext)) {
                     return false;
@@ -152,11 +165,17 @@ public final class AmplifyStateTracker {
             }
         }
 
-        for (final IEvent event : lastEventTimePredicates.keySet()) {
+        return true;
+    }
+
+    private boolean allLastEventTimePredicatesAllowFeedbackPrompt() {
+        for (final Map.Entry<IEvent, List<IEventCheck<Long>>> eventCheckSet : lastEventTimePredicates.entrySet()) {
+            final IEvent event = eventCheckSet.getKey();
+
             final Long lastEventTime = getSettings().getLastEventTime(event);
 
-            for (final IEventCheck<Long> predicate : lastEventTimePredicates.get(event)) {
-                Log.d("TAG", event.getTrackingKey() + ": " + predicate.getStatusString(lastEventTime, applicationContext));
+            for (final IEventCheck<Long> predicate : eventCheckSet.getValue()) {
+                Logger.d(event.getTrackingKey() + ": " + predicate.getStatusString(lastEventTime, applicationContext));
 
                 if (predicate.shouldBlockFeedbackPrompt(lastEventTime, applicationContext)) {
                     return false;
@@ -164,12 +183,18 @@ public final class AmplifyStateTracker {
             }
         }
 
-        for (final IEvent event : lastEventVersionPredicates.keySet()) {
+        return true;
+    }
+
+    private boolean allLastEventVersionPredicatesAllowFeedbackPrompt() {
+        for (final Map.Entry<IEvent, List<IEventCheck<String>>> eventCheckSet : lastEventVersionPredicates.entrySet()) {
+            final IEvent event = eventCheckSet.getKey();
+
             final String lastEventVersion = getSettings().getLastEventVersion(event);
 
             if (lastEventVersion != null) {
-                for (final IEventCheck<String> predicate : lastEventVersionPredicates.get(event)) {
-                    Log.d("TAG", event.getTrackingKey() + ": " + predicate.getStatusString(lastEventVersion, applicationContext));
+                for (final IEventCheck<String> predicate : eventCheckSet.getValue()) {
+                    Logger.d(event.getTrackingKey() + ": " + predicate.getStatusString(lastEventVersion, applicationContext));
 
                     if (predicate.shouldBlockFeedbackPrompt(lastEventVersion, applicationContext)) {
                         return false;
@@ -180,8 +205,6 @@ public final class AmplifyStateTracker {
 
         return true;
     }
-
-    // private implementation:
 
     private void performEventRelatedInitializationIfRequired(@NonNull final IEvent event) {
         if (isEventAlreadyTracked(event)) {

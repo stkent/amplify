@@ -14,19 +14,17 @@ public final class Settings implements ISettings {
 
     private static Settings sharedInstance;
 
+    private final SharedPreferences sharedPreferences;
+
     public static Settings getSharedInstance(@NonNull final Context context) {
-        if (sharedInstance == null) {
-            synchronized (AmplifyStateTracker.class) {
-                if (sharedInstance == null) {
-                    sharedInstance = new Settings(context);
-                }
+        synchronized (AmplifyStateTracker.class) {
+            if (sharedInstance == null) {
+                sharedInstance = new Settings(context);
             }
         }
 
         return sharedInstance;
     }
-
-    private final SharedPreferences sharedPreferences;
 
     private Settings(@NonNull final Context applicationContext) {
         this.sharedPreferences = applicationContext

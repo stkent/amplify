@@ -6,7 +6,9 @@ import android.support.annotation.NonNull;
 
 public final class TrackingUtils {
 
-    private TrackingUtils() {}
+    private TrackingUtils() {
+
+    }
 
     public static String getAppVersionName(@NonNull final Context applicationContext) throws PackageManager.NameNotFoundException {
         final PackageManager packageManager = applicationContext.getPackageManager();
