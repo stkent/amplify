@@ -31,8 +31,8 @@ public final class AmplifyStateTracker {
     private final Map<IEvent, List<IEventCheck<Long>>> lastEventTimePredicates = new ConcurrentHashMap<>();
     private final Map<IEvent, List<IEventCheck<String>>> lastEventVersionPredicates = new ConcurrentHashMap<>();
     private final Map<IEvent, List<IEventCheck<Integer>>> totalEventCountPredicates = new ConcurrentHashMap<>();
-    ISettings settings;
-    ILogger logger;
+    private ISettings settings;
+    private ILogger logger;
 
     public static AmplifyStateTracker get(@NonNull final Context context) {
         synchronized (AmplifyStateTracker.class) {

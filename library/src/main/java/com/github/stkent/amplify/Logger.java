@@ -27,10 +27,6 @@ public final class Logger implements ILogger {
 
     private LogLevel logLevel = LogLevel.ERROR;
 
-    public Logger() {
-
-    }
-
     public void setLogLevel(@NonNull final LogLevel logLevel) {
         this.logLevel = logLevel;
     }
