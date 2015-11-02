@@ -18,4 +18,4 @@ branches:
   only:
     - master
 
-script: ./gradlew clean library:check library:test example:assembleDebug
+script: ./travis-build.sh
