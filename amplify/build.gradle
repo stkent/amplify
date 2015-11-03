@@ -27,6 +27,10 @@ ext {
     amplifyDescription = ""
 }
 
+// If this is skipped, the upload to Bintray will succeed but the version in filenames will be
+// 'unspecified'.
+version = amplifyVersion
+
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.1"
@@ -83,7 +87,8 @@ install {
             version amplifyVersion
             packaging 'aar'
 
-            name amplifyDescription
+            // This does not seem to delegate to project.name as I expected it would.
+            name amplifyArtifactId
             url amplifyWebsiteUrl
 
             licenses {
@@ -127,7 +132,7 @@ bintray {
     key = project.hasProperty(bintrayKeyParameterName) ?
             project.property(bintrayKeyParameterName) : System.getenv(bintrayKeyEnvVarName)
 
-    dryRun = true
+    dryRun = false
     publish = true
 
     configurations = ['archives']
@@ -145,7 +150,8 @@ bintray {
 
         version {
             name = amplifyVersion
-            vcsTag = amplifyVersion
+            // todo: set this up later for pulling release notes from github
+            // vcsTag = amplifyVersion
             released = new Date()
         }
     }
