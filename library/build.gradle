@@ -116,9 +116,9 @@ bintray {
     configurations = ['archives']
 
     pkg {
-        repo = 'maven'
+        repo = 'android-libraries'
         name = 'amplify'
-        desc = 'Get feedback'
+        desc = amplifyDescription
         licenses = ['Apache-2.0']
         vcsUrl = amplifyVcsUrl
         websiteUrl = amplifyWebsiteUrl
