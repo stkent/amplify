@@ -1,4 +1,6 @@
-# amplify <a href="https://travis-ci.org/stkent/amplify"><img src="https://travis-ci.org/stkent/amplify.svg"></a>
+# amplify
+
+<a href="https://travis-ci.org/stkent/amplify"><img src="https://travis-ci.org/stkent/amplify.svg"></a> [ ![Download](https://api.bintray.com/packages/stkent/android-libraries/amplify/images/download.svg) ](https://bintray.com/stkent/android-libraries/amplify/_latestVersion)
 
 # License
 
