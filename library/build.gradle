@@ -1,5 +1,18 @@
 apply plugin: 'com.android.library'
 apply plugin: 'com.noveogroup.android.check'
+apply plugin: 'com.jfrog.bintray'
+apply plugin: 'com.github.dcendents.android-maven'
+
+// Shared project metadata
+
+ext {
+    amplifyVersion = "0.1.0"
+    amplifyWebsiteUrl = 'https://github.com/stkent/amplify'
+    amplifyVcsUrl = 'https://github.com/stkent/amplify.git'
+    amplifyGroupId = 'com.github.stkent'
+    amplifyArtifactId = 'amplify'
+    amplifyDescription = ""
+}
 
 android {
     compileSdkVersion 23
@@ -9,7 +22,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 23
         versionCode 1
-        versionName "1.0.0"
+        versionName amplifyVersion
     }
 
     lintOptions {
@@ -31,13 +44,101 @@ dependencies {
 
 check {
     abortOnError true
+
     checkstyle {
         config project.file('config/checkstyle.xml')
     }
+
     findbugs {
         config hard()
     }
+
     pmd {
         config project.file('config/pmd.xml')
     }
+}
+
+install {
+    repositories.mavenInstaller {
+        pom.project {
+            groupId amplifyGroupId
+            artifactId amplifyArtifactId
+            version amplifyVersion
+            packaging 'aar'
+
+            // Add your description here
+            name 'Get feedback'
+            url amplifyWebsiteUrl
+
+            // Set your license
+            licenses {
+                license {
+                    name 'The Apache Software License, Version 2.0'
+                    url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                }
+            }
+
+            developers {
+                developer {
+                    id 'stkent'
+                    name 'Stuart Kent'
+                    email 'skent.dev@gmail.com'
+                }
+            }
+
+            scm {
+                connection amplifyVcsUrl
+                developerConnection amplifyVcsUrl
+                url amplifyWebsiteUrl
+            }
+        }
+    }
+}
+
+bintray {
+    user = '[REDACTED]'
+    key = '[REDACTED]'
+
+    dryRun = true
+    publish = true
+
+    configurations = ['archives']
+
+    pkg {
+        repo = 'maven'
+        name = 'amplify'
+        desc = 'Get feedback'
+        licenses = ['Apache-2.0']
+        vcsUrl = amplifyVcsUrl
+        websiteUrl = amplifyWebsiteUrl
+        issueTrackerUrl = 'https://github.com/stkent/amplify/issues'
+        labels = ['android', 'ratings', 'feedback']
+        publicDownloadNumbers = true
+
+        version {
+            name = amplifyVersion
+            vcsTag = amplifyVersion
+            released = new Date()
+        }
+    }
+}
+
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+
+task javadoc(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    from javadoc.getDestinationDir()
+    classifier = 'javadoc'
+}
+
+artifacts {
+    archives javadocJar
+    archives sourcesJar
 }
