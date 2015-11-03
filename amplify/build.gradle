@@ -31,6 +31,11 @@ ext {
 // 'unspecified'.
 version = amplifyVersion
 
+// If this is skipped, the upload to Bintray will succeed but the reported group id will be
+// the root project name (in this case, amplify-android) rather than the group id specified
+// in the install or bintray configuration closures.
+group = amplifyGroupId
+
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.1"
