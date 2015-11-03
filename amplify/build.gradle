@@ -94,6 +94,8 @@ install {
 
             // This does not seem to delegate to project.name as I expected it would.
             name amplifyArtifactId
+            description amplifyDescription
+            inceptionYear '2015'
             url amplifyWebsiteUrl
 
             licenses {
@@ -113,7 +115,6 @@ install {
 
             scm {
                 connection amplifyVcsUrl
-                developerConnection amplifyVcsUrl
                 url amplifyWebsiteUrl
             }
         }
