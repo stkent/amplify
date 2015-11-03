@@ -66,11 +66,9 @@ install {
             version amplifyVersion
             packaging 'aar'
 
-            // Add your description here
-            name 'Get feedback'
+            name amplifyDescription
             url amplifyWebsiteUrl
 
-            // Set your license
             licenses {
                 license {
                     name 'The Apache Software License, Version 2.0'
