@@ -93,9 +93,22 @@ install {
     }
 }
 
+ext {
+    // command-line deployment
+    bintrayUserParameterName = 'bintrayUser'
+    bintrayKeyParameterName = 'bintrayKey'
+
+    // CI deployment
+    bintrayUserEnvVarName = 'BINTRAY_USER'
+    bintrayKeyEnvVarName = 'BINTRAY_KEY'
+}
+
 bintray {
-    user = '[REDACTED]'
-    key = '[REDACTED]'
+    user = project.hasProperty(bintrayUserParameterName) ?
+            project.property(bintrayUserParameterName) : System.getenv(bintrayUserEnvVarName)
+
+    key = project.hasProperty(bintrayKeyParameterName) ?
+            project.property(bintrayKeyParameterName) : System.getenv(bintrayKeyEnvVarName)
 
     dryRun = true
     publish = true
