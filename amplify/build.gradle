@@ -1,0 +1,184 @@
+buildscript {
+    repositories {
+        maven {
+            jcenter()
+            url 'http://dl.bintray.com/btkelly/maven'
+        }
+    }
+    dependencies {
+        classpath 'com.btkelly:gnag:0.0.2'
+    }
+}
+
+apply plugin: 'com.android.library'
+apply plugin: 'com.noveogroup.android.check'
+apply plugin: 'com.jfrog.bintray'
+apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'gnag-plugin'
+
+// Shared project metadata
+
+ext {
+    amplifyVersion = "0.1.0"
+    amplifyWebsiteUrl = 'https://github.com/stkent/amplify'
+    amplifyVcsUrl = 'https://github.com/stkent/amplify.git'
+    amplifyGroupId = 'com.github.stkent'
+    amplifyArtifactId = 'amplify'
+    amplifyDescription = ""
+}
+
+// If this is skipped, the upload to Bintray will succeed but the version in filenames will be
+// 'unspecified'.
+version = amplifyVersion
+
+// If this is skipped, the upload to Bintray will succeed but the reported group id will be
+// the root project name (in this case, amplify-android) rather than the group id specified
+// in the install or bintray configuration closures.
+group = amplifyGroupId
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion "23.0.1"
+
+    defaultConfig {
+        minSdkVersion 16
+        targetSdkVersion 23
+        versionCode 1
+        versionName amplifyVersion
+    }
+
+    lintOptions {
+        abortOnError true
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+gnag {
+    gitHubRepoName 'stkent/amplify'
+    failBuildOnError true
+}
+
+dependencies {
+    testCompile 'junit:junit:4.12'
+    compile 'com.android.support:appcompat-v7:23.1.0'
+}
+
+check {
+    abortOnError false
+    checkstyle {
+        config project.file('config/checkstyle.xml')
+    }
+
+    findbugs {
+        config hard()
+    }
+
+    pmd {
+        config project.file('config/pmd.xml')
+    }
+}
+
+install {
+    repositories.mavenInstaller {
+        pom.project {
+            groupId amplifyGroupId
+            artifactId amplifyArtifactId
+            version amplifyVersion
+            packaging 'aar'
+
+            // This does not seem to delegate to project.name as I expected it would.
+            name amplifyArtifactId
+            description amplifyDescription
+            inceptionYear '2015'
+            url amplifyWebsiteUrl
+
+            licenses {
+                license {
+                    name 'The Apache Software License, Version 2.0'
+                    url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                }
+            }
+
+            developers {
+                developer {
+                    id 'stkent'
+                    name 'Stuart Kent'
+                    email 'skent.dev@gmail.com'
+                }
+            }
+
+            scm {
+                connection amplifyVcsUrl
+                url amplifyWebsiteUrl
+            }
+        }
+    }
+}
+
+ext {
+    // command-line deployment
+    bintrayUserParameterName = 'bintrayUser'
+    bintrayKeyParameterName = 'bintrayKey'
+
+    // CI deployment
+    bintrayUserEnvVarName = 'BINTRAY_USER'
+    bintrayKeyEnvVarName = 'BINTRAY_KEY'
+}
+
+bintray {
+    user = project.hasProperty(bintrayUserParameterName) ?
+            project.property(bintrayUserParameterName) : System.getenv(bintrayUserEnvVarName)
+
+    key = project.hasProperty(bintrayKeyParameterName) ?
+            project.property(bintrayKeyParameterName) : System.getenv(bintrayKeyEnvVarName)
+
+    dryRun = false
+    publish = true
+
+    configurations = ['archives']
+
+    pkg {
+        repo = 'android-libraries'
+        name = 'amplify'
+        desc = amplifyDescription
+        licenses = ['Apache-2.0']
+        vcsUrl = amplifyVcsUrl
+        websiteUrl = amplifyWebsiteUrl
+        issueTrackerUrl = 'https://github.com/stkent/amplify/issues'
+        labels = ['android', 'ratings', 'feedback']
+        publicDownloadNumbers = true
+
+        version {
+            name = amplifyVersion
+            // todo: set this up later for pulling release notes from github
+            // vcsTag = amplifyVersion
+            released = new Date()
+        }
+    }
+}
+
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+
+task javadoc(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    from javadoc.getDestinationDir()
+    classifier = 'javadoc'
+}
+
+artifacts {
+    archives javadocJar
+    archives sourcesJar
+}
