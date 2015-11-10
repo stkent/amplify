@@ -1,12 +1,9 @@
 buildscript {
     repositories {
-        maven {
-            jcenter()
-            url 'http://dl.bintray.com/btkelly/maven'
-        }
+        jcenter()
     }
     dependencies {
-        classpath 'com.btkelly:gnag:0.0.2'
+        classpath 'com.btkelly:gnag:0.0.4'
     }
 }
 
