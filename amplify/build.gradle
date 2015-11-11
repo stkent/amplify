@@ -7,6 +7,10 @@ buildscript {
     }
 }
 
+plugins {
+    id "com.github.hierynomus.license" version "0.12.1"
+}
+
 apply plugin: 'com.android.library'
 apply plugin: 'com.noveogroup.android.check'
 apply plugin: 'com.jfrog.bintray'
@@ -22,6 +26,11 @@ ext {
     amplifyGroupId = 'com.github.stkent'
     amplifyArtifactId = 'amplify'
     amplifyDescription = ""
+}
+
+license {
+    header = file('../Apache2License.txt')
+    strictCheck true
 }
 
 configurations {
