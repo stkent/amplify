@@ -3,7 +3,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.btkelly:gnag:0.0.4'
+        classpath 'com.btkelly:gnag:0.0.5'
     }
 }
 
