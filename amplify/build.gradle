@@ -24,6 +24,10 @@ ext {
     amplifyDescription = ""
 }
 
+configurations {
+    javadocDeps
+}
+
 // If this is skipped, the upload to Bintray will succeed but the version in filenames will be
 // 'unspecified'.
 version = amplifyVersion
@@ -63,6 +67,7 @@ gnag {
 
 dependencies {
     testCompile 'junit:junit:4.12'
+    javadocDeps 'com.android.support:support-annotations:23.1.0'
     compile 'com.android.support:appcompat-v7:23.1.0'
 }
 
@@ -167,6 +172,7 @@ task sourcesJar(type: Jar) {
 
 task javadoc(type: Javadoc) {
     source = android.sourceSets.main.java.srcDirs
+    classpath += configurations.javadocDeps
     classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
 }
 
