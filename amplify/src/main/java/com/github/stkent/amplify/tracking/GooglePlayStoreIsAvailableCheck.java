@@ -25,7 +25,17 @@ import com.github.stkent.amplify.tracking.interfaces.IEnvironmentCheck;
 
 import static android.content.pm.PackageManager.GET_ACTIVITIES;
 
-public class GooglePlayServicesIsAvailableCheck implements IEnvironmentCheck {
+/**
+ * An implementation of {@code IEnvironmentCheck} that verifies whether or not
+ * the Google Play Store is installed on the current device.
+ */
+public class GooglePlayStoreIsAvailableCheck implements IEnvironmentCheck {
+
+    /**
+     * Package name for the Google Play Store. Value can be verified here:
+     * https://developers.google.com/android/reference/com/google/android/gms/common/GooglePlayServicesUtil.html#GOOGLE_PLAY_STORE_PACKAGE
+     */
+    private static final String GOOGLE_PLAY_STORE_PACKAGE_NAME = "com.android.vending";
 
     @Override
     public boolean isMet(@NonNull final Context applicationContext) {
@@ -33,7 +43,9 @@ public class GooglePlayServicesIsAvailableCheck implements IEnvironmentCheck {
         boolean playServicesInstalled;
 
         try {
-            final PackageInfo info = pm.getPackageInfo("com.android.vending", GET_ACTIVITIES);
+            final PackageInfo info
+                    = pm.getPackageInfo(GOOGLE_PLAY_STORE_PACKAGE_NAME, GET_ACTIVITIES);
+
             final String label = (String) info.applicationInfo.loadLabel(pm);
             playServicesInstalled = label != null && !label.equals("Market");
         } catch (final PackageManager.NameNotFoundException e) {

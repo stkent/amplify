@@ -19,10 +19,31 @@ package com.github.stkent.amplify.tracking.interfaces;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+/**
+ * An abstract representation of an event-based prerequisite for prompting the
+ * user for feedback.
+ *
+ * @param <T> the type of the value tracked by this event (Integer, Long or
+ *        String)
+ */
 public interface IEventCheck<T> {
 
+    /**
+     * @param cachedEventValue the current value associated with the tracked
+     *        event this check is applied to
+     * @param applicationContext the context of the consuming application
+     * @return true if the feedback prompt should be blocked from showing;
+     *         false otherwise
+     */
     boolean shouldBlockFeedbackPrompt(@NonNull final T cachedEventValue, @NonNull final Context applicationContext);
 
+    /**
+     * @param cachedEventValue the current value associated with the tracked
+     *        event this check is applied to
+     * @param applicationContext the context of the consuming application
+     * @return a string representation of the current check status; primarily
+     *         used for debugging.
+     */
     @NonNull
     String getStatusString(@NonNull final T cachedEventValue, @NonNull final Context applicationContext);
 

@@ -21,6 +21,10 @@ import android.support.annotation.NonNull;
 
 import static java.lang.Thread.UncaughtExceptionHandler;
 
+/**
+ * An exception handler used to observe application crashes. Received
+ * exceptions are forwarded to the provided default exception handler.
+ */
 public class AmplifyExceptionHandler implements UncaughtExceptionHandler {
 
     @NonNull
