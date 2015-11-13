@@ -58,8 +58,7 @@ public final class AmplifyStateTracker {
     protected static AmplifyStateTracker get(
             @NonNull final Context context,
             @NonNull final ISettings settings,
-            @NonNull final ILogger logger)
-    {
+            @NonNull final ILogger logger) {
         synchronized (AmplifyStateTracker.class) {
             if (sharedInstance == null) {
                 sharedInstance = new AmplifyStateTracker(context, settings, logger);
@@ -79,8 +78,7 @@ public final class AmplifyStateTracker {
     private AmplifyStateTracker(
             @NonNull final Context context,
             @NonNull final ISettings settings,
-            @NonNull final ILogger logger)
-    {
+            @NonNull final ILogger logger) {
         this.applicationContext = context.getApplicationContext();
         this.settings = settings;
         this.logger = logger;
