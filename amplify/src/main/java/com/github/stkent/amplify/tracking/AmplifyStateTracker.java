@@ -55,7 +55,7 @@ public final class AmplifyStateTracker {
         return get(context, Settings.getSharedInstance(context), new Logger());
     }
 
-    protected static AmplifyStateTracker get(
+    static AmplifyStateTracker get(
             @NonNull final Context context,
             @NonNull final ISettings settings,
             @NonNull final ILogger logger) {
