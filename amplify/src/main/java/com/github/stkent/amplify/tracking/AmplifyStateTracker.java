@@ -33,7 +33,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 public final class AmplifyStateTracker {
 
@@ -45,10 +44,10 @@ public final class AmplifyStateTracker {
 
     private final Context applicationContext;
     private final List<IEnvironmentCheck> environmentRequirements = new ArrayList<>();
-    private final Map<IEvent, List<IEventCheck<Long>>> lastEventTimePredicates = new ConcurrentHashMap<>();
-    private final Map<IEvent, List<IEventCheck<Long>>> firstEventTimePredicates = new ConcurrentHashMap<>();
-    private final Map<IEvent, List<IEventCheck<String>>> lastEventVersionPredicates = new ConcurrentHashMap<>();
-    private final Map<IEvent, List<IEventCheck<Integer>>> totalEventCountPredicates = new ConcurrentHashMap<>();
+    private final PredicateMap<Long> lastEventTimePredicates;
+    private final PredicateMap<Long> firstEventTimePredicates;
+    private final PredicateMap<String> lastEventVersionPredicates;
+    private final PredicateMap<Integer> totalEventCountPredicates;
     private final ISettings settings;
     private final ILogger logger;
 
@@ -56,7 +55,7 @@ public final class AmplifyStateTracker {
         return get(context, Settings.getSharedInstance(context), new Logger());
     }
 
-    static AmplifyStateTracker get(
+    public static AmplifyStateTracker get(
             @NonNull final Context context,
             @NonNull final ISettings settings,
             @NonNull final ILogger logger) {
@@ -83,6 +82,10 @@ public final class AmplifyStateTracker {
         this.applicationContext = context.getApplicationContext();
         this.settings = settings;
         this.logger = logger;
+        this.lastEventTimePredicates = new PredicateMap<>(logger);
+        this.firstEventTimePredicates = new PredicateMap<>(logger);
+        this.lastEventVersionPredicates = new PredicateMap<>(logger);
+        this.totalEventCountPredicates = new PredicateMap<>(logger);
     }
 
     // configuration methods
@@ -90,56 +93,28 @@ public final class AmplifyStateTracker {
     public AmplifyStateTracker trackTotalEventCount(@NonNull final IEvent event, @NonNull final IEventCheck<Integer> predicate) {
         // todo: check for conflicts here
         performEventRelatedInitializationIfRequired(event);
-
-        if (!totalEventCountPredicates.containsKey(event)) {
-            totalEventCountPredicates.put(event, new ArrayList<IEventCheck<Integer>>());
-        }
-
-        totalEventCountPredicates.get(event).add(predicate);
-        logger.d(totalEventCountPredicates.get(event).toString());
-
+        totalEventCountPredicates.trackEvent(event, predicate);
         return this;
     }
 
     public AmplifyStateTracker trackFirstEventTime(@NonNull final IEvent event, @NonNull final IEventCheck<Long> predicate) {
         // todo: check for conflicts here
         performEventRelatedInitializationIfRequired(event);
-
-        if (!firstEventTimePredicates.containsKey(event)) {
-            firstEventTimePredicates.put(event, new ArrayList<IEventCheck<Long>>());
-        }
-
-        firstEventTimePredicates.get(event).add(predicate);
-        logger.d(firstEventTimePredicates.get(event).toString());
-
+        firstEventTimePredicates.trackEvent(event, predicate);
         return this;
     }
 
     public AmplifyStateTracker trackLastEventTime(@NonNull final IEvent event, @NonNull final IEventCheck<Long> predicate) {
         // todo: check for conflicts here
         performEventRelatedInitializationIfRequired(event);
-
-        if (!lastEventTimePredicates.containsKey(event)) {
-            lastEventTimePredicates.put(event, new ArrayList<IEventCheck<Long>>());
-        }
-
-        lastEventTimePredicates.get(event).add(predicate);
-        logger.d(lastEventTimePredicates.get(event).toString());
-
+        lastEventTimePredicates.trackEvent(event, predicate);
         return this;
     }
 
     public AmplifyStateTracker trackLastEventVersion(@NonNull final IEvent event, @NonNull final IEventCheck<String> predicate) {
         // todo: check for conflicts here
         performEventRelatedInitializationIfRequired(event);
-
-        if (!lastEventVersionPredicates.containsKey(event)) {
-            lastEventVersionPredicates.put(event, new ArrayList<IEventCheck<String>>());
-        }
-
-        lastEventVersionPredicates.get(event).add(predicate);
-        logger.d(lastEventVersionPredicates.get(event).toString());
-
+        lastEventVersionPredicates.trackEvent(event, predicate);
         return this;
     }
 
