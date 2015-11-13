@@ -27,7 +27,7 @@ public interface IEvent {
 
     /**
      * @return a key that uniquely identifies this event within the
-     *         application.
+     *         application
      */
     @NonNull
     String getTrackingKey();
@@ -37,7 +37,7 @@ public interface IEvent {
      * track this event. Will be called once per launch of the consuming
      * application.
      *
-     * @param applicationContext the context of the consuming application.
+     * @param applicationContext the context of the consuming application
      */
     void performRelatedInitialization(@NonNull final Context applicationContext);
 
