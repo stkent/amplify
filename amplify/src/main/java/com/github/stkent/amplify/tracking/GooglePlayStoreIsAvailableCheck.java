@@ -25,7 +25,11 @@ import com.github.stkent.amplify.tracking.interfaces.IEnvironmentCheck;
 
 import static android.content.pm.PackageManager.GET_ACTIVITIES;
 
-public class GooglePlayServicesIsAvailableCheck implements IEnvironmentCheck {
+/**
+ * An implementation of {@code IEnvironmentCheck} that verifies whether or not
+ * the Google Play Store is installed on the current device.
+ */
+public class GooglePlayStoreIsAvailableCheck implements IEnvironmentCheck {
 
     @Override
     public boolean isMet(@NonNull final Context applicationContext) {
