@@ -27,7 +27,9 @@ public enum IntegratedEvent implements IEvent {
     APP_INSTALLED,
     APP_UPDATED,
     USER_GAVE_POSITIVE_FEEDBACK,
-    USER_GAVE_NEGATIVE_FEEDBACK;
+    USER_GAVE_NEGATIVE_FEEDBACK,
+    USER_DECLINED_RATING,
+    USER_DECLINED_FEEDBACK;
 
     @NonNull
     @Override
