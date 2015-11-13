@@ -20,6 +20,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 
+import com.github.stkent.amplify.AmplifyView;
 import com.github.stkent.amplify.Logger;
 import com.github.stkent.amplify.tracking.interfaces.IEnvironmentCheck;
 import com.github.stkent.amplify.tracking.interfaces.IEvent;
@@ -168,6 +169,12 @@ public final class AmplifyStateTracker {
     }
 
     // query methods
+
+    public void promptIfReady(@NonNull final AmplifyView amplifyView) {
+        if (shouldAskForRating()) {
+            amplifyView.show();
+        }
+    }
 
     public boolean shouldAskForRating() {
         return allEnvironmentRequirementsMet()
