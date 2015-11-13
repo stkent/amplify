@@ -78,7 +78,7 @@ public final class Settings implements ISettings {
 
     @Override
     public long getLastEventTime(@NonNull final IEvent event) {
-        final String key = generateTotalEventCountTrackingKey(event);
+        final String key = generateLastEventTimeTrackingKey(event);
         return sharedPreferences.getLong(key, 0);
     }
 
@@ -91,7 +91,7 @@ public final class Settings implements ISettings {
     @Nullable
     @Override
     public String getLastEventVersion(@NonNull final IEvent event) {
-        final String key = generateTotalEventCountTrackingKey(event);
+        final String key = generateLastEventVersionTrackingKey(event);
         return sharedPreferences.getString(key, null);
     }
 
