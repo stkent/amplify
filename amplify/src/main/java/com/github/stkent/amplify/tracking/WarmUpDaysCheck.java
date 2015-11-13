@@ -23,24 +23,24 @@ import com.github.stkent.amplify.tracking.interfaces.IEventCheck;
 
 import java.util.concurrent.TimeUnit;
 
-public class WarmupDaysCheck implements IEventCheck<Long> {
+public class WarmUpDaysCheck implements IEventCheck<Long> {
 
-    private final long warmupPeriodDays;
+    private final long warmUpPeriodDays;
 
-    public WarmupDaysCheck(final long warmupPeriodDays) {
-        this.warmupPeriodDays = warmupPeriodDays;
+    public WarmUpDaysCheck(final long warmUpPeriodDays) {
+        this.warmUpPeriodDays = warmUpPeriodDays;
     }
 
     @Override
     public boolean shouldBlockFeedbackPrompt(@NonNull final Long cachedEventValue, @NonNull final Context applicationContext) {
-        return (System.currentTimeMillis() - cachedEventValue) >= TimeUnit.DAYS.toMillis(warmupPeriodDays);
+        return (System.currentTimeMillis() - cachedEventValue) >= TimeUnit.DAYS.toMillis(warmUpPeriodDays);
     }
 
     @NonNull
     @Override
     public String getStatusString(@NonNull final Long cachedEventValue, @NonNull final Context applicationContext) {
         final Long daysSinceLastEvent = TimeUnit.MILLISECONDS.toDays(System.currentTimeMillis() - cachedEventValue);
-        return "Warmup period: " + warmupPeriodDays + " days. Time since last event: " + daysSinceLastEvent + " days.";
+        return "Warm-up period: " + warmUpPeriodDays + " days. Time since last event: " + daysSinceLastEvent + " days.";
     }
 
 }

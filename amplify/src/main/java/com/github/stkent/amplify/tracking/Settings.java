@@ -60,8 +60,25 @@ public final class Settings implements ISettings {
     }
 
     @Override
+    public long getFirstEventTime(@NonNull final IEvent event) {
+        final String key = generateFirstEventTimeTrackingKey(event);
+        return sharedPreferences.getLong(key, Long.MAX_VALUE);
+    }
+
+    @Override
+    public void setFirstEventTime(@NonNull final IEvent event, final long lastEventTime) {
+        if (getFirstEventTime(event) != Long.MAX_VALUE) {
+            throw new IllegalArgumentException(
+                    "First event time is already set; cannot be overwritten");
+        }
+
+        final String key = generateFirstEventTimeTrackingKey(event);
+        sharedPreferences.edit().putLong(key, lastEventTime).apply();
+    }
+
+    @Override
     public long getLastEventTime(@NonNull final IEvent event) {
-        final String key = generateTotalEventCountTrackingKey(event);
+        final String key = generateLastEventTimeTrackingKey(event);
         return sharedPreferences.getLong(key, 0);
     }
 
@@ -74,7 +91,7 @@ public final class Settings implements ISettings {
     @Nullable
     @Override
     public String getLastEventVersion(@NonNull final IEvent event) {
-        final String key = generateTotalEventCountTrackingKey(event);
+        final String key = generateLastEventVersionTrackingKey(event);
         return sharedPreferences.getString(key, null);
     }
 
@@ -91,6 +108,10 @@ public final class Settings implements ISettings {
 
     private String generateTotalEventCountTrackingKey(@NonNull final IEvent event) {
         return "TOTAL_EVENT_COUNT_" + event.getTrackingKey();
+    }
+
+    private String generateFirstEventTimeTrackingKey(@NonNull final IEvent event) {
+        return "FIRST_EVENT_TIME_" + event.getTrackingKey();
     }
 
     private String generateLastEventTimeTrackingKey(@NonNull final IEvent event) {
