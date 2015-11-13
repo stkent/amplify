@@ -20,12 +20,30 @@ import android.support.annotation.NonNull;
 
 import com.github.stkent.amplify.Logger;
 
+/**
+ * An abstract representation of a logging class with customizable output
+ * verbosity.
+ */
 public interface ILogger {
 
+    /**
+     * @param logLevel the most verbose log message type that should be
+     *        displayed
+     */
     void setLogLevel(@NonNull final Logger.LogLevel logLevel);
 
+    /**
+     * Record a log message with level Logger.LogLevel.DEBUG.
+     *
+     * @param message the message to be logged
+     */
     void d(@NonNull final String message);
 
+    /**
+     * Record a log message with level Logger.LogLevel.ERROR.
+     *
+     * @param message the message to be logged
+     */
     void e(@NonNull final String message);
 
 }
