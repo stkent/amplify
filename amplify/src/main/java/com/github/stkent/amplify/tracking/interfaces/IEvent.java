@@ -19,11 +19,26 @@ package com.github.stkent.amplify.tracking.interfaces;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+/**
+ * An abstract representation of an event whose occurrences can be tracked
+ * across application launches.
+ */
 public interface IEvent {
 
+    /**
+     * @return a key that uniquely identifies this event within the
+     *         application.
+     */
     @NonNull
     String getTrackingKey();
 
+    /**
+     * A method that can be used to perform any initialization required to
+     * track this event. Will be called once per launch of the consuming
+     * application.
+     *
+     * @param applicationContext the context of the consuming application.
+     */
     void performRelatedInitialization(@NonNull final Context applicationContext);
 
 }
