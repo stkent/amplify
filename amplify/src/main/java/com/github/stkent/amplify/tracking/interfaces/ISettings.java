@@ -21,7 +21,7 @@ import android.support.annotation.Nullable;
 
 /**
  * An abstract representation of the persistence layer used to track events
- * across consuming application launches.
+ * across launches of the consuming application.
  */
 public interface ISettings {
 
