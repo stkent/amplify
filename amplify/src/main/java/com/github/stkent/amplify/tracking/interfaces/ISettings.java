@@ -40,6 +40,21 @@ public interface ISettings {
 
     /**
      * @param event an event that has been registered with the state tracker
+     * @return the system time in millis of the most first occurrence of the
+     *         provided event, or Long.MAX_VALUE if this event has never
+     *         occurred before
+     */
+    long getFirstEventTime(@NonNull final IEvent event);
+
+    /**
+     * @param event an event that has been registered with the state tracker
+     * @param lastEventTime the system time in millis of the first
+     *        occurrence of the provided event
+     */
+    void setFirstEventTime(@NonNull final IEvent event, final long lastEventTime);
+
+    /**
+     * @param event an event that has been registered with the state tracker
      * @return the system time in millis of the most recent occurrence of the
      *         provided event
      */

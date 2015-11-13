@@ -45,6 +45,7 @@ public final class AmplifyStateTracker {
     private final Context applicationContext;
     private final List<IEnvironmentCheck> environmentRequirements = new ArrayList<>();
     private final Map<IEvent, List<IEventCheck<Long>>> lastEventTimePredicates = new ConcurrentHashMap<>();
+    private final Map<IEvent, List<IEventCheck<Long>>> firstEventTimePredicates = new ConcurrentHashMap<>();
     private final Map<IEvent, List<IEventCheck<String>>> lastEventVersionPredicates = new ConcurrentHashMap<>();
     private final Map<IEvent, List<IEventCheck<Integer>>> totalEventCountPredicates = new ConcurrentHashMap<>();
     private ISettings settings;
@@ -107,6 +108,20 @@ public final class AmplifyStateTracker {
         return this;
     }
 
+    public AmplifyStateTracker trackFirstEventTime(@NonNull final IEvent event, @NonNull final IEventCheck<Long> predicate) {
+        // todo: check for conflicts here
+        performEventRelatedInitializationIfRequired(event);
+
+        if (!firstEventTimePredicates.containsKey(event)) {
+            firstEventTimePredicates.put(event, new ArrayList<IEventCheck<Long>>());
+        }
+
+        firstEventTimePredicates.get(event).add(predicate);
+        getLogger().d(firstEventTimePredicates.get(event).toString());
+
+        return this;
+    }
+
     public AmplifyStateTracker trackLastEventTime(@NonNull final IEvent event, @NonNull final IEventCheck<Long> predicate) {
         // todo: check for conflicts here
         performEventRelatedInitializationIfRequired(event);
@@ -150,6 +165,15 @@ public final class AmplifyStateTracker {
             getSettings().setTotalEventCount(event, updatedCount);
         }
 
+        if (firstEventTimePredicates.containsKey(event)) {
+            final Long cachedTime = getSettings().getFirstEventTime(event);
+
+            if (cachedTime == Long.MAX_VALUE) {
+                final Long currentTime = System.currentTimeMillis();
+                getSettings().setFirstEventTime(event, Math.min(cachedTime, currentTime));
+            }
+        }
+
         if (lastEventTimePredicates.containsKey(event)) {
             final Long currentTime = System.currentTimeMillis();
             getSettings().setLastEventTime(event, currentTime);
@@ -172,6 +196,7 @@ public final class AmplifyStateTracker {
     public boolean shouldAskForRating() {
         return allEnvironmentRequirementsMet()
                 && allTotalEventCountPredicatesAllowFeedbackPrompt()
+                && allFirstEventTimePredicatesAllowFeedbackPrompt()
                 && allLastEventTimePredicatesAllowFeedbackPrompt()
                 && allLastEventVersionPredicatesAllowFeedbackPrompt();
     }
@@ -198,6 +223,24 @@ public final class AmplifyStateTracker {
                 getLogger().d(event.getTrackingKey() + ": " + predicate.getStatusString(totalEventCount, applicationContext));
 
                 if (predicate.shouldBlockFeedbackPrompt(totalEventCount, applicationContext)) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    private boolean allFirstEventTimePredicatesAllowFeedbackPrompt() {
+        for (final Map.Entry<IEvent, List<IEventCheck<Long>>> eventCheckSet : firstEventTimePredicates.entrySet()) {
+            final IEvent event = eventCheckSet.getKey();
+
+            final Long firstEventTime = getSettings().getFirstEventTime(event);
+
+            for (final IEventCheck<Long> predicate : eventCheckSet.getValue()) {
+                getLogger().d(event.getTrackingKey() + ": " + predicate.getStatusString(firstEventTime, applicationContext));
+
+                if (predicate.shouldBlockFeedbackPrompt(firstEventTime, applicationContext)) {
                     return false;
                 }
             }
