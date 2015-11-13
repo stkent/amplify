@@ -21,13 +21,13 @@ import android.support.annotation.NonNull;
 
 /**
  * An abstract representation of an event whose occurrences can be tracked
- * across application launches.
+ * across consuming application launches.
  */
 public interface IEvent {
 
     /**
      * @return a key that uniquely identifies this event within the
-     *         application
+     *         consuming application
      */
     @NonNull
     String getTrackingKey();
