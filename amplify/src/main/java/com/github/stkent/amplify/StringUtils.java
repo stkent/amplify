@@ -19,7 +19,11 @@ package com.github.stkent.amplify;
 /**
  * Created by bobbake4 on 11/13/15.
  */
-public class StringUtils {
+public final class StringUtils {
+
+    private StringUtils() {
+
+    }
 
     /**
      * <p>Returns either the passed in CharSequence, or if the CharSequence is
@@ -64,7 +68,7 @@ public class StringUtils {
             return true;
         }
         for (int i = 0; i < strLen; i++) {
-            if (Character.isWhitespace(cs.charAt(i)) == false) {
+            if (!Character.isWhitespace(cs.charAt(i))) {
                 return false;
             }
         }
