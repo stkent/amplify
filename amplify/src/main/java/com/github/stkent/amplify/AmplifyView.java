@@ -16,6 +16,7 @@
  */
 package com.github.stkent.amplify;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
@@ -83,13 +84,10 @@ public class AmplifyView extends FrameLayout {
     protected void respondToNegativeFeedback() {
         //TODO implement open email chooser
         //showFeedbackEmailChooser();
-        ratingStateTracker.notifyEventTriggered(IntegratedEvent.USER_GAVE_NEGATIVE_FEEDBACK);
     }
 
     protected void respondToPositiveFeedback() {
-        //TODO implement open in play store
-        //PlayStoreUtil.openPlayStoreToRate((Activity) getContext());
-        ratingStateTracker.notifyEventTriggered(IntegratedEvent.USER_GAVE_POSITIVE_FEEDBACK);
+        PlayStoreUtil.openPlayStoreToRate((Activity) getContext());
     }
 
     private void init(final Context context, @Nullable final AttributeSet attrs) {
@@ -101,46 +99,45 @@ public class AmplifyView extends FrameLayout {
         questionLayoutResId = typedArray.getResourceId(R.styleable.Amplify_amplify_question_layout, 0);
         confirmationLayoutResId = typedArray.getResourceId(R.styleable.Amplify_amplify_confirmation_layout, 0);
 
-        final String userOpinionQuestionTitle = typedArray.getString(
-                R.styleable.Amplify_amplify_user_opinion_question);
-        final String userOpinionPositiveButtonText = typedArray.getString(
-                R.styleable.Amplify_amplify_user_opinion_positive_button_text);
-        final String userOpinionNegativeButtonText = typedArray.getString(
-                R.styleable.Amplify_amplify_user_opinion_negative_button_text);
-
         //TODO add default string loading
+        final String userOpinionQuestionTitle = StringUtils.defaultIfBlank(typedArray.getString(
+                R.styleable.Amplify_amplify_user_opinion_question), "");
+        final String userOpinionPositiveButtonText = StringUtils.defaultIfBlank(typedArray.getString(
+                R.styleable.Amplify_amplify_user_opinion_positive_button_text), "");
+        final String userOpinionNegativeButtonText = StringUtils.defaultIfBlank(typedArray.getString(
+                R.styleable.Amplify_amplify_user_opinion_negative_button_text), "");
         userOpinionQuestion = Question.Builder
-                .withTitle(userOpinionQuestionTitle != null ? userOpinionQuestionTitle : "")
-                .andPositiveButtonText(userOpinionPositiveButtonText != null ? userOpinionPositiveButtonText : "")
-                .andNegativeButtonText(userOpinionNegativeButtonText != null ? userOpinionNegativeButtonText : "")
+                .withTitle(userOpinionQuestionTitle)
+                .andPositiveButtonText(userOpinionPositiveButtonText)
+                .andNegativeButtonText(userOpinionNegativeButtonText)
                 .build();
 
-        final String positiveFeedbackQuestionTitle = typedArray.getString(
-                R.styleable.Amplify_amplify_positive_feedback_question);
-        final String positiveFeedbackPositiveButtonText = typedArray.getString(
-                R.styleable.Amplify_amplify_positive_feedback_positive_button_text);
-        final String positiveFeedbackNegativeButtonText = typedArray.getString(
-                R.styleable.Amplify_amplify_positive_feedback_negative_button_text);
-
         //TODO add default string loading
+        final String positiveFeedbackQuestionTitle = StringUtils.defaultIfBlank(typedArray.getString(
+                R.styleable.Amplify_amplify_positive_feedback_question), "");
+        final String positiveFeedbackPositiveButtonText = StringUtils.defaultIfBlank(typedArray.getString(
+                R.styleable.Amplify_amplify_positive_feedback_positive_button_text), "");
+        final String positiveFeedbackNegativeButtonText = StringUtils.defaultIfBlank(typedArray.getString(
+                R.styleable.Amplify_amplify_positive_feedback_negative_button_text), "");
+
         positiveFeedbackQuestion = Question.Builder
-                .withTitle(positiveFeedbackQuestionTitle != null ? positiveFeedbackQuestionTitle : "")
-                .andPositiveButtonText(positiveFeedbackPositiveButtonText != null ? positiveFeedbackPositiveButtonText : "")
-                .andNegativeButtonText(positiveFeedbackNegativeButtonText != null ? positiveFeedbackNegativeButtonText : "")
+                .withTitle(positiveFeedbackQuestionTitle)
+                .andPositiveButtonText(positiveFeedbackPositiveButtonText)
+                .andNegativeButtonText(positiveFeedbackNegativeButtonText)
                 .build();
 
-        final String criticalFeedbackQuestionTitle = typedArray.getString(
-                R.styleable.Amplify_amplify_critical_feedback_question);
-        final String criticalFeedbackPositiveButtonText = typedArray.getString(
-                R.styleable.Amplify_amplify_critical_feedback_positive_button_text);
-        final String criticalFeedbackNegativeButtonText = typedArray.getString(
-                R.styleable.Amplify_amplify_critical_feedback_negative_button_text);
-
         //TODO add default string loading
+        final String criticalFeedbackQuestionTitle = StringUtils.defaultIfBlank(typedArray.getString(
+                R.styleable.Amplify_amplify_critical_feedback_question), "");
+        final String criticalFeedbackPositiveButtonText = StringUtils.defaultIfBlank(typedArray.getString(
+                R.styleable.Amplify_amplify_critical_feedback_positive_button_text), "");
+        final String criticalFeedbackNegativeButtonText = StringUtils.defaultIfBlank(typedArray.getString(
+                R.styleable.Amplify_amplify_critical_feedback_negative_button_text), "");
+
         criticalFeedbackQuestion = Question.Builder
-                .withTitle(criticalFeedbackQuestionTitle != null ? criticalFeedbackQuestionTitle : "")
-                .andPositiveButtonText(criticalFeedbackPositiveButtonText != null ? criticalFeedbackPositiveButtonText : "")
-                .andNegativeButtonText(criticalFeedbackNegativeButtonText != null ? criticalFeedbackNegativeButtonText : "")
+                .withTitle(criticalFeedbackQuestionTitle)
+                .andPositiveButtonText(criticalFeedbackPositiveButtonText)
+                .andNegativeButtonText(criticalFeedbackNegativeButtonText)
                 .build();
 
         typedArray.recycle();
@@ -237,10 +234,12 @@ public class AmplifyView extends FrameLayout {
                     askSecondQuestion();
                     break;
                 case POSITIVE:
+                    ratingStateTracker.notifyEventTriggered(IntegratedEvent.USER_GAVE_POSITIVE_FEEDBACK);
                     thankUser();
                     respondToPositiveFeedback();
                     break;
                 case NEGATIVE:
+                    ratingStateTracker.notifyEventTriggered(IntegratedEvent.USER_GAVE_NEGATIVE_FEEDBACK);
                     thankUser();
                     respondToNegativeFeedback();
                     break;
@@ -260,13 +259,11 @@ public class AmplifyView extends FrameLayout {
                     break;
                 case POSITIVE:
                     hide();
-                    //TODO implement declined rating
-//                    ratingStateTracker.notify(USER_DECLINED_RATING);
+                    ratingStateTracker.notifyEventTriggered(IntegratedEvent.USER_DECLINED_RATING);
                     break;
                 case NEGATIVE:
                     hide();
-                    //TODO implement declined feedback
-//                    ratingStateTracker.notify(USER_DECLINED_FEEDBACK);
+                    ratingStateTracker.notifyEventTriggered(IntegratedEvent.USER_DECLINED_FEEDBACK);
                     break;
                 default:
                     break;
