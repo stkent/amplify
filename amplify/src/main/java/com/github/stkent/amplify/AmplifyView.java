@@ -221,6 +221,10 @@ public class AmplifyView extends FrameLayout {
         addView(cachedQuestionView.getView(), CONTENT_VIEW_LAYOUT_PARAMS);
     }
 
+    public void show() {
+        setVisibility(VISIBLE);
+    }
+
     private void hide() {
         setVisibility(GONE);
     }
