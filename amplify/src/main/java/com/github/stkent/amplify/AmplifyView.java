@@ -93,19 +93,19 @@ public class AmplifyView extends FrameLayout {
     private void init(final Context context, @Nullable final AttributeSet attrs) {
         ratingStateTracker = AmplifyStateTracker.get(context);
 
-        final TypedArray typedArray = context.getTheme().obtainStyledAttributes(attrs, R.styleable.Amplify, 0, 0);
+        final TypedArray typedArray = context.getTheme().obtainStyledAttributes(attrs, R.styleable.AmplifyView, 0, 0);
 
         // TODO: add proper default handling; checking for resource type
-        questionLayoutResId = typedArray.getResourceId(R.styleable.Amplify_amplify_question_layout, 0);
-        confirmationLayoutResId = typedArray.getResourceId(R.styleable.Amplify_amplify_confirmation_layout, 0);
+        questionLayoutResId = typedArray.getResourceId(R.styleable.AmplifyView_amplify_question_layout, 0);
+        confirmationLayoutResId = typedArray.getResourceId(R.styleable.AmplifyView_amplify_confirmation_layout, 0);
 
         //TODO add default string loading
         final String userOpinionQuestionTitle = StringUtils.defaultIfBlank(typedArray.getString(
-                R.styleable.Amplify_amplify_user_opinion_question), "");
+                R.styleable.AmplifyView_amplify_user_opinion_question), "");
         final String userOpinionPositiveButtonText = StringUtils.defaultIfBlank(typedArray.getString(
-                R.styleable.Amplify_amplify_user_opinion_positive_button_text), "");
+                R.styleable.AmplifyView_amplify_user_opinion_positive_button_text), "");
         final String userOpinionNegativeButtonText = StringUtils.defaultIfBlank(typedArray.getString(
-                R.styleable.Amplify_amplify_user_opinion_negative_button_text), "");
+                R.styleable.AmplifyView_amplify_user_opinion_negative_button_text), "");
         userOpinionQuestion = Question.Builder
                 .withTitle(userOpinionQuestionTitle)
                 .andPositiveButtonText(userOpinionPositiveButtonText)
@@ -114,11 +114,11 @@ public class AmplifyView extends FrameLayout {
 
         //TODO add default string loading
         final String positiveFeedbackQuestionTitle = StringUtils.defaultIfBlank(typedArray.getString(
-                R.styleable.Amplify_amplify_positive_feedback_question), "");
+                R.styleable.AmplifyView_amplify_positive_feedback_question), "");
         final String positiveFeedbackPositiveButtonText = StringUtils.defaultIfBlank(typedArray.getString(
-                R.styleable.Amplify_amplify_positive_feedback_positive_button_text), "");
+                R.styleable.AmplifyView_amplify_positive_feedback_positive_button_text), "");
         final String positiveFeedbackNegativeButtonText = StringUtils.defaultIfBlank(typedArray.getString(
-                R.styleable.Amplify_amplify_positive_feedback_negative_button_text), "");
+                R.styleable.AmplifyView_amplify_positive_feedback_negative_button_text), "");
 
         positiveFeedbackQuestion = Question.Builder
                 .withTitle(positiveFeedbackQuestionTitle)
@@ -128,11 +128,11 @@ public class AmplifyView extends FrameLayout {
 
         //TODO add default string loading
         final String criticalFeedbackQuestionTitle = StringUtils.defaultIfBlank(typedArray.getString(
-                R.styleable.Amplify_amplify_critical_feedback_question), "");
+                R.styleable.AmplifyView_amplify_critical_feedback_question), "");
         final String criticalFeedbackPositiveButtonText = StringUtils.defaultIfBlank(typedArray.getString(
-                R.styleable.Amplify_amplify_critical_feedback_positive_button_text), "");
+                R.styleable.AmplifyView_amplify_critical_feedback_positive_button_text), "");
         final String criticalFeedbackNegativeButtonText = StringUtils.defaultIfBlank(typedArray.getString(
-                R.styleable.Amplify_amplify_critical_feedback_negative_button_text), "");
+                R.styleable.AmplifyView_amplify_critical_feedback_negative_button_text), "");
 
         criticalFeedbackQuestion = Question.Builder
                 .withTitle(criticalFeedbackQuestionTitle)

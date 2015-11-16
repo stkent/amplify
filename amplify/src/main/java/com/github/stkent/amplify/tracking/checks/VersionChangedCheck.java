@@ -14,12 +14,13 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package com.github.stkent.amplify.tracking;
+package com.github.stkent.amplify.tracking.checks;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 
+import com.github.stkent.amplify.tracking.TrackingUtils;
 import com.github.stkent.amplify.tracking.interfaces.IEventCheck;
 
 public final class VersionChangedCheck implements IEventCheck<String> {

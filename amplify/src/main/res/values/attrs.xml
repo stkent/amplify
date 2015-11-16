@@ -19,7 +19,7 @@
 -->
 <resources>
 
-    <declare-styleable name="Amplify">
+    <declare-styleable name="AmplifyView">
         <!-- layouts -->
         <attr name="amplify_question_layout" format="reference" />
         <attr name="amplify_confirmation_layout" format="reference" />

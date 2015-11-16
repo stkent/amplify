@@ -42,6 +42,7 @@
         <exclude name="DataflowAnomalyAnalysis" />
         <exclude name="NullAssignment" />
         <exclude name="OnlyOneReturn" />
+        <exclude name="DefaultPackage" />
     </rule>
 
     <rule ref="rulesets/java/coupling.xml">

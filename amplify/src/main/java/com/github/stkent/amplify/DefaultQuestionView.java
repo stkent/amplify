@@ -41,17 +41,17 @@ public class DefaultQuestionView implements QuestionView {
 
         titleTextView = (TextView) view.findViewById(R.id.amp_title_text_view);
         if (titleTextView == null) {
-            throw new IllegalArgumentException("Some string here");
+            throw new IllegalArgumentException("You must supply a layout that includes a TextView with id amp_title_text_view");
         }
 
         positiveButton = (Button) view.findViewById(R.id.amp_positive_button);
         if (positiveButton == null) {
-            throw new IllegalArgumentException("Some other string here");
+            throw new IllegalArgumentException("You must supply a layout that includes a Button with id amp_positive_button");
         }
 
         negativeButton = (Button) view.findViewById(R.id.amp_negative_button);
         if (negativeButton == null) {
-            throw new IllegalArgumentException("Some other other string here");
+            throw new IllegalArgumentException("You must supply a layout that includes a Button with id amp_negative_button");
         }
     }
 
