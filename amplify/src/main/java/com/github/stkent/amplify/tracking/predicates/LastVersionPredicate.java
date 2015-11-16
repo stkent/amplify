@@ -31,7 +31,7 @@ import com.github.stkent.amplify.tracking.interfaces.ILogger;
 public class LastVersionPredicate extends EventPredicate<String> {
 
     public LastVersionPredicate(ILogger logger, Context applicationContext) {
-        super(logger, new GenericSettings<String>(applicationContext), applicationContext);
+        super(logger, new GenericSettings<String>(applicationContext, logger), applicationContext);
     }
 
     @Override

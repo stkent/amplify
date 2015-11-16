@@ -22,6 +22,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.github.stkent.amplify.tracking.interfaces.IEvent;
+import com.github.stkent.amplify.tracking.interfaces.ILogger;
 
 import java.util.Map;
 
@@ -33,8 +34,10 @@ public class GenericSettings<T> {
     private static final String SHARED_PREFERENCES_NAME = "AMPLIFY_SHARED_PREFERENCES_NAME";
 
     private final SharedPreferences sharedPreferences;
+    private final ILogger logger;
 
-    public GenericSettings(Context applicationContext) {
+    public GenericSettings(Context applicationContext, ILogger logger) {
+        this.logger = logger;
         this.sharedPreferences = applicationContext
                 .getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
     }
@@ -70,6 +73,8 @@ public class GenericSettings<T> {
                 return (T) entry.getValue();
             }
         }
+
+        logger.e("No event value for " + event);
 
         return null;
     }

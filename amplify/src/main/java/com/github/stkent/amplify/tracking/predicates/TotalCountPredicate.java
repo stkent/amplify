@@ -29,7 +29,7 @@ import com.github.stkent.amplify.tracking.interfaces.ILogger;
 public class TotalCountPredicate extends EventPredicate<Integer> {
 
     public TotalCountPredicate(ILogger logger, Context applicationContext) {
-        super(logger, new GenericSettings<Integer>(applicationContext), applicationContext);
+        super(logger, new GenericSettings<Integer>(applicationContext, logger), applicationContext);
     }
 
     @Override
