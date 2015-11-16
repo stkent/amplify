@@ -14,7 +14,7 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package com.github.stkent.amplify.tracking;
+package com.github.stkent.amplify.tracking.checks;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -23,24 +23,24 @@ import com.github.stkent.amplify.tracking.interfaces.IEventCheck;
 
 import java.util.concurrent.TimeUnit;
 
-public class WarmUpDaysCheck implements IEventCheck<Long> {
+public final class CooldownDaysCheck implements IEventCheck<Long> {
 
-    private final long warmUpPeriodDays;
+    private final long cooldownPeriodDays;
 
-    public WarmUpDaysCheck(final long warmUpPeriodDays) {
-        this.warmUpPeriodDays = warmUpPeriodDays;
+    public CooldownDaysCheck(final long cooldownPeriodDays) {
+        this.cooldownPeriodDays = cooldownPeriodDays;
     }
 
     @Override
     public boolean shouldBlockFeedbackPrompt(@NonNull final Long cachedEventValue, @NonNull final Context applicationContext) {
-        return (System.currentTimeMillis() - cachedEventValue) >= TimeUnit.DAYS.toMillis(warmUpPeriodDays);
+        return (System.currentTimeMillis() - cachedEventValue) < TimeUnit.DAYS.toMillis(cooldownPeriodDays);
     }
 
     @NonNull
     @Override
     public String getStatusString(@NonNull final Long cachedEventValue, @NonNull final Context applicationContext) {
         final Long daysSinceLastEvent = TimeUnit.MILLISECONDS.toDays(System.currentTimeMillis() - cachedEventValue);
-        return "Warm-up period: " + warmUpPeriodDays + " days. Time since last event: " + daysSinceLastEvent + " days.";
+        return "Cooldown period: " + cooldownPeriodDays + " days. Time since last event: " + daysSinceLastEvent + " days.";
     }
 
 }

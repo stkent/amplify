@@ -4,11 +4,11 @@ import android.app.Application;
 
 import com.github.stkent.amplify.Logger;
 import com.github.stkent.amplify.tracking.AmplifyStateTracker;
-import com.github.stkent.amplify.tracking.CooldownDaysCheck;
-import com.github.stkent.amplify.tracking.GooglePlayStoreIsAvailableCheck;
-import com.github.stkent.amplify.tracking.MaximumCountCheck;
-import com.github.stkent.amplify.tracking.VersionChangedCheck;
-import com.github.stkent.amplify.tracking.WarmUpDaysCheck;
+import com.github.stkent.amplify.tracking.checks.CooldownDaysCheck;
+import com.github.stkent.amplify.tracking.checks.GooglePlayStoreIsAvailableCheck;
+import com.github.stkent.amplify.tracking.checks.MaximumCountCheck;
+import com.github.stkent.amplify.tracking.checks.VersionChangedCheck;
+import com.github.stkent.amplify.tracking.checks.WarmUpDaysCheck;
 
 import static com.github.stkent.amplify.tracking.IntegratedEvent.APP_CRASHED;
 import static com.github.stkent.amplify.tracking.IntegratedEvent.APP_INSTALLED;
