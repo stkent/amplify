@@ -1,8 +1,9 @@
-package com.github.stkent.amplify.tracking;
+package com.github.stkent.amplify.tracking.predicates;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import com.github.stkent.amplify.tracking.GenericSettings;
 import com.github.stkent.amplify.tracking.interfaces.IEvent;
 import com.github.stkent.amplify.tracking.interfaces.IEventCheck;
 import com.github.stkent.amplify.tracking.interfaces.ILogger;
@@ -15,11 +16,13 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Created by bobbake4 on 11/13/15.
  */
-public class PredicateMap<T> extends ConcurrentHashMap<IEvent, List<IEventCheck<T>>> {
+public abstract class PredicateMap<T> extends ConcurrentHashMap<IEvent, List<IEventCheck<T>>> {
 
-    private final ILogger logger;
-    private final GenericSettings<T> settings;
-    private final Context applicationContext;
+    public abstract void eventTriggered(@NonNull final IEvent event);
+
+    protected final ILogger logger;
+    protected final GenericSettings<T> settings;
+    protected final Context applicationContext;
 
     public PredicateMap(ILogger logger, GenericSettings<T> settings, Context applicationContext) {
         this.logger = logger;
@@ -57,11 +60,11 @@ public class PredicateMap<T> extends ConcurrentHashMap<IEvent, List<IEventCheck<
         return true;
     }
 
-    public T getEventValue(@NonNull final IEvent event) {
+    protected T getEventValue(@NonNull final IEvent event) {
         return settings.getEventValue(event);
     }
 
-    public void updateEventValue(@NonNull final IEvent event, T value) {
+    protected void updateEventValue(@NonNull final IEvent event, T value) {
         settings.writeEventValue(event, value);
     }
 

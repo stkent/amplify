@@ -17,7 +17,6 @@
 package com.github.stkent.amplify.tracking;
 
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 
 import com.github.stkent.amplify.AmplifyView;
@@ -26,6 +25,10 @@ import com.github.stkent.amplify.tracking.interfaces.IEnvironmentCheck;
 import com.github.stkent.amplify.tracking.interfaces.IEvent;
 import com.github.stkent.amplify.tracking.interfaces.IEventCheck;
 import com.github.stkent.amplify.tracking.interfaces.ILogger;
+import com.github.stkent.amplify.tracking.predicates.FirstTimeMap;
+import com.github.stkent.amplify.tracking.predicates.LastTimeMap;
+import com.github.stkent.amplify.tracking.predicates.LastVersionMap;
+import com.github.stkent.amplify.tracking.predicates.TotalCountMap;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -42,10 +45,10 @@ public final class AmplifyStateTracker {
 
     private final Context applicationContext;
     private final List<IEnvironmentCheck> environmentRequirements = new ArrayList<>();
-    private final PredicateMap<Long> lastEventTimePredicates;
-    private final PredicateMap<Long> firstEventTimePredicates;
-    private final PredicateMap<String> lastEventVersionPredicates;
-    private final PredicateMap<Integer> totalEventCountPredicates;
+    private final LastTimeMap lastEventTimePredicates;
+    private final FirstTimeMap firstEventTimePredicates;
+    private final LastVersionMap lastEventVersionPredicates;
+    private final TotalCountMap totalEventCountPredicates;
     private final ILogger logger;
 
     public static AmplifyStateTracker get(@NonNull final Context context) {
@@ -76,10 +79,10 @@ public final class AmplifyStateTracker {
             @NonNull final ILogger logger) {
         this.applicationContext = context.getApplicationContext();
         this.logger = logger;
-        this.lastEventTimePredicates = new PredicateMap<>(logger, new GenericSettings<Long>(applicationContext), applicationContext);
-        this.firstEventTimePredicates = new PredicateMap<>(logger, new GenericSettings<Long>(applicationContext), applicationContext);
-        this.lastEventVersionPredicates = new PredicateMap<>(logger, new GenericSettings<String>(applicationContext), applicationContext);
-        this.totalEventCountPredicates = new PredicateMap<>(logger, new GenericSettings<Integer>(applicationContext), applicationContext);
+        this.lastEventTimePredicates = new LastTimeMap(logger, applicationContext);
+        this.firstEventTimePredicates = new FirstTimeMap(logger, applicationContext);
+        this.lastEventVersionPredicates = new LastVersionMap(logger, applicationContext);
+        this.totalEventCountPredicates = new TotalCountMap(logger, applicationContext);
     }
 
     // configuration methods
@@ -121,35 +124,10 @@ public final class AmplifyStateTracker {
     // update methods
 
     public AmplifyStateTracker notifyEventTriggered(@NonNull final IEvent event) {
-        if (totalEventCountPredicates.containsKey(event)) {
-            final Integer cachedCount = totalEventCountPredicates.getEventValue(event);
-            final Integer updatedCount = cachedCount + 1;
-            totalEventCountPredicates.updateEventValue(event, updatedCount);
-        }
-
-        if (firstEventTimePredicates.containsKey(event)) {
-            final Long cachedTime = firstEventTimePredicates.getEventValue(event);
-
-            if (cachedTime == Long.MAX_VALUE) {
-                final Long currentTime = System.currentTimeMillis();
-                firstEventTimePredicates.updateEventValue(event, Math.min(cachedTime, currentTime));
-            }
-        }
-
-        if (lastEventTimePredicates.containsKey(event)) {
-            final Long currentTime = System.currentTimeMillis();
-            lastEventTimePredicates.updateEventValue(event, currentTime);
-        }
-
-        if (lastEventVersionPredicates.containsKey(event)) {
-            try {
-                final String currentVersion = TrackingUtils.getAppVersionName(applicationContext);
-                lastEventVersionPredicates.updateEventValue(event, currentVersion);
-            } catch (final PackageManager.NameNotFoundException e) {
-                logger.d("Could not read current app version name.");
-            }
-        }
-
+        totalEventCountPredicates.eventTriggered(event);
+        firstEventTimePredicates.eventTriggered(event);
+        lastEventTimePredicates.eventTriggered(event);
+        lastEventVersionPredicates.eventTriggered(event);
         return this;
     }
 
@@ -163,10 +141,10 @@ public final class AmplifyStateTracker {
 
     public boolean shouldAskForRating() {
         return allEnvironmentRequirementsMet()
-                && allTotalEventCountPredicatesAllowFeedbackPrompt()
-                && allFirstEventTimePredicatesAllowFeedbackPrompt()
-                && allLastEventTimePredicatesAllowFeedbackPrompt()
-                && allLastEventVersionPredicatesAllowFeedbackPrompt();
+                && totalEventCountPredicates.allowFeedbackPrompt()
+                && firstEventTimePredicates.allowFeedbackPrompt()
+                && lastEventTimePredicates.allowFeedbackPrompt()
+                && lastEventVersionPredicates.allowFeedbackPrompt();
     }
 
     // private implementation:
@@ -179,22 +157,6 @@ public final class AmplifyStateTracker {
         }
 
         return true;
-    }
-
-    private boolean allTotalEventCountPredicatesAllowFeedbackPrompt() {
-        return totalEventCountPredicates.allowFeedbackPrompt();
-    }
-
-    private boolean allFirstEventTimePredicatesAllowFeedbackPrompt() {
-        return firstEventTimePredicates.allowFeedbackPrompt();
-    }
-
-    private boolean allLastEventTimePredicatesAllowFeedbackPrompt() {
-        return lastEventTimePredicates.allowFeedbackPrompt();
-    }
-
-    private boolean allLastEventVersionPredicatesAllowFeedbackPrompt() {
-        return lastEventVersionPredicates.allowFeedbackPrompt();
     }
 
     private void performEventRelatedInitializationIfRequired(@NonNull final IEvent event) {
