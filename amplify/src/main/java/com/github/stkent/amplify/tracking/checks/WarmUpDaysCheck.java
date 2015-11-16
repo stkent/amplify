@@ -39,8 +39,8 @@ public class WarmUpDaysCheck implements IEventCheck<Long> {
     @NonNull
     @Override
     public String getStatusString(@NonNull final Long cachedEventValue, @NonNull final Context applicationContext) {
-        final Long daysSinceLastEvent = TimeUnit.MILLISECONDS.toDays(System.currentTimeMillis() - cachedEventValue);
-        return "Warm-up period: " + warmUpPeriodDays + " days. Time since last event: " + daysSinceLastEvent + " days.";
+        final Long daysSinceFirstEvent = TimeUnit.MILLISECONDS.toDays(System.currentTimeMillis() - cachedEventValue);
+        return "Warm-up period: " + warmUpPeriodDays + " days. Time since first event: " + daysSinceFirstEvent + " days.";
     }
 
 }
