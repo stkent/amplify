@@ -40,18 +40,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static com.github.stkent.amplify.tracking.IntegratedEvent.APP_CRASHED;
-import static com.github.stkent.amplify.tracking.IntegratedEvent.APP_INSTALLED;
-import static com.github.stkent.amplify.tracking.IntegratedEvent.USER_DECLINED_FEEDBACK;
-import static com.github.stkent.amplify.tracking.IntegratedEvent.USER_DECLINED_RATING;
-import static com.github.stkent.amplify.tracking.IntegratedEvent.USER_GAVE_NEGATIVE_FEEDBACK;
-import static com.github.stkent.amplify.tracking.IntegratedEvent.USER_GAVE_POSITIVE_FEEDBACK;
-
 public final class AmplifyStateTracker {
 
     // static fields
 
     private static AmplifyStateTracker sharedInstance;
+    private static final int ONE_WEEK = 7;
+    private static final int ONE_DAY = 1;
 
     // instance fields
 
@@ -190,15 +185,15 @@ public final class AmplifyStateTracker {
     }
 
     public AmplifyStateTracker defaultSettings() {
-        return  this.addEnvironmentCheck(new GooglePlayStoreIsAvailableCheck())
-                .trackLastEventTime(APP_INSTALLED, new WarmUpDaysCheck(7))
-                .trackTotalEventCount(USER_GAVE_POSITIVE_FEEDBACK, new MaximumCountCheck(1))
-                .trackLastEventTime(USER_GAVE_NEGATIVE_FEEDBACK, new CooldownDaysCheck(7))
-                .trackLastEventTime(USER_DECLINED_FEEDBACK, new CooldownDaysCheck(7))
-                .trackLastEventVersion(USER_DECLINED_FEEDBACK, new VersionChangedCheck())
-                .trackLastEventTime(USER_DECLINED_RATING, new CooldownDaysCheck(7))
-                .trackLastEventVersion(USER_DECLINED_RATING, new VersionChangedCheck())
-                .trackLastEventTime(APP_CRASHED, new CooldownDaysCheck(7))
-                .trackLastEventVersion(USER_GAVE_NEGATIVE_FEEDBACK, new VersionChangedCheck());
+        return this.addEnvironmentCheck(new GooglePlayStoreIsAvailableCheck())
+                .trackLastEventTime(IntegratedEvent.APP_INSTALLED, new WarmUpDaysCheck(ONE_WEEK))
+                .trackTotalEventCount(IntegratedEvent.USER_GAVE_POSITIVE_FEEDBACK, new MaximumCountCheck(ONE_DAY))
+                .trackLastEventTime(IntegratedEvent.USER_GAVE_NEGATIVE_FEEDBACK, new CooldownDaysCheck(ONE_WEEK))
+                .trackLastEventTime(IntegratedEvent.USER_DECLINED_FEEDBACK, new CooldownDaysCheck(ONE_WEEK))
+                .trackLastEventVersion(IntegratedEvent.USER_DECLINED_FEEDBACK, new VersionChangedCheck())
+                .trackLastEventTime(IntegratedEvent.USER_DECLINED_RATING, new CooldownDaysCheck(ONE_WEEK))
+                .trackLastEventVersion(IntegratedEvent.USER_DECLINED_RATING, new VersionChangedCheck())
+                .trackLastEventTime(IntegratedEvent.APP_CRASHED, new CooldownDaysCheck(ONE_WEEK))
+                .trackLastEventVersion(IntegratedEvent.USER_GAVE_NEGATIVE_FEEDBACK, new VersionChangedCheck());
     }
 }
