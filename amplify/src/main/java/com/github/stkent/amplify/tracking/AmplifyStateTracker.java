@@ -26,12 +26,10 @@ import com.github.stkent.amplify.tracking.interfaces.IEnvironmentCheck;
 import com.github.stkent.amplify.tracking.interfaces.IEvent;
 import com.github.stkent.amplify.tracking.interfaces.IEventCheck;
 import com.github.stkent.amplify.tracking.interfaces.ILogger;
-import com.github.stkent.amplify.tracking.interfaces.ISettings;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 public final class AmplifyStateTracker {
@@ -48,20 +46,18 @@ public final class AmplifyStateTracker {
     private final PredicateMap<Long> firstEventTimePredicates;
     private final PredicateMap<String> lastEventVersionPredicates;
     private final PredicateMap<Integer> totalEventCountPredicates;
-    private final ISettings settings;
     private final ILogger logger;
 
     public static AmplifyStateTracker get(@NonNull final Context context) {
-        return get(context, Settings.getSharedInstance(context), new Logger());
+        return get(context, new Logger());
     }
 
     public static AmplifyStateTracker get(
             @NonNull final Context context,
-            @NonNull final ISettings settings,
             @NonNull final ILogger logger) {
         synchronized (AmplifyStateTracker.class) {
             if (sharedInstance == null) {
-                sharedInstance = new AmplifyStateTracker(context, settings, logger);
+                sharedInstance = new AmplifyStateTracker(context, logger);
             }
         }
 
@@ -77,15 +73,13 @@ public final class AmplifyStateTracker {
 
     private AmplifyStateTracker(
             @NonNull final Context context,
-            @NonNull final ISettings settings,
             @NonNull final ILogger logger) {
         this.applicationContext = context.getApplicationContext();
-        this.settings = settings;
         this.logger = logger;
-        this.lastEventTimePredicates = new PredicateMap<>(logger);
-        this.firstEventTimePredicates = new PredicateMap<>(logger);
-        this.lastEventVersionPredicates = new PredicateMap<>(logger);
-        this.totalEventCountPredicates = new PredicateMap<>(logger);
+        this.lastEventTimePredicates = new PredicateMap<>(logger, new GenericSettings<Long>(applicationContext), applicationContext);
+        this.firstEventTimePredicates = new PredicateMap<>(logger, new GenericSettings<Long>(applicationContext), applicationContext);
+        this.lastEventVersionPredicates = new PredicateMap<>(logger, new GenericSettings<String>(applicationContext), applicationContext);
+        this.totalEventCountPredicates = new PredicateMap<>(logger, new GenericSettings<Integer>(applicationContext), applicationContext);
     }
 
     // configuration methods
@@ -128,29 +122,29 @@ public final class AmplifyStateTracker {
 
     public AmplifyStateTracker notifyEventTriggered(@NonNull final IEvent event) {
         if (totalEventCountPredicates.containsKey(event)) {
-            final Integer cachedCount = settings.getTotalEventCount(event);
+            final Integer cachedCount = totalEventCountPredicates.getEventValue(event);
             final Integer updatedCount = cachedCount + 1;
-            settings.setTotalEventCount(event, updatedCount);
+            totalEventCountPredicates.updateEventValue(event, updatedCount);
         }
 
         if (firstEventTimePredicates.containsKey(event)) {
-            final Long cachedTime = settings.getFirstEventTime(event);
+            final Long cachedTime = firstEventTimePredicates.getEventValue(event);
 
             if (cachedTime == Long.MAX_VALUE) {
                 final Long currentTime = System.currentTimeMillis();
-                settings.setFirstEventTime(event, Math.min(cachedTime, currentTime));
+                firstEventTimePredicates.updateEventValue(event, Math.min(cachedTime, currentTime));
             }
         }
 
         if (lastEventTimePredicates.containsKey(event)) {
             final Long currentTime = System.currentTimeMillis();
-            settings.setLastEventTime(event, currentTime);
+            lastEventTimePredicates.updateEventValue(event, currentTime);
         }
 
         if (lastEventVersionPredicates.containsKey(event)) {
             try {
                 final String currentVersion = TrackingUtils.getAppVersionName(applicationContext);
-                settings.setLastEventVersion(event, currentVersion);
+                lastEventVersionPredicates.updateEventValue(event, currentVersion);
             } catch (final PackageManager.NameNotFoundException e) {
                 logger.d("Could not read current app version name.");
             }
@@ -188,77 +182,19 @@ public final class AmplifyStateTracker {
     }
 
     private boolean allTotalEventCountPredicatesAllowFeedbackPrompt() {
-        for (final Map.Entry<IEvent, List<IEventCheck<Integer>>> eventCheckSet : totalEventCountPredicates.entrySet()) {
-            final IEvent event = eventCheckSet.getKey();
-
-            final Integer totalEventCount = settings.getTotalEventCount(event);
-
-            for (final IEventCheck<Integer> predicate : eventCheckSet.getValue()) {
-                logger.d(event.getTrackingKey() + ": " + predicate.getStatusString(totalEventCount, applicationContext));
-
-                if (predicate.shouldBlockFeedbackPrompt(totalEventCount, applicationContext)) {
-                    return false;
-                }
-            }
-        }
-
-        return true;
+        return totalEventCountPredicates.allowFeedbackPrompt();
     }
 
     private boolean allFirstEventTimePredicatesAllowFeedbackPrompt() {
-        for (final Map.Entry<IEvent, List<IEventCheck<Long>>> eventCheckSet : firstEventTimePredicates.entrySet()) {
-            final IEvent event = eventCheckSet.getKey();
-
-            final Long firstEventTime = settings.getFirstEventTime(event);
-
-            for (final IEventCheck<Long> predicate : eventCheckSet.getValue()) {
-                logger.d(event.getTrackingKey() + ": " + predicate.getStatusString(firstEventTime, applicationContext));
-
-                if (predicate.shouldBlockFeedbackPrompt(firstEventTime, applicationContext)) {
-                    return false;
-                }
-            }
-        }
-
-        return true;
+        return firstEventTimePredicates.allowFeedbackPrompt();
     }
 
     private boolean allLastEventTimePredicatesAllowFeedbackPrompt() {
-        for (final Map.Entry<IEvent, List<IEventCheck<Long>>> eventCheckSet : lastEventTimePredicates.entrySet()) {
-            final IEvent event = eventCheckSet.getKey();
-
-            final Long lastEventTime = settings.getLastEventTime(event);
-
-            for (final IEventCheck<Long> predicate : eventCheckSet.getValue()) {
-                logger.d(event.getTrackingKey() + ": " + predicate.getStatusString(lastEventTime, applicationContext));
-
-                if (predicate.shouldBlockFeedbackPrompt(lastEventTime, applicationContext)) {
-                    return false;
-                }
-            }
-        }
-
-        return true;
+        return lastEventTimePredicates.allowFeedbackPrompt();
     }
 
     private boolean allLastEventVersionPredicatesAllowFeedbackPrompt() {
-        for (final Map.Entry<IEvent, List<IEventCheck<String>>> eventCheckSet : lastEventVersionPredicates.entrySet()) {
-            final IEvent event = eventCheckSet.getKey();
-
-            final String lastEventVersion = settings.getLastEventVersion(event);
-
-            if (lastEventVersion != null) {
-                for (final IEventCheck<String> predicate : eventCheckSet.getValue()) {
-                    logger.d(event.getTrackingKey() + ": " + predicate.getStatusString(lastEventVersion, applicationContext));
-
-                    if (predicate.shouldBlockFeedbackPrompt(lastEventVersion, applicationContext)) {
-                        return false;
-                    }
-                }
-            }
-        }
-
-        return true;
+        return lastEventVersionPredicates.allowFeedbackPrompt();
     }
 
     private void performEventRelatedInitializationIfRequired(@NonNull final IEvent event) {
