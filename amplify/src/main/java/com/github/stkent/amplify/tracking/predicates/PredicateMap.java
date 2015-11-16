@@ -47,18 +47,6 @@ public abstract class PredicateMap<T> extends ConcurrentHashMap<IEvent, List<IEv
         this.applicationContext = applicationContext;
     }
 
-    public ILogger getLogger() {
-        return logger;
-    }
-
-    public GenericSettings<T> getSettings() {
-        return settings;
-    }
-
-    public Context getApplicationContext() {
-        return applicationContext;
-    }
-
     public void trackEvent(@NonNull final IEvent event, @NonNull final IEventCheck<T> predicate) {
 
         if (!containsKey(event)) {
@@ -87,6 +75,14 @@ public abstract class PredicateMap<T> extends ConcurrentHashMap<IEvent, List<IEv
         }
 
         return true;
+    }
+
+    protected ILogger getLogger() {
+        return logger;
+    }
+
+    protected Context getApplicationContext() {
+        return applicationContext;
     }
 
     protected T getEventValue(@NonNull final IEvent event) {

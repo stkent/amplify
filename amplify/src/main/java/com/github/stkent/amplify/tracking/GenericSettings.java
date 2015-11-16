@@ -53,6 +53,8 @@ public class GenericSettings<T> {
             editor.putInt(event.getTrackingKey(), (Integer) value);
         } else if (value.getClass().equals(Float.class)) {
             editor.putLong(event.getTrackingKey(), (Long) value);
+        } else {
+            throw new IllegalArgumentException("Event value must be one of String, Boolean, Long, Integer or Float");
         }
 
         //TODO is it alright that this is asynchronous?
