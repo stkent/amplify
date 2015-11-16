@@ -30,15 +30,13 @@ import com.github.stkent.amplify.tracking.interfaces.IEnvironmentCheck;
 import com.github.stkent.amplify.tracking.interfaces.IEvent;
 import com.github.stkent.amplify.tracking.interfaces.IEventCheck;
 import com.github.stkent.amplify.tracking.interfaces.ILogger;
-import com.github.stkent.amplify.tracking.predicates.FirstTimeMap;
-import com.github.stkent.amplify.tracking.predicates.LastTimeMap;
-import com.github.stkent.amplify.tracking.predicates.LastVersionMap;
-import com.github.stkent.amplify.tracking.predicates.TotalCountMap;
+import com.github.stkent.amplify.tracking.predicates.FirstTimePredicate;
+import com.github.stkent.amplify.tracking.predicates.LastTimePredicate;
+import com.github.stkent.amplify.tracking.predicates.LastVersionPredicate;
+import com.github.stkent.amplify.tracking.predicates.TotalCountPredicate;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public final class AmplifyStateTracker {
 
@@ -52,10 +50,10 @@ public final class AmplifyStateTracker {
 
     private final Context applicationContext;
     private final List<IEnvironmentCheck> environmentRequirements = new ArrayList<>();
-    private final LastTimeMap lastEventTimePredicates;
-    private final FirstTimeMap firstEventTimePredicates;
-    private final LastVersionMap lastEventVersionPredicates;
-    private final TotalCountMap totalEventCountPredicates;
+    private final LastTimePredicate lastTimePredicate;
+    private final FirstTimePredicate firstTimePredicate;
+    private final LastVersionPredicate lastVersionPredicate;
+    private final TotalCountPredicate totalCountPredicate;
     private final ILogger logger;
 
     public static AmplifyStateTracker defaultTracker(@NonNull final Context context) {
@@ -100,10 +98,10 @@ public final class AmplifyStateTracker {
             @NonNull final ILogger logger) {
         this.applicationContext = context.getApplicationContext();
         this.logger = logger;
-        this.lastEventTimePredicates = new LastTimeMap(logger, applicationContext);
-        this.firstEventTimePredicates = new FirstTimeMap(logger, applicationContext);
-        this.lastEventVersionPredicates = new LastVersionMap(logger, applicationContext);
-        this.totalEventCountPredicates = new TotalCountMap(logger, applicationContext);
+        this.lastTimePredicate = new LastTimePredicate(logger, applicationContext);
+        this.firstTimePredicate = new FirstTimePredicate(logger, applicationContext);
+        this.lastVersionPredicate = new LastVersionPredicate(logger, applicationContext);
+        this.totalCountPredicate = new TotalCountPredicate(logger, applicationContext);
     }
 
     // configuration methods
@@ -111,28 +109,28 @@ public final class AmplifyStateTracker {
     public AmplifyStateTracker trackTotalEventCount(@NonNull final IEvent event, @NonNull final IEventCheck<Integer> predicate) {
         // todo: check for conflicts here
         performEventRelatedInitializationIfRequired(event);
-        totalEventCountPredicates.trackEvent(event, predicate);
+        totalCountPredicate.trackEvent(event, predicate);
         return this;
     }
 
     public AmplifyStateTracker trackFirstEventTime(@NonNull final IEvent event, @NonNull final IEventCheck<Long> predicate) {
         // todo: check for conflicts here
         performEventRelatedInitializationIfRequired(event);
-        firstEventTimePredicates.trackEvent(event, predicate);
+        firstTimePredicate.trackEvent(event, predicate);
         return this;
     }
 
     public AmplifyStateTracker trackLastEventTime(@NonNull final IEvent event, @NonNull final IEventCheck<Long> predicate) {
         // todo: check for conflicts here
         performEventRelatedInitializationIfRequired(event);
-        lastEventTimePredicates.trackEvent(event, predicate);
+        lastTimePredicate.trackEvent(event, predicate);
         return this;
     }
 
     public AmplifyStateTracker trackLastEventVersion(@NonNull final IEvent event, @NonNull final IEventCheck<String> predicate) {
         // todo: check for conflicts here
         performEventRelatedInitializationIfRequired(event);
-        lastEventVersionPredicates.trackEvent(event, predicate);
+        lastVersionPredicate.trackEvent(event, predicate);
         return this;
     }
 
@@ -145,10 +143,10 @@ public final class AmplifyStateTracker {
     // update methods
 
     public AmplifyStateTracker notifyEventTriggered(@NonNull final IEvent event) {
-        totalEventCountPredicates.eventTriggered(event);
-        firstEventTimePredicates.eventTriggered(event);
-        lastEventTimePredicates.eventTriggered(event);
-        lastEventVersionPredicates.eventTriggered(event);
+        totalCountPredicate.eventTriggered(event);
+        firstTimePredicate.eventTriggered(event);
+        lastTimePredicate.eventTriggered(event);
+        lastVersionPredicate.eventTriggered(event);
         return this;
     }
 
@@ -162,10 +160,10 @@ public final class AmplifyStateTracker {
 
     public boolean shouldAskForRating() {
         return allEnvironmentRequirementsMet()
-                && totalEventCountPredicates.allowFeedbackPrompt()
-                && firstEventTimePredicates.allowFeedbackPrompt()
-                && lastEventTimePredicates.allowFeedbackPrompt()
-                && lastEventVersionPredicates.allowFeedbackPrompt();
+                && totalCountPredicate.allowFeedbackPrompt()
+                && firstTimePredicate.allowFeedbackPrompt()
+                && lastTimePredicate.allowFeedbackPrompt()
+                && lastVersionPredicate.allowFeedbackPrompt();
     }
 
     // private implementation:
@@ -189,12 +187,9 @@ public final class AmplifyStateTracker {
     }
 
     private boolean isEventAlreadyTracked(@NonNull final IEvent event) {
-        final Set<IEvent> allTrackedEvents = new HashSet<>();
-
-        allTrackedEvents.addAll(lastEventTimePredicates.keySet());
-        allTrackedEvents.addAll(lastEventVersionPredicates.keySet());
-        allTrackedEvents.addAll(totalEventCountPredicates.keySet());
-
-        return allTrackedEvents.contains(event);
+        return lastTimePredicate.containsEvent(event)
+                || lastVersionPredicate.containsEvent(event)
+                || totalCountPredicate.containsEvent(event)
+                || firstTimePredicate.containsEvent(event);
     }
 }

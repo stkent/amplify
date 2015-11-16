@@ -26,19 +26,22 @@ import com.github.stkent.amplify.tracking.interfaces.ILogger;
 /**
  * Created by bobbake4 on 11/16/15.
  */
-public class TotalCountMap extends PredicateMap<Integer> {
+public class FirstTimePredicate extends EventPredicate<Long> {
 
-    public TotalCountMap(ILogger logger, Context applicationContext) {
-        super(logger, new GenericSettings<Integer>(applicationContext), applicationContext);
+    public FirstTimePredicate(ILogger logger, Context applicationContext) {
+        super(logger, new GenericSettings<Long>(applicationContext), applicationContext);
     }
 
     @Override
     public void eventTriggered(@NonNull IEvent event) {
 
-        if (containsKey(event)) {
-            final Integer cachedCount = getEventValue(event);
-            final Integer updatedCount = cachedCount + 1;
-            updateEventValue(event, updatedCount);
+        if (containsEvent(event)) {
+            final Long cachedTime = getEventValue(event);
+
+            if (cachedTime == Long.MAX_VALUE) {
+                final Long currentTime = System.currentTimeMillis();
+                updateEventValue(event, Math.min(cachedTime, currentTime));
+            }
         }
     }
 }

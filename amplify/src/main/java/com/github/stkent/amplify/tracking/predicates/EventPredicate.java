@@ -32,35 +32,37 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Created by bobbake4 on 11/13/15.
  */
-public abstract class PredicateMap<T> extends ConcurrentHashMap<IEvent, List<IEventCheck<T>>> {
+public abstract class EventPredicate<T> {
 
     private final ILogger logger;
     private final GenericSettings<T> settings;
     private final Context applicationContext;
+    private final ConcurrentHashMap<IEvent, List<IEventCheck<T>>> internalMap;
 
     public abstract void eventTriggered(@NonNull final IEvent event);
 
-    public PredicateMap(ILogger logger, GenericSettings<T> settings, Context applicationContext) {
+    public EventPredicate(ILogger logger, GenericSettings<T> settings, Context applicationContext) {
         super();
         this.logger = logger;
         this.settings = settings;
         this.applicationContext = applicationContext;
+        this.internalMap = new ConcurrentHashMap<>();
     }
 
     public void trackEvent(@NonNull final IEvent event, @NonNull final IEventCheck<T> predicate) {
 
-        if (!containsKey(event)) {
-            put(event, new ArrayList<IEventCheck<T>>());
+        if (!internalMap.containsKey(event)) {
+            internalMap.put(event, new ArrayList<IEventCheck<T>>());
         }
 
-        get(event).add(predicate);
+        internalMap.get(event).add(predicate);
 
-        logger.d(get(event).toString());
+        logger.d(internalMap.get(event).toString());
     }
 
     public boolean allowFeedbackPrompt() {
 
-        for (final Map.Entry<IEvent, List<IEventCheck<T>>> eventCheckSet : entrySet()) {
+        for (final Map.Entry<IEvent, List<IEventCheck<T>>> eventCheckSet : internalMap.entrySet()) {
             final IEvent event = eventCheckSet.getKey();
 
             final T cachedEventValue = settings.getEventValue(event);
@@ -75,6 +77,10 @@ public abstract class PredicateMap<T> extends ConcurrentHashMap<IEvent, List<IEv
         }
 
         return true;
+    }
+
+    public boolean containsEvent(@NonNull final IEvent event) {
+        return internalMap.contains(event);
     }
 
     protected ILogger getLogger() {
