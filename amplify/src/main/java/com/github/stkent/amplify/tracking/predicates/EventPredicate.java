@@ -51,7 +51,7 @@ public abstract class EventPredicate<T> {
 
     public void trackEvent(@NonNull final IEvent event, @NonNull final IEventCheck<T> predicate) {
 
-        if (!internalMap.containsKey(event)) {
+        if (!containsEvent(event)) {
             internalMap.put(event, new ArrayList<IEventCheck<T>>());
         }
 
@@ -80,7 +80,7 @@ public abstract class EventPredicate<T> {
     }
 
     public boolean containsEvent(@NonNull final IEvent event) {
-        return internalMap.contains(event);
+        return internalMap.containsKey(event);
     }
 
     protected ILogger getLogger() {
