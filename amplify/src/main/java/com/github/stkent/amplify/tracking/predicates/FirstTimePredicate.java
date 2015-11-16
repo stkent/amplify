@@ -44,4 +44,9 @@ public class FirstTimePredicate extends EventPredicate<Long> {
             }
         }
     }
+
+    @Override
+    public Long defaultValue() {
+        return Long.MAX_VALUE;
+    }
 }

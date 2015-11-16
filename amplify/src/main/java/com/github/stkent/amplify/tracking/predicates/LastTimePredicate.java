@@ -40,4 +40,9 @@ public class LastTimePredicate extends EventPredicate<Long> {
             updateEventValue(event, currentTime);
         }
     }
+
+    @Override
+    public Long defaultValue() {
+        return 0L;
+    }
 }

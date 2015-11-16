@@ -40,6 +40,7 @@ public abstract class EventPredicate<T> {
     private final ConcurrentHashMap<IEvent, List<IEventCheck<T>>> internalMap;
 
     public abstract void eventTriggered(@NonNull final IEvent event);
+    public abstract T defaultValue();
 
     public EventPredicate(ILogger logger, GenericSettings<T> settings, Context applicationContext) {
         super();
@@ -65,7 +66,7 @@ public abstract class EventPredicate<T> {
         for (final Map.Entry<IEvent, List<IEventCheck<T>>> eventCheckSet : internalMap.entrySet()) {
             final IEvent event = eventCheckSet.getKey();
 
-            final T cachedEventValue = settings.getEventValue(event);
+            final T cachedEventValue = getEventValue(event);
 
             for (final IEventCheck<T> predicate : eventCheckSet.getValue()) {
                 logger.d(event.getTrackingKey() + ": " + predicate.getStatusString(cachedEventValue, applicationContext));
@@ -92,7 +93,8 @@ public abstract class EventPredicate<T> {
     }
 
     protected T getEventValue(@NonNull final IEvent event) {
-        return settings.getEventValue(event);
+        T value = settings.getEventValue(event);
+        return value != null ? value : defaultValue();
     }
 
     protected void updateEventValue(@NonNull final IEvent event, T value) {
