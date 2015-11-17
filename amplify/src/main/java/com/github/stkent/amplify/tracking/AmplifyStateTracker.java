@@ -56,6 +56,8 @@ public final class AmplifyStateTracker {
     private final TotalCountPredicate totalCountPredicate;
     private final ILogger logger;
 
+    private boolean alwaysShow;
+
     public static AmplifyStateTracker defaultTracker(@NonNull final Context context) {
         return AmplifyStateTracker.get(context)
                 .addEnvironmentCheck(new GooglePlayStoreIsAvailableCheck())
@@ -88,6 +90,11 @@ public final class AmplifyStateTracker {
 
     public AmplifyStateTracker setLogLevel(@NonNull final Logger.LogLevel logLevel) {
         logger.setLogLevel(logLevel);
+        return this;
+    }
+
+    public AmplifyStateTracker setAlwaysShow(@NonNull final boolean alwaysShow) {
+        this.alwaysShow = alwaysShow;
         return this;
     }
 
@@ -143,6 +150,7 @@ public final class AmplifyStateTracker {
     // update methods
 
     public AmplifyStateTracker notifyEventTriggered(@NonNull final IEvent event) {
+        logger.d("Triggered Event: " + event);
         totalCountPredicate.eventTriggered(event);
         firstTimePredicate.eventTriggered(event);
         lastTimePredicate.eventTriggered(event);
@@ -159,11 +167,11 @@ public final class AmplifyStateTracker {
     }
 
     public boolean shouldAskForRating() {
-        return allEnvironmentRequirementsMet()
-                && totalCountPredicate.allowFeedbackPrompt()
-                && firstTimePredicate.allowFeedbackPrompt()
-                && lastTimePredicate.allowFeedbackPrompt()
-                && lastVersionPredicate.allowFeedbackPrompt();
+        return alwaysShow | (allEnvironmentRequirementsMet()
+                & totalCountPredicate.allowFeedbackPrompt()
+                & firstTimePredicate.allowFeedbackPrompt()
+                & lastTimePredicate.allowFeedbackPrompt()
+                & lastVersionPredicate.allowFeedbackPrompt());
     }
 
     // private implementation:
@@ -171,6 +179,7 @@ public final class AmplifyStateTracker {
     private boolean allEnvironmentRequirementsMet() {
         for (final IEnvironmentCheck environmentRequirement : environmentRequirements) {
             if (!environmentRequirement.isMet(applicationContext)) {
+                logger.d("Environment requirement not met: " + environmentRequirement);
                 return false;
             }
         }

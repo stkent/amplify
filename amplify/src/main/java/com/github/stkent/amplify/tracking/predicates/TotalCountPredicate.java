@@ -38,6 +38,7 @@ public class TotalCountPredicate extends EventPredicate<Integer> {
         if (containsEvent(event)) {
             final Integer cachedCount = getEventValue(event);
             final Integer updatedCount = cachedCount + 1;
+            getLogger().d("TotalCountPredicate updating event value from: " + cachedCount + ", to: " + updatedCount);
             updateEventValue(event, updatedCount);
         }
     }

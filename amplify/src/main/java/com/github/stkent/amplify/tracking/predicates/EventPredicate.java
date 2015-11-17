@@ -72,6 +72,7 @@ public abstract class EventPredicate<T> {
                 logger.d(event.getTrackingKey() + ": " + predicate.getStatusString(cachedEventValue, applicationContext));
 
                 if (predicate.shouldBlockFeedbackPrompt(cachedEventValue, applicationContext)) {
+                    logger.d("Blocking feedback for event: " + event + " because of check: " + predicate);
                     return false;
                 }
             }

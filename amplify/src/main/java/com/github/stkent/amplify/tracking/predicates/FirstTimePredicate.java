@@ -40,6 +40,7 @@ public class FirstTimePredicate extends EventPredicate<Long> {
 
             if (cachedTime == Long.MAX_VALUE) {
                 final Long currentTime = System.currentTimeMillis();
+                getLogger().d("FirstTimePredicate updating event value from: " + cachedTime + ", to: " + currentTime);
                 updateEventValue(event, Math.min(cachedTime, currentTime));
             }
         }
