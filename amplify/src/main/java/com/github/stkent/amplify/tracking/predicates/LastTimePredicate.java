@@ -43,6 +43,6 @@ public class LastTimePredicate extends EventPredicate<Long> {
 
     @Override
     public Long defaultValue() {
-        return 0L;
+        return Long.MAX_VALUE;
     }
 }
