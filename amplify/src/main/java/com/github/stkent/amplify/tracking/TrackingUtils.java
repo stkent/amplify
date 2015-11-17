@@ -17,6 +17,7 @@
 package com.github.stkent.amplify.tracking;
 
 import android.content.Context;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 
@@ -27,10 +28,17 @@ public final class TrackingUtils {
     }
 
     public static String getAppVersionName(@NonNull final Context applicationContext) throws PackageManager.NameNotFoundException {
+        return getPackageInfo(applicationContext).versionName;
+    }
+
+    public static int getAppVersionCode(@NonNull final Context applicationContext) throws PackageManager.NameNotFoundException {
+        return getPackageInfo(applicationContext).versionCode;
+    }
+
+    private static PackageInfo getPackageInfo(@NonNull Context applicationContext) throws PackageManager.NameNotFoundException {
         final PackageManager packageManager = applicationContext.getPackageManager();
         final String applicationPackageName = applicationContext.getPackageName();
-
-        return packageManager.getPackageInfo(applicationPackageName, 0).versionName;
+        return packageManager.getPackageInfo(applicationPackageName, 0);
     }
 
 }
