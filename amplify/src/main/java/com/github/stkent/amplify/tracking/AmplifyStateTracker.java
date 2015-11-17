@@ -59,7 +59,7 @@ public final class AmplifyStateTracker {
     public static AmplifyStateTracker defaultTracker(@NonNull final Context context) {
         return AmplifyStateTracker.get(context)
                 .addEnvironmentCheck(new GooglePlayStoreIsAvailableCheck())
-                .trackLastEventTime(IntegratedEvent.APP_INSTALLED, new WarmUpDaysCheck(ONE_WEEK))
+                .trackFirstEventTime(IntegratedEvent.APP_INSTALLED, new WarmUpDaysCheck(ONE_WEEK))
                 .trackTotalEventCount(IntegratedEvent.USER_GAVE_POSITIVE_FEEDBACK, new MaximumCountCheck(ONE_DAY))
                 .trackLastEventTime(IntegratedEvent.USER_GAVE_NEGATIVE_FEEDBACK, new CooldownDaysCheck(ONE_WEEK))
                 .trackLastEventTime(IntegratedEvent.USER_DECLINED_FEEDBACK, new CooldownDaysCheck(ONE_WEEK))
