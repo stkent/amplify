@@ -38,7 +38,8 @@ public interface IEvent {
      * application.
      *
      * @param applicationContext the context of the consuming application
+     * @param logger logger to be used for messaging
      */
-    void performRelatedInitialization(@NonNull final Context applicationContext);
+    void performRelatedInitialization(@NonNull final Context applicationContext, @NonNull final ILogger logger);
 
 }

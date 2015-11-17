@@ -79,4 +79,8 @@ public class GenericSettings<T> {
         return null;
     }
 
+    public boolean hasEventValue(@NonNull final IEvent event) {
+        return sharedPreferences.contains(event.getTrackingKey());
+    }
+
 }

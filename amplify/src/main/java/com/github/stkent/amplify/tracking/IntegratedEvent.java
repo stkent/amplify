@@ -20,12 +20,12 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.github.stkent.amplify.tracking.interfaces.IEvent;
+import com.github.stkent.amplify.tracking.interfaces.ILogger;
 
 public enum IntegratedEvent implements IEvent {
 
     APP_CRASHED,
     APP_INSTALLED,
-    APP_UPDATED,
     USER_GAVE_POSITIVE_FEEDBACK,
     USER_GAVE_NEGATIVE_FEEDBACK,
     USER_DECLINED_RATING,
@@ -38,7 +38,7 @@ public enum IntegratedEvent implements IEvent {
     }
 
     @Override
-    public void performRelatedInitialization(@NonNull final Context applicationContext) {
+    public void performRelatedInitialization(@NonNull final Context applicationContext, @NonNull final ILogger logger) {
         if (this == APP_CRASHED) {
             final Thread.UncaughtExceptionHandler defaultExceptionHandler
                     = Thread.getDefaultUncaughtExceptionHandler();
@@ -49,6 +49,12 @@ public enum IntegratedEvent implements IEvent {
 
             Thread.setDefaultUncaughtExceptionHandler(
                     new AmplifyExceptionHandler(applicationContext, defaultExceptionHandler));
+        } else if (this == APP_INSTALLED) {
+            GenericSettings<Long> genericSettings = new GenericSettings<>(applicationContext, logger);
+
+            if (!genericSettings.hasEventValue(this)) {
+                genericSettings.writeEventValue(this, System.currentTimeMillis());
+            }
         }
     }
 
