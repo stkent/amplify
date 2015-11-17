@@ -40,8 +40,10 @@ public final class FeedbackUtils {
     }
 
     public static void showFeedbackEmailChooser(final Activity activity) {
-        activity.startActivity(Intent.createChooser(getFeedbackEmailIntent(activity), "Choose an email provider:"));
-        activity.overridePendingTransition(0, 0);
+        if (ActivityStateUtil.isActivityValid(activity)) {
+            activity.startActivity(Intent.createChooser(getFeedbackEmailIntent(activity), "Choose an email provider:"));
+            activity.overridePendingTransition(0, 0);
+        }
     }
 
     public static boolean canHandleFeedbackEmailIntent(final Context context) {
@@ -52,28 +54,27 @@ public final class FeedbackUtils {
 
     private static Intent getFeedbackEmailIntent(Context context) {
 
-        String email;
-
-        try {
-            email = context.getString(R.string.amp_feedback_email);
-        } catch (Resources.NotFoundException e) {
-            throw new IllegalArgumentException("R.string.amp_feedback_email resource not found, you must set this in your strings file for the"
-                    + " feedback util to function", e);
-        }
-
-        final String feedbackMailTo = "mailto:" + email;
         final String feedbackEmailSubject = Uri.encode("Android App Feedback", "UTF-8");
         final String appInfo = getAppInfo(context);
 
-        final String uriString = feedbackMailTo
-                + "?subject=" + feedbackEmailSubject
-                + "&body=" + Uri.encode(appInfo);
+        final StringBuilder uriStringBuilder = new StringBuilder("mailto:");
 
-        final Uri uri = Uri.parse(uriString);
+        try {
+            uriStringBuilder.append(context.getString(R.string.amp_feedback_email));
+        } catch (Resources.NotFoundException e) {
+            IllegalArgumentException illegalArgumentException = new IllegalArgumentException("R.string.amp_feedback_email"
+                    + "resource not found, you must set this in your strings file for the feedback util to function", e);
+            Log.d(TAG, "ResourceNotFound", illegalArgumentException);
+        }
 
-        final Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
-        emailIntent.setData(uri);
-        return emailIntent;
+        uriStringBuilder.append("?subject=")
+                .append(feedbackEmailSubject)
+                .append("&body=")
+                .append(appInfo);
+
+        final Uri uri = Uri.parse(uriStringBuilder.toString());
+
+        return new Intent(Intent.ACTION_SENDTO, uri);
     }
 
     private static String getAppInfo(final Context context) {
