@@ -46,4 +46,9 @@ public class LastVersionPredicate extends EventPredicate<String> {
             }
         }
     }
+
+    @Override
+    public String defaultValue() {
+        return "";
+    }
 }

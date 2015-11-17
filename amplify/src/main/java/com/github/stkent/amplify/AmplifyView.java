@@ -91,6 +91,8 @@ public class AmplifyView extends FrameLayout {
     }
 
     private void init(final Context context, @Nullable final AttributeSet attrs) {
+        hide();
+
         ratingStateTracker = AmplifyStateTracker.get(context);
 
         final TypedArray typedArray = context.getTheme().obtainStyledAttributes(attrs, R.styleable.AmplifyView, 0, 0);

@@ -41,4 +41,9 @@ public class TotalCountPredicate extends EventPredicate<Integer> {
             updateEventValue(event, updatedCount);
         }
     }
+
+    @Override
+    public Integer defaultValue() {
+        return 0;
+    }
 }
