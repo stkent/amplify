@@ -43,4 +43,10 @@ public class WarmUpDaysCheck implements IEventCheck<Long> {
         return "Warm-up period: " + warmUpPeriodDays + " days. Time since first event: " + daysSinceFirstEvent + " days.";
     }
 
+    @NonNull
+    @Override
+    public String getTrackingKey() {
+        return "WARM_UP_DAYS_CHECK";
+    }
+
 }

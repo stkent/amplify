@@ -19,7 +19,9 @@ package com.github.stkent.amplify.tracking;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import com.github.stkent.amplify.tracking.checks.WarmUpDaysCheck;
 import com.github.stkent.amplify.tracking.interfaces.IEvent;
+import com.github.stkent.amplify.tracking.interfaces.ILogger;
 
 public enum IntegratedEvent implements IEvent {
 
@@ -31,6 +33,8 @@ public enum IntegratedEvent implements IEvent {
     USER_DECLINED_RATING,
     USER_DECLINED_FEEDBACK;
 
+    private static final int ONE_WEEK = 7;
+
     @NonNull
     @Override
     public String getTrackingKey() {
@@ -38,7 +42,7 @@ public enum IntegratedEvent implements IEvent {
     }
 
     @Override
-    public void performRelatedInitialization(@NonNull final Context applicationContext) {
+    public void performRelatedInitialization(@NonNull final Context applicationContext, @NonNull final ILogger logger) {
         if (this == APP_CRASHED) {
             final Thread.UncaughtExceptionHandler defaultExceptionHandler
                     = Thread.getDefaultUncaughtExceptionHandler();
@@ -49,6 +53,14 @@ public enum IntegratedEvent implements IEvent {
 
             Thread.setDefaultUncaughtExceptionHandler(
                     new AmplifyExceptionHandler(applicationContext, defaultExceptionHandler));
+        } else if (this == APP_INSTALLED) {
+            GenericSettings<Long> genericSettings = new GenericSettings<>(applicationContext, logger);
+
+            TrackedEvent trackedEvent = new TrackedEvent(this, new WarmUpDaysCheck(ONE_WEEK));
+
+            if (!genericSettings.hasEventValue(trackedEvent)) {
+                genericSettings.writeEventValue(trackedEvent, System.currentTimeMillis());
+            }
         }
     }
 

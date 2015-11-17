@@ -192,7 +192,7 @@ public final class AmplifyStateTracker {
             return;
         }
 
-        event.performRelatedInitialization(applicationContext);
+        event.performRelatedInitialization(applicationContext, logger);
     }
 
     private boolean isEventAlreadyTracked(@NonNull final IEvent event) {

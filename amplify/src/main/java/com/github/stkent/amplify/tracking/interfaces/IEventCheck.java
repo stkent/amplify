@@ -47,4 +47,11 @@ public interface IEventCheck<T> {
     @NonNull
     String getStatusString(@NonNull final T cachedEventValue, @NonNull final Context applicationContext);
 
+    /**
+     * @return a key that uniquely identifies this event check within the
+     *         consuming application
+     */
+    @NonNull
+    String getTrackingKey();
+
 }

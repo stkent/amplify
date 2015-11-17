@@ -20,6 +20,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.github.stkent.amplify.tracking.GenericSettings;
+import com.github.stkent.amplify.tracking.TrackedEvent;
 import com.github.stkent.amplify.tracking.interfaces.IEvent;
 import com.github.stkent.amplify.tracking.interfaces.IEventCheck;
 import com.github.stkent.amplify.tracking.interfaces.ILogger;
@@ -39,7 +40,7 @@ public abstract class EventPredicate<T> {
     private final Context applicationContext;
     private final ConcurrentHashMap<IEvent, List<IEventCheck<T>>> internalMap;
 
-    public abstract void eventTriggered(@NonNull final IEvent event);
+    public abstract void eventTriggered(@NonNull final TrackedEvent event);
     public abstract T defaultValue();
 
     public EventPredicate(ILogger logger, GenericSettings<T> settings, Context applicationContext) {
@@ -61,18 +62,35 @@ public abstract class EventPredicate<T> {
         logger.d(internalMap.get(event).toString());
     }
 
+    public void eventTriggered(@NonNull final IEvent event) {
+
+        if (containsEvent(event)) {
+
+            List<IEventCheck<T>> eventChecks = internalMap.get(event);
+
+            for (final IEventCheck<T> predicate : eventChecks) {
+
+                TrackedEvent trackedEvent = new TrackedEvent(event, predicate);
+                eventTriggered(trackedEvent);
+            }
+        }
+    }
+
     public boolean allowFeedbackPrompt() {
 
         for (final Map.Entry<IEvent, List<IEventCheck<T>>> eventCheckSet : internalMap.entrySet()) {
             final IEvent event = eventCheckSet.getKey();
 
-            final T cachedEventValue = getEventValue(event);
-
             for (final IEventCheck<T> predicate : eventCheckSet.getValue()) {
-                logger.d(event.getTrackingKey() + ": " + predicate.getStatusString(cachedEventValue, applicationContext));
+
+                TrackedEvent trackedEvent = new TrackedEvent(event, predicate);
+
+                final T cachedEventValue = getEventValue(trackedEvent);
+
+                logger.d(trackedEvent.getTrackingKey() + ": " + predicate.getStatusString(cachedEventValue, applicationContext));
 
                 if (predicate.shouldBlockFeedbackPrompt(cachedEventValue, applicationContext)) {
-                    logger.d("Blocking feedback for event: " + event + " because of check: " + predicate);
+                    logger.d("Blocking feedback for event: " + trackedEvent + " because of check: " + predicate);
                     return false;
                 }
             }
@@ -93,12 +111,12 @@ public abstract class EventPredicate<T> {
         return applicationContext;
     }
 
-    protected T getEventValue(@NonNull final IEvent event) {
+    protected T getEventValue(@NonNull final TrackedEvent event) {
         T value = settings.getEventValue(event);
         return value != null ? value : defaultValue();
     }
 
-    protected void updateEventValue(@NonNull final IEvent event, T value) {
+    protected void updateEventValue(@NonNull final TrackedEvent event, T value) {
         settings.writeEventValue(event, value);
     }
 

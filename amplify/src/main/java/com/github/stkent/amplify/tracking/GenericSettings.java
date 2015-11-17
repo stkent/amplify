@@ -21,7 +21,6 @@ import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.github.stkent.amplify.tracking.interfaces.IEvent;
 import com.github.stkent.amplify.tracking.interfaces.ILogger;
 
 import java.util.Map;
@@ -42,7 +41,7 @@ public class GenericSettings<T> {
                 .getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
     }
 
-    public void writeEventValue(@NonNull final IEvent event, final T value) {
+    public void writeEventValue(@NonNull final TrackedEvent event, final T value) {
 
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
@@ -65,7 +64,7 @@ public class GenericSettings<T> {
     }
 
     @Nullable
-    public T getEventValue(@NonNull final IEvent event) {
+    public T getEventValue(@NonNull final TrackedEvent event) {
         Map<String, ?> map = sharedPreferences.getAll();
 
         for (Map.Entry<String, ?> entry : map.entrySet()) {
@@ -77,6 +76,10 @@ public class GenericSettings<T> {
         logger.e("No event value for " + event);
 
         return null;
+    }
+
+    public boolean hasEventValue(@NonNull final TrackedEvent event) {
+        return sharedPreferences.contains(event.getTrackingKey());
     }
 
 }

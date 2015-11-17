@@ -20,7 +20,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.github.stkent.amplify.tracking.GenericSettings;
-import com.github.stkent.amplify.tracking.interfaces.IEvent;
+import com.github.stkent.amplify.tracking.TrackedEvent;
 import com.github.stkent.amplify.tracking.interfaces.ILogger;
 
 /**
@@ -33,14 +33,12 @@ public class TotalCountPredicate extends EventPredicate<Integer> {
     }
 
     @Override
-    public void eventTriggered(@NonNull IEvent event) {
+    public void eventTriggered(@NonNull final TrackedEvent event) {
 
-        if (containsEvent(event)) {
-            final Integer cachedCount = getEventValue(event);
-            final Integer updatedCount = cachedCount + 1;
-            getLogger().d("TotalCountPredicate updating event value from: " + cachedCount + ", to: " + updatedCount);
-            updateEventValue(event, updatedCount);
-        }
+        final Integer cachedCount = getEventValue(event);
+        final Integer updatedCount = cachedCount + 1;
+        getLogger().d("TotalCountPredicate updating event value from: " + cachedCount + ", to: " + updatedCount);
+        updateEventValue(event, updatedCount);
     }
 
     @Override
