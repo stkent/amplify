@@ -37,6 +37,7 @@ public class LastTimePredicate extends EventPredicate<Long> {
 
         if (containsEvent(event)) {
             final Long currentTime = System.currentTimeMillis();
+            getLogger().d("LastTimePredicate updating event value to: " + currentTime);
             updateEventValue(event, currentTime);
         }
     }

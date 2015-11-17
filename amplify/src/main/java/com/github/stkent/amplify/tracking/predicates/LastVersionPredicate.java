@@ -40,6 +40,7 @@ public class LastVersionPredicate extends EventPredicate<String> {
         if (containsEvent(event)) {
             try {
                 final String currentVersion = TrackingUtils.getAppVersionName(getApplicationContext());
+                getLogger().d("LastVersionPredicate updating event value to: " + currentVersion);
                 updateEventValue(event, currentVersion);
             } catch (final PackageManager.NameNotFoundException e) {
                 getLogger().d("Could not read current app version name.");
