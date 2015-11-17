@@ -21,18 +21,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Build;
-import android.view.View;
+import android.util.Log;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import com.github.stkent.amplify.tracking.TrackingUtils;
+
 import java.util.List;
 
 public final class FeedbackUtils {
 
+    private static final String TAG = "FeedbackUtils";
     private static final int BASE_MESSAGE_LENGTH = 78;
 
     private FeedbackUtils() {
@@ -40,86 +40,67 @@ public final class FeedbackUtils {
     }
 
     public static void showFeedbackEmailChooser(final Activity activity) {
-        activity.startActivity(Intent.createChooser(getFeedbackEmailIntent(), "Choose an email provider:"));
+        activity.startActivity(Intent.createChooser(getFeedbackEmailIntent(activity), "Choose an email provider:"));
         activity.overridePendingTransition(0, 0);
     }
 
     public static boolean canHandleFeedbackEmailIntent(final Context context) {
-        final List<ResolveInfo> resolveInfoList = context.getPackageManager().queryIntentActivities(getFeedbackEmailIntent(),
+        final List<ResolveInfo> resolveInfoList = context.getPackageManager().queryIntentActivities(getFeedbackEmailIntent(context),
                 PackageManager.MATCH_DEFAULT_ONLY);
         return !resolveInfoList.isEmpty();
     }
 
-    public static String getAppInfo() {
-        //noinspection StringBufferReplaceableByString
+    private static Intent getFeedbackEmailIntent(Context context) {
 
-        return new StringBuilder(BASE_MESSAGE_LENGTH)
+        String email;
 
-        .append("\n\n\n---------------------\nApp Version: ")
+        try {
+            email = context.getString(R.string.amp_feedback_email);
+        } catch (Resources.NotFoundException e) {
+            throw new IllegalArgumentException("R.string.amp_feedback_email resource not found, you must set this in your strings file for the"
+                    + " feedback util to function", e);
+        }
 
-        .append(BuildConfig.VERSION_NAME)
-        .append(" - ")
-        .append(BuildConfig.VERSION_CODE)
-        .append("\n")
-
-        .append("Android OS Version: ")
-        .append(Build.VERSION.RELEASE)
-        .append(" - ")
-        .append(Build.VERSION.SDK_INT)
-
-        .append("\n")
-        .append("Date: ")
-        .append(System.currentTimeMillis())
-        .toString();
-    }
-
-    /**
-     * Creates a bitmap from the activity's root view
-     */
-    public static void getBitmapFromRootView(Activity activity, final OnBitmapCapturedListener bitmapCapturedListener) {
-        final View view = activity.getWindow().getDecorView().getRootView();
-            bitmapCapturedListener.onCapture(getScreenBitmap(view), null);
-    }
-
-    public static List<Uri> getAttachmentList(Uri... uris) {
-        List<Uri> list = new ArrayList<>(uris.length);
-        list.addAll(Arrays.asList(uris));
-        return list;
-    }
-
-    private static Intent getFeedbackEmailIntent() {
-        final Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
-
-//        TODO: this
-//        final String email = AppProvider.getAppContext().getString(R.string.feedback_email);
-        final String feedbackMailTo = "mailto:" + emailIntent.toString(); //+email;
+        final String feedbackMailTo = "mailto:" + email;
         final String feedbackEmailSubject = Uri.encode("Android App Feedback", "UTF-8");
-        final String appInfo = getAppInfo();
+        final String appInfo = getAppInfo(context);
 
         final String uriString = feedbackMailTo
                 + "?subject=" + feedbackEmailSubject
                 + "&body=" + Uri.encode(appInfo);
 
         final Uri uri = Uri.parse(uriString);
-        emailIntent.setData(uri);
 
+        final Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
+        emailIntent.setData(uri);
         return emailIntent;
     }
 
-    private static Bitmap getScreenBitmap(View view) {
-        Bitmap bitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-        view.draw(canvas);
-        return bitmap;
-    }
+    private static String getAppInfo(final Context context) {
+        String versionString = "Error fetching version string";
 
-    /**
-     * callback methods for when screen capture has taken place. This is required to be able to get a bitmap from a map.
-     *
-     * @see
-     */
-    public interface OnBitmapCapturedListener {
-        void onCapture(Bitmap screenBitmap, Bitmap mapBitmap);
+        try {
+            versionString = TrackingUtils.getAppVersionCode(context) + " - " + TrackingUtils.getAppVersionName(context);
+        } catch (PackageManager.NameNotFoundException e) {
+            Log.d(TAG, "MissingVersion", e);
+        }
+
+        return new StringBuilder(BASE_MESSAGE_LENGTH)
+
+                .append("\n\n\n---------------------\nApp Version: ")
+
+                .append(versionString)
+                .append("\n")
+
+                .append("Android OS Version: ")
+                .append(Build.VERSION.RELEASE)
+                .append(" - ")
+                .append(Build.VERSION.SDK_INT)
+
+                .append("\n")
+                .append("Date: ")
+                .append(System.currentTimeMillis())
+                .toString();
     }
 
 }

@@ -82,8 +82,9 @@ public class AmplifyView extends FrameLayout {
     }
 
     protected void respondToNegativeFeedback() {
-        //TODO implement open email chooser
-        //showFeedbackEmailChooser();
+        if (getContext() instanceof Activity && FeedbackUtils.canHandleFeedbackEmailIntent(getContext())) {
+            FeedbackUtils.showFeedbackEmailChooser((Activity) getContext());
+        }
     }
 
     protected void respondToPositiveFeedback() {
