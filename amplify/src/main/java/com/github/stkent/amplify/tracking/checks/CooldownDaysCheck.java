@@ -43,4 +43,10 @@ public final class CooldownDaysCheck implements IEventCheck<Long> {
         return "Cooldown period: " + cooldownPeriodDays + " days. Time since last event: " + daysSinceLastEvent + " days.";
     }
 
+    @NonNull
+    @Override
+    public String getTrackingKey() {
+        return "COOLDOWN_DAYS_CHECK";
+    }
+
 }

@@ -20,7 +20,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.github.stkent.amplify.tracking.GenericSettings;
-import com.github.stkent.amplify.tracking.interfaces.IEvent;
+import com.github.stkent.amplify.tracking.TrackedEvent;
 import com.github.stkent.amplify.tracking.interfaces.ILogger;
 
 /**
@@ -33,16 +33,13 @@ public class FirstTimePredicate extends EventPredicate<Long> {
     }
 
     @Override
-    public void eventTriggered(@NonNull IEvent event) {
+    public void eventTriggered(@NonNull final TrackedEvent event) {
+        final Long cachedTime = getEventValue(event);
 
-        if (containsEvent(event)) {
-            final Long cachedTime = getEventValue(event);
-
-            if (cachedTime == Long.MAX_VALUE) {
-                final Long currentTime = System.currentTimeMillis();
-                getLogger().d("FirstTimePredicate updating event value from: " + cachedTime + ", to: " + currentTime);
-                updateEventValue(event, Math.min(cachedTime, currentTime));
-            }
+        if (cachedTime == Long.MAX_VALUE) {
+            final Long currentTime = System.currentTimeMillis();
+            getLogger().d("FirstTimePredicate updating event value from: " + cachedTime + ", to: " + currentTime);
+            updateEventValue(event, Math.min(cachedTime, currentTime));
         }
     }
 

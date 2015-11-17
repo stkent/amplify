@@ -40,4 +40,10 @@ public final class MaximumCountCheck implements IEventCheck<Integer> {
         return "Maximum allowed event count: " + maximumCount + ". Current event count: " + cachedEventValue + ".";
     }
 
+    @NonNull
+    @Override
+    public String getTrackingKey() {
+        return "MAXIMUM_COUNT_CHECK";
+    }
+
 }

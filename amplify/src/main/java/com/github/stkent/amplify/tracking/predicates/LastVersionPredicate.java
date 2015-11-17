@@ -21,8 +21,8 @@ import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 
 import com.github.stkent.amplify.tracking.GenericSettings;
+import com.github.stkent.amplify.tracking.TrackedEvent;
 import com.github.stkent.amplify.tracking.TrackingUtils;
-import com.github.stkent.amplify.tracking.interfaces.IEvent;
 import com.github.stkent.amplify.tracking.interfaces.ILogger;
 
 /**
@@ -35,16 +35,14 @@ public class LastVersionPredicate extends EventPredicate<String> {
     }
 
     @Override
-    public void eventTriggered(@NonNull IEvent event) {
+    public void eventTriggered(@NonNull final TrackedEvent event) {
 
-        if (containsEvent(event)) {
-            try {
-                final String currentVersion = TrackingUtils.getAppVersionName(getApplicationContext());
-                getLogger().d("LastVersionPredicate updating event value to: " + currentVersion);
-                updateEventValue(event, currentVersion);
-            } catch (final PackageManager.NameNotFoundException e) {
-                getLogger().d("Could not read current app version name.");
-            }
+        try {
+            final String currentVersion = TrackingUtils.getAppVersionName(getApplicationContext());
+            getLogger().d("LastVersionPredicate updating event value to: " + currentVersion);
+            updateEventValue(event, currentVersion);
+        } catch (final PackageManager.NameNotFoundException e) {
+            getLogger().d("Could not read current app version name.");
         }
     }
 

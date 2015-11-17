@@ -20,7 +20,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.github.stkent.amplify.tracking.GenericSettings;
-import com.github.stkent.amplify.tracking.interfaces.IEvent;
+import com.github.stkent.amplify.tracking.TrackedEvent;
 import com.github.stkent.amplify.tracking.interfaces.ILogger;
 
 /**
@@ -33,13 +33,11 @@ public class LastTimePredicate extends EventPredicate<Long> {
     }
 
     @Override
-    public void eventTriggered(@NonNull IEvent event) {
+    public void eventTriggered(@NonNull final TrackedEvent event) {
 
-        if (containsEvent(event)) {
-            final Long currentTime = System.currentTimeMillis();
-            getLogger().d("LastTimePredicate updating event value to: " + currentTime);
-            updateEventValue(event, currentTime);
-        }
+        final Long currentTime = System.currentTimeMillis();
+        getLogger().d("LastTimePredicate updating event value to: " + currentTime);
+        updateEventValue(event, currentTime);
     }
 
     @Override
