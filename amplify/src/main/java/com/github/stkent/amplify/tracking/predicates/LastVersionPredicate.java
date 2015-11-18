@@ -22,7 +22,7 @@ import android.support.annotation.NonNull;
 
 import com.github.stkent.amplify.tracking.GenericSettings;
 import com.github.stkent.amplify.tracking.TrackedEvent;
-import com.github.stkent.amplify.tracking.TrackingUtils;
+import com.github.stkent.amplify.utils.TrackingUtils;
 import com.github.stkent.amplify.tracking.interfaces.ILogger;
 
 /**

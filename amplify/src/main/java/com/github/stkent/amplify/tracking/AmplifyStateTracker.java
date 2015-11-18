@@ -19,7 +19,7 @@ package com.github.stkent.amplify.tracking;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
-import com.github.stkent.amplify.AmplifyView;
+import com.github.stkent.amplify.views.AmplifyView;
 import com.github.stkent.amplify.Logger;
 import com.github.stkent.amplify.tracking.checks.CooldownDaysCheck;
 import com.github.stkent.amplify.tracking.checks.GooglePlayStoreIsAvailableCheck;

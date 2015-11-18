@@ -14,7 +14,7 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package com.github.stkent.amplify;
+package com.github.stkent.amplify.utils;
 
 import android.app.Activity;
 import android.content.Context;
@@ -26,7 +26,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.util.Log;
 
-import com.github.stkent.amplify.tracking.TrackingUtils;
+import com.github.stkent.amplify.R;
 
 import java.util.List;
 

@@ -14,12 +14,13 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package com.github.stkent.amplify;
+package com.github.stkent.amplify.views;
 
 import android.support.annotation.NonNull;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
+
+import com.github.stkent.amplify.R;
 
 public class DefaultQuestionView implements QuestionView {
 
@@ -30,10 +31,10 @@ public class DefaultQuestionView implements QuestionView {
     private final TextView titleTextView;
 
     @NonNull
-    private final Button positiveButton;
+    private final View positiveButton;
 
     @NonNull
-    private final Button negativeButton;
+    private final View negativeButton;
 
     @SuppressWarnings("ConstantConditions")
     public DefaultQuestionView(@NonNull final View view) {
@@ -44,12 +45,12 @@ public class DefaultQuestionView implements QuestionView {
             throw new IllegalArgumentException("You must supply a layout that includes a TextView with id amp_title_text_view");
         }
 
-        positiveButton = (Button) view.findViewById(R.id.amp_positive_button);
+        positiveButton = view.findViewById(R.id.amp_positive_button);
         if (positiveButton == null) {
             throw new IllegalArgumentException("You must supply a layout that includes a Button with id amp_positive_button");
         }
 
-        negativeButton = (Button) view.findViewById(R.id.amp_negative_button);
+        negativeButton = view.findViewById(R.id.amp_negative_button);
         if (negativeButton == null) {
             throw new IllegalArgumentException("You must supply a layout that includes a Button with id amp_negative_button");
         }
@@ -63,21 +64,19 @@ public class DefaultQuestionView implements QuestionView {
 
     @NonNull
     @Override
-    public Button getPositiveButton() {
+    public View getPositiveButton() {
         return positiveButton;
     }
 
     @NonNull
     @Override
-    public Button getNegativeButton() {
+    public View getNegativeButton() {
         return negativeButton;
     }
 
     @Override
-    public void setQuestion(@NonNull final Question question) {
-        titleTextView.setText(question.getTitle());
-        positiveButton.setText(question.getPositiveButtonText());
-        negativeButton.setText(question.getNegativeButtonText());
+    public void setQuestion(@NonNull final String question) {
+        titleTextView.setText(question);
     }
 
 }

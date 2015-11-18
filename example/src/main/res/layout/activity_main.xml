@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:text="Trigger event" />
 
-    <com.github.stkent.amplify.AmplifyView
+    <com.github.stkent.amplify.views.AmplifyView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:amplify_question_layout="@layout/amplify_view_question_layout_example"
