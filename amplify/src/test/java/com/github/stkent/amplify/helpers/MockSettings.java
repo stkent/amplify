@@ -24,8 +24,8 @@ import com.github.stkent.amplify.tracking.interfaces.IEventCheck;
 import com.github.stkent.amplify.tracking.interfaces.ISettings;
 import com.github.stkent.amplify.tracking.interfaces.ITrackedEvent;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * A mock settings implementation that stores most recent values written,
@@ -34,7 +34,7 @@ import java.util.Map;
  */
 public class MockSettings<T> implements ISettings<T> {
 
-    private Map<IEvent, Map<IEventCheck, T>> mostRecentValuesWritten = new HashMap<>();
+    private final Map<IEvent, Map<IEventCheck, T>> mostRecentValuesWritten = new ConcurrentHashMap<>();
 
     @Nullable
     public T getEventValue(@NonNull final IEvent event, @NonNull final IEventCheck eventCheck) {
@@ -56,7 +56,7 @@ public class MockSettings<T> implements ISettings<T> {
         final IEvent event = trackedEvent.getEvent();
 
         if (!mostRecentValuesWritten.containsKey(event)) {
-            mostRecentValuesWritten.put(event, new HashMap<IEventCheck, T>());
+            mostRecentValuesWritten.put(event, new ConcurrentHashMap<IEventCheck, T>());
         }
 
         mostRecentValuesWritten.get(event).put(trackedEvent.getEventCheck(), value);

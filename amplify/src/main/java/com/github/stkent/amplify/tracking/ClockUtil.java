@@ -23,6 +23,10 @@ public final class ClockUtil {
     @Nullable
     private static Long fakeCurrentTimeMillis = null;
 
+    private ClockUtil() {
+
+    }
+
     // todo: consider injecting this around the app rather than relying
     // on static access
     public static long getCurrentTimeMillis() {

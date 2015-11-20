@@ -23,9 +23,13 @@ import org.junit.Before;
 
 import static org.mockito.MockitoAnnotations.initMocks;
 
-public abstract class BaseTest {
+public class BaseTest {
 
     public static final long MARCH_18_2014_838PM_UTC = 1395175090000L;
+
+    protected BaseTest() {
+
+    }
 
     @Before
     public final void globalSetUp() {

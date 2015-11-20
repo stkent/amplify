@@ -26,16 +26,13 @@ import com.github.stkent.amplify.tracking.ClockUtil;
 import com.github.stkent.amplify.tracking.interfaces.IApplicationInfoProvider;
 import com.github.stkent.amplify.tracking.interfaces.IEvent;
 import com.github.stkent.amplify.tracking.interfaces.IEventCheck;
-import com.github.stkent.amplify.tracking.interfaces.ITrackedEvent;
 
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
 import org.mockito.Mock;
 
 import java.util.concurrent.TimeUnit;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 public class FirstTimePredicateTest extends BaseTest {
 
@@ -49,9 +46,6 @@ public class FirstTimePredicateTest extends BaseTest {
     private IEvent mockEvent;
     @Mock
     private IEventCheck<Long> mockEventCheck;
-
-    @Captor
-    private ArgumentCaptor<ITrackedEvent> trackedEventCaptor;
 
     @Override
     public void localSetUp() {
@@ -78,11 +72,7 @@ public class FirstTimePredicateTest extends BaseTest {
         // Check that the correct event time was saved:
         final Long savedEventTime = mockSettings.getEventValue(mockEvent, mockEventCheck);
 
-        assertTrue("A time should have been recorded for this event",
-                savedEventTime != null);
-
-        assertTrue("The correct time should have been recorded for this event",
-                fakeEventTime == savedEventTime);
+        assertEquals("The correct time should have been recorded for this event", Long.valueOf(fakeEventTime), savedEventTime);
     }
 
     @SuppressLint("Assert")
@@ -104,17 +94,13 @@ public class FirstTimePredicateTest extends BaseTest {
         // Check that the earlier event time was saved, and the second event time ignored:
         final Long savedEventTime = mockSettings.getEventValue(mockEvent, mockEventCheck);
 
-        assertTrue("A time should have been recorded for this event",
-                savedEventTime != null);
-
-        assertTrue("The correct (earliest) time should have been recorded for this event",
-                fakeEventTimeEarlier == savedEventTime);
+        assertEquals("The correct (earliest) time should have been recorded for this event",
+                Long.valueOf(fakeEventTimeEarlier), savedEventTime);
     }
 
     private void triggerEventAtTime(@NonNull final IEvent event, final long time) {
         ClockUtil.setFakeCurrentTimeMillis(time);
         firstTimePredicate.eventTriggered(event);
     }
-
 
 }
