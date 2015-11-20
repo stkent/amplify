@@ -20,6 +20,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 
+import com.github.stkent.amplify.tracking.ClockUtil;
 import com.github.stkent.amplify.tracking.Settings;
 import com.github.stkent.amplify.tracking.interfaces.IApplicationInfoProvider;
 import com.github.stkent.amplify.tracking.interfaces.ILogger;
@@ -45,7 +46,7 @@ public class FirstTimePredicate extends EventPredicate<Long> {
         final Long cachedTime = getEventValue(event);
 
         if (cachedTime == Long.MAX_VALUE) {
-            final Long currentTime = System.currentTimeMillis();
+            final Long currentTime = ClockUtil.getCurrentTimeMillis();
             getLogger().d("FirstTimePredicate updating event value from: " + cachedTime + ", to: " + currentTime);
             updateEventValue(event, Math.min(cachedTime, currentTime));
         }

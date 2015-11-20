@@ -16,6 +16,43 @@
  */
 package com.github.stkent.amplify.tracking.predicates;
 
+import com.github.stkent.amplify.helpers.StubbedLogger;
+import com.github.stkent.amplify.tracking.interfaces.IApplicationInfoProvider;
+import com.github.stkent.amplify.tracking.interfaces.ISettings;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mock;
+
+import static org.mockito.MockitoAnnotations.initMocks;
+
 public class FirstTimePredicateTest {
+
+    private FirstTimePredicate firstTimePredicate;
+
+    @Mock
+    private ISettings<Long> mockSettings;
+    @Mock
+    private IApplicationInfoProvider mockApplicationInfoProvider;
+
+    @Before
+    public void setUp() {
+        initMocks(this);
+
+        firstTimePredicate = new FirstTimePredicate(
+                new StubbedLogger(),
+                mockSettings,
+                mockApplicationInfoProvider);
+    }
+
+    @Test
+    public void testThatFirstEventTimeIsRecorded() {
+        // Arrange
+
+        // Act
+
+        // Assert
+
+    }
 
 }
