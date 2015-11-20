@@ -35,7 +35,9 @@ public final class FeedbackUtil {
     private final IApplicationInfoProvider applicationInfoProvider;
     private final IEnvironmentInfoProvider environmentInfoProvider;
 
-    public FeedbackUtil(@NonNull final IApplicationInfoProvider applicationInfoProvider, @NonNull final IEnvironmentInfoProvider environmentInfoProvider) {
+    public FeedbackUtil(
+            @NonNull final IApplicationInfoProvider applicationInfoProvider,
+            @NonNull final IEnvironmentInfoProvider environmentInfoProvider) {
         this.applicationInfoProvider = applicationInfoProvider;
         this.environmentInfoProvider = environmentInfoProvider;
     }

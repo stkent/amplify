@@ -30,7 +30,9 @@ public final class MaximumCountCheck implements IEventCheck<Integer> {
     }
 
     @Override
-    public boolean shouldBlockFeedbackPrompt(@NonNull final Integer cachedEventValue, @NonNull final IApplicationInfoProvider applicationInfoProvider) {
+    public boolean shouldBlockFeedbackPrompt(
+            @NonNull final Integer cachedEventValue,
+            @NonNull final IApplicationInfoProvider applicationInfoProvider) {
         return cachedEventValue >= maximumCount;
     }
 

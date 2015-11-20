@@ -25,7 +25,9 @@ import com.github.stkent.amplify.tracking.interfaces.IEventCheck;
 public final class VersionChangedCheck implements IEventCheck<String> {
 
     @Override
-    public boolean shouldBlockFeedbackPrompt(@NonNull final String cachedEventValue, @NonNull final IApplicationInfoProvider applicationInfoProvider) {
+    public boolean shouldBlockFeedbackPrompt(
+            @NonNull final String cachedEventValue,
+            @NonNull final IApplicationInfoProvider applicationInfoProvider) {
         try {
             final String currentAppVersion = applicationInfoProvider.getVersionName();
             return cachedEventValue.equals(currentAppVersion);

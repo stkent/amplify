@@ -23,6 +23,10 @@ import android.support.annotation.NonNull;
 
 public class ApplicationUtils {
 
+    private ApplicationUtils() {
+
+    }
+
     public static PackageInfo getPackageInfo(@NonNull final Context applicationContext, final int flags) throws PackageManager.NameNotFoundException {
         final PackageManager packageManager = applicationContext.getPackageManager();
         final String applicationPackageName = applicationContext.getPackageName();

@@ -62,6 +62,7 @@ public class VersionChangedCheckTest {
 
     @SuppressLint("Assert")
     @SuppressWarnings("ConstantConditions")
+    @Test
     public void testThatCheckDoesNotBlockPrompt_ifAppVersionHasChanged() throws PackageManager.NameNotFoundException {
         // Arrange
         final String fakeCachedVersionName = "any string";
