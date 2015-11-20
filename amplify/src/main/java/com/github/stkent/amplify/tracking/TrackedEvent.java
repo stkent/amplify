@@ -20,11 +20,9 @@ import android.support.annotation.NonNull;
 
 import com.github.stkent.amplify.tracking.interfaces.IEvent;
 import com.github.stkent.amplify.tracking.interfaces.IEventCheck;
+import com.github.stkent.amplify.tracking.interfaces.ITrackedEvent;
 
-/**
- * Created by bobbake4 on 11/17/15.
- */
-public class TrackedEvent {
+public class TrackedEvent implements ITrackedEvent {
 
     private final IEvent event;
     private final IEventCheck eventCheck;
@@ -34,7 +32,10 @@ public class TrackedEvent {
         this.eventCheck = eventCheck;
     }
 
+    @NonNull
+    @Override
     public String getTrackingKey() {
         return "AMPLIFY_" + event.getTrackingKey() + "_" + eventCheck.getTrackingKey();
     }
+
 }
