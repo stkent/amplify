@@ -21,7 +21,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 
-public class ApplicationUtils {
+public final class ApplicationUtils {
 
     private ApplicationUtils() {
 
