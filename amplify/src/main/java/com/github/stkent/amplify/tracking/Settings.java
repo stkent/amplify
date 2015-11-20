@@ -63,22 +63,22 @@ public class Settings<T> implements ISettings<T> {
     }
 
     @Nullable
-    public T getEventValue(@NonNull final ITrackedEvent event) {
+    public T getEventValue(@NonNull final ITrackedEvent trackedEvent) {
         final Map<String, ?> map = sharedPreferences.getAll();
 
         for (Map.Entry<String, ?> entry : map.entrySet()) {
-            if (entry.getKey().equals(event.getTrackingKey())) {
+            if (entry.getKey().equals(trackedEvent.getTrackingKey())) {
                 return (T) entry.getValue();
             }
         }
 
-        logger.e("No event value for " + event);
+        logger.e("No event value for " + trackedEvent);
 
         return null;
     }
 
-    public boolean hasEventValue(@NonNull final ITrackedEvent event) {
-        return sharedPreferences.contains(event.getTrackingKey());
+    public boolean hasEventValue(@NonNull final ITrackedEvent trackedEvent) {
+        return sharedPreferences.contains(trackedEvent.getTrackingKey());
     }
 
 }

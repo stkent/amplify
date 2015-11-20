@@ -8,8 +8,8 @@ public interface ISettings<T> {
     void writeEventValue(@NonNull final ITrackedEvent event, final T value);
 
     @Nullable
-    T getEventValue(@NonNull final ITrackedEvent event);
+    T getEventValue(@NonNull final ITrackedEvent trackedEvent);
 
-    boolean hasEventValue(@NonNull final ITrackedEvent event);
+    boolean hasEventValue(@NonNull final ITrackedEvent trackedEvent);
 
 }
