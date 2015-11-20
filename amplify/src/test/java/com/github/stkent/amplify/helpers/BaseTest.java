@@ -9,12 +9,11 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 public abstract class BaseTest {
 
-    // MARCH 18th, 2014 @ 8:38 PM UTC
-    public static final long DEFAULT_FAKE_CLOCK_TIME = 1395175090000L;
+    public static final long MARCH_18_2014_838PM_UTC = 1395175090000L;
 
     @Before
     public final void globalSetUp() {
-        ClockUtil.setFakeCurrentTimeMillis(DEFAULT_FAKE_CLOCK_TIME);
+        ClockUtil.setFakeCurrentTimeMillis(MARCH_18_2014_838PM_UTC);
 
         initMocks(this);
 

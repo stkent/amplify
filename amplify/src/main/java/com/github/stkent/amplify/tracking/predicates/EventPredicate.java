@@ -38,8 +38,8 @@ public abstract class EventPredicate<T> {
     private final IApplicationInfoProvider applicationInfoProvider;
     private final ConcurrentHashMap<IEvent, List<IEventCheck<T>>> internalMap;
 
-    public abstract void eventTriggered(@NonNull final ITrackedEvent event);
-    public abstract T defaultValue();
+    protected abstract void eventTriggered(@NonNull final ITrackedEvent event);
+    protected abstract T defaultValue();
 
     public EventPredicate(ILogger logger, ISettings<T> settings, IApplicationInfoProvider applicationInfoProvider) {
         super();
