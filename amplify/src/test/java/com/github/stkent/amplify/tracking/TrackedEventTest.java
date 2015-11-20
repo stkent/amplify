@@ -19,10 +19,11 @@ package com.github.stkent.amplify.tracking;
 import com.github.stkent.amplify.tracking.interfaces.IEvent;
 import com.github.stkent.amplify.tracking.interfaces.IEventCheck;
 
-import junit.framework.Assert;
-
 import org.junit.Test;
-import org.mockito.Mockito;
+
+import static junit.framework.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by bobbake4 on 11/20/15.
@@ -36,14 +37,14 @@ public class TrackedEventTest {
         String iEventKey = "MOCK_EVENT";
         String iEventCheckKey = "MOCK_EVENT_CHECK";
 
-        IEvent iEvent = Mockito.mock(IEvent.class);
-        Mockito.when(iEvent.getTrackingKey()).thenReturn(iEventKey);
+        IEvent iEvent = mock(IEvent.class);
+        when(iEvent.getTrackingKey()).thenReturn(iEventKey);
 
-        IEventCheck iEventCheck = Mockito.mock(IEventCheck.class);
-        Mockito.when(iEventCheck.getTrackingKey()).thenReturn(iEventCheckKey);
+        IEventCheck iEventCheck = mock(IEventCheck.class);
+        when(iEventCheck.getTrackingKey()).thenReturn(iEventCheckKey);
 
         TrackedEvent trackedEvent = new TrackedEvent(iEvent, iEventCheck);
-        Assert.assertEquals(trackedEventPrefixKey + iEventKey + "_" + iEventCheckKey, trackedEvent.getTrackingKey());
+        assertEquals(trackedEventPrefixKey + iEventKey + "_" + iEventCheckKey, trackedEvent.getTrackingKey());
 
     }
 }
