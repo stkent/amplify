@@ -24,7 +24,7 @@ task coverageDebugTestReport(type:JacocoReport, dependsOn: "testDebugUnitTest") 
 
     reports {
         xml.enabled = true
-        html.enabled = true
+        html.enabled = false
         csv.enabled = false
     }
 }
@@ -34,7 +34,7 @@ jacoco {
 }
 
 coveralls {
-    jacocoReportPath = "${buildDir}/reports/coverage/jacocoDebugTestReport/jacocoDebugTestReport.xml"
+    jacocoReportPath = "${buildDir}/reports/coverage/coverageDebugTestReport/coverageDebugTestReport.xml"
 }
 
 tasks.coveralls {
