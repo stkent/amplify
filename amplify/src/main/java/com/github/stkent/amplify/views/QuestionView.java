@@ -14,11 +14,10 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package com.github.stkent.amplify;
+package com.github.stkent.amplify.views;
 
 import android.support.annotation.NonNull;
 import android.view.View;
-import android.widget.Button;
 
 public interface QuestionView {
 
@@ -26,11 +25,13 @@ public interface QuestionView {
     View getView();
 
     @NonNull
-    Button getPositiveButton();
+    View getPositiveButton();
 
     @NonNull
-    Button getNegativeButton();
+    View getNegativeButton();
 
-    void setQuestion(@NonNull final Question question);
+    void setQuestion(@NonNull final String question);
+
+    void setTitle(@NonNull final String title);
 
 }

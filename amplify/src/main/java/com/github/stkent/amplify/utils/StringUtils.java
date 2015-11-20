@@ -14,7 +14,7 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package com.github.stkent.amplify;
+package com.github.stkent.amplify.utils;
 
 /**
  * Created by bobbake4 on 11/13/15.

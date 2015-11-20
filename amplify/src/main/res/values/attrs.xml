@@ -29,13 +29,10 @@
         <attr name="amplify_positive_feedback_question" format="string" />
         <attr name="amplify_critical_feedback_question" format="string" />
 
-        <!-- button labels -->
-        <attr name="amplify_user_opinion_positive_button_text" format="string" />
-        <attr name="amplify_user_opinion_negative_button_text" format="string" />
-        <attr name="amplify_positive_feedback_positive_button_text" format="string" />
-        <attr name="amplify_positive_feedback_negative_button_text" format="string" />
-        <attr name="amplify_critical_feedback_positive_button_text" format="string" />
-        <attr name="amplify_critical_feedback_negative_button_text" format="string" />
+        <attr name="amplify_user_opinion_title" format="string" />
+        <attr name="amplify_positive_feedback_title" format="string" />
+        <attr name="amplify_critical_feedback_title" format="string" />
+
     </declare-styleable>
 
     <!--<attr name="amp_view_background_color" format="color" />-->

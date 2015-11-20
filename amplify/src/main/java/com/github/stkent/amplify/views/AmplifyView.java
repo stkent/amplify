@@ -14,7 +14,7 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package com.github.stkent.amplify;
+package com.github.stkent.amplify.views;
 
 import android.app.Activity;
 import android.content.Context;
@@ -28,8 +28,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
 
+import com.github.stkent.amplify.R;
 import com.github.stkent.amplify.tracking.AmplifyStateTracker;
 import com.github.stkent.amplify.tracking.IntegratedEvent;
+import com.github.stkent.amplify.utils.FeedbackUtils;
+import com.github.stkent.amplify.utils.PlayStoreUtil;
+import com.github.stkent.amplify.utils.StringUtils;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
@@ -51,9 +55,12 @@ public class AmplifyView extends FrameLayout {
 
     private LayoutState layoutState;
     private AmplifyStateTracker ratingStateTracker;
-    private Question userOpinionQuestion;
-    private Question positiveFeedbackQuestion;
-    private Question criticalFeedbackQuestion;
+    private String userOpinionQuestion;
+    private String userOpinionTitle;
+    private String positiveFeedbackQuestion;
+    private String positiveFeedbackTitle;
+    private String criticalFeedbackQuestion;
+    private String criticalFeedbackTitle;
     private UserOpinion userOpinion = UserOpinion.UNKNOWN;
 
     @LayoutRes
@@ -103,45 +110,22 @@ public class AmplifyView extends FrameLayout {
         confirmationLayoutResId = typedArray.getResourceId(R.styleable.AmplifyView_amplify_confirmation_layout, 0);
 
         //TODO add default string loading
-        final String userOpinionQuestionTitle = StringUtils.defaultIfBlank(typedArray.getString(
+        userOpinionQuestion = StringUtils.defaultIfBlank(typedArray.getString(
                 R.styleable.AmplifyView_amplify_user_opinion_question), "");
-        final String userOpinionPositiveButtonText = StringUtils.defaultIfBlank(typedArray.getString(
-                R.styleable.AmplifyView_amplify_user_opinion_positive_button_text), "");
-        final String userOpinionNegativeButtonText = StringUtils.defaultIfBlank(typedArray.getString(
-                R.styleable.AmplifyView_amplify_user_opinion_negative_button_text), "");
-        userOpinionQuestion = Question.Builder
-                .withTitle(userOpinionQuestionTitle)
-                .andPositiveButtonText(userOpinionPositiveButtonText)
-                .andNegativeButtonText(userOpinionNegativeButtonText)
-                .build();
+        userOpinionTitle = StringUtils.defaultIfBlank(typedArray.getString(
+                R.styleable.AmplifyView_amplify_user_opinion_title), "");
 
         //TODO add default string loading
-        final String positiveFeedbackQuestionTitle = StringUtils.defaultIfBlank(typedArray.getString(
+        positiveFeedbackQuestion = StringUtils.defaultIfBlank(typedArray.getString(
                 R.styleable.AmplifyView_amplify_positive_feedback_question), "");
-        final String positiveFeedbackPositiveButtonText = StringUtils.defaultIfBlank(typedArray.getString(
-                R.styleable.AmplifyView_amplify_positive_feedback_positive_button_text), "");
-        final String positiveFeedbackNegativeButtonText = StringUtils.defaultIfBlank(typedArray.getString(
-                R.styleable.AmplifyView_amplify_positive_feedback_negative_button_text), "");
-
-        positiveFeedbackQuestion = Question.Builder
-                .withTitle(positiveFeedbackQuestionTitle)
-                .andPositiveButtonText(positiveFeedbackPositiveButtonText)
-                .andNegativeButtonText(positiveFeedbackNegativeButtonText)
-                .build();
+        positiveFeedbackTitle = StringUtils.defaultIfBlank(typedArray.getString(
+                R.styleable.AmplifyView_amplify_positive_feedback_title), "");
 
         //TODO add default string loading
-        final String criticalFeedbackQuestionTitle = StringUtils.defaultIfBlank(typedArray.getString(
+        criticalFeedbackQuestion = StringUtils.defaultIfBlank(typedArray.getString(
                 R.styleable.AmplifyView_amplify_critical_feedback_question), "");
-        final String criticalFeedbackPositiveButtonText = StringUtils.defaultIfBlank(typedArray.getString(
-                R.styleable.AmplifyView_amplify_critical_feedback_positive_button_text), "");
-        final String criticalFeedbackNegativeButtonText = StringUtils.defaultIfBlank(typedArray.getString(
-                R.styleable.AmplifyView_amplify_critical_feedback_negative_button_text), "");
-
-        criticalFeedbackQuestion = Question.Builder
-                .withTitle(criticalFeedbackQuestionTitle)
-                .andPositiveButtonText(criticalFeedbackPositiveButtonText)
-                .andNegativeButtonText(criticalFeedbackNegativeButtonText)
-                .build();
+        criticalFeedbackTitle = StringUtils.defaultIfBlank(typedArray.getString(
+                R.styleable.AmplifyView_amplify_critical_feedback_title), "");
 
         typedArray.recycle();
 
@@ -153,6 +137,7 @@ public class AmplifyView extends FrameLayout {
 
         if (cachedQuestionView != null) {
             cachedQuestionView.setQuestion(userOpinionQuestion);
+            cachedQuestionView.setTitle(userOpinionTitle);
         }
     }
 
@@ -162,8 +147,10 @@ public class AmplifyView extends FrameLayout {
         if (cachedQuestionView != null) {
             if (userOpinion == UserOpinion.POSITIVE) {
                 cachedQuestionView.setQuestion(positiveFeedbackQuestion);
+                cachedQuestionView.setTitle(positiveFeedbackTitle);
             } else if (userOpinion == UserOpinion.NEGATIVE) {
                 cachedQuestionView.setQuestion(criticalFeedbackQuestion);
+                cachedQuestionView.setTitle(criticalFeedbackTitle);
             }
         }
     }

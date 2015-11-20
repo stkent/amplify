@@ -20,7 +20,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 
-import com.github.stkent.amplify.tracking.TrackingUtils;
+import com.github.stkent.amplify.utils.TrackingUtils;
 import com.github.stkent.amplify.tracking.interfaces.IEventCheck;
 
 public final class VersionChangedCheck implements IEventCheck<String> {
