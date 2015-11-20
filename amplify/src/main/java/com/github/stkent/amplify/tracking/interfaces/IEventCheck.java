@@ -30,7 +30,8 @@ public interface IEventCheck<T> {
     /**
      * @param cachedEventValue the current value associated with the tracked
      *        event this check is applied to
-     * @param applicationContext the context of the consuming application
+     * @param applicationInfoProvider exposes information about the consuming
+     *        application
      * @return true if the feedback prompt should be blocked from showing;
      *         false otherwise
      */
@@ -41,7 +42,8 @@ public interface IEventCheck<T> {
     /**
      * @param cachedEventValue the current value associated with the tracked
      *        event this check is applied to
-     * @param applicationContext the context of the consuming application
+     * @param applicationInfoProvider exposes information about the consuming
+     *        application
      * @return a string representation of the current check status; primarily
      *         used for debugging.
      */
