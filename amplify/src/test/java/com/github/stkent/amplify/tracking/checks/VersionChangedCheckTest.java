@@ -19,28 +19,25 @@ package com.github.stkent.amplify.tracking.checks;
 import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 
+import com.github.stkent.amplify.helpers.BaseTest;
 import com.github.stkent.amplify.tracking.interfaces.IApplicationInfoProvider;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.initMocks;
 
-public class VersionChangedCheckTest {
+public class VersionChangedCheckTest extends BaseTest {
 
     private VersionChangedCheck versionChangedCheck;
 
     @Mock
     private IApplicationInfoProvider mockApplicationInfoProvider;
 
-    @Before
-    public void setUp() {
-        initMocks(this);
-
+    @Override
+    public void localSetUp() {
         versionChangedCheck = new VersionChangedCheck();
     }
 
@@ -56,8 +53,7 @@ public class VersionChangedCheckTest {
                 fakeVersionName, mockApplicationInfoProvider);
 
         // Assert
-        assertTrue("Feedback prompt should be blocked if the app version has not changed",
-                shouldBlockFeedbackPrompt);
+        assertTrue("Feedback prompt should be blocked if the app version has not changed", shouldBlockFeedbackPrompt);
     }
 
     @SuppressLint("Assert")

@@ -18,6 +18,7 @@ package com.github.stkent.amplify.tracking.checks;
 
 import android.annotation.SuppressLint;
 
+import com.github.stkent.amplify.helpers.BaseTest;
 import com.github.stkent.amplify.tracking.ClockUtil;
 
 import org.junit.Test;
@@ -27,7 +28,7 @@ import java.util.concurrent.TimeUnit;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class CooldownDaysCheckTest {
+public class CooldownDaysCheckTest extends BaseTest {
 
     @SuppressLint("Assert")
     @SuppressWarnings("ConstantConditions")

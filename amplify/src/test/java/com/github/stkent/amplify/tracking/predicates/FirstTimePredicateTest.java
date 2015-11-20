@@ -16,17 +16,15 @@
  */
 package com.github.stkent.amplify.tracking.predicates;
 
+import com.github.stkent.amplify.helpers.BaseTest;
 import com.github.stkent.amplify.helpers.StubbedLogger;
 import com.github.stkent.amplify.tracking.interfaces.IApplicationInfoProvider;
 import com.github.stkent.amplify.tracking.interfaces.ISettings;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import static org.mockito.MockitoAnnotations.initMocks;
-
-public class FirstTimePredicateTest {
+public class FirstTimePredicateTest extends BaseTest {
 
     private FirstTimePredicate firstTimePredicate;
 
@@ -35,10 +33,8 @@ public class FirstTimePredicateTest {
     @Mock
     private IApplicationInfoProvider mockApplicationInfoProvider;
 
-    @Before
-    public void setUp() {
-        initMocks(this);
-
+    @Override
+    public void localSetUp() {
         firstTimePredicate = new FirstTimePredicate(
                 new StubbedLogger(),
                 mockSettings,
