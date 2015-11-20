@@ -22,12 +22,10 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.github.stkent.amplify.tracking.interfaces.ILogger;
+import com.github.stkent.amplify.tracking.interfaces.ITrackedEvent;
 
 import java.util.Map;
 
-/**
- * Created by bobbake4 on 11/13/15.
- */
 public class GenericSettings<T> {
 
     private static final String SHARED_PREFERENCES_NAME = "AMPLIFY_SHARED_PREFERENCES_NAME";
@@ -41,7 +39,7 @@ public class GenericSettings<T> {
                 .getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
     }
 
-    public void writeEventValue(@NonNull final TrackedEvent event, final T value) {
+    public void writeEventValue(@NonNull final ITrackedEvent event, final T value) {
 
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
@@ -64,8 +62,8 @@ public class GenericSettings<T> {
     }
 
     @Nullable
-    public T getEventValue(@NonNull final TrackedEvent event) {
-        Map<String, ?> map = sharedPreferences.getAll();
+    public T getEventValue(@NonNull final ITrackedEvent event) {
+        final Map<String, ?> map = sharedPreferences.getAll();
 
         for (Map.Entry<String, ?> entry : map.entrySet()) {
             if (entry.getKey().equals(event.getTrackingKey())) {
@@ -78,7 +76,7 @@ public class GenericSettings<T> {
         return null;
     }
 
-    public boolean hasEventValue(@NonNull final TrackedEvent event) {
+    public boolean hasEventValue(@NonNull final ITrackedEvent event) {
         return sharedPreferences.contains(event.getTrackingKey());
     }
 

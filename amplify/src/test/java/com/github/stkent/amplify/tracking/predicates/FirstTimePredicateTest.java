@@ -14,22 +14,8 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package com.github.stkent.amplify.tracking.interfaces;
+package com.github.stkent.amplify.tracking.predicates;
 
-import android.support.annotation.NonNull;
-
-/**
- * An abstract representation of an event-independent prerequisite for
- * prompting the user for feedback.
- */
-public interface IEnvironmentCheck {
-
-    /**
-     * @param applicationInfoProvider exposes information about the consuming
-     *        application
-     * @return true if the consuming application is able to prompt the user
-     *         for feedback; false otherwise
-     */
-    boolean isMet(@NonNull final IEnvironmentInfoProvider applicationInfoProvider);
+public class FirstTimePredicateTest {
 
 }

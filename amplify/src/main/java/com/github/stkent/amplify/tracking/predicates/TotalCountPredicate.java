@@ -20,20 +20,19 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.github.stkent.amplify.tracking.GenericSettings;
-import com.github.stkent.amplify.tracking.TrackedEvent;
 import com.github.stkent.amplify.tracking.interfaces.ILogger;
+import com.github.stkent.amplify.tracking.interfaces.ITrackedEvent;
 
-/**
- * Created by bobbake4 on 11/16/15.
- */
 public class TotalCountPredicate extends EventPredicate<Integer> {
 
     public TotalCountPredicate(ILogger logger, Context applicationContext) {
-        super(logger, new GenericSettings<Integer>(applicationContext, logger), applicationContext);
+        super(logger,
+                new GenericSettings<Integer>(applicationContext, logger),
+                new ApplicationInfoProvider(applicationContext));
     }
 
     @Override
-    public void eventTriggered(@NonNull final TrackedEvent event) {
+    public void eventTriggered(@NonNull final ITrackedEvent event) {
 
         final Integer cachedCount = getEventValue(event);
         final Integer updatedCount = cachedCount + 1;
