@@ -44,7 +44,8 @@ public class TrackedEventTest {
         when(iEventCheck.getTrackingKey()).thenReturn(iEventCheckKey);
 
         TrackedEvent trackedEvent = new TrackedEvent(iEvent, iEventCheck);
-        assertEquals(trackedEventPrefixKey + iEventKey + "_" + iEventCheckKey, trackedEvent.getTrackingKey());
+        assertEquals("The tracking key for a TrackedEvent is incorrect", trackedEventPrefixKey + iEventKey + "_" + iEventCheckKey,
+                trackedEvent.getTrackingKey());
 
     }
 }
