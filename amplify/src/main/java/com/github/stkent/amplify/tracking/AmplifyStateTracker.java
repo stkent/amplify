@@ -93,7 +93,7 @@ public final class AmplifyStateTracker {
         return this;
     }
 
-    public AmplifyStateTracker setAlwaysShow(@NonNull final boolean alwaysShow) {
+    public AmplifyStateTracker setAlwaysShow(final boolean alwaysShow) {
         this.alwaysShow = alwaysShow;
         return this;
     }
