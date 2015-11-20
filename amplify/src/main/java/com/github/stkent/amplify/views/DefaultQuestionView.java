@@ -32,13 +32,14 @@ public class DefaultQuestionView implements QuestionView {
     @NonNull
     private final TextView questionTextView;
 
+    @Nullable
+    private final TextView titleTextView;
+
     @NonNull
     private final View positiveButton;
 
     @NonNull
     private final View negativeButton;
-
-    private final TextView titleTextView;
 
     @SuppressWarnings("ConstantConditions")
     public DefaultQuestionView(@NonNull final View view) {
