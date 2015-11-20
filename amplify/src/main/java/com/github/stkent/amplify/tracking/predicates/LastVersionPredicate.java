@@ -20,7 +20,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 
-import com.github.stkent.amplify.tracking.GenericSettings;
+import com.github.stkent.amplify.tracking.Settings;
 import com.github.stkent.amplify.tracking.interfaces.ILogger;
 import com.github.stkent.amplify.tracking.interfaces.ITrackedEvent;
 
@@ -28,13 +28,12 @@ public class LastVersionPredicate extends EventPredicate<String> {
 
     public LastVersionPredicate(ILogger logger, Context applicationContext) {
         super(logger,
-                new GenericSettings<String>(applicationContext, logger),
+                new Settings<String>(applicationContext, logger),
                 new ApplicationInfoProvider(applicationContext));
     }
 
     @Override
     public void eventTriggered(@NonNull final ITrackedEvent event) {
-
         try {
             final String currentVersion = getApplicationInfoProvider().getVersionName();
             getLogger().d("LastVersionPredicate updating event value to: " + currentVersion);
@@ -48,4 +47,5 @@ public class LastVersionPredicate extends EventPredicate<String> {
     public String defaultValue() {
         return "";
     }
+
 }

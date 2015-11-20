@@ -19,7 +19,7 @@ package com.github.stkent.amplify.tracking.predicates;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
-import com.github.stkent.amplify.tracking.GenericSettings;
+import com.github.stkent.amplify.tracking.Settings;
 import com.github.stkent.amplify.tracking.interfaces.ILogger;
 import com.github.stkent.amplify.tracking.interfaces.ITrackedEvent;
 
@@ -27,7 +27,7 @@ public class LastTimePredicate extends EventPredicate<Long> {
 
     public LastTimePredicate(ILogger logger, Context applicationContext) {
         super(logger,
-                new GenericSettings<Long>(applicationContext, logger),
+                new Settings<Long>(applicationContext, logger),
                 new ApplicationInfoProvider(applicationContext));
     }
 
