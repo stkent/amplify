@@ -16,9 +16,9 @@
  */
 package com.github.stkent.amplify.tracking.checks;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 
+import com.github.stkent.amplify.tracking.interfaces.IApplicationInfoProvider;
 import com.github.stkent.amplify.tracking.interfaces.IEventCheck;
 
 import java.util.concurrent.TimeUnit;
@@ -32,13 +32,13 @@ public class WarmUpDaysCheck implements IEventCheck<Long> {
     }
 
     @Override
-    public boolean shouldBlockFeedbackPrompt(@NonNull final Long cachedEventValue, @NonNull final Context applicationContext) {
+    public boolean shouldBlockFeedbackPrompt(@NonNull final Long cachedEventValue, @NonNull final IApplicationInfoProvider applicationInfoProvider) {
         return cachedEventValue == Long.MAX_VALUE || (System.currentTimeMillis() - cachedEventValue) <= TimeUnit.DAYS.toMillis(warmUpPeriodDays);
     }
 
     @NonNull
     @Override
-    public String getStatusString(@NonNull final Long cachedEventValue, @NonNull final Context applicationContext) {
+    public String getStatusString(@NonNull final Long cachedEventValue, @NonNull final IApplicationInfoProvider applicationInfoProvider) {
         final Long daysSinceFirstEvent = TimeUnit.MILLISECONDS.toDays(System.currentTimeMillis() - cachedEventValue);
         return "Warm-up period: " + warmUpPeriodDays + " days. Time since first event: " + daysSinceFirstEvent + " days.";
     }

@@ -16,7 +16,6 @@
  */
 package com.github.stkent.amplify.tracking.interfaces;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 
 /**
@@ -26,10 +25,11 @@ import android.support.annotation.NonNull;
 public interface IEnvironmentCheck {
 
     /**
-     * @param applicationContext the context of the consuming application
+     * @param applicationInfoProvider exposes information about the consuming
+     *        application
      * @return true if the consuming application is able to prompt the user
      *         for feedback; false otherwise
      */
-    boolean isMet(@NonNull final Context applicationContext);
+    boolean isMet(@NonNull final IEnvironmentInfoProvider applicationInfoProvider);
 
 }

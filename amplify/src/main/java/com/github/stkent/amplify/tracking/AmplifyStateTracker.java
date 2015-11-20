@@ -19,6 +19,7 @@ package com.github.stkent.amplify.tracking;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import com.github.stkent.amplify.tracking.interfaces.IEnvironmentInfoProvider;
 import com.github.stkent.amplify.views.AmplifyView;
 import com.github.stkent.amplify.Logger;
 import com.github.stkent.amplify.tracking.checks.CooldownDaysCheck;
@@ -49,6 +50,7 @@ public final class AmplifyStateTracker {
     // instance fields
 
     private final Context applicationContext;
+    private final IEnvironmentInfoProvider applicationInfoProvider;
     private final List<IEnvironmentCheck> environmentRequirements = new ArrayList<>();
     private final LastTimePredicate lastTimePredicate;
     private final FirstTimePredicate firstTimePredicate;
@@ -104,6 +106,7 @@ public final class AmplifyStateTracker {
             @NonNull final Context context,
             @NonNull final ILogger logger) {
         this.applicationContext = context.getApplicationContext();
+        this.applicationInfoProvider = new EnvironmentInfoProvider(applicationContext);
         this.logger = logger;
         this.lastTimePredicate = new LastTimePredicate(logger, applicationContext);
         this.firstTimePredicate = new FirstTimePredicate(logger, applicationContext);
@@ -178,7 +181,7 @@ public final class AmplifyStateTracker {
 
     private boolean allEnvironmentRequirementsMet() {
         for (final IEnvironmentCheck environmentRequirement : environmentRequirements) {
-            if (!environmentRequirement.isMet(applicationContext)) {
+            if (!environmentRequirement.isMet(applicationInfoProvider)) {
                 logger.d("Environment requirement not met: " + environmentRequirement);
                 return false;
             }

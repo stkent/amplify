@@ -16,19 +16,18 @@
  */
 package com.github.stkent.amplify.tracking.checks;
 
-import android.content.Context;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 
-import com.github.stkent.amplify.utils.TrackingUtils;
+import com.github.stkent.amplify.tracking.interfaces.IApplicationInfoProvider;
 import com.github.stkent.amplify.tracking.interfaces.IEventCheck;
 
 public final class VersionChangedCheck implements IEventCheck<String> {
 
     @Override
-    public boolean shouldBlockFeedbackPrompt(@NonNull final String cachedEventValue, @NonNull final Context applicationContext) {
+    public boolean shouldBlockFeedbackPrompt(@NonNull final String cachedEventValue, @NonNull final IApplicationInfoProvider applicationInfoProvider) {
         try {
-            final String currentAppVersion = TrackingUtils.getAppVersionName(applicationContext);
+            final String currentAppVersion = applicationInfoProvider.getVersionName();
             return !cachedEventValue.equals(currentAppVersion);
         } catch (PackageManager.NameNotFoundException e) {
             // TODO: log here
@@ -39,11 +38,11 @@ public final class VersionChangedCheck implements IEventCheck<String> {
 
     @NonNull
     @Override
-    public String getStatusString(@NonNull final String cachedEventValue, @NonNull final Context applicationContext) {
+    public String getStatusString(@NonNull final String cachedEventValue, @NonNull final IApplicationInfoProvider applicationInfoProvider) {
         String statusStringSuffix;
 
         try {
-            statusStringSuffix = "Current app version: " + TrackingUtils.getAppVersionName(applicationContext);
+            statusStringSuffix = "Current app version: " + applicationInfoProvider.getVersionName();
         } catch (PackageManager.NameNotFoundException e) {
             statusStringSuffix = "Current app version cannot be determined.";
         }

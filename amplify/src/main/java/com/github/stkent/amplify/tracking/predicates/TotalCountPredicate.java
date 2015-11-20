@@ -26,7 +26,9 @@ import com.github.stkent.amplify.tracking.interfaces.ITrackedEvent;
 public class TotalCountPredicate extends EventPredicate<Integer> {
 
     public TotalCountPredicate(ILogger logger, Context applicationContext) {
-        super(logger, new GenericSettings<Integer>(applicationContext, logger), applicationContext);
+        super(logger,
+                new GenericSettings<Integer>(applicationContext, logger),
+                new ApplicationInfoProvider(applicationContext));
     }
 
     @Override

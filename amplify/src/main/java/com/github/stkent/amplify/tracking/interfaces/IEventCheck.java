@@ -16,7 +16,6 @@
  */
 package com.github.stkent.amplify.tracking.interfaces;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 
 /**
@@ -35,7 +34,9 @@ public interface IEventCheck<T> {
      * @return true if the feedback prompt should be blocked from showing;
      *         false otherwise
      */
-    boolean shouldBlockFeedbackPrompt(@NonNull final T cachedEventValue, @NonNull final Context applicationContext);
+    boolean shouldBlockFeedbackPrompt(
+            @NonNull final T cachedEventValue,
+            @NonNull final IApplicationInfoProvider applicationInfoProvider);
 
     /**
      * @param cachedEventValue the current value associated with the tracked
@@ -45,7 +46,9 @@ public interface IEventCheck<T> {
      *         used for debugging.
      */
     @NonNull
-    String getStatusString(@NonNull final T cachedEventValue, @NonNull final Context applicationContext);
+    String getStatusString(
+            @NonNull final T cachedEventValue,
+            @NonNull final IApplicationInfoProvider applicationInfoProvider);
 
     /**
      * @return a key that uniquely identifies this event check within the

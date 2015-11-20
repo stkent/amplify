@@ -16,14 +16,10 @@
  */
 package com.github.stkent.amplify.tracking.checks;
 
-import android.content.Context;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 
+import com.github.stkent.amplify.tracking.interfaces.IEnvironmentInfoProvider;
 import com.github.stkent.amplify.tracking.interfaces.IEnvironmentCheck;
-
-import static android.content.pm.PackageManager.GET_ACTIVITIES;
 
 /**
  * An implementation of {@code IEnvironmentCheck} that verifies whether or not
@@ -31,28 +27,9 @@ import static android.content.pm.PackageManager.GET_ACTIVITIES;
  */
 public class GooglePlayStoreIsAvailableCheck implements IEnvironmentCheck {
 
-    /**
-     * Package name for the Google Play Store. Value can be verified here:
-     * https://developers.google.com/android/reference/com/google/android/gms/common/GooglePlayServicesUtil.html#GOOGLE_PLAY_STORE_PACKAGE
-     */
-    private static final String GOOGLE_PLAY_STORE_PACKAGE_NAME = "com.android.vending";
-
     @Override
-    public boolean isMet(@NonNull final Context applicationContext) {
-        final PackageManager pm = applicationContext.getPackageManager();
-        boolean playServicesInstalled;
-
-        try {
-            final PackageInfo info
-                    = pm.getPackageInfo(GOOGLE_PLAY_STORE_PACKAGE_NAME, GET_ACTIVITIES);
-
-            final String label = (String) info.applicationInfo.loadLabel(pm);
-            playServicesInstalled = label != null && !label.equals("Market");
-        } catch (final PackageManager.NameNotFoundException e) {
-            playServicesInstalled = false;
-        }
-
-        return playServicesInstalled;
+    public boolean isMet(@NonNull final IEnvironmentInfoProvider environmentInfoProvider) {
+        return environmentInfoProvider.isGooglePlayStoreInstalled();
     }
 
 }

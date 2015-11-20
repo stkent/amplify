@@ -26,7 +26,9 @@ import com.github.stkent.amplify.tracking.interfaces.ITrackedEvent;
 public class FirstTimePredicate extends EventPredicate<Long> {
 
     public FirstTimePredicate(ILogger logger, Context applicationContext) {
-        super(logger, new GenericSettings<Long>(applicationContext, logger), applicationContext);
+        super(logger,
+                new GenericSettings<Long>(applicationContext, logger),
+                new ApplicationInfoProvider(applicationContext));
     }
 
     @Override

@@ -17,54 +17,55 @@
 package com.github.stkent.amplify.utils;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
-import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.github.stkent.amplify.R;
+import com.github.stkent.amplify.tracking.interfaces.IApplicationInfoProvider;
+import com.github.stkent.amplify.tracking.interfaces.IEnvironmentInfoProvider;
 
-import java.util.List;
-
-public final class FeedbackUtils {
+public final class FeedbackUtil {
 
     private static final String TAG = "FeedbackUtils";
     private static final int BASE_MESSAGE_LENGTH = 78;
 
-    private FeedbackUtils() {
+    private final IApplicationInfoProvider applicationInfoProvider;
+    private final IEnvironmentInfoProvider environmentInfoProvider;
 
+    public FeedbackUtil(@NonNull final IApplicationInfoProvider applicationInfoProvider, @NonNull final IEnvironmentInfoProvider environmentInfoProvider) {
+        this.applicationInfoProvider = applicationInfoProvider;
+        this.environmentInfoProvider = environmentInfoProvider;
     }
 
-    public static void showFeedbackEmailChooser(final Activity activity) {
+    public void showFeedbackEmailChooser(final Activity activity) {
+        final Intent feedbackEmailIntent = getFeedbackEmailIntent();
+
+        if (!environmentInfoProvider.canHandleIntent(feedbackEmailIntent)) {
+            // fixme: log here
+            return;
+        }
+
         if (ActivityStateUtil.isActivityValid(activity)) {
-            activity.startActivity(Intent.createChooser(getFeedbackEmailIntent(activity), "Choose an email provider:"));
+            activity.startActivity(Intent.createChooser(getFeedbackEmailIntent(), "Choose an email provider:"));
             activity.overridePendingTransition(0, 0);
         }
     }
 
-    public static boolean canHandleFeedbackEmailIntent(final Context context) {
-        final List<ResolveInfo> resolveInfoList = context.getPackageManager().queryIntentActivities(getFeedbackEmailIntent(context),
-                PackageManager.MATCH_DEFAULT_ONLY);
-        return !resolveInfoList.isEmpty();
-    }
-
-    private static Intent getFeedbackEmailIntent(Context context) {
-
+    @NonNull
+    private Intent getFeedbackEmailIntent() {
+        // fixme: pull in app name here?
         final String feedbackEmailSubject = Uri.encode("Android App Feedback", "UTF-8");
-        final String appInfo = getAppInfo(context);
+        final String appInfo = getApplicationInfoString();
 
         final StringBuilder uriStringBuilder = new StringBuilder("mailto:");
 
         try {
-            uriStringBuilder.append(context.getString(R.string.amp_feedback_email));
-        } catch (Resources.NotFoundException e) {
-            IllegalArgumentException illegalArgumentException = new IllegalArgumentException("R.string.amp_feedback_email"
-                    + "resource not found, you must set this in your strings file for the feedback util to function", e);
-            Log.d(TAG, "ResourceNotFound", illegalArgumentException);
+            uriStringBuilder.append(applicationInfoProvider.getFeedbackEmailAddress());
+        } catch (final IllegalStateException e) {
+            Log.d(TAG, "ResourceNotFound", e);
         }
 
         uriStringBuilder.append("?subject=")
@@ -77,17 +78,17 @@ public final class FeedbackUtils {
         return new Intent(Intent.ACTION_SENDTO, uri);
     }
 
-    private static String getAppInfo(final Context context) {
+    @NonNull
+    private String getApplicationInfoString() {
         String versionString = "Error fetching version string";
 
         try {
-            versionString = TrackingUtils.getAppVersionCode(context) + " - " + TrackingUtils.getAppVersionName(context);
+            versionString = applicationInfoProvider.getVersionCode() + " - " + applicationInfoProvider.getVersionName();
         } catch (PackageManager.NameNotFoundException e) {
             Log.d(TAG, "MissingVersion", e);
         }
 
         return new StringBuilder(BASE_MESSAGE_LENGTH)
-
                 .append("\n\n\n---------------------\nApp Version: ")
 
                 .append(versionString)

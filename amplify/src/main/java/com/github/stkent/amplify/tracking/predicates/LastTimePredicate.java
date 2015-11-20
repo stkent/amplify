@@ -26,7 +26,9 @@ import com.github.stkent.amplify.tracking.interfaces.ITrackedEvent;
 public class LastTimePredicate extends EventPredicate<Long> {
 
     public LastTimePredicate(ILogger logger, Context applicationContext) {
-        super(logger, new GenericSettings<Long>(applicationContext, logger), applicationContext);
+        super(logger,
+                new GenericSettings<Long>(applicationContext, logger),
+                new ApplicationInfoProvider(applicationContext));
     }
 
     @Override
