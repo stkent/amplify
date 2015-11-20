@@ -23,9 +23,6 @@ import com.github.stkent.amplify.tracking.GenericSettings;
 import com.github.stkent.amplify.tracking.TrackedEvent;
 import com.github.stkent.amplify.tracking.interfaces.ILogger;
 
-/**
- * Created by bobbake4 on 11/16/15.
- */
 public class FirstTimePredicate extends EventPredicate<Long> {
 
     public FirstTimePredicate(ILogger logger, Context applicationContext) {

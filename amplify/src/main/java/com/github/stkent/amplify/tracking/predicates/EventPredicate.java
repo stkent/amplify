@@ -30,9 +30,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-/**
- * Created by bobbake4 on 11/13/15.
- */
 public abstract class EventPredicate<T> {
 
     private final ILogger logger;

@@ -25,9 +25,6 @@ import com.github.stkent.amplify.tracking.interfaces.ILogger;
 
 import java.util.Map;
 
-/**
- * Created by bobbake4 on 11/13/15.
- */
 public class GenericSettings<T> {
 
     private static final String SHARED_PREFERENCES_NAME = "AMPLIFY_SHARED_PREFERENCES_NAME";

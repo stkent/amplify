@@ -25,9 +25,6 @@ import static junit.framework.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-/**
- * Created by bobbake4 on 11/20/15.
- */
 public class TrackedEventTest {
 
     @Test

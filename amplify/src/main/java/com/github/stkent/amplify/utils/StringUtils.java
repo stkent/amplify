@@ -16,9 +16,6 @@
  */
 package com.github.stkent.amplify.utils;
 
-/**
- * Created by bobbake4 on 11/13/15.
- */
 public final class StringUtils {
 
     private StringUtils() {
