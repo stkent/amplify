@@ -16,20 +16,15 @@
  */
 package com.github.stkent.amplify.tracking.interfaces;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 
-/**
- * An abstract representation of an event-independent prerequisite for
- * prompting the user for feedback.
- */
-public interface IEnvironmentCheck {
+public interface IEnvironmentInfoProvider {
 
-    /**
-     * @param applicationInfoProvider exposes information about the consuming
-     *        application
-     * @return true if the consuming application is able to prompt the user
-     *         for feedback; false otherwise
-     */
-    boolean isMet(@NonNull final IEnvironmentInfoProvider applicationInfoProvider);
+    boolean isApplicationInstalled(@NonNull final String packageName);
+
+    boolean isGooglePlayStoreInstalled();
+
+    boolean canHandleIntent(@NonNull final Intent intent);
 
 }

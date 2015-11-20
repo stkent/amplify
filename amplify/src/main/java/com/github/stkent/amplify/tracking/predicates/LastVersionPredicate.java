@@ -21,24 +21,22 @@ import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 
 import com.github.stkent.amplify.tracking.GenericSettings;
-import com.github.stkent.amplify.tracking.TrackedEvent;
-import com.github.stkent.amplify.utils.TrackingUtils;
 import com.github.stkent.amplify.tracking.interfaces.ILogger;
+import com.github.stkent.amplify.tracking.interfaces.ITrackedEvent;
 
-/**
- * Created by bobbake4 on 11/16/15.
- */
 public class LastVersionPredicate extends EventPredicate<String> {
 
     public LastVersionPredicate(ILogger logger, Context applicationContext) {
-        super(logger, new GenericSettings<String>(applicationContext, logger), applicationContext);
+        super(logger,
+                new GenericSettings<String>(applicationContext, logger),
+                new ApplicationInfoProvider(applicationContext));
     }
 
     @Override
-    public void eventTriggered(@NonNull final TrackedEvent event) {
+    public void eventTriggered(@NonNull final ITrackedEvent event) {
 
         try {
-            final String currentVersion = TrackingUtils.getAppVersionName(getApplicationContext());
+            final String currentVersion = getApplicationInfoProvider().getVersionName();
             getLogger().d("LastVersionPredicate updating event value to: " + currentVersion);
             updateEventValue(event, currentVersion);
         } catch (final PackageManager.NameNotFoundException e) {

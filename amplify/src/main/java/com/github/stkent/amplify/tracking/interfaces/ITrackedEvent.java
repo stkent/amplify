@@ -18,18 +18,9 @@ package com.github.stkent.amplify.tracking.interfaces;
 
 import android.support.annotation.NonNull;
 
-/**
- * An abstract representation of an event-independent prerequisite for
- * prompting the user for feedback.
- */
-public interface IEnvironmentCheck {
+public interface ITrackedEvent {
 
-    /**
-     * @param applicationInfoProvider exposes information about the consuming
-     *        application
-     * @return true if the consuming application is able to prompt the user
-     *         for feedback; false otherwise
-     */
-    boolean isMet(@NonNull final IEnvironmentInfoProvider applicationInfoProvider);
+    @NonNull
+    String getTrackingKey();
 
 }

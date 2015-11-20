@@ -16,38 +16,36 @@
  */
 package com.github.stkent.amplify.tracking.predicates;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.github.stkent.amplify.tracking.GenericSettings;
 import com.github.stkent.amplify.tracking.TrackedEvent;
+import com.github.stkent.amplify.tracking.interfaces.IApplicationInfoProvider;
 import com.github.stkent.amplify.tracking.interfaces.IEvent;
 import com.github.stkent.amplify.tracking.interfaces.IEventCheck;
 import com.github.stkent.amplify.tracking.interfaces.ILogger;
+import com.github.stkent.amplify.tracking.interfaces.ITrackedEvent;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-/**
- * Created by bobbake4 on 11/13/15.
- */
 public abstract class EventPredicate<T> {
 
     private final ILogger logger;
     private final GenericSettings<T> settings;
-    private final Context applicationContext;
+    private final IApplicationInfoProvider applicationInfoProvider;
     private final ConcurrentHashMap<IEvent, List<IEventCheck<T>>> internalMap;
 
-    public abstract void eventTriggered(@NonNull final TrackedEvent event);
+    public abstract void eventTriggered(@NonNull final ITrackedEvent event);
     public abstract T defaultValue();
 
-    public EventPredicate(ILogger logger, GenericSettings<T> settings, Context applicationContext) {
+    public EventPredicate(ILogger logger, GenericSettings<T> settings, IApplicationInfoProvider applicationInfoProvider) {
         super();
         this.logger = logger;
         this.settings = settings;
-        this.applicationContext = applicationContext;
+        this.applicationInfoProvider = applicationInfoProvider;
         this.internalMap = new ConcurrentHashMap<>();
     }
 
@@ -63,14 +61,12 @@ public abstract class EventPredicate<T> {
     }
 
     public void eventTriggered(@NonNull final IEvent event) {
-
         if (containsEvent(event)) {
 
-            List<IEventCheck<T>> eventChecks = internalMap.get(event);
+            final List<IEventCheck<T>> eventChecks = internalMap.get(event);
 
             for (final IEventCheck<T> predicate : eventChecks) {
-
-                TrackedEvent trackedEvent = new TrackedEvent(event, predicate);
+                final ITrackedEvent trackedEvent = new TrackedEvent(event, predicate);
                 eventTriggered(trackedEvent);
             }
         }
@@ -82,14 +78,13 @@ public abstract class EventPredicate<T> {
             final IEvent event = eventCheckSet.getKey();
 
             for (final IEventCheck<T> predicate : eventCheckSet.getValue()) {
-
-                TrackedEvent trackedEvent = new TrackedEvent(event, predicate);
+                final ITrackedEvent trackedEvent = new TrackedEvent(event, predicate);
 
                 final T cachedEventValue = getEventValue(trackedEvent);
 
-                logger.d(trackedEvent.getTrackingKey() + ": " + predicate.getStatusString(cachedEventValue, applicationContext));
+                logger.d(trackedEvent.getTrackingKey() + ": " + predicate.getStatusString(cachedEventValue, applicationInfoProvider));
 
-                if (predicate.shouldBlockFeedbackPrompt(cachedEventValue, applicationContext)) {
+                if (predicate.shouldBlockFeedbackPrompt(cachedEventValue, applicationInfoProvider)) {
                     logger.d("Blocking feedback for event: " + trackedEvent + " because of check: " + predicate);
                     return false;
                 }
@@ -107,16 +102,16 @@ public abstract class EventPredicate<T> {
         return logger;
     }
 
-    protected Context getApplicationContext() {
-        return applicationContext;
+    protected IApplicationInfoProvider getApplicationInfoProvider() {
+        return applicationInfoProvider;
     }
 
-    protected T getEventValue(@NonNull final TrackedEvent event) {
+    protected T getEventValue(@NonNull final ITrackedEvent event) {
         T value = settings.getEventValue(event);
         return value != null ? value : defaultValue();
     }
 
-    protected void updateEventValue(@NonNull final TrackedEvent event, T value) {
+    protected void updateEventValue(@NonNull final ITrackedEvent event, T value) {
         settings.writeEventValue(event, value);
     }
 

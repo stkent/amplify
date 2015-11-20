@@ -30,8 +30,10 @@ import android.widget.FrameLayout;
 
 import com.github.stkent.amplify.R;
 import com.github.stkent.amplify.tracking.AmplifyStateTracker;
+import com.github.stkent.amplify.tracking.EnvironmentInfoProvider;
 import com.github.stkent.amplify.tracking.IntegratedEvent;
-import com.github.stkent.amplify.utils.FeedbackUtils;
+import com.github.stkent.amplify.tracking.predicates.ApplicationInfoProvider;
+import com.github.stkent.amplify.utils.FeedbackUtil;
 import com.github.stkent.amplify.utils.PlayStoreUtil;
 import com.github.stkent.amplify.utils.StringUtils;
 
@@ -89,8 +91,14 @@ public class AmplifyView extends FrameLayout {
     }
 
     protected void respondToNegativeFeedback() {
-        if (getContext() instanceof Activity && FeedbackUtils.canHandleFeedbackEmailIntent(getContext())) {
-            FeedbackUtils.showFeedbackEmailChooser((Activity) getContext());
+        final Context applicationContext = getContext().getApplicationContext();
+
+        final FeedbackUtil feedbackUtil = new FeedbackUtil(
+                new ApplicationInfoProvider(applicationContext),
+                new EnvironmentInfoProvider(applicationContext));
+
+        if (getContext() instanceof Activity) {
+            feedbackUtil.showFeedbackEmailChooser((Activity) getContext());
         }
     }
 

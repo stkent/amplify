@@ -2,6 +2,12 @@
 
 <a href="https://travis-ci.org/stkent/amplify"><img src="https://travis-ci.org/stkent/amplify.svg"></a> [ ![Download](https://api.bintray.com/packages/stkent/android-libraries/amplify/images/download.svg) ](https://bintray.com/stkent/android-libraries/amplify/_latestVersion)
 
+# Tests
+
+You can execute library tests only using the Gradle command:
+
+    ./gradlew :amplify:test
+
 # License
 
     Copyright 2015 Stuart Kent
