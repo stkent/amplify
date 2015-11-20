@@ -24,6 +24,7 @@ import com.github.stkent.amplify.tracking.TrackedEvent;
 import com.github.stkent.amplify.tracking.interfaces.IEvent;
 import com.github.stkent.amplify.tracking.interfaces.IEventCheck;
 import com.github.stkent.amplify.tracking.interfaces.ILogger;
+import com.github.stkent.amplify.tracking.interfaces.ITrackedEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +38,7 @@ public abstract class EventPredicate<T> {
     private final Context applicationContext;
     private final ConcurrentHashMap<IEvent, List<IEventCheck<T>>> internalMap;
 
-    public abstract void eventTriggered(@NonNull final TrackedEvent event);
+    public abstract void eventTriggered(@NonNull final ITrackedEvent event);
     public abstract T defaultValue();
 
     public EventPredicate(ILogger logger, GenericSettings<T> settings, Context applicationContext) {
@@ -60,14 +61,12 @@ public abstract class EventPredicate<T> {
     }
 
     public void eventTriggered(@NonNull final IEvent event) {
-
         if (containsEvent(event)) {
 
-            List<IEventCheck<T>> eventChecks = internalMap.get(event);
+            final List<IEventCheck<T>> eventChecks = internalMap.get(event);
 
             for (final IEventCheck<T> predicate : eventChecks) {
-
-                TrackedEvent trackedEvent = new TrackedEvent(event, predicate);
+                final ITrackedEvent trackedEvent = new TrackedEvent(event, predicate);
                 eventTriggered(trackedEvent);
             }
         }
@@ -79,8 +78,7 @@ public abstract class EventPredicate<T> {
             final IEvent event = eventCheckSet.getKey();
 
             for (final IEventCheck<T> predicate : eventCheckSet.getValue()) {
-
-                TrackedEvent trackedEvent = new TrackedEvent(event, predicate);
+                final ITrackedEvent trackedEvent = new TrackedEvent(event, predicate);
 
                 final T cachedEventValue = getEventValue(trackedEvent);
 
@@ -108,12 +106,12 @@ public abstract class EventPredicate<T> {
         return applicationContext;
     }
 
-    protected T getEventValue(@NonNull final TrackedEvent event) {
+    protected T getEventValue(@NonNull final ITrackedEvent event) {
         T value = settings.getEventValue(event);
         return value != null ? value : defaultValue();
     }
 
-    protected void updateEventValue(@NonNull final TrackedEvent event, T value) {
+    protected void updateEventValue(@NonNull final ITrackedEvent event, T value) {
         settings.writeEventValue(event, value);
     }
 

@@ -21,9 +21,9 @@ import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 
 import com.github.stkent.amplify.tracking.GenericSettings;
-import com.github.stkent.amplify.tracking.TrackedEvent;
-import com.github.stkent.amplify.utils.TrackingUtils;
 import com.github.stkent.amplify.tracking.interfaces.ILogger;
+import com.github.stkent.amplify.tracking.interfaces.ITrackedEvent;
+import com.github.stkent.amplify.utils.TrackingUtils;
 
 public class LastVersionPredicate extends EventPredicate<String> {
 
@@ -32,7 +32,7 @@ public class LastVersionPredicate extends EventPredicate<String> {
     }
 
     @Override
-    public void eventTriggered(@NonNull final TrackedEvent event) {
+    public void eventTriggered(@NonNull final ITrackedEvent event) {
 
         try {
             final String currentVersion = TrackingUtils.getAppVersionName(getApplicationContext());

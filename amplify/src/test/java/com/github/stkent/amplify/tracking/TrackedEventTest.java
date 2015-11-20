@@ -18,6 +18,7 @@ package com.github.stkent.amplify.tracking;
 
 import com.github.stkent.amplify.tracking.interfaces.IEvent;
 import com.github.stkent.amplify.tracking.interfaces.IEventCheck;
+import com.github.stkent.amplify.tracking.interfaces.ITrackedEvent;
 
 import org.junit.Test;
 
@@ -40,7 +41,7 @@ public class TrackedEventTest {
         IEventCheck iEventCheck = mock(IEventCheck.class);
         when(iEventCheck.getTrackingKey()).thenReturn(iEventCheckKey);
 
-        TrackedEvent trackedEvent = new TrackedEvent(iEvent, iEventCheck);
+        final ITrackedEvent trackedEvent = new TrackedEvent(iEvent, iEventCheck);
         assertEquals("The tracking key for a TrackedEvent is incorrect", trackedEventPrefixKey + iEventKey + "_" + iEventCheckKey,
                 trackedEvent.getTrackingKey());
 

@@ -20,8 +20,8 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.github.stkent.amplify.tracking.GenericSettings;
-import com.github.stkent.amplify.tracking.TrackedEvent;
 import com.github.stkent.amplify.tracking.interfaces.ILogger;
+import com.github.stkent.amplify.tracking.interfaces.ITrackedEvent;
 
 public class FirstTimePredicate extends EventPredicate<Long> {
 
@@ -30,7 +30,7 @@ public class FirstTimePredicate extends EventPredicate<Long> {
     }
 
     @Override
-    public void eventTriggered(@NonNull final TrackedEvent event) {
+    public void eventTriggered(@NonNull final ITrackedEvent event) {
         final Long cachedTime = getEventValue(event);
 
         if (cachedTime == Long.MAX_VALUE) {
