@@ -28,7 +28,7 @@ public final class VersionChangedCheck implements IEventCheck<String> {
     public boolean shouldBlockFeedbackPrompt(@NonNull final String cachedEventValue, @NonNull final IApplicationInfoProvider applicationInfoProvider) {
         try {
             final String currentAppVersion = applicationInfoProvider.getVersionName();
-            return !cachedEventValue.equals(currentAppVersion);
+            return cachedEventValue.equals(currentAppVersion);
         } catch (PackageManager.NameNotFoundException e) {
             // TODO: log here
             // TODO: be safe (return false) or strict (return true) here?
