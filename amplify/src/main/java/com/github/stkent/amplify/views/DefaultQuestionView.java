@@ -17,10 +17,12 @@
 package com.github.stkent.amplify.views;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.TextView;
 
 import com.github.stkent.amplify.R;
+import com.github.stkent.amplify.utils.StringUtils;
 
 public class DefaultQuestionView implements QuestionView {
 
@@ -28,7 +30,7 @@ public class DefaultQuestionView implements QuestionView {
     private final View view;
 
     @NonNull
-    private final TextView titleTextView;
+    private final TextView questionTextView;
 
     @NonNull
     private final View positiveButton;
@@ -36,23 +38,26 @@ public class DefaultQuestionView implements QuestionView {
     @NonNull
     private final View negativeButton;
 
+    private final TextView titleTextView;
+
     @SuppressWarnings("ConstantConditions")
     public DefaultQuestionView(@NonNull final View view) {
         this.view = view;
 
         titleTextView = (TextView) view.findViewById(R.id.amp_title_text_view);
-        if (titleTextView == null) {
-            throw new IllegalArgumentException("You must supply a layout that includes a TextView with id amp_title_text_view");
+        questionTextView = (TextView) view.findViewById(R.id.amp_question_text_view);
+        if (questionTextView == null) {
+            throw new IllegalArgumentException("You must supply a layout that includes a TextView with id amp_question_text_view");
         }
 
         positiveButton = view.findViewById(R.id.amp_positive_button);
         if (positiveButton == null) {
-            throw new IllegalArgumentException("You must supply a layout that includes a Button with id amp_positive_button");
+            throw new IllegalArgumentException("You must supply a layout that includes a View with id amp_positive_button");
         }
 
         negativeButton = view.findViewById(R.id.amp_negative_button);
         if (negativeButton == null) {
-            throw new IllegalArgumentException("You must supply a layout that includes a Button with id amp_negative_button");
+            throw new IllegalArgumentException("You must supply a layout that includes a View with id amp_negative_button");
         }
     }
 
@@ -76,7 +81,18 @@ public class DefaultQuestionView implements QuestionView {
 
     @Override
     public void setQuestion(@NonNull final String question) {
-        titleTextView.setText(question);
+        questionTextView.setText(question);
+    }
+
+    @Override
+    public void setTitle(@Nullable String title) {
+        if (titleTextView != null) {
+            if (StringUtils.isBlank(title)) {
+                titleTextView.setVisibility(View.GONE);
+            } else {
+                titleTextView.setText(title);
+            }
+        }
     }
 
 }

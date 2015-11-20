@@ -32,4 +32,6 @@ public interface QuestionView {
 
     void setQuestion(@NonNull final String question);
 
+    void setTitle(@NonNull final String title);
+
 }

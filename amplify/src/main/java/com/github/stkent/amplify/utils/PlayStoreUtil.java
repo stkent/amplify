@@ -22,8 +22,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 
-import com.github.stkent.amplify.utils.ActivityStateUtil;
-
 import static android.content.Intent.ACTION_VIEW;
 
 public final class PlayStoreUtil {

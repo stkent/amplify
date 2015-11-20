@@ -56,8 +56,11 @@ public class AmplifyView extends FrameLayout {
     private LayoutState layoutState;
     private AmplifyStateTracker ratingStateTracker;
     private String userOpinionQuestion;
+    private String userOpinionTitle;
     private String positiveFeedbackQuestion;
+    private String positiveFeedbackTitle;
     private String criticalFeedbackQuestion;
+    private String criticalFeedbackTitle;
     private UserOpinion userOpinion = UserOpinion.UNKNOWN;
 
     @LayoutRes
@@ -109,14 +112,20 @@ public class AmplifyView extends FrameLayout {
         //TODO add default string loading
         userOpinionQuestion = StringUtils.defaultIfBlank(typedArray.getString(
                 R.styleable.AmplifyView_amplify_user_opinion_question), "");
+        userOpinionTitle = StringUtils.defaultIfBlank(typedArray.getString(
+                R.styleable.AmplifyView_amplify_user_opinion_title), "");
 
         //TODO add default string loading
         positiveFeedbackQuestion = StringUtils.defaultIfBlank(typedArray.getString(
                 R.styleable.AmplifyView_amplify_positive_feedback_question), "");
+        positiveFeedbackTitle = StringUtils.defaultIfBlank(typedArray.getString(
+                R.styleable.AmplifyView_amplify_positive_feedback_title), "");
 
         //TODO add default string loading
         criticalFeedbackQuestion = StringUtils.defaultIfBlank(typedArray.getString(
                 R.styleable.AmplifyView_amplify_critical_feedback_question), "");
+        criticalFeedbackTitle = StringUtils.defaultIfBlank(typedArray.getString(
+                R.styleable.AmplifyView_amplify_critical_feedback_title), "");
 
         typedArray.recycle();
 
@@ -128,6 +137,7 @@ public class AmplifyView extends FrameLayout {
 
         if (cachedQuestionView != null) {
             cachedQuestionView.setQuestion(userOpinionQuestion);
+            cachedQuestionView.setTitle(userOpinionTitle);
         }
     }
 
@@ -137,8 +147,10 @@ public class AmplifyView extends FrameLayout {
         if (cachedQuestionView != null) {
             if (userOpinion == UserOpinion.POSITIVE) {
                 cachedQuestionView.setQuestion(positiveFeedbackQuestion);
+                cachedQuestionView.setTitle(positiveFeedbackTitle);
             } else if (userOpinion == UserOpinion.NEGATIVE) {
                 cachedQuestionView.setQuestion(criticalFeedbackQuestion);
+                cachedQuestionView.setTitle(criticalFeedbackTitle);
             }
         }
     }
