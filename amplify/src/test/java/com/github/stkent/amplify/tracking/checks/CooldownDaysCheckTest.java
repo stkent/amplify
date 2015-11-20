@@ -30,7 +30,7 @@ public class CooldownDaysCheckTest {
     @SuppressLint("Assert")
     @SuppressWarnings("ConstantConditions")
     @Test
-    public void testThatCheckBlocksPrompt_ifCooldownPeriodHasNotPassed() {
+    public void testThatCheckBlocksPromptIfCooldownPeriodHasNotPassed() {
         // Arrange
         final int cooldownTimeDays = 7;
         final int daysSinceLastEvent = 2;
@@ -52,7 +52,7 @@ public class CooldownDaysCheckTest {
     @SuppressLint("Assert")
     @SuppressWarnings("ConstantConditions")
     @Test
-    public void testThatCheckDoesNotBlockPrompt_ifCooldownPeriodHasPassed() {
+    public void testThatCheckDoesNotBlockPromptIfCooldownPeriodHasPassed() {
         // Arrange
         final int cooldownTimeDays = 7;
         final int daysSinceLastEvent = 9;

@@ -45,7 +45,7 @@ public class VersionChangedCheckTest {
     }
 
     @Test
-    public void testThatCheckBlocksPrompt_ifAppVersionHasNotChanged() throws PackageManager.NameNotFoundException {
+    public void testThatCheckBlocksPromptIfAppVersionHasNotChanged() throws PackageManager.NameNotFoundException {
         // Arrange
         final String fakeVersionName = "any string";
 
@@ -63,7 +63,7 @@ public class VersionChangedCheckTest {
     @SuppressLint("Assert")
     @SuppressWarnings("ConstantConditions")
     @Test
-    public void testThatCheckDoesNotBlockPrompt_ifAppVersionHasChanged() throws PackageManager.NameNotFoundException {
+    public void testThatCheckDoesNotBlockPromptIfAppVersionHasChanged() throws PackageManager.NameNotFoundException {
         // Arrange
         final String fakeCachedVersionName = "any string";
         final String fakeCurrentVersionName = "any other string";

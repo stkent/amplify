@@ -42,7 +42,7 @@ public class GooglePlayStoreIsAvailableCheckTest {
     }
 
     @Test
-    public void testThatEnvironmentCheckIsMet_ifGooglePlayStoreIsInstalledOnDevice() {
+    public void testThatEnvironmentCheckIsMetIfGooglePlayStoreIsInstalledOnDevice() {
         // Arrange
        when(mockEnvironmentInfoProvider.isGooglePlayStoreInstalled()).thenReturn(true);
 
@@ -55,7 +55,7 @@ public class GooglePlayStoreIsAvailableCheckTest {
     }
 
     @Test
-    public void testThatEnvironmentCheckIsNotMet_ifGooglePlayStoreIsNotInstalledOnDevice() {
+    public void testThatEnvironmentCheckIsNotMetIfGooglePlayStoreIsNotInstalledOnDevice() {
         // Arrange
         when(mockEnvironmentInfoProvider.isGooglePlayStoreInstalled()).thenReturn(false);
 

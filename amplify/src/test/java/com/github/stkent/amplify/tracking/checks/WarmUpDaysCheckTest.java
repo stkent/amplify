@@ -30,7 +30,7 @@ public class WarmUpDaysCheckTest {
     @SuppressLint("Assert")
     @SuppressWarnings("ConstantConditions")
     @Test
-    public void testThatCheckBlocksPrompt_ifEventHasNotOccurredYet() {
+    public void testThatCheckBlocksPromptIfEventHasNotOccurredYet() {
         // Arrange
         final int warmUpTimeDays = 7;
 
@@ -52,7 +52,7 @@ public class WarmUpDaysCheckTest {
     @SuppressLint("Assert")
     @SuppressWarnings("ConstantConditions")
     @Test
-    public void testThatCheckBlocksPrompt_ifWarmUpPeriodHasNotPassed() {
+    public void testThatCheckBlocksPromptIfWarmUpPeriodHasNotPassed() {
         // Arrange
         final int warmUpTimeDays = 7;
         final int daysSinceLastEvent = 2;
@@ -75,7 +75,7 @@ public class WarmUpDaysCheckTest {
     @SuppressLint("Assert")
     @SuppressWarnings("ConstantConditions")
     @Test
-    public void testThatCheckDoesNotBlockPrompt_ifWarmUpPeriodHasPassed() {
+    public void testThatCheckDoesNotBlockPromptIfWarmUpPeriodHasPassed() {
         // Arrange
         final int warmUpTimeDays = 7;
         final int daysSinceLastEvent = 9;

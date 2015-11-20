@@ -28,7 +28,7 @@ public class MaximumCountCheckTest {
     @SuppressLint("Assert")
     @SuppressWarnings("ConstantConditions")
     @Test
-    public void testThatCheckBlocksPrompt_ifCountThresholdHasBeenExceeded() {
+    public void testThatCheckBlocksPromptIfCountThresholdHasBeenExceeded() {
         // Arrange
         final int maximumEventCount = 7;
         final int currentEventCount = 9;
@@ -50,7 +50,7 @@ public class MaximumCountCheckTest {
     @SuppressLint("Assert")
     @SuppressWarnings("ConstantConditions")
     @Test
-    public void testThatCheckDoesNotBlockPrompt_ifCountThresholdHasNotBeenExceeded() {
+    public void testThatCheckDoesNotBlockPromptIfCountThresholdHasNotBeenExceeded() {
         // Arrange
         final int maximumEventCount = 7;
         final int currentEventCount = 2;
