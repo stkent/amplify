@@ -61,6 +61,17 @@ android {
         abortOnError true
     }
 
+    testOptions.unitTests {
+        returnDefaultValues = true
+        all {
+            maxParallelForks = 2
+            forkEvery = 150
+            afterTest { descriptor, result ->
+                println "Executing test for ${descriptor.name} with result: ${result.resultType}"
+            }
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -76,6 +87,7 @@ gnag {
 
 dependencies {
     testCompile 'junit:junit:4.12'
+    testCompile 'org.mockito:mockito-all:1.10.19'
     javadocDeps 'com.android.support:support-annotations:23.1.0'
     compile 'com.android.support:appcompat-v7:23.1.0'
 }
