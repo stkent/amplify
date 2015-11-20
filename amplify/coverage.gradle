@@ -1,0 +1,43 @@
+apply plugin: 'jacoco'
+apply plugin: 'com.github.kt3k.coveralls'
+
+def coverageSourceDirs = [
+        'src/main/java'
+]
+
+task coverageDebugTestReport(type:JacocoReport) {
+    group = "Reporting"
+
+    description = "Generate Jacoco coverage reports for debug build type"
+
+    classDirectories = fileTree(
+            dir: 'build/intermediates/classes/debug',
+            excludes: ['**/R.class',
+                       '**/R$*.class',
+                       '**/BuildConfig.*',
+                       '**/Manifest*.*']
+    )
+
+    additionalSourceDirs = files(coverageSourceDirs)
+    sourceDirectories = files(coverageSourceDirs)
+    executionData = files('build/jacoco/testDebugUnitTest.exec')
+
+    reports {
+        xml.enabled = true
+        html.enabled = false
+        csv.enabled = false
+    }
+}
+
+jacoco {
+    toolVersion = "0.7.5.201505241946"
+}
+
+coveralls {
+    jacocoReportPath = "${buildDir}/reports/jacoco/coverageDebugTestReport/coverageDebugTestReport.xml"
+}
+
+tasks.coveralls {
+    dependsOn "coverageDebugTestReport"
+    onlyIf { System.env.'CI' }
+}
