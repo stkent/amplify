@@ -14,13 +14,8 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package com.github.stkent.amplify.tracking.interfaces;
+package com.github.stkent.amplify.tracking.predicates;
 
-import android.support.annotation.NonNull;
-
-public interface ITrackedEvent {
-
-    @NonNull
-    String getTrackingKey();
+public class FirstTimePredicateTest {
 
 }
