@@ -32,7 +32,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * indexed first by IEvent, and then by IEventCheck. This allows for easier
  * verifications during testing.
  */
-public class MockSettings<T> implements ISettings<T> {
+public class FakeSettings<T> implements ISettings<T> {
 
     private final Map<IEvent, Map<IEventCheck, T>> mostRecentValuesWritten = new ConcurrentHashMap<>();
 

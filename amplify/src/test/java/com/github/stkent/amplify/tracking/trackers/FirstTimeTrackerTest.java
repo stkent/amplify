@@ -20,7 +20,7 @@ import android.annotation.SuppressLint;
 import android.support.annotation.NonNull;
 
 import com.github.stkent.amplify.helpers.BaseTest;
-import com.github.stkent.amplify.helpers.MockSettings;
+import com.github.stkent.amplify.helpers.FakeSettings;
 import com.github.stkent.amplify.helpers.StubbedLogger;
 import com.github.stkent.amplify.tracking.ClockUtil;
 import com.github.stkent.amplify.tracking.interfaces.IApplicationInfoProvider;
@@ -38,7 +38,7 @@ public class FirstTimeTrackerTest extends BaseTest {
 
     private FirstTimeTracker firstTimeTracker;
 
-    private MockSettings<Long> mockSettings;
+    private FakeSettings<Long> fakeSettings;
 
     @Mock
     private IApplicationInfoProvider mockApplicationInfoProvider;
@@ -49,11 +49,10 @@ public class FirstTimeTrackerTest extends BaseTest {
 
     @Override
     public void localSetUp() {
-        mockSettings = new MockSettings<>();
+        fakeSettings = new FakeSettings<>();
 
         firstTimeTracker = new FirstTimeTracker(
-                new StubbedLogger(),
-                mockSettings,
+                new StubbedLogger(), fakeSettings,
                 mockApplicationInfoProvider);
 
         firstTimeTracker.trackEvent(mockEvent, mockEventCheck);
@@ -70,7 +69,7 @@ public class FirstTimeTrackerTest extends BaseTest {
         // Assert
 
         // Check that the correct event time was saved:
-        final Long savedEventTime = mockSettings.getEventValue(mockEvent, mockEventCheck);
+        final Long savedEventTime = fakeSettings.getEventValue(mockEvent, mockEventCheck);
 
         assertEquals("The correct time should have been recorded for this event", Long.valueOf(fakeEventTime), savedEventTime);
     }
@@ -92,7 +91,7 @@ public class FirstTimeTrackerTest extends BaseTest {
         // Assert
 
         // Check that the earlier event time was saved, and the second event time ignored:
-        final Long savedEventTime = mockSettings.getEventValue(mockEvent, mockEventCheck);
+        final Long savedEventTime = fakeSettings.getEventValue(mockEvent, mockEventCheck);
 
         assertEquals("The correct (earliest) time should have been recorded for this event",
                 Long.valueOf(fakeEventTimeEarlier), savedEventTime);
