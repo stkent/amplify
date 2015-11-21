@@ -21,12 +21,11 @@ import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 
+import com.github.stkent.amplify.ILogger;
 import com.github.stkent.amplify.tracking.ApplicationInfoProvider;
 import com.github.stkent.amplify.tracking.Settings;
-import com.github.stkent.amplify.ILogger;
 import com.github.stkent.amplify.tracking.interfaces.IApplicationInfoProvider;
 import com.github.stkent.amplify.tracking.interfaces.ISettings;
-import com.github.stkent.amplify.tracking.interfaces.ITrackedEvent;
 
 public class LastVersionTracker extends EventTracker<String> {
 
@@ -39,19 +38,22 @@ public class LastVersionTracker extends EventTracker<String> {
         super(logger, settings, applicationInfoProvider);
     }
 
+    @NonNull
     @Override
-    public void eventTriggered(@NonNull final ITrackedEvent event) {
+    public String computeUpdatedTrackingValue(@NonNull final String cachedTrackingValue) {
         try {
             final String currentVersion = getApplicationInfoProvider().getVersionName();
             getLogger().d("LastVersionPredicate updating event value to: " + currentVersion);
-            updateEventValue(event, currentVersion);
+            return currentVersion;
         } catch (final PackageManager.NameNotFoundException e) {
             getLogger().d("Could not read current app version name.");
+            return cachedTrackingValue;
         }
     }
 
+    @NonNull
     @Override
-    public String defaultValue() {
+    public String defaultTrackingValue() {
         return "";
     }
 

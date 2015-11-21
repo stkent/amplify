@@ -20,13 +20,12 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 
+import com.github.stkent.amplify.ILogger;
 import com.github.stkent.amplify.tracking.ApplicationInfoProvider;
 import com.github.stkent.amplify.tracking.ClockUtil;
 import com.github.stkent.amplify.tracking.Settings;
 import com.github.stkent.amplify.tracking.interfaces.IApplicationInfoProvider;
-import com.github.stkent.amplify.ILogger;
 import com.github.stkent.amplify.tracking.interfaces.ISettings;
-import com.github.stkent.amplify.tracking.interfaces.ITrackedEvent;
 
 public class FirstTimeTracker extends EventTracker<Long> {
 
@@ -39,19 +38,21 @@ public class FirstTimeTracker extends EventTracker<Long> {
         super(logger, settings, applicationInfoProvider);
     }
 
+    @NonNull
     @Override
-    public void eventTriggered(@NonNull final ITrackedEvent event) {
-        final Long cachedTime = getEventValue(event);
-
-        if (cachedTime == Long.MAX_VALUE) {
+    public Long computeUpdatedTrackingValue(@NonNull final Long cachedValue) {
+        if (cachedValue == Long.MAX_VALUE) {
             final Long currentTime = ClockUtil.getCurrentTimeMillis();
-            getLogger().d("FirstTimePredicate updating event value from: " + cachedTime + ", to: " + currentTime);
-            updateEventValue(event, Math.min(cachedTime, currentTime));
+            getLogger().d("FirstTimePredicate updating event value from: " + cachedValue + ", to: " + currentTime);
+            return Math.min(cachedValue, currentTime);
         }
+
+        return cachedValue;
     }
 
+    @NonNull
     @Override
-    public Long defaultValue() {
+    public Long defaultTrackingValue() {
         return Long.MAX_VALUE;
     }
 }

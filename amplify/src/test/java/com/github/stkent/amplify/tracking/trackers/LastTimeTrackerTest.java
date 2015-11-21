@@ -100,7 +100,7 @@ public class LastTimeTrackerTest extends BaseTest {
 
     private void triggerEventAtTime(@NonNull final IEvent event, final long time) {
         ClockUtil.setFakeCurrentTimeMillis(time);
-        lastTimeTracker.eventTriggered(event);
+        lastTimeTracker.notifyEventTriggered(event);
     }
 
 }

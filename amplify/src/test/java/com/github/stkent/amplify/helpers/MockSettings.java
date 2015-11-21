@@ -52,7 +52,7 @@ public class MockSettings<T> implements ISettings<T> {
     }
 
     @Override
-    public void writeEventValue(@NonNull final ITrackedEvent trackedEvent, final T value) {
+    public void writeTrackingValue(@NonNull final ITrackedEvent trackedEvent, final T value) {
         final IEvent event = trackedEvent.getEvent();
 
         if (!mostRecentValuesWritten.containsKey(event)) {
@@ -64,13 +64,13 @@ public class MockSettings<T> implements ISettings<T> {
 
     @Nullable
     @Override
-    public T getEventValue(@NonNull final ITrackedEvent trackedEvent) {
+    public T readTrackingValue(@NonNull final ITrackedEvent trackedEvent) {
         return getEventValue(trackedEvent.getEvent(), trackedEvent.getEventCheck());
     }
 
     @Override
     public boolean hasEventValue(@NonNull final ITrackedEvent trackedEvent) {
-        return getEventValue(trackedEvent) != null;
+        return readTrackingValue(trackedEvent) != null;
     }
 
 }
