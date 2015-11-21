@@ -32,7 +32,7 @@ import com.github.stkent.amplify.R;
 import com.github.stkent.amplify.tracking.AmplifyStateTracker;
 import com.github.stkent.amplify.tracking.EnvironmentInfoProvider;
 import com.github.stkent.amplify.tracking.IntegratedEvent;
-import com.github.stkent.amplify.tracking.predicates.ApplicationInfoProvider;
+import com.github.stkent.amplify.tracking.ApplicationInfoProvider;
 import com.github.stkent.amplify.utils.FeedbackUtil;
 import com.github.stkent.amplify.utils.PlayStoreUtil;
 import com.github.stkent.amplify.utils.StringUtils;

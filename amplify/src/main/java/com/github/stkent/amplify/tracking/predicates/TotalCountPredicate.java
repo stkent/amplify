@@ -19,6 +19,7 @@ package com.github.stkent.amplify.tracking.predicates;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import com.github.stkent.amplify.tracking.ApplicationInfoProvider;
 import com.github.stkent.amplify.tracking.Settings;
 import com.github.stkent.amplify.ILogger;
 import com.github.stkent.amplify.tracking.interfaces.ITrackedEvent;
