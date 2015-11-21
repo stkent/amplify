@@ -41,7 +41,10 @@ public abstract class EventPredicate<T> {
     protected abstract void eventTriggered(@NonNull final ITrackedEvent event);
     protected abstract T defaultValue();
 
-    public EventPredicate(ILogger logger, ISettings<T> settings, IApplicationInfoProvider applicationInfoProvider) {
+    public EventPredicate(
+            @NonNull final ILogger logger,
+            @NonNull final ISettings<T> settings,
+            @NonNull final IApplicationInfoProvider applicationInfoProvider) {
         super();
         this.logger = logger;
         this.settings = settings;

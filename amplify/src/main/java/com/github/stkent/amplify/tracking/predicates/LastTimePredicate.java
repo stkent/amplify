@@ -30,7 +30,9 @@ import com.github.stkent.amplify.tracking.interfaces.ITrackedEvent;
 
 public class LastTimePredicate extends EventPredicate<Long> {
 
-    public LastTimePredicate(ILogger logger, Context applicationContext) {
+    public LastTimePredicate(
+            @NonNull final ILogger logger,
+            @NonNull final Context applicationContext) {
         this(logger, new Settings<Long>(applicationContext, logger), new ApplicationInfoProvider(applicationContext));
     }
 
