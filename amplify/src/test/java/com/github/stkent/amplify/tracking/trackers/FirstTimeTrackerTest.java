@@ -21,7 +21,7 @@ import android.support.annotation.NonNull;
 
 import com.github.stkent.amplify.helpers.BaseTest;
 import com.github.stkent.amplify.helpers.FakeSettings;
-import com.github.stkent.amplify.helpers.StubbedLogger;
+import com.github.stkent.amplify.helpers.StubLogger;
 import com.github.stkent.amplify.tracking.ClockUtil;
 import com.github.stkent.amplify.tracking.interfaces.IApplicationInfoProvider;
 import com.github.stkent.amplify.tracking.interfaces.IEvent;
@@ -52,7 +52,7 @@ public class FirstTimeTrackerTest extends BaseTest {
         fakeSettings = new FakeSettings<>();
 
         firstTimeTracker = new FirstTimeTracker(
-                new StubbedLogger(), fakeSettings,
+                new StubLogger(), fakeSettings,
                 mockApplicationInfoProvider);
 
         firstTimeTracker.trackEvent(mockEvent, mockEventCheck);

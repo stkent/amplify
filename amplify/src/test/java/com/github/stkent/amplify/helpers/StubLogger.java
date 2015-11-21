@@ -21,7 +21,7 @@ import android.support.annotation.NonNull;
 import com.github.stkent.amplify.Logger;
 import com.github.stkent.amplify.ILogger;
 
-public class StubbedLogger implements ILogger {
+public class StubLogger implements ILogger {
 
     @Override
     public void setLogLevel(@NonNull final Logger.LogLevel logLevel) {
