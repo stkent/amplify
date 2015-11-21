@@ -19,7 +19,7 @@ package com.github.stkent.amplify.helpers;
 import android.support.annotation.NonNull;
 
 import com.github.stkent.amplify.Logger;
-import com.github.stkent.amplify.tracking.interfaces.ILogger;
+import com.github.stkent.amplify.ILogger;
 
 public class StubbedLogger implements ILogger {
 

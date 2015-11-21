@@ -30,7 +30,7 @@ import com.github.stkent.amplify.tracking.checks.WarmUpDaysCheck;
 import com.github.stkent.amplify.tracking.interfaces.IEnvironmentCheck;
 import com.github.stkent.amplify.tracking.interfaces.IEvent;
 import com.github.stkent.amplify.tracking.interfaces.IEventCheck;
-import com.github.stkent.amplify.tracking.interfaces.ILogger;
+import com.github.stkent.amplify.ILogger;
 import com.github.stkent.amplify.tracking.predicates.FirstTimePredicate;
 import com.github.stkent.amplify.tracking.predicates.LastTimePredicate;
 import com.github.stkent.amplify.tracking.predicates.LastVersionPredicate;

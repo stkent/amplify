@@ -19,8 +19,6 @@ package com.github.stkent.amplify;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.github.stkent.amplify.tracking.interfaces.ILogger;
-
 public final class Logger implements ILogger {
 
     private static final String TAG = "Amplify Library";
