@@ -14,7 +14,7 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package com.github.stkent.amplify.tracking.predicates;
+package com.github.stkent.amplify.tracking.trackers;
 
 import android.annotation.SuppressLint;
 import android.support.annotation.NonNull;
@@ -34,9 +34,9 @@ import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertEquals;
 
-public class LastTimePredicateTest extends BaseTest {
+public class FirstTimeTrackerTest extends BaseTest {
 
-    private LastTimePredicate lastTimePredicate;
+    private FirstTimeTracker firstTimeTracker;
 
     private MockSettings<Long> mockSettings;
 
@@ -51,12 +51,12 @@ public class LastTimePredicateTest extends BaseTest {
     public void localSetUp() {
         mockSettings = new MockSettings<>();
 
-        lastTimePredicate = new LastTimePredicate(
+        firstTimeTracker = new FirstTimeTracker(
                 new StubbedLogger(),
                 mockSettings,
                 mockApplicationInfoProvider);
 
-        lastTimePredicate.trackEvent(mockEvent, mockEventCheck);
+        firstTimeTracker.trackEvent(mockEvent, mockEventCheck);
     }
 
     @Test
@@ -77,7 +77,7 @@ public class LastTimePredicateTest extends BaseTest {
 
     @SuppressLint("Assert")
     @Test
-    public void testThatSecondEventTimesIsRecorded() {
+    public void testThatSecondAndSubsequentEventTimesAreNotRecorded() {
         // Arrange Act
         final long fakeEventTimeEarlier = MARCH_18_2014_838PM_UTC;
         final long fakeEventTimeLater
@@ -94,13 +94,13 @@ public class LastTimePredicateTest extends BaseTest {
         // Check that the earlier event time was saved, and the second event time ignored:
         final Long savedEventTime = mockSettings.getEventValue(mockEvent, mockEventCheck);
 
-        assertEquals("The correct (latest) time should have been recorded for this event",
-                Long.valueOf(fakeEventTimeLater), savedEventTime);
+        assertEquals("The correct (earliest) time should have been recorded for this event",
+                Long.valueOf(fakeEventTimeEarlier), savedEventTime);
     }
 
     private void triggerEventAtTime(@NonNull final IEvent event, final long time) {
         ClockUtil.setFakeCurrentTimeMillis(time);
-        lastTimePredicate.eventTriggered(event);
+        firstTimeTracker.eventTriggered(event);
     }
 
 }

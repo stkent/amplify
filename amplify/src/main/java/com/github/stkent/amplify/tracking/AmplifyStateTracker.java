@@ -31,10 +31,10 @@ import com.github.stkent.amplify.tracking.interfaces.IEnvironmentCheck;
 import com.github.stkent.amplify.tracking.interfaces.IEvent;
 import com.github.stkent.amplify.tracking.interfaces.IEventCheck;
 import com.github.stkent.amplify.ILogger;
-import com.github.stkent.amplify.tracking.predicates.FirstTimePredicate;
-import com.github.stkent.amplify.tracking.predicates.LastTimePredicate;
-import com.github.stkent.amplify.tracking.predicates.LastVersionPredicate;
-import com.github.stkent.amplify.tracking.predicates.TotalCountPredicate;
+import com.github.stkent.amplify.tracking.trackers.FirstTimeTracker;
+import com.github.stkent.amplify.tracking.trackers.LastTimeTracker;
+import com.github.stkent.amplify.tracking.trackers.LastVersionTracker;
+import com.github.stkent.amplify.tracking.trackers.TotalCountTracker;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,10 +52,10 @@ public final class AmplifyStateTracker {
     private final Context applicationContext;
     private final IEnvironmentInfoProvider applicationInfoProvider;
     private final List<IEnvironmentCheck> environmentRequirements = new ArrayList<>();
-    private final LastTimePredicate lastTimePredicate;
-    private final FirstTimePredicate firstTimePredicate;
-    private final LastVersionPredicate lastVersionPredicate;
-    private final TotalCountPredicate totalCountPredicate;
+    private final LastTimeTracker lastTimeTracker;
+    private final FirstTimeTracker firstTimeTracker;
+    private final LastVersionTracker lastVersionTracker;
+    private final TotalCountTracker totalCountTracker;
     private final ILogger logger;
 
     private boolean alwaysShow;
@@ -108,10 +108,10 @@ public final class AmplifyStateTracker {
         this.applicationContext = context.getApplicationContext();
         this.applicationInfoProvider = new EnvironmentInfoProvider(applicationContext);
         this.logger = logger;
-        this.lastTimePredicate = new LastTimePredicate(logger, applicationContext);
-        this.firstTimePredicate = new FirstTimePredicate(logger, applicationContext);
-        this.lastVersionPredicate = new LastVersionPredicate(logger, applicationContext);
-        this.totalCountPredicate = new TotalCountPredicate(logger, applicationContext);
+        this.lastTimeTracker = new LastTimeTracker(logger, applicationContext);
+        this.firstTimeTracker = new FirstTimeTracker(logger, applicationContext);
+        this.lastVersionTracker = new LastVersionTracker(logger, applicationContext);
+        this.totalCountTracker = new TotalCountTracker(logger, applicationContext);
     }
 
     // configuration methods
@@ -119,28 +119,28 @@ public final class AmplifyStateTracker {
     public AmplifyStateTracker trackTotalEventCount(@NonNull final IEvent event, @NonNull final IEventCheck<Integer> predicate) {
         // todo: check for conflicts here
         performEventRelatedInitializationIfRequired(event);
-        totalCountPredicate.trackEvent(event, predicate);
+        totalCountTracker.trackEvent(event, predicate);
         return this;
     }
 
     public AmplifyStateTracker trackFirstEventTime(@NonNull final IEvent event, @NonNull final IEventCheck<Long> predicate) {
         // todo: check for conflicts here
         performEventRelatedInitializationIfRequired(event);
-        firstTimePredicate.trackEvent(event, predicate);
+        firstTimeTracker.trackEvent(event, predicate);
         return this;
     }
 
     public AmplifyStateTracker trackLastEventTime(@NonNull final IEvent event, @NonNull final IEventCheck<Long> predicate) {
         // todo: check for conflicts here
         performEventRelatedInitializationIfRequired(event);
-        lastTimePredicate.trackEvent(event, predicate);
+        lastTimeTracker.trackEvent(event, predicate);
         return this;
     }
 
     public AmplifyStateTracker trackLastEventVersion(@NonNull final IEvent event, @NonNull final IEventCheck<String> predicate) {
         // todo: check for conflicts here
         performEventRelatedInitializationIfRequired(event);
-        lastVersionPredicate.trackEvent(event, predicate);
+        lastVersionTracker.trackEvent(event, predicate);
         return this;
     }
 
@@ -154,10 +154,10 @@ public final class AmplifyStateTracker {
 
     public AmplifyStateTracker notifyEventTriggered(@NonNull final IEvent event) {
         logger.d("Triggered Event: " + event);
-        totalCountPredicate.eventTriggered(event);
-        firstTimePredicate.eventTriggered(event);
-        lastTimePredicate.eventTriggered(event);
-        lastVersionPredicate.eventTriggered(event);
+        totalCountTracker.eventTriggered(event);
+        firstTimeTracker.eventTriggered(event);
+        lastTimeTracker.eventTriggered(event);
+        lastVersionTracker.eventTriggered(event);
         return this;
     }
 
@@ -171,10 +171,10 @@ public final class AmplifyStateTracker {
 
     public boolean shouldAskForRating() {
         return alwaysShow | (allEnvironmentRequirementsMet()
-                & totalCountPredicate.allowFeedbackPrompt()
-                & firstTimePredicate.allowFeedbackPrompt()
-                & lastTimePredicate.allowFeedbackPrompt()
-                & lastVersionPredicate.allowFeedbackPrompt());
+                & totalCountTracker.allowFeedbackPrompt()
+                & firstTimeTracker.allowFeedbackPrompt()
+                & lastTimeTracker.allowFeedbackPrompt()
+                & lastVersionTracker.allowFeedbackPrompt());
     }
 
     // private implementation:
@@ -199,9 +199,9 @@ public final class AmplifyStateTracker {
     }
 
     private boolean isEventAlreadyTracked(@NonNull final IEvent event) {
-        return lastTimePredicate.containsEvent(event)
-                || lastVersionPredicate.containsEvent(event)
-                || totalCountPredicate.containsEvent(event)
-                || firstTimePredicate.containsEvent(event);
+        return lastTimeTracker.containsEvent(event)
+                || lastVersionTracker.containsEvent(event)
+                || totalCountTracker.containsEvent(event)
+                || firstTimeTracker.containsEvent(event);
     }
 }

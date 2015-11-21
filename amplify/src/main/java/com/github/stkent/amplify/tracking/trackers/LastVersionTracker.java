@@ -14,9 +14,10 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package com.github.stkent.amplify.tracking.predicates;
+package com.github.stkent.amplify.tracking.trackers;
 
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 
@@ -27,33 +28,31 @@ import com.github.stkent.amplify.tracking.interfaces.IApplicationInfoProvider;
 import com.github.stkent.amplify.tracking.interfaces.ISettings;
 import com.github.stkent.amplify.tracking.interfaces.ITrackedEvent;
 
-public class TotalCountPredicate extends EventPredicate<Integer> {
+public class LastVersionTracker extends EventTracker<String> {
 
-    public TotalCountPredicate(
-            @NonNull final ILogger logger,
-            @NonNull final Context applicationContext) {
-        this(logger, new Settings<Integer>(applicationContext, logger), new ApplicationInfoProvider(applicationContext));
+    public LastVersionTracker(@NonNull final ILogger logger, @NonNull final Context applicationContext) {
+        this(logger, new Settings<String>(applicationContext, logger), new ApplicationInfoProvider(applicationContext));
     }
 
     @VisibleForTesting
-    protected TotalCountPredicate(
-            @NonNull final ILogger logger,
-            @NonNull final ISettings<Integer> settings,
-            @NonNull final IApplicationInfoProvider applicationInfoProvider) {
+    protected LastVersionTracker(@NonNull final ILogger logger, @NonNull final ISettings<String> settings, @NonNull final IApplicationInfoProvider applicationInfoProvider) {
         super(logger, settings, applicationInfoProvider);
     }
 
     @Override
     public void eventTriggered(@NonNull final ITrackedEvent event) {
-
-        final Integer cachedCount = getEventValue(event);
-        final Integer updatedCount = cachedCount + 1;
-        getLogger().d("TotalCountPredicate updating event value from: " + cachedCount + ", to: " + updatedCount);
-        updateEventValue(event, updatedCount);
+        try {
+            final String currentVersion = getApplicationInfoProvider().getVersionName();
+            getLogger().d("LastVersionPredicate updating event value to: " + currentVersion);
+            updateEventValue(event, currentVersion);
+        } catch (final PackageManager.NameNotFoundException e) {
+            getLogger().d("Could not read current app version name.");
+        }
     }
 
     @Override
-    public Integer defaultValue() {
-        return 0;
+    public String defaultValue() {
+        return "";
     }
+
 }
