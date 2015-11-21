@@ -37,7 +37,6 @@ public class CooldownDaysCheckTest extends BaseTest {
         // Arrange
         final int cooldownTimeDays = 7;
         final int daysSinceLastEvent = 2;
-
         assert daysSinceLastEvent < cooldownTimeDays;
 
         final CooldownDaysCheck cooldownDaysCheck = new CooldownDaysCheck(cooldownTimeDays);
@@ -59,7 +58,6 @@ public class CooldownDaysCheckTest extends BaseTest {
         // Arrange
         final int cooldownTimeDays = 7;
         final int daysSinceLastEvent = 9;
-
         assert daysSinceLastEvent > cooldownTimeDays;
 
         final CooldownDaysCheck cooldownDaysCheck = new CooldownDaysCheck(cooldownTimeDays);
