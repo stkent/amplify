@@ -52,7 +52,8 @@ public class LastTimeTrackerTest extends BaseTest {
         fakeSettings = new FakeSettings<>();
 
         lastTimeTracker = new LastTimeTracker(
-                new StubLogger(), fakeSettings,
+                new StubLogger(),
+                fakeSettings,
                 mockApplicationInfoProvider);
 
         lastTimeTracker.trackEvent(mockEvent, mockEventCheck);
@@ -67,20 +68,19 @@ public class LastTimeTrackerTest extends BaseTest {
         triggerEventAtTime(mockEvent, fakeEventTime);
 
         // Assert
-
-        // Check that the correct event time was saved:
         final Long savedEventTime = fakeSettings.getEventValue(mockEvent, mockEventCheck);
 
-        assertEquals("The correct time should have been recorded for this event", Long.valueOf(fakeEventTime), savedEventTime);
+        assertEquals(
+                "The correct time should have been recorded for this event",
+                Long.valueOf(fakeEventTime), savedEventTime);
     }
 
     @SuppressLint("Assert")
     @Test
     public void testThatSecondEventTimesIsRecorded() {
-        // Arrange Act
+        // Arrange
         final long fakeEventTimeEarlier = MARCH_18_2014_838PM_UTC;
-        final long fakeEventTimeLater
-                = fakeEventTimeEarlier + TimeUnit.DAYS.toMillis(1);
+        final long fakeEventTimeLater = fakeEventTimeEarlier + TimeUnit.DAYS.toMillis(1);
 
         assert fakeEventTimeEarlier < fakeEventTimeLater;
 
@@ -89,11 +89,10 @@ public class LastTimeTrackerTest extends BaseTest {
         triggerEventAtTime(mockEvent, fakeEventTimeLater);
 
         // Assert
-
-        // Check that the earlier event time was saved, and the second event time ignored:
         final Long savedEventTime = fakeSettings.getEventValue(mockEvent, mockEventCheck);
 
-        assertEquals("The correct (latest) time should have been recorded for this event",
+        assertEquals(
+                "The correct (latest) time should have been recorded for this event",
                 Long.valueOf(fakeEventTimeLater), savedEventTime);
     }
 
