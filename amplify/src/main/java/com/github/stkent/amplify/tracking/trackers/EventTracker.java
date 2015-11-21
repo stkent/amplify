@@ -41,7 +41,10 @@ public abstract class EventTracker<T> {
     protected abstract void eventTriggered(@NonNull final ITrackedEvent event);
     protected abstract T defaultValue();
 
-    public EventTracker(@NonNull final ILogger logger, @NonNull final ISettings<T> settings, @NonNull final IApplicationInfoProvider applicationInfoProvider) {
+    public EventTracker(
+            @NonNull final ILogger logger,
+            @NonNull final ISettings<T> settings,
+            @NonNull final IApplicationInfoProvider applicationInfoProvider) {
         super();
         this.logger = logger;
         this.settings = settings;

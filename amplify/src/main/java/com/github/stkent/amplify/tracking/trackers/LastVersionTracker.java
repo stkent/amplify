@@ -35,7 +35,10 @@ public class LastVersionTracker extends EventTracker<String> {
     }
 
     @VisibleForTesting
-    protected LastVersionTracker(@NonNull final ILogger logger, @NonNull final ISettings<String> settings, @NonNull final IApplicationInfoProvider applicationInfoProvider) {
+    protected LastVersionTracker(
+            @NonNull final ILogger logger,
+            @NonNull final ISettings<String> settings,
+            @NonNull final IApplicationInfoProvider applicationInfoProvider) {
         super(logger, settings, applicationInfoProvider);
     }
 
