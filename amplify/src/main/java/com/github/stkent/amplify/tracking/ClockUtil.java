@@ -21,7 +21,7 @@ import android.support.annotation.Nullable;
 public final class ClockUtil {
 
     @Nullable
-    private static Long fakeCurrentTimeMillis = null;
+    private static Long fakeCurrentTimeMillis;
 
     private ClockUtil() {
 

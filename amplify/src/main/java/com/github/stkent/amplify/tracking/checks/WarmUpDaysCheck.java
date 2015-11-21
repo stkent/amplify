@@ -33,13 +33,18 @@ public class WarmUpDaysCheck implements IEventCheck<Long> {
     }
 
     @Override
-    public boolean shouldBlockFeedbackPrompt(@NonNull final Long cachedEventValue, @NonNull final IApplicationInfoProvider applicationInfoProvider) {
-        return cachedEventValue == Long.MAX_VALUE || (ClockUtil.getCurrentTimeMillis() - cachedEventValue) <= TimeUnit.DAYS.toMillis(warmUpPeriodDays);
+    public boolean shouldBlockFeedbackPrompt(
+            @NonNull final Long cachedEventValue,
+            @NonNull final IApplicationInfoProvider applicationInfoProvider) {
+        return cachedEventValue == Long.MAX_VALUE ||
+                (ClockUtil.getCurrentTimeMillis() - cachedEventValue) <= TimeUnit.DAYS.toMillis(warmUpPeriodDays);
     }
 
     @NonNull
     @Override
-    public String getStatusString(@NonNull final Long cachedEventValue, @NonNull final IApplicationInfoProvider applicationInfoProvider) {
+    public String getStatusString(
+            @NonNull final Long cachedEventValue,
+            @NonNull final IApplicationInfoProvider applicationInfoProvider) {
         final Long daysSinceFirstEvent = TimeUnit.MILLISECONDS.toDays(ClockUtil.getCurrentTimeMillis() - cachedEventValue);
         return "Warm-up period: " + warmUpPeriodDays + " days. Time since first event: " + daysSinceFirstEvent + " days.";
     }
