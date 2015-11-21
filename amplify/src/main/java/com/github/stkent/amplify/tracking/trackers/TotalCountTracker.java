@@ -33,7 +33,10 @@ public class TotalCountTracker extends EventTracker<Integer> {
     }
 
     @VisibleForTesting
-    protected TotalCountTracker(@NonNull final ILogger logger, @NonNull final ISettings<Integer> settings, @NonNull final IApplicationInfoProvider applicationInfoProvider) {
+    protected TotalCountTracker(
+            @NonNull final ILogger logger,
+            @NonNull final ISettings<Integer> settings,
+            @NonNull final IApplicationInfoProvider applicationInfoProvider) {
         super(logger, settings, applicationInfoProvider);
     }
 

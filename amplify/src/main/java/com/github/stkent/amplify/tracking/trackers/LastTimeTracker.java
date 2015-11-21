@@ -34,7 +34,10 @@ public class LastTimeTracker extends EventTracker<Long> {
     }
 
     @VisibleForTesting
-    protected LastTimeTracker(@NonNull final ILogger logger, @NonNull final ISettings<Long> settings, @NonNull final IApplicationInfoProvider applicationInfoProvider) {
+    protected LastTimeTracker(
+            @NonNull final ILogger logger,
+            @NonNull final ISettings<Long> settings,
+            @NonNull final IApplicationInfoProvider applicationInfoProvider) {
         super(logger, settings, applicationInfoProvider);
     }
 

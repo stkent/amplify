@@ -44,7 +44,11 @@ public abstract class EventTracker<T> {
     @NonNull
     protected abstract T computeUpdatedTrackingValue(@NonNull final T cachedEventValue);
 
-    public EventTracker(@NonNull final ILogger logger, @NonNull final ISettings<T> settings, @NonNull final IApplicationInfoProvider applicationInfoProvider) {
+
+    public EventTracker(
+            @NonNull final ILogger logger,
+            @NonNull final ISettings<T> settings,
+            @NonNull final IApplicationInfoProvider applicationInfoProvider) {
         this.logger = logger;
         this.settings = settings;
         this.applicationInfoProvider = applicationInfoProvider;

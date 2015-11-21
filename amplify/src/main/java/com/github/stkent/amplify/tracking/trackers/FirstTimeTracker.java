@@ -34,7 +34,10 @@ public class FirstTimeTracker extends EventTracker<Long> {
     }
 
     @VisibleForTesting
-    protected FirstTimeTracker(@NonNull final ILogger logger, @NonNull final ISettings<Long> settings, @NonNull final IApplicationInfoProvider applicationInfoProvider) {
+    protected FirstTimeTracker(
+            @NonNull final ILogger logger,
+            @NonNull final ISettings<Long> settings,
+            @NonNull final IApplicationInfoProvider applicationInfoProvider) {
         super(logger, settings, applicationInfoProvider);
     }
 
