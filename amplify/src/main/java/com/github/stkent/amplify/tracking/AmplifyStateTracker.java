@@ -74,16 +74,6 @@ public final class AmplifyStateTracker {
         return sharedInstance;
     }
 
-    public AmplifyStateTracker setLogLevel(@NonNull final Logger.LogLevel logLevel) {
-        logger.setLogLevel(logLevel);
-        return this;
-    }
-
-    public AmplifyStateTracker setAlwaysShow(final boolean alwaysShow) {
-        this.alwaysShow = alwaysShow;
-        return this;
-    }
-
     // constructors
 
     private AmplifyStateTracker(
@@ -112,6 +102,16 @@ public final class AmplifyStateTracker {
                 .trackLastEventVersion(IntegratedEvent.USER_DECLINED_RATING, new VersionChangedCheck())
                 .trackLastEventTime(IntegratedEvent.APP_CRASHED, new CooldownDaysCheck(ONE_WEEK))
                 .trackLastEventVersion(IntegratedEvent.USER_GAVE_NEGATIVE_FEEDBACK, new VersionChangedCheck());
+    }
+
+    public AmplifyStateTracker setLogLevel(@NonNull final Logger.LogLevel logLevel) {
+        logger.setLogLevel(logLevel);
+        return this;
+    }
+
+    public AmplifyStateTracker setAlwaysShow(final boolean alwaysShow) {
+        this.alwaysShow = alwaysShow;
+        return this;
     }
 
     public AmplifyStateTracker trackTotalEventCount(@NonNull final IEvent event, @NonNull final IEventCheck<Integer> eventCheck) {
