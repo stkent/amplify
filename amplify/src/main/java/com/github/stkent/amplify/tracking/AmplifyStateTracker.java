@@ -26,10 +26,13 @@ import com.github.stkent.amplify.tracking.checks.GooglePlayStoreIsAvailableCheck
 import com.github.stkent.amplify.tracking.checks.MaximumCountCheck;
 import com.github.stkent.amplify.tracking.checks.VersionChangedCheck;
 import com.github.stkent.amplify.tracking.checks.WarmUpDaysCheck;
+import com.github.stkent.amplify.tracking.initializers.ExceptionHandlingInitializer;
+import com.github.stkent.amplify.tracking.initializers.ImmediateEventTriggerInitializer;
 import com.github.stkent.amplify.tracking.interfaces.IEnvironmentCheck;
 import com.github.stkent.amplify.tracking.interfaces.IEnvironmentInfoProvider;
 import com.github.stkent.amplify.tracking.interfaces.IEvent;
 import com.github.stkent.amplify.tracking.interfaces.IEventCheck;
+import com.github.stkent.amplify.tracking.interfaces.ITrackingInitializer;
 import com.github.stkent.amplify.tracking.trackers.FirstTimeTracker;
 import com.github.stkent.amplify.tracking.trackers.LastTimeTracker;
 import com.github.stkent.amplify.tracking.trackers.LastVersionTracker;
@@ -93,14 +96,14 @@ public final class AmplifyStateTracker {
     public AmplifyStateTracker configureWithDefaults() {
         return this
                 .addEnvironmentCheck(new GooglePlayStoreIsAvailableCheck())
-                .trackFirstEventTime(IntegratedEvent.APP_INSTALLED, new WarmUpDaysCheck(ONE_WEEK))
+                .trackFirstEventTime(IntegratedEvent.APP_INSTALLED, new WarmUpDaysCheck(ONE_WEEK), new ImmediateEventTriggerInitializer())
                 .trackTotalEventCount(IntegratedEvent.USER_GAVE_POSITIVE_FEEDBACK, new MaximumCountCheck(ONE_DAY))
                 .trackLastEventTime(IntegratedEvent.USER_GAVE_NEGATIVE_FEEDBACK, new CooldownDaysCheck(ONE_WEEK))
                 .trackLastEventTime(IntegratedEvent.USER_DECLINED_FEEDBACK, new CooldownDaysCheck(ONE_WEEK))
                 .trackLastEventVersion(IntegratedEvent.USER_DECLINED_FEEDBACK, new VersionChangedCheck())
                 .trackLastEventTime(IntegratedEvent.USER_DECLINED_RATING, new CooldownDaysCheck(ONE_WEEK))
                 .trackLastEventVersion(IntegratedEvent.USER_DECLINED_RATING, new VersionChangedCheck())
-                .trackLastEventTime(IntegratedEvent.APP_CRASHED, new CooldownDaysCheck(ONE_WEEK))
+                .trackLastEventTime(IntegratedEvent.APP_CRASHED, new CooldownDaysCheck(ONE_WEEK), new ExceptionHandlingInitializer())
                 .trackLastEventVersion(IntegratedEvent.USER_GAVE_NEGATIVE_FEEDBACK, new VersionChangedCheck());
     }
 
@@ -115,35 +118,78 @@ public final class AmplifyStateTracker {
     }
 
     public AmplifyStateTracker trackTotalEventCount(@NonNull final IEvent event, @NonNull final IEventCheck<Integer> eventCheck) {
-        // todo: check for conflicts here
-        performEventRelatedInitializationIfRequired(event);
         totalCountTracker.trackEvent(event, eventCheck);
         return this;
     }
 
+    public AmplifyStateTracker trackTotalEventCount(
+            @NonNull final IEvent event,
+            @NonNull final IEventCheck<Integer> eventCheck,
+            @NonNull final ITrackingInitializer trackingInitializer) {
+        trackTotalEventCount(event, eventCheck);
+
+        if (!totalCountTracker.containsEvent(event)) {
+            trackingInitializer.initialize(this, event);
+        }
+
+        return this;
+    }
+
     public AmplifyStateTracker trackFirstEventTime(@NonNull final IEvent event, @NonNull final IEventCheck<Long> eventCheck) {
-        // todo: check for conflicts here
-        performEventRelatedInitializationIfRequired(event);
         firstTimeTracker.trackEvent(event, eventCheck);
         return this;
     }
 
+    public AmplifyStateTracker trackFirstEventTime(
+            @NonNull final IEvent event,
+            @NonNull final IEventCheck<Long> eventCheck,
+            @NonNull final ITrackingInitializer trackingInitializer) {
+        trackFirstEventTime(event, eventCheck);
+
+        if (!firstTimeTracker.containsEvent(event)) {
+            trackingInitializer.initialize(this, event);
+        }
+
+        return this;
+    }
+
     public AmplifyStateTracker trackLastEventTime(@NonNull final IEvent event, @NonNull final IEventCheck<Long> eventCheck) {
-        // todo: check for conflicts here
-        performEventRelatedInitializationIfRequired(event);
         lastTimeTracker.trackEvent(event, eventCheck);
         return this;
     }
 
+    public AmplifyStateTracker trackLastEventTime(
+            @NonNull final IEvent event,
+            @NonNull final IEventCheck<Long> eventCheck,
+            @NonNull final ITrackingInitializer trackingInitializer) {
+        trackLastEventTime(event, eventCheck);
+
+        if (!lastTimeTracker.containsEvent(event)) {
+            trackingInitializer.initialize(this, event);
+        }
+
+        return this;
+    }
+
     public AmplifyStateTracker trackLastEventVersion(@NonNull final IEvent event, @NonNull final IEventCheck<String> eventCheck) {
-        // todo: check for conflicts here
-        performEventRelatedInitializationIfRequired(event);
         lastVersionTracker.trackEvent(event, eventCheck);
         return this;
     }
 
+    public AmplifyStateTracker trackLastEventVersion(
+            @NonNull final IEvent event,
+            @NonNull final IEventCheck<String> eventCheck,
+            @NonNull final ITrackingInitializer trackingInitializer) {
+        trackLastEventVersion(event, eventCheck);
+
+        if (!lastVersionTracker.containsEvent(event)) {
+            trackingInitializer.initialize(this, event);
+        }
+
+        return this;
+    }
+
     public AmplifyStateTracker addEnvironmentCheck(@NonNull final IEnvironmentCheck requirement) {
-        // todo: check for conflicts here
         environmentRequirements.add(requirement);
         return this;
     }
@@ -188,18 +234,4 @@ public final class AmplifyStateTracker {
         return true;
     }
 
-    private void performEventRelatedInitializationIfRequired(@NonNull final IEvent event) {
-        if (isEventAlreadyTracked(event)) {
-            return;
-        }
-
-        event.performRelatedInitialization(applicationContext, logger);
-    }
-
-    private boolean isEventAlreadyTracked(@NonNull final IEvent event) {
-        return lastTimeTracker.containsEvent(event)
-                || lastVersionTracker.containsEvent(event)
-                || totalCountTracker.containsEvent(event)
-                || firstTimeTracker.containsEvent(event);
-    }
 }
