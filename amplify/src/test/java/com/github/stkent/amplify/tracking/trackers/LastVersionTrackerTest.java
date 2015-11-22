@@ -31,6 +31,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
 
 public class LastVersionTrackerTest extends BaseTest {
@@ -57,7 +58,27 @@ public class LastVersionTrackerTest extends BaseTest {
                 fakeSettings,
                 mockApplicationInfoProvider);
 
+        when(mockEvent.getTrackingKey()).thenReturn(DEFAULT_MOCK_EVENT_TRACKING_KEY);
         lastVersionTracker.trackEvent(mockEvent, mockEventCheck);
+    }
+
+    @Test
+    public void testThatEventsAreSavedWithCorrectTrackingKey() throws PackageManager.NameNotFoundException {
+        // Arrange
+        final String fakeVersionName = "any string";
+
+        final String expectedTrackingKey = getExpectedTrackingKeyForEvent(mockEvent);
+        assert fakeSettings.readTrackingValue(expectedTrackingKey) == null;
+
+        // Act
+        triggerEventForAppVersion(fakeVersionName);
+
+        // Assert
+        final String trackedEventVersionName = fakeSettings.readTrackingValue(expectedTrackingKey);
+
+        assertNotNull(
+                "The event time should have been saved using the correct tracking key",
+                trackedEventVersionName);
     }
 
     @SuppressLint("Assert")
@@ -70,9 +91,12 @@ public class LastVersionTrackerTest extends BaseTest {
         triggerEventForAppVersion(fakeVersionName);
 
         // Assert
-        final String savedVersionName = fakeSettings.getEventValue(mockEvent, mockEventCheck);
+        final String trackedEventVersionName = fakeSettings.readTrackingValue(getExpectedTrackingKeyForEvent(mockEvent));
 
-        assertEquals("The correct application version name should have been recorded", fakeVersionName, savedVersionName);
+        assertEquals(
+                "The correct application version name should have been recorded",
+                fakeVersionName,
+                trackedEventVersionName);
     }
 
     @SuppressLint("Assert")
@@ -88,16 +112,19 @@ public class LastVersionTrackerTest extends BaseTest {
         triggerEventForAppVersion(fakeSecondVersionName);
 
         // Assert
-        final String savedVersionName = fakeSettings.getEventValue(mockEvent, mockEventCheck);
+        final String trackedEventVersionName = fakeSettings.readTrackingValue(getExpectedTrackingKeyForEvent(mockEvent));
 
         assertEquals(
                 "The correct (latest) application version name should have been recorded",
                 fakeSecondVersionName,
-                savedVersionName);
+                trackedEventVersionName);
     }
 
-    private void triggerEventForAppVersion(
-            @NonNull final String appVersionName) throws PackageManager.NameNotFoundException {
+    private String getExpectedTrackingKeyForEvent(@NonNull final IEvent event) {
+        return "AMPLIFY_" + event.getTrackingKey() + "_LASTVERSIONTRACKER";
+    }
+
+    private void triggerEventForAppVersion(@NonNull final String appVersionName) throws PackageManager.NameNotFoundException {
         when(mockApplicationInfoProvider.getVersionName()).thenReturn(appVersionName);
         lastVersionTracker.notifyEventTriggered(mockEvent);
     }

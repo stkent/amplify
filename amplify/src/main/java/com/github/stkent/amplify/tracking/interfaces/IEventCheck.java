@@ -52,11 +52,4 @@ public interface IEventCheck<T> {
             @NonNull final T cachedEventValue,
             @NonNull final IApplicationInfoProvider applicationInfoProvider);
 
-    /**
-     * @return a key that uniquely identifies this event check within the
-     *         consuming application
-     */
-    @NonNull
-    String getTrackingKey();
-
 }

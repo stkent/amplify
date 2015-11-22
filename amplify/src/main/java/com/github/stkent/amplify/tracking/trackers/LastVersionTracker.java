@@ -43,6 +43,18 @@ public class LastVersionTracker extends EventTracker<String> {
 
     @NonNull
     @Override
+    protected String getTrackingKeySuffix() {
+        return getClass().getSimpleName();
+    }
+
+    @NonNull
+    @Override
+    public String defaultTrackingValue() {
+        return "";
+    }
+
+    @NonNull
+    @Override
     public String getUpdatedTrackingValue(@NonNull final String cachedTrackingValue) {
         try {
             return applicationInfoProvider.getVersionName();
@@ -50,12 +62,6 @@ public class LastVersionTracker extends EventTracker<String> {
             logger.d("Could not read current app version name.");
             return cachedTrackingValue;
         }
-    }
-
-    @NonNull
-    @Override
-    public String defaultTrackingValue() {
-        return "";
     }
 
 }

@@ -19,11 +19,9 @@ package com.github.stkent.amplify.tracking;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
-import com.github.stkent.amplify.tracking.checks.WarmUpDaysCheck;
-import com.github.stkent.amplify.tracking.interfaces.IEvent;
 import com.github.stkent.amplify.ILogger;
+import com.github.stkent.amplify.tracking.interfaces.IEvent;
 import com.github.stkent.amplify.tracking.interfaces.ISettings;
-import com.github.stkent.amplify.tracking.interfaces.ITrackedEvent;
 
 public enum IntegratedEvent implements IEvent {
 
@@ -58,11 +56,12 @@ public enum IntegratedEvent implements IEvent {
         } else if (this == APP_INSTALLED) {
             final ISettings<Long> settings = new Settings<>(applicationContext, logger);
 
-            final ITrackedEvent trackedEvent = new TrackedEvent(this, new WarmUpDaysCheck(ONE_WEEK));
-
-            if (!settings.hasEventValue(trackedEvent)) {
-                settings.writeTrackingValue(trackedEvent, ClockUtil.getCurrentTimeMillis());
-            }
+            // todo: this needs to happen somewhere else
+//            final ITrackedEvent trackedEvent = new TrackedEvent(this, new WarmUpDaysCheck(ONE_WEEK));
+//
+//            if (!settings.hasEventValue(trackedEvent)) {
+//                settings.writeTrackingValue(trackedEvent, ClockUtil.getCurrentTimeMillis());
+//            }
         }
     }
 

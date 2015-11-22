@@ -43,18 +43,24 @@ public class FirstTimeTracker extends EventTracker<Long> {
 
     @NonNull
     @Override
-    public Long getUpdatedTrackingValue(@NonNull final Long cachedTrackingValue) {
-        if (cachedTrackingValue == Long.MAX_VALUE) {
-            return Math.min(cachedTrackingValue, ClockUtil.getCurrentTimeMillis());
-        }
-
-        return cachedTrackingValue;
+    protected String getTrackingKeySuffix() {
+        return getClass().getSimpleName();
     }
 
     @NonNull
     @Override
     public Long defaultTrackingValue() {
         return Long.MAX_VALUE;
+    }
+
+    @NonNull
+    @Override
+    public Long getUpdatedTrackingValue(@NonNull final Long cachedTrackingValue) {
+        if (cachedTrackingValue == Long.MAX_VALUE) {
+            return Math.min(cachedTrackingValue, ClockUtil.getCurrentTimeMillis());
+        }
+
+        return cachedTrackingValue;
     }
 
 }

@@ -26,6 +26,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 public class BaseTest {
 
     public static final long MARCH_18_2014_838PM_UTC = 1395175090000L;
+    public static final String DEFAULT_MOCK_EVENT_TRACKING_KEY = "DEFAULT_MOCK_EVENT_TRACKING_KEY";
 
     protected BaseTest() {
         // This constructor is intentionally empty. Nothing special is needed here.

@@ -42,14 +42,20 @@ public class TotalCountTracker extends EventTracker<Integer> {
 
     @NonNull
     @Override
-    public Integer getUpdatedTrackingValue(@NonNull final Integer cachedTrackingValue) {
-        return cachedTrackingValue + 1;
+    protected String getTrackingKeySuffix() {
+        return getClass().getSimpleName();
     }
 
     @NonNull
     @Override
     public Integer defaultTrackingValue() {
         return 0;
+    }
+
+    @NonNull
+    @Override
+    public Integer getUpdatedTrackingValue(@NonNull final Integer cachedTrackingValue) {
+        return cachedTrackingValue + 1;
     }
 
 }
