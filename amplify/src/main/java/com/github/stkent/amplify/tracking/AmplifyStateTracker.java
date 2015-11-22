@@ -116,31 +116,31 @@ public final class AmplifyStateTracker {
 
     // configuration methods
 
-    public AmplifyStateTracker trackTotalEventCount(@NonNull final IEvent event, @NonNull final IEventCheck<Integer> predicate) {
+    public AmplifyStateTracker trackTotalEventCount(@NonNull final IEvent event, @NonNull final IEventCheck<Integer> eventCheck) {
         // todo: check for conflicts here
         performEventRelatedInitializationIfRequired(event);
-        totalCountTracker.trackEvent(event, predicate);
+        totalCountTracker.trackEvent(event, eventCheck);
         return this;
     }
 
-    public AmplifyStateTracker trackFirstEventTime(@NonNull final IEvent event, @NonNull final IEventCheck<Long> predicate) {
+    public AmplifyStateTracker trackFirstEventTime(@NonNull final IEvent event, @NonNull final IEventCheck<Long> eventCheck) {
         // todo: check for conflicts here
         performEventRelatedInitializationIfRequired(event);
-        firstTimeTracker.trackEvent(event, predicate);
+        firstTimeTracker.trackEvent(event, eventCheck);
         return this;
     }
 
-    public AmplifyStateTracker trackLastEventTime(@NonNull final IEvent event, @NonNull final IEventCheck<Long> predicate) {
+    public AmplifyStateTracker trackLastEventTime(@NonNull final IEvent event, @NonNull final IEventCheck<Long> eventCheck) {
         // todo: check for conflicts here
         performEventRelatedInitializationIfRequired(event);
-        lastTimeTracker.trackEvent(event, predicate);
+        lastTimeTracker.trackEvent(event, eventCheck);
         return this;
     }
 
-    public AmplifyStateTracker trackLastEventVersion(@NonNull final IEvent event, @NonNull final IEventCheck<String> predicate) {
+    public AmplifyStateTracker trackLastEventVersion(@NonNull final IEvent event, @NonNull final IEventCheck<String> eventCheck) {
         // todo: check for conflicts here
         performEventRelatedInitializationIfRequired(event);
-        lastVersionTracker.trackEvent(event, predicate);
+        lastVersionTracker.trackEvent(event, eventCheck);
         return this;
     }
 

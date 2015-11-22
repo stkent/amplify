@@ -33,7 +33,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class EventTracker<T> {
 
-    private final ILogger logger;
+    protected final ILogger logger;
     private final ISettings<T> settings;
     private final IApplicationInfoProvider applicationInfoProvider;
     private final ConcurrentHashMap<IEvent, List<IEventCheck<T>>> internalMap;
@@ -54,12 +54,12 @@ public abstract class EventTracker<T> {
         this.internalMap = new ConcurrentHashMap<>();
     }
 
-    public void trackEvent(@NonNull final IEvent event, @NonNull final IEventCheck<T> predicate) {
+    public void trackEvent(@NonNull final IEvent event, @NonNull final IEventCheck<T> eventCheck) {
         if (!containsEvent(event)) {
             internalMap.put(event, new ArrayList<IEventCheck<T>>());
         }
 
-        internalMap.get(event).add(predicate);
+        internalMap.get(event).add(eventCheck);
 
         logger.d(internalMap.get(event).toString());
     }
@@ -69,11 +69,19 @@ public abstract class EventTracker<T> {
 
             final List<IEventCheck<T>> eventChecks = internalMap.get(event);
 
-            for (final IEventCheck<T> predicate : eventChecks) {
-                final ITrackedEvent trackedEvent = new TrackedEvent(event, predicate);
+            for (final IEventCheck<T> eventCheck : eventChecks) {
+                final ITrackedEvent trackedEvent = new TrackedEvent(event, eventCheck);
 
                 final T cachedTrackingValue = getCachedTrackingValue(trackedEvent);
                 final T updatedTrackingValue = computeUpdatedTrackingValue(cachedTrackingValue);
+
+                if (!updatedTrackingValue.equals(cachedTrackingValue)) {
+                    logger.d(IEventCheck.class.getSimpleName()
+                            + " updating event value from: "
+                            + cachedTrackingValue
+                            + " to "
+                            + updatedTrackingValue);
+                }
 
                 settings.writeTrackingValue(trackedEvent, updatedTrackingValue);
             }
@@ -85,15 +93,15 @@ public abstract class EventTracker<T> {
         for (final Map.Entry<IEvent, List<IEventCheck<T>>> eventCheckSet : internalMap.entrySet()) {
             final IEvent event = eventCheckSet.getKey();
 
-            for (final IEventCheck<T> predicate : eventCheckSet.getValue()) {
-                final ITrackedEvent trackedEvent = new TrackedEvent(event, predicate);
+            for (final IEventCheck<T> eventCheck : eventCheckSet.getValue()) {
+                final ITrackedEvent trackedEvent = new TrackedEvent(event, eventCheck);
 
                 final T cachedEventValue = getCachedTrackingValue(trackedEvent);
 
-                logger.d(trackedEvent.getTrackingKey() + ": " + predicate.getStatusString(cachedEventValue, applicationInfoProvider));
+                logger.d(trackedEvent.getTrackingKey() + ": " + eventCheck.getStatusString(cachedEventValue, applicationInfoProvider));
 
-                if (predicate.shouldBlockFeedbackPrompt(cachedEventValue, applicationInfoProvider)) {
-                    logger.d("Blocking feedback for event: " + trackedEvent + " because of check: " + predicate);
+                if (eventCheck.shouldBlockFeedbackPrompt(cachedEventValue, applicationInfoProvider)) {
+                    logger.d("Blocking feedback for event: " + trackedEvent + " because of check: " + eventCheck);
                     return false;
                 }
             }
@@ -104,10 +112,6 @@ public abstract class EventTracker<T> {
 
     public boolean containsEvent(@NonNull final IEvent event) {
         return internalMap.containsKey(event);
-    }
-
-    protected ILogger getLogger() {
-        return logger;
     }
 
     protected IApplicationInfoProvider getApplicationInfoProvider() {

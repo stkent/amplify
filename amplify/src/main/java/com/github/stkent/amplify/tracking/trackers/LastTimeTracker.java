@@ -44,9 +44,7 @@ public class LastTimeTracker extends EventTracker<Long> {
     @NonNull
     @Override
     public Long computeUpdatedTrackingValue(@NonNull final Long cachedTrackingValue) {
-        final Long currentTime = ClockUtil.getCurrentTimeMillis();
-        getLogger().d("LastTimePredicate updating event value to: " + currentTime);
-        return currentTime;
+        return ClockUtil.getCurrentTimeMillis();
     }
 
     @NonNull
@@ -54,4 +52,5 @@ public class LastTimeTracker extends EventTracker<Long> {
     public Long defaultTrackingValue() {
         return Long.MAX_VALUE;
     }
+
 }

@@ -43,14 +43,12 @@ public class FirstTimeTracker extends EventTracker<Long> {
 
     @NonNull
     @Override
-    public Long computeUpdatedTrackingValue(@NonNull final Long cachedValue) {
-        if (cachedValue == Long.MAX_VALUE) {
-            final Long currentTime = ClockUtil.getCurrentTimeMillis();
-            getLogger().d("FirstTimePredicate updating event value from: " + cachedValue + ", to: " + currentTime);
-            return Math.min(cachedValue, currentTime);
+    public Long computeUpdatedTrackingValue(@NonNull final Long cachedTrackingValue) {
+        if (cachedTrackingValue == Long.MAX_VALUE) {
+            return Math.min(cachedTrackingValue, ClockUtil.getCurrentTimeMillis());
         }
 
-        return cachedValue;
+        return cachedTrackingValue;
     }
 
     @NonNull
@@ -58,4 +56,5 @@ public class FirstTimeTracker extends EventTracker<Long> {
     public Long defaultTrackingValue() {
         return Long.MAX_VALUE;
     }
+
 }
