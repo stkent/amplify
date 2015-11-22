@@ -42,7 +42,7 @@ public class TotalCountTracker extends EventTracker<Integer> {
 
     @NonNull
     @Override
-    public Integer computeUpdatedTrackingValue(@NonNull final Integer cachedTrackingValue) {
+    public Integer getUpdatedTrackingValue(@NonNull final Integer cachedTrackingValue) {
         return cachedTrackingValue + 1;
     }
 

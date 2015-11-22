@@ -43,7 +43,7 @@ public class LastTimeTracker extends EventTracker<Long> {
 
     @NonNull
     @Override
-    public Long computeUpdatedTrackingValue(@NonNull final Long cachedTrackingValue) {
+    public Long getUpdatedTrackingValue(@NonNull final Long cachedTrackingValue) {
         return ClockUtil.getCurrentTimeMillis();
     }
 

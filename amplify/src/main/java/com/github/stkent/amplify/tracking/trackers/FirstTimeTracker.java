@@ -43,7 +43,7 @@ public class FirstTimeTracker extends EventTracker<Long> {
 
     @NonNull
     @Override
-    public Long computeUpdatedTrackingValue(@NonNull final Long cachedTrackingValue) {
+    public Long getUpdatedTrackingValue(@NonNull final Long cachedTrackingValue) {
         if (cachedTrackingValue == Long.MAX_VALUE) {
             return Math.min(cachedTrackingValue, ClockUtil.getCurrentTimeMillis());
         }

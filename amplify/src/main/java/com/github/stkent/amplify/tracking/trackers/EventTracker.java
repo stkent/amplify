@@ -34,15 +34,16 @@ import java.util.concurrent.ConcurrentHashMap;
 public abstract class EventTracker<T> {
 
     protected final ILogger logger;
+    protected final IApplicationInfoProvider applicationInfoProvider;
+
     private final ISettings<T> settings;
-    private final IApplicationInfoProvider applicationInfoProvider;
     private final ConcurrentHashMap<IEvent, List<IEventCheck<T>>> internalMap;
 
     @NonNull
     protected abstract T defaultTrackingValue();
 
     @NonNull
-    protected abstract T computeUpdatedTrackingValue(@NonNull final T cachedEventValue);
+    protected abstract T getUpdatedTrackingValue(@NonNull final T cachedEventValue);
 
     public EventTracker(
             @NonNull final ILogger logger,
@@ -73,7 +74,7 @@ public abstract class EventTracker<T> {
                 final ITrackedEvent trackedEvent = new TrackedEvent(event, eventCheck);
 
                 final T cachedTrackingValue = getCachedTrackingValue(trackedEvent);
-                final T updatedTrackingValue = computeUpdatedTrackingValue(cachedTrackingValue);
+                final T updatedTrackingValue = getUpdatedTrackingValue(cachedTrackingValue);
 
                 if (!updatedTrackingValue.equals(cachedTrackingValue)) {
                     logger.d(IEventCheck.class.getSimpleName()
@@ -112,10 +113,6 @@ public abstract class EventTracker<T> {
 
     public boolean containsEvent(@NonNull final IEvent event) {
         return internalMap.containsKey(event);
-    }
-
-    protected IApplicationInfoProvider getApplicationInfoProvider() {
-        return applicationInfoProvider;
     }
 
     private T getCachedTrackingValue(@NonNull final ITrackedEvent trackedEvent) {
