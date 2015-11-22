@@ -19,9 +19,9 @@ package com.github.stkent.amplify.tracking.trackers;
 import android.annotation.SuppressLint;
 import android.support.annotation.NonNull;
 
+import com.github.stkent.amplify.ILogger;
 import com.github.stkent.amplify.helpers.BaseTest;
 import com.github.stkent.amplify.helpers.FakeSettings;
-import com.github.stkent.amplify.helpers.StubLogger;
 import com.github.stkent.amplify.tracking.ClockUtil;
 import com.github.stkent.amplify.tracking.interfaces.IApplicationInfoProvider;
 import com.github.stkent.amplify.tracking.interfaces.IEvent;
@@ -41,6 +41,8 @@ public class LastTimeTrackerTest extends BaseTest {
     private FakeSettings<Long> fakeSettings;
 
     @Mock
+    private ILogger mockLogger;
+    @Mock
     private IApplicationInfoProvider mockApplicationInfoProvider;
     @Mock
     private IEvent mockEvent;
@@ -52,7 +54,7 @@ public class LastTimeTrackerTest extends BaseTest {
         fakeSettings = new FakeSettings<>();
 
         lastTimeTracker = new LastTimeTracker(
-                new StubLogger(),
+                mockLogger,
                 fakeSettings,
                 mockApplicationInfoProvider);
 

@@ -20,9 +20,9 @@ import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 
+import com.github.stkent.amplify.ILogger;
 import com.github.stkent.amplify.helpers.BaseTest;
 import com.github.stkent.amplify.helpers.FakeSettings;
-import com.github.stkent.amplify.helpers.StubLogger;
 import com.github.stkent.amplify.tracking.interfaces.IApplicationInfoProvider;
 import com.github.stkent.amplify.tracking.interfaces.IEvent;
 import com.github.stkent.amplify.tracking.interfaces.IEventCheck;
@@ -40,6 +40,8 @@ public class LastVersionTrackerTest extends BaseTest {
     private FakeSettings<String> fakeSettings;
 
     @Mock
+    private ILogger mockLogger;
+    @Mock
     private IApplicationInfoProvider mockApplicationInfoProvider;
     @Mock
     private IEvent mockEvent;
@@ -51,7 +53,7 @@ public class LastVersionTrackerTest extends BaseTest {
         fakeSettings = new FakeSettings<>();
 
         lastVersionTracker = new LastVersionTracker(
-                new StubLogger(),
+                mockLogger,
                 fakeSettings,
                 mockApplicationInfoProvider);
 
