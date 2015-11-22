@@ -16,34 +16,45 @@
  */
 package com.github.stkent.amplify.tracking;
 
+import com.github.stkent.amplify.helpers.BaseTest;
 import com.github.stkent.amplify.tracking.interfaces.IEvent;
 import com.github.stkent.amplify.tracking.interfaces.IEventCheck;
 import com.github.stkent.amplify.tracking.interfaces.ITrackedEvent;
 
 import org.junit.Test;
+import org.mockito.Mock;
 
 import static junit.framework.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class TrackedEventTest {
+public class TrackedEventTest extends BaseTest {
+
+    @Mock
+    private IEvent mockEvent;
+    @Mock
+    private IEventCheck mockEventCheck;
 
     @Test
-    public void testGetTrackingKey() throws Exception {
+    public void testThatTrackingKeyIsGeneratedCorrectly() {
+        // Arrange
+        final String trackedEventPrefixKey = "AMPLIFY_";
+        final String mockEventKey = "MOCK_EVENT";
+        final String mockEventCheckKey = "MOCK_EVENT_CHECK";
+        final String expectedTrackingKey = trackedEventPrefixKey + mockEventKey + "_" + mockEventCheckKey;
 
-        String trackedEventPrefixKey = "AMPLIFY_";
-        String iEventKey = "MOCK_EVENT";
-        String iEventCheckKey = "MOCK_EVENT_CHECK";
+        when(mockEvent.getTrackingKey()).thenReturn(mockEventKey);
+        when(mockEventCheck.getTrackingKey()).thenReturn(mockEventCheckKey);
 
-        IEvent iEvent = mock(IEvent.class);
-        when(iEvent.getTrackingKey()).thenReturn(iEventKey);
+        // Act
+        final ITrackedEvent trackedEvent = new TrackedEvent(mockEvent, mockEventCheck);
 
-        IEventCheck iEventCheck = mock(IEventCheck.class);
-        when(iEventCheck.getTrackingKey()).thenReturn(iEventCheckKey);
+        // Assert
+        final String actualTrackingKey = trackedEvent.getTrackingKey();
 
-        final ITrackedEvent trackedEvent = new TrackedEvent(iEvent, iEventCheck);
-        assertEquals("The tracking key for a TrackedEvent is incorrect", trackedEventPrefixKey + iEventKey + "_" + iEventCheckKey,
-                trackedEvent.getTrackingKey());
-
+        assertEquals(
+                "The generated tracking key for a TrackedEvent is incorrect",
+                expectedTrackingKey,
+                actualTrackingKey);
     }
+
 }
