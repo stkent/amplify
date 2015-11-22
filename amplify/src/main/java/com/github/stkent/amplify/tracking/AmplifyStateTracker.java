@@ -78,9 +78,7 @@ public final class AmplifyStateTracker {
         return get(context, new Logger());
     }
 
-    public static AmplifyStateTracker get(
-            @NonNull final Context context,
-            @NonNull final ILogger logger) {
+    public static AmplifyStateTracker get(@NonNull final Context context, @NonNull final ILogger logger) {
         synchronized (AmplifyStateTracker.class) {
             if (sharedInstance == null) {
                 sharedInstance = new AmplifyStateTracker(context, logger);
