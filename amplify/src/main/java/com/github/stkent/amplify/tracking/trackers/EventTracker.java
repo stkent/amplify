@@ -17,7 +17,6 @@
 package com.github.stkent.amplify.tracking.trackers;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.VisibleForTesting;
 
 import com.github.stkent.amplify.ILogger;
 import com.github.stkent.amplify.tracking.interfaces.IApplicationInfoProvider;
@@ -34,9 +33,8 @@ public abstract class EventTracker<T> {
 
     private static final String AMPLIFY_TRACKING_KEY_PREFIX = "AMPLIFY_";
 
-    protected final ILogger logger;
-    protected final IApplicationInfoProvider applicationInfoProvider;
-
+    private final ILogger logger;
+    private final IApplicationInfoProvider applicationInfoProvider;
     private final ISettings<T> settings;
     private final ConcurrentHashMap<IEvent, List<IEventCheck<T>>> internalMap;
 
@@ -115,8 +113,15 @@ public abstract class EventTracker<T> {
         return internalMap.containsKey(event);
     }
 
-    @VisibleForTesting
-    protected String getTrackingKey(@NonNull final IEvent event) {
+    protected ILogger getLogger() {
+        return logger;
+    }
+
+    protected IApplicationInfoProvider getApplicationInfoProvider() {
+        return applicationInfoProvider;
+    }
+
+    private String getTrackingKey(@NonNull final IEvent event) {
         return AMPLIFY_TRACKING_KEY_PREFIX
                 + event.getTrackingKey()
                 + "_"

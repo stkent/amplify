@@ -52,7 +52,6 @@ public final class AmplifyStateTracker {
 
     // instance fields
 
-    private final Context applicationContext;
     private final IEnvironmentInfoProvider applicationInfoProvider;
     private final List<IEnvironmentCheck> environmentRequirements = new ArrayList<>();
     private final LastTimeTracker lastTimeTracker;
@@ -82,7 +81,7 @@ public final class AmplifyStateTracker {
     private AmplifyStateTracker(
             @NonNull final Context context,
             @NonNull final ILogger logger) {
-        this.applicationContext = context.getApplicationContext();
+        final Context applicationContext = context.getApplicationContext();
         this.applicationInfoProvider = new EnvironmentInfoProvider(applicationContext);
         this.logger = logger;
         this.lastTimeTracker = new LastTimeTracker(logger, applicationContext);

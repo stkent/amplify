@@ -57,9 +57,9 @@ public class LastVersionTracker extends EventTracker<String> {
     @Override
     public String getUpdatedTrackingValue(@NonNull final String cachedTrackingValue) {
         try {
-            return applicationInfoProvider.getVersionName();
+            return getApplicationInfoProvider().getVersionName();
         } catch (final PackageManager.NameNotFoundException e) {
-            logger.d("Could not read current app version name.");
+            getLogger().d("Could not read current app version name.");
             return cachedTrackingValue;
         }
     }
