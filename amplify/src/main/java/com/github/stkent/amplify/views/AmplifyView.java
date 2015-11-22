@@ -30,9 +30,10 @@ import android.widget.FrameLayout;
 
 import com.github.stkent.amplify.R;
 import com.github.stkent.amplify.tracking.AmplifyStateTracker;
+import com.github.stkent.amplify.tracking.ApplicationInfoProvider;
 import com.github.stkent.amplify.tracking.EnvironmentInfoProvider;
 import com.github.stkent.amplify.tracking.IntegratedEvent;
-import com.github.stkent.amplify.tracking.ApplicationInfoProvider;
+import com.github.stkent.amplify.tracking.interfaces.IAmplifyStateTracker;
 import com.github.stkent.amplify.utils.FeedbackUtil;
 import com.github.stkent.amplify.utils.PlayStoreUtil;
 import com.github.stkent.amplify.utils.StringUtils;
@@ -56,7 +57,7 @@ public class AmplifyView extends FrameLayout {
             = new LayoutParams(MATCH_PARENT, MATCH_PARENT);
 
     private LayoutState layoutState;
-    private AmplifyStateTracker ratingStateTracker;
+    private IAmplifyStateTracker ratingStateTracker;
     private String userOpinionQuestion;
     private String userOpinionTitle;
     private String positiveFeedbackQuestion;

@@ -18,6 +18,8 @@ package com.github.stkent.amplify.tracking;
 
 import android.support.annotation.NonNull;
 
+import com.github.stkent.amplify.tracking.interfaces.IAmplifyStateTracker;
+
 import static java.lang.Thread.UncaughtExceptionHandler;
 
 /**
@@ -27,11 +29,11 @@ import static java.lang.Thread.UncaughtExceptionHandler;
 public class AmplifyExceptionHandler implements UncaughtExceptionHandler {
 
     @NonNull
-    private final AmplifyStateTracker amplifyStateTracker;
+    private final IAmplifyStateTracker amplifyStateTracker;
     private final UncaughtExceptionHandler defaultExceptionHandler;
 
     public AmplifyExceptionHandler(
-            @NonNull final AmplifyStateTracker amplifyStateTracker,
+            @NonNull final IAmplifyStateTracker amplifyStateTracker,
             final UncaughtExceptionHandler defaultExceptionHandler) {
         this.amplifyStateTracker = amplifyStateTracker;
         this.defaultExceptionHandler = defaultExceptionHandler;

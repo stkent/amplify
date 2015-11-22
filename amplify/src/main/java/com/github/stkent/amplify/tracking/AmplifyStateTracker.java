@@ -28,6 +28,7 @@ import com.github.stkent.amplify.tracking.checks.VersionChangedCheck;
 import com.github.stkent.amplify.tracking.checks.WarmUpDaysCheck;
 import com.github.stkent.amplify.tracking.initializers.ExceptionHandlingInitializer;
 import com.github.stkent.amplify.tracking.initializers.ImmediateEventTriggerInitializer;
+import com.github.stkent.amplify.tracking.interfaces.IAmplifyStateTracker;
 import com.github.stkent.amplify.tracking.interfaces.IEnvironmentCheck;
 import com.github.stkent.amplify.tracking.interfaces.IEnvironmentInfoProvider;
 import com.github.stkent.amplify.tracking.interfaces.IEvent;
@@ -42,11 +43,11 @@ import com.github.stkent.amplify.views.AmplifyView;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class AmplifyStateTracker {
+public final class AmplifyStateTracker implements IAmplifyStateTracker {
 
     // static fields
 
-    private static AmplifyStateTracker sharedInstance;
+    private static IAmplifyStateTracker sharedInstance;
     private static final int ONE_WEEK = 7;
     private static final int ONE_DAY = 1;
 
@@ -62,11 +63,11 @@ public final class AmplifyStateTracker {
 
     private boolean alwaysShow;
 
-    public static AmplifyStateTracker get(@NonNull final Context context) {
+    public static IAmplifyStateTracker get(@NonNull final Context context) {
         return get(context, new Logger());
     }
 
-    public static AmplifyStateTracker get(@NonNull final Context context, @NonNull final ILogger logger) {
+    public static IAmplifyStateTracker get(@NonNull final Context context, @NonNull final ILogger logger) {
         synchronized (AmplifyStateTracker.class) {
             if (sharedInstance == null) {
                 sharedInstance = new AmplifyStateTracker(context, logger);
@@ -92,7 +93,8 @@ public final class AmplifyStateTracker {
 
     // configuration methods
 
-    public AmplifyStateTracker configureWithDefaults() {
+    @Override
+    public IAmplifyStateTracker configureWithDefaults() {
         return this
                 .addEnvironmentCheck(new GooglePlayStoreIsAvailableCheck())
                 .trackFirstEventTime(IntegratedEvent.APP_INSTALLED, new WarmUpDaysCheck(ONE_WEEK), new ImmediateEventTriggerInitializer())
@@ -106,22 +108,26 @@ public final class AmplifyStateTracker {
                 .trackLastEventVersion(IntegratedEvent.USER_GAVE_NEGATIVE_FEEDBACK, new VersionChangedCheck());
     }
 
-    public AmplifyStateTracker setLogLevel(@NonNull final Logger.LogLevel logLevel) {
+    @Override
+    public IAmplifyStateTracker setLogLevel(@NonNull final Logger.LogLevel logLevel) {
         logger.setLogLevel(logLevel);
         return this;
     }
 
-    public AmplifyStateTracker setAlwaysShow(final boolean alwaysShow) {
+    @Override
+    public IAmplifyStateTracker setAlwaysShow(final boolean alwaysShow) {
         this.alwaysShow = alwaysShow;
         return this;
     }
 
-    public AmplifyStateTracker trackTotalEventCount(@NonNull final IEvent event, @NonNull final IEventCheck<Integer> eventCheck) {
+    @Override
+    public IAmplifyStateTracker trackTotalEventCount(@NonNull final IEvent event, @NonNull final IEventCheck<Integer> eventCheck) {
         totalCountTracker.trackEvent(event, eventCheck);
         return this;
     }
 
-    public AmplifyStateTracker trackTotalEventCount(
+    @Override
+    public IAmplifyStateTracker trackTotalEventCount(
             @NonNull final IEvent event,
             @NonNull final IEventCheck<Integer> eventCheck,
             @NonNull final ITrackingInitializer trackingInitializer) {
@@ -134,12 +140,14 @@ public final class AmplifyStateTracker {
         return this;
     }
 
-    public AmplifyStateTracker trackFirstEventTime(@NonNull final IEvent event, @NonNull final IEventCheck<Long> eventCheck) {
+    @Override
+    public IAmplifyStateTracker trackFirstEventTime(@NonNull final IEvent event, @NonNull final IEventCheck<Long> eventCheck) {
         firstTimeTracker.trackEvent(event, eventCheck);
         return this;
     }
 
-    public AmplifyStateTracker trackFirstEventTime(
+    @Override
+    public IAmplifyStateTracker trackFirstEventTime(
             @NonNull final IEvent event,
             @NonNull final IEventCheck<Long> eventCheck,
             @NonNull final ITrackingInitializer trackingInitializer) {
@@ -152,12 +160,14 @@ public final class AmplifyStateTracker {
         return this;
     }
 
-    public AmplifyStateTracker trackLastEventTime(@NonNull final IEvent event, @NonNull final IEventCheck<Long> eventCheck) {
+    @Override
+    public IAmplifyStateTracker trackLastEventTime(@NonNull final IEvent event, @NonNull final IEventCheck<Long> eventCheck) {
         lastTimeTracker.trackEvent(event, eventCheck);
         return this;
     }
 
-    public AmplifyStateTracker trackLastEventTime(
+    @Override
+    public IAmplifyStateTracker trackLastEventTime(
             @NonNull final IEvent event,
             @NonNull final IEventCheck<Long> eventCheck,
             @NonNull final ITrackingInitializer trackingInitializer) {
@@ -170,12 +180,14 @@ public final class AmplifyStateTracker {
         return this;
     }
 
-    public AmplifyStateTracker trackLastEventVersion(@NonNull final IEvent event, @NonNull final IEventCheck<String> eventCheck) {
+    @Override
+    public IAmplifyStateTracker trackLastEventVersion(@NonNull final IEvent event, @NonNull final IEventCheck<String> eventCheck) {
         lastVersionTracker.trackEvent(event, eventCheck);
         return this;
     }
 
-    public AmplifyStateTracker trackLastEventVersion(
+    @Override
+    public IAmplifyStateTracker trackLastEventVersion(
             @NonNull final IEvent event,
             @NonNull final IEventCheck<String> eventCheck,
             @NonNull final ITrackingInitializer trackingInitializer) {
@@ -188,14 +200,16 @@ public final class AmplifyStateTracker {
         return this;
     }
 
-    public AmplifyStateTracker addEnvironmentCheck(@NonNull final IEnvironmentCheck requirement) {
+    @Override
+    public IAmplifyStateTracker addEnvironmentCheck(@NonNull final IEnvironmentCheck requirement) {
         environmentRequirements.add(requirement);
         return this;
     }
 
     // update methods
 
-    public AmplifyStateTracker notifyEventTriggered(@NonNull final IEvent event) {
+    @Override
+    public IAmplifyStateTracker notifyEventTriggered(@NonNull final IEvent event) {
         logger.d("Triggered Event: " + event);
         totalCountTracker.notifyEventTriggered(event);
         firstTimeTracker.notifyEventTriggered(event);
@@ -206,12 +220,14 @@ public final class AmplifyStateTracker {
 
     // query methods
 
+    @Override
     public void promptIfReady(@NonNull final AmplifyView amplifyView) {
         if (shouldAskForRating()) {
             amplifyView.show();
         }
     }
 
+    @Override
     public boolean shouldAskForRating() {
         return alwaysShow | (allEnvironmentRequirementsMet()
                 & totalCountTracker.allowFeedbackPrompt()
