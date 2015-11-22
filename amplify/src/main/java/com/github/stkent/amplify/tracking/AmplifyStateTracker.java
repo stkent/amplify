@@ -19,8 +19,7 @@ package com.github.stkent.amplify.tracking;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
-import com.github.stkent.amplify.tracking.interfaces.IEnvironmentInfoProvider;
-import com.github.stkent.amplify.views.AmplifyView;
+import com.github.stkent.amplify.ILogger;
 import com.github.stkent.amplify.Logger;
 import com.github.stkent.amplify.tracking.checks.CooldownDaysCheck;
 import com.github.stkent.amplify.tracking.checks.GooglePlayStoreIsAvailableCheck;
@@ -28,13 +27,14 @@ import com.github.stkent.amplify.tracking.checks.MaximumCountCheck;
 import com.github.stkent.amplify.tracking.checks.VersionChangedCheck;
 import com.github.stkent.amplify.tracking.checks.WarmUpDaysCheck;
 import com.github.stkent.amplify.tracking.interfaces.IEnvironmentCheck;
+import com.github.stkent.amplify.tracking.interfaces.IEnvironmentInfoProvider;
 import com.github.stkent.amplify.tracking.interfaces.IEvent;
 import com.github.stkent.amplify.tracking.interfaces.IEventCheck;
-import com.github.stkent.amplify.ILogger;
 import com.github.stkent.amplify.tracking.trackers.FirstTimeTracker;
 import com.github.stkent.amplify.tracking.trackers.LastTimeTracker;
 import com.github.stkent.amplify.tracking.trackers.LastVersionTracker;
 import com.github.stkent.amplify.tracking.trackers.TotalCountTracker;
+import com.github.stkent.amplify.views.AmplifyView;
 
 import java.util.ArrayList;
 import java.util.List;
