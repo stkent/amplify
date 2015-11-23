@@ -19,6 +19,8 @@ package com.github.stkent.amplify.tracking.interfaces;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import com.github.stkent.amplify.ILogger;
+
 /**
  * An abstract representation of an event whose occurrences can be tracked
  * across consuming application launches.

@@ -19,22 +19,33 @@ package com.github.stkent.amplify.tracking.predicates;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
+import android.support.annotation.VisibleForTesting;
 
-import com.github.stkent.amplify.tracking.GenericSettings;
-import com.github.stkent.amplify.tracking.interfaces.ILogger;
+import com.github.stkent.amplify.tracking.ApplicationInfoProvider;
+import com.github.stkent.amplify.tracking.Settings;
+import com.github.stkent.amplify.ILogger;
+import com.github.stkent.amplify.tracking.interfaces.IApplicationInfoProvider;
+import com.github.stkent.amplify.tracking.interfaces.ISettings;
 import com.github.stkent.amplify.tracking.interfaces.ITrackedEvent;
 
 public class LastVersionPredicate extends EventPredicate<String> {
 
-    public LastVersionPredicate(ILogger logger, Context applicationContext) {
-        super(logger,
-                new GenericSettings<String>(applicationContext, logger),
-                new ApplicationInfoProvider(applicationContext));
+    public LastVersionPredicate(
+            @NonNull final ILogger logger,
+            @NonNull final Context applicationContext) {
+        this(logger, new Settings<String>(applicationContext, logger), new ApplicationInfoProvider(applicationContext));
+    }
+
+    @VisibleForTesting
+    protected LastVersionPredicate(
+            @NonNull final ILogger logger,
+            @NonNull final ISettings<String> settings,
+            @NonNull final IApplicationInfoProvider applicationInfoProvider) {
+        super(logger, settings, applicationInfoProvider);
     }
 
     @Override
     public void eventTriggered(@NonNull final ITrackedEvent event) {
-
         try {
             final String currentVersion = getApplicationInfoProvider().getVersionName();
             getLogger().d("LastVersionPredicate updating event value to: " + currentVersion);
@@ -48,4 +59,5 @@ public class LastVersionPredicate extends EventPredicate<String> {
     public String defaultValue() {
         return "";
     }
+
 }

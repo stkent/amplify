@@ -19,6 +19,7 @@ package com.github.stkent.amplify.utils;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Build;
+import android.support.annotation.Nullable;
 
 public final class ActivityStateUtil {
 
@@ -27,7 +28,7 @@ public final class ActivityStateUtil {
     }
 
     @SuppressLint("NewApi")
-    public static boolean isActivityValid(Activity activity) {
+    public static boolean isActivityValid(@Nullable final Activity activity) {
         if (activity == null) {
             return false;
         } else {

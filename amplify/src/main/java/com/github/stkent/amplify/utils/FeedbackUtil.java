@@ -22,8 +22,10 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.github.stkent.amplify.tracking.ClockUtil;
 import com.github.stkent.amplify.tracking.interfaces.IApplicationInfoProvider;
 import com.github.stkent.amplify.tracking.interfaces.IEnvironmentInfoProvider;
 
@@ -42,7 +44,7 @@ public final class FeedbackUtil {
         this.environmentInfoProvider = environmentInfoProvider;
     }
 
-    public void showFeedbackEmailChooser(final Activity activity) {
+    public void showFeedbackEmailChooser(@Nullable final Activity activity) {
         final Intent feedbackEmailIntent = getFeedbackEmailIntent();
 
         if (!environmentInfoProvider.canHandleIntent(feedbackEmailIntent)) {
@@ -103,7 +105,7 @@ public final class FeedbackUtil {
 
                 .append("\n")
                 .append("Date: ")
-                .append(System.currentTimeMillis())
+                .append(ClockUtil.getCurrentTimeMillis())
                 .toString();
     }
 

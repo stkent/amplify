@@ -21,6 +21,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import static android.content.Intent.ACTION_VIEW;
 
@@ -33,7 +34,7 @@ public final class PlayStoreUtil {
 
     }
 
-    public static void openPlayStoreToRate(@NonNull final Activity activity) {
+    public static void openPlayStoreToRate(@Nullable final Activity activity) {
         if (ActivityStateUtil.isActivityValid(activity)) {
             final String packageName = activity.getPackageName();
 

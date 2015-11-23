@@ -18,12 +18,12 @@ package com.github.stkent.amplify.tracking.predicates;
 
 import android.support.annotation.NonNull;
 
-import com.github.stkent.amplify.tracking.GenericSettings;
 import com.github.stkent.amplify.tracking.TrackedEvent;
 import com.github.stkent.amplify.tracking.interfaces.IApplicationInfoProvider;
 import com.github.stkent.amplify.tracking.interfaces.IEvent;
 import com.github.stkent.amplify.tracking.interfaces.IEventCheck;
-import com.github.stkent.amplify.tracking.interfaces.ILogger;
+import com.github.stkent.amplify.ILogger;
+import com.github.stkent.amplify.tracking.interfaces.ISettings;
 import com.github.stkent.amplify.tracking.interfaces.ITrackedEvent;
 
 import java.util.ArrayList;
@@ -34,14 +34,17 @@ import java.util.concurrent.ConcurrentHashMap;
 public abstract class EventPredicate<T> {
 
     private final ILogger logger;
-    private final GenericSettings<T> settings;
+    private final ISettings<T> settings;
     private final IApplicationInfoProvider applicationInfoProvider;
     private final ConcurrentHashMap<IEvent, List<IEventCheck<T>>> internalMap;
 
-    public abstract void eventTriggered(@NonNull final ITrackedEvent event);
-    public abstract T defaultValue();
+    protected abstract void eventTriggered(@NonNull final ITrackedEvent event);
+    protected abstract T defaultValue();
 
-    public EventPredicate(ILogger logger, GenericSettings<T> settings, IApplicationInfoProvider applicationInfoProvider) {
+    public EventPredicate(
+            @NonNull final ILogger logger,
+            @NonNull final ISettings<T> settings,
+            @NonNull final IApplicationInfoProvider applicationInfoProvider) {
         super();
         this.logger = logger;
         this.settings = settings;

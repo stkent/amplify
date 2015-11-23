@@ -14,22 +14,28 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package com.github.stkent.amplify.tracking.interfaces;
+package com.github.stkent.amplify.helpers;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.VisibleForTesting;
 
-public interface ITrackedEvent {
+import com.github.stkent.amplify.Logger;
+import com.github.stkent.amplify.ILogger;
 
-    @NonNull
-    String getTrackingKey();
+public class StubbedLogger implements ILogger {
 
-    @VisibleForTesting
-    @NonNull
-    IEvent getEvent();
+    @Override
+    public void setLogLevel(@NonNull final Logger.LogLevel logLevel) {
+        // no-op
+    }
 
-    @VisibleForTesting
-    @NonNull
-    IEventCheck getEventCheck();
+    @Override
+    public void d(@NonNull final String message) {
+        // no-op
+    }
+
+    @Override
+    public void e(@NonNull final String message) {
+        // no-op
+    }
 
 }

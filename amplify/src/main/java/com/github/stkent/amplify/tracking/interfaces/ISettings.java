@@ -17,19 +17,15 @@
 package com.github.stkent.amplify.tracking.interfaces;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.VisibleForTesting;
+import android.support.annotation.Nullable;
 
-public interface ITrackedEvent {
+public interface ISettings<T> {
 
-    @NonNull
-    String getTrackingKey();
+    void writeEventValue(@NonNull final ITrackedEvent event, final T value);
 
-    @VisibleForTesting
-    @NonNull
-    IEvent getEvent();
+    @Nullable
+    T getEventValue(@NonNull final ITrackedEvent trackedEvent);
 
-    @VisibleForTesting
-    @NonNull
-    IEventCheck getEventCheck();
+    boolean hasEventValue(@NonNull final ITrackedEvent trackedEvent);
 
 }

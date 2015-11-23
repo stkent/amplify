@@ -14,11 +14,9 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package com.github.stkent.amplify.tracking.interfaces;
+package com.github.stkent.amplify;
 
 import android.support.annotation.NonNull;
-
-import com.github.stkent.amplify.Logger;
 
 /**
  * An abstract representation of a logging class with customizable output

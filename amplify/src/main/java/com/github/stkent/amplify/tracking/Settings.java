@@ -21,19 +21,20 @@ import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.github.stkent.amplify.tracking.interfaces.ILogger;
+import com.github.stkent.amplify.ILogger;
+import com.github.stkent.amplify.tracking.interfaces.ISettings;
 import com.github.stkent.amplify.tracking.interfaces.ITrackedEvent;
 
 import java.util.Map;
 
-public class GenericSettings<T> {
+public class Settings<T> implements ISettings<T> {
 
     private static final String SHARED_PREFERENCES_NAME = "AMPLIFY_SHARED_PREFERENCES_NAME";
 
     private final SharedPreferences sharedPreferences;
     private final ILogger logger;
 
-    public GenericSettings(Context applicationContext, ILogger logger) {
+    public Settings(Context applicationContext, ILogger logger) {
         this.logger = logger;
         this.sharedPreferences = applicationContext
                 .getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
@@ -62,22 +63,22 @@ public class GenericSettings<T> {
     }
 
     @Nullable
-    public T getEventValue(@NonNull final ITrackedEvent event) {
+    public T getEventValue(@NonNull final ITrackedEvent trackedEvent) {
         final Map<String, ?> map = sharedPreferences.getAll();
 
         for (Map.Entry<String, ?> entry : map.entrySet()) {
-            if (entry.getKey().equals(event.getTrackingKey())) {
+            if (entry.getKey().equals(trackedEvent.getTrackingKey())) {
                 return (T) entry.getValue();
             }
         }
 
-        logger.e("No event value for " + event);
+        logger.e("No event value for " + trackedEvent);
 
         return null;
     }
 
-    public boolean hasEventValue(@NonNull final ITrackedEvent event) {
-        return sharedPreferences.contains(event.getTrackingKey());
+    public boolean hasEventValue(@NonNull final ITrackedEvent trackedEvent) {
+        return sharedPreferences.contains(trackedEvent.getTrackingKey());
     }
 
 }
