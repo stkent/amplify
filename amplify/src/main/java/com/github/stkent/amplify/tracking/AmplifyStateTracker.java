@@ -154,10 +154,10 @@ public final class AmplifyStateTracker {
 
     public AmplifyStateTracker notifyEventTriggered(@NonNull final IEvent event) {
         logger.d("Triggered Event: " + event);
-        totalCountTracker.eventTriggered(event);
-        firstTimeTracker.eventTriggered(event);
-        lastTimeTracker.eventTriggered(event);
-        lastVersionTracker.eventTriggered(event);
+        totalCountTracker.notifyEventTriggered(event);
+        firstTimeTracker.notifyEventTriggered(event);
+        lastTimeTracker.notifyEventTriggered(event);
+        lastVersionTracker.notifyEventTriggered(event);
         return this;
     }
 

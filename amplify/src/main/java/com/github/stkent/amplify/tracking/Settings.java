@@ -40,7 +40,7 @@ public class Settings<T> implements ISettings<T> {
                 .getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
     }
 
-    public void writeEventValue(@NonNull final ITrackedEvent event, final T value) {
+    public void writeTrackingValue(@NonNull final ITrackedEvent event, final T value) {
 
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
@@ -63,7 +63,7 @@ public class Settings<T> implements ISettings<T> {
     }
 
     @Nullable
-    public T getEventValue(@NonNull final ITrackedEvent trackedEvent) {
+    public T readTrackingValue(@NonNull final ITrackedEvent trackedEvent) {
         final Map<String, ?> map = sharedPreferences.getAll();
 
         for (Map.Entry<String, ?> entry : map.entrySet()) {

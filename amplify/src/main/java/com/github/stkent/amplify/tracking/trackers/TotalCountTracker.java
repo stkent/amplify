@@ -20,12 +20,11 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 
+import com.github.stkent.amplify.ILogger;
 import com.github.stkent.amplify.tracking.ApplicationInfoProvider;
 import com.github.stkent.amplify.tracking.Settings;
-import com.github.stkent.amplify.ILogger;
 import com.github.stkent.amplify.tracking.interfaces.IApplicationInfoProvider;
 import com.github.stkent.amplify.tracking.interfaces.ISettings;
-import com.github.stkent.amplify.tracking.interfaces.ITrackedEvent;
 
 public class TotalCountTracker extends EventTracker<Integer> {
 
@@ -41,17 +40,17 @@ public class TotalCountTracker extends EventTracker<Integer> {
         super(logger, settings, applicationInfoProvider);
     }
 
+    @NonNull
     @Override
-    public void eventTriggered(@NonNull final ITrackedEvent event) {
-
-        final Integer cachedCount = getEventValue(event);
-        final Integer updatedCount = cachedCount + 1;
-        getLogger().d("TotalCountPredicate updating event value from: " + cachedCount + ", to: " + updatedCount);
-        updateEventValue(event, updatedCount);
+    public Integer computeUpdatedTrackingValue(@NonNull final Integer cachedTrackingValue) {
+        final Integer updatedCount = cachedTrackingValue + 1;
+        getLogger().d("TotalCountPredicate updating event value from: " + cachedTrackingValue + ", to: " + updatedCount);
+        return updatedCount;
     }
 
+    @NonNull
     @Override
-    public Integer defaultValue() {
+    public Integer defaultTrackingValue() {
         return 0;
     }
 }

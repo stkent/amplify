@@ -20,13 +20,12 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 
+import com.github.stkent.amplify.ILogger;
 import com.github.stkent.amplify.tracking.ApplicationInfoProvider;
 import com.github.stkent.amplify.tracking.ClockUtil;
 import com.github.stkent.amplify.tracking.Settings;
 import com.github.stkent.amplify.tracking.interfaces.IApplicationInfoProvider;
-import com.github.stkent.amplify.ILogger;
 import com.github.stkent.amplify.tracking.interfaces.ISettings;
-import com.github.stkent.amplify.tracking.interfaces.ITrackedEvent;
 
 public class LastTimeTracker extends EventTracker<Long> {
 
@@ -42,16 +41,17 @@ public class LastTimeTracker extends EventTracker<Long> {
         super(logger, settings, applicationInfoProvider);
     }
 
+    @NonNull
     @Override
-    public void eventTriggered(@NonNull final ITrackedEvent event) {
-
+    public Long computeUpdatedTrackingValue(@NonNull final Long cachedTrackingValue) {
         final Long currentTime = ClockUtil.getCurrentTimeMillis();
         getLogger().d("LastTimePredicate updating event value to: " + currentTime);
-        updateEventValue(event, currentTime);
+        return currentTime;
     }
 
+    @NonNull
     @Override
-    public Long defaultValue() {
+    public Long defaultTrackingValue() {
         return Long.MAX_VALUE;
     }
 }

@@ -20,8 +20,8 @@ import android.annotation.SuppressLint;
 import android.support.annotation.NonNull;
 
 import com.github.stkent.amplify.helpers.BaseTest;
-import com.github.stkent.amplify.helpers.MockSettings;
-import com.github.stkent.amplify.helpers.StubbedLogger;
+import com.github.stkent.amplify.helpers.FakeSettings;
+import com.github.stkent.amplify.helpers.StubLogger;
 import com.github.stkent.amplify.tracking.ClockUtil;
 import com.github.stkent.amplify.tracking.interfaces.IApplicationInfoProvider;
 import com.github.stkent.amplify.tracking.interfaces.IEvent;
@@ -38,7 +38,7 @@ public class FirstTimeTrackerTest extends BaseTest {
 
     private FirstTimeTracker firstTimeTracker;
 
-    private MockSettings<Long> mockSettings;
+    private FakeSettings<Long> fakeSettings;
 
     @Mock
     private IApplicationInfoProvider mockApplicationInfoProvider;
@@ -49,11 +49,11 @@ public class FirstTimeTrackerTest extends BaseTest {
 
     @Override
     public void localSetUp() {
-        mockSettings = new MockSettings<>();
+        fakeSettings = new FakeSettings<>();
 
         firstTimeTracker = new FirstTimeTracker(
-                new StubbedLogger(),
-                mockSettings,
+                new StubLogger(),
+                fakeSettings,
                 mockApplicationInfoProvider);
 
         firstTimeTracker.trackEvent(mockEvent, mockEventCheck);
@@ -68,20 +68,19 @@ public class FirstTimeTrackerTest extends BaseTest {
         triggerEventAtTime(mockEvent, fakeEventTime);
 
         // Assert
+        final Long savedEventTime = fakeSettings.getEventValue(mockEvent, mockEventCheck);
 
-        // Check that the correct event time was saved:
-        final Long savedEventTime = mockSettings.getEventValue(mockEvent, mockEventCheck);
-
-        assertEquals("The correct time should have been recorded for this event", Long.valueOf(fakeEventTime), savedEventTime);
+        assertEquals(
+                "The correct time should have been recorded for this event",
+                Long.valueOf(fakeEventTime), savedEventTime);
     }
 
     @SuppressLint("Assert")
     @Test
-    public void testThatSecondAndSubsequentEventTimesAreNotRecorded() {
-        // Arrange Act
+    public void testThatOnlyFirstEventTimeIsRecorded() {
+        // Arrange
         final long fakeEventTimeEarlier = MARCH_18_2014_838PM_UTC;
-        final long fakeEventTimeLater
-                = fakeEventTimeEarlier + TimeUnit.DAYS.toMillis(1);
+        final long fakeEventTimeLater = fakeEventTimeEarlier + TimeUnit.DAYS.toMillis(1);
 
         assert fakeEventTimeEarlier < fakeEventTimeLater;
 
@@ -90,17 +89,16 @@ public class FirstTimeTrackerTest extends BaseTest {
         triggerEventAtTime(mockEvent, fakeEventTimeLater);
 
         // Assert
+        final Long savedEventTime = fakeSettings.getEventValue(mockEvent, mockEventCheck);
 
-        // Check that the earlier event time was saved, and the second event time ignored:
-        final Long savedEventTime = mockSettings.getEventValue(mockEvent, mockEventCheck);
-
-        assertEquals("The correct (earliest) time should have been recorded for this event",
+        assertEquals(
+                "The correct (earliest) time should have been recorded for this event",
                 Long.valueOf(fakeEventTimeEarlier), savedEventTime);
     }
 
     private void triggerEventAtTime(@NonNull final IEvent event, final long time) {
         ClockUtil.setFakeCurrentTimeMillis(time);
-        firstTimeTracker.eventTriggered(event);
+        firstTimeTracker.notifyEventTriggered(event);
     }
 
 }
