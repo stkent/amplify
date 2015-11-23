@@ -61,7 +61,7 @@ public enum IntegratedEvent implements IEvent {
             final ITrackedEvent trackedEvent = new TrackedEvent(this, new WarmUpDaysCheck(ONE_WEEK));
 
             if (!settings.hasEventValue(trackedEvent)) {
-                settings.writeEventValue(trackedEvent, ClockUtil.getCurrentTimeMillis());
+                settings.writeTrackingValue(trackedEvent, ClockUtil.getCurrentTimeMillis());
             }
         }
     }

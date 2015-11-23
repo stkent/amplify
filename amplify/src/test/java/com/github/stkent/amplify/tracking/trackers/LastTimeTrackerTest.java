@@ -14,14 +14,14 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package com.github.stkent.amplify.tracking.predicates;
+package com.github.stkent.amplify.tracking.trackers;
 
 import android.annotation.SuppressLint;
 import android.support.annotation.NonNull;
 
 import com.github.stkent.amplify.helpers.BaseTest;
-import com.github.stkent.amplify.helpers.MockSettings;
-import com.github.stkent.amplify.helpers.StubbedLogger;
+import com.github.stkent.amplify.helpers.FakeSettings;
+import com.github.stkent.amplify.helpers.StubLogger;
 import com.github.stkent.amplify.tracking.ClockUtil;
 import com.github.stkent.amplify.tracking.interfaces.IApplicationInfoProvider;
 import com.github.stkent.amplify.tracking.interfaces.IEvent;
@@ -34,11 +34,11 @@ import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertEquals;
 
-public class LastTimePredicateTest extends BaseTest {
+public class LastTimeTrackerTest extends BaseTest {
 
-    private LastTimePredicate lastTimePredicate;
+    private LastTimeTracker lastTimeTracker;
 
-    private MockSettings<Long> mockSettings;
+    private FakeSettings<Long> fakeSettings;
 
     @Mock
     private IApplicationInfoProvider mockApplicationInfoProvider;
@@ -49,14 +49,14 @@ public class LastTimePredicateTest extends BaseTest {
 
     @Override
     public void localSetUp() {
-        mockSettings = new MockSettings<>();
+        fakeSettings = new FakeSettings<>();
 
-        lastTimePredicate = new LastTimePredicate(
-                new StubbedLogger(),
-                mockSettings,
+        lastTimeTracker = new LastTimeTracker(
+                new StubLogger(),
+                fakeSettings,
                 mockApplicationInfoProvider);
 
-        lastTimePredicate.trackEvent(mockEvent, mockEventCheck);
+        lastTimeTracker.trackEvent(mockEvent, mockEventCheck);
     }
 
     @Test
@@ -68,20 +68,19 @@ public class LastTimePredicateTest extends BaseTest {
         triggerEventAtTime(mockEvent, fakeEventTime);
 
         // Assert
+        final Long savedEventTime = fakeSettings.getEventValue(mockEvent, mockEventCheck);
 
-        // Check that the correct event time was saved:
-        final Long savedEventTime = mockSettings.getEventValue(mockEvent, mockEventCheck);
-
-        assertEquals("The correct time should have been recorded for this event", Long.valueOf(fakeEventTime), savedEventTime);
+        assertEquals(
+                "The correct time should have been recorded for this event",
+                Long.valueOf(fakeEventTime), savedEventTime);
     }
 
     @SuppressLint("Assert")
     @Test
     public void testThatSecondEventTimesIsRecorded() {
-        // Arrange Act
+        // Arrange
         final long fakeEventTimeEarlier = MARCH_18_2014_838PM_UTC;
-        final long fakeEventTimeLater
-                = fakeEventTimeEarlier + TimeUnit.DAYS.toMillis(1);
+        final long fakeEventTimeLater = fakeEventTimeEarlier + TimeUnit.DAYS.toMillis(1);
 
         assert fakeEventTimeEarlier < fakeEventTimeLater;
 
@@ -90,17 +89,16 @@ public class LastTimePredicateTest extends BaseTest {
         triggerEventAtTime(mockEvent, fakeEventTimeLater);
 
         // Assert
+        final Long savedEventTime = fakeSettings.getEventValue(mockEvent, mockEventCheck);
 
-        // Check that the earlier event time was saved, and the second event time ignored:
-        final Long savedEventTime = mockSettings.getEventValue(mockEvent, mockEventCheck);
-
-        assertEquals("The correct (latest) time should have been recorded for this event",
+        assertEquals(
+                "The correct (latest) time should have been recorded for this event",
                 Long.valueOf(fakeEventTimeLater), savedEventTime);
     }
 
     private void triggerEventAtTime(@NonNull final IEvent event, final long time) {
         ClockUtil.setFakeCurrentTimeMillis(time);
-        lastTimePredicate.eventTriggered(event);
+        lastTimeTracker.notifyEventTriggered(event);
     }
 
 }

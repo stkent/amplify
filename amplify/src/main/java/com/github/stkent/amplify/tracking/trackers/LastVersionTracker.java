@@ -14,46 +14,50 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package com.github.stkent.amplify.tracking.predicates;
+package com.github.stkent.amplify.tracking.trackers;
 
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 
+import com.github.stkent.amplify.ILogger;
 import com.github.stkent.amplify.tracking.ApplicationInfoProvider;
-import com.github.stkent.amplify.tracking.ClockUtil;
 import com.github.stkent.amplify.tracking.Settings;
 import com.github.stkent.amplify.tracking.interfaces.IApplicationInfoProvider;
-import com.github.stkent.amplify.ILogger;
 import com.github.stkent.amplify.tracking.interfaces.ISettings;
-import com.github.stkent.amplify.tracking.interfaces.ITrackedEvent;
 
-public class LastTimePredicate extends EventPredicate<Long> {
+public class LastVersionTracker extends EventTracker<String> {
 
-    public LastTimePredicate(
-            @NonNull final ILogger logger,
-            @NonNull final Context applicationContext) {
-        this(logger, new Settings<Long>(applicationContext, logger), new ApplicationInfoProvider(applicationContext));
+    public LastVersionTracker(@NonNull final ILogger logger, @NonNull final Context applicationContext) {
+        this(logger, new Settings<String>(applicationContext, logger), new ApplicationInfoProvider(applicationContext));
     }
 
     @VisibleForTesting
-    protected LastTimePredicate(
+    protected LastVersionTracker(
             @NonNull final ILogger logger,
-            @NonNull final ISettings<Long> settings,
+            @NonNull final ISettings<String> settings,
             @NonNull final IApplicationInfoProvider applicationInfoProvider) {
         super(logger, settings, applicationInfoProvider);
     }
 
+    @NonNull
     @Override
-    public void eventTriggered(@NonNull final ITrackedEvent event) {
-
-        final Long currentTime = ClockUtil.getCurrentTimeMillis();
-        getLogger().d("LastTimePredicate updating event value to: " + currentTime);
-        updateEventValue(event, currentTime);
+    public String computeUpdatedTrackingValue(@NonNull final String cachedTrackingValue) {
+        try {
+            final String currentVersion = getApplicationInfoProvider().getVersionName();
+            getLogger().d("LastVersionPredicate updating event value to: " + currentVersion);
+            return currentVersion;
+        } catch (final PackageManager.NameNotFoundException e) {
+            getLogger().d("Could not read current app version name.");
+            return cachedTrackingValue;
+        }
     }
 
+    @NonNull
     @Override
-    public Long defaultValue() {
-        return Long.MAX_VALUE;
+    public String defaultTrackingValue() {
+        return "";
     }
+
 }
