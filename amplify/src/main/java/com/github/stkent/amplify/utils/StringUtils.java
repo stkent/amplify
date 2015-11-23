@@ -16,6 +16,9 @@
  */
 package com.github.stkent.amplify.utils;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 public final class StringUtils {
 
     private StringUtils() {
@@ -23,52 +26,43 @@ public final class StringUtils {
     }
 
     /**
-     * <p>Returns either the passed in CharSequence, or if the CharSequence is
-     * whitespace, empty ("") or {@code null}, the value of {@code defaultStr}.</p>
+     * Returns either the passed in CharSequence, or if the CharSequence is
+     * whitespace, empty ("") or null, the value of defaultString.
      *
-     * <pre>
-     * StringUtils.defaultIfBlank(null, "NULL")  = "NULL"
-     * StringUtils.defaultIfBlank("", "NULL")    = "NULL"
-     * StringUtils.defaultIfBlank(" ", "NULL")   = "NULL"
-     * StringUtils.defaultIfBlank("bat", "NULL") = "bat"
-     * StringUtils.defaultIfBlank("", null)      = null
-     * </pre>
      * @param <T> the specific kind of CharSequence
-     * @param str the CharSequence to check, may be null
-     * @param defaultStr  the default CharSequence to return
-     *  if the input is whitespace, empty ("") or {@code null}, may be null
+     * @param string the CharSequence to check, may be null
+     * @param defaultString the default CharSequence to return
      * @return the passed in CharSequence, or the default
      */
-    public static <T extends CharSequence> T defaultIfBlank(final T str, final T defaultStr) {
-        return isBlank(str) ? defaultStr : str;
+    @NonNull
+    public static <T extends CharSequence> T defaultIfBlank(@Nullable final T string, @NonNull final T defaultString) {
+        return isBlank(string) ? defaultString : string;
     }
 
     /**
-     * <p>Checks if a CharSequence is whitespace, empty ("") or null.</p>
+     * Checks if a CharSequence is whitespace, empty ("") or null.
      *
-     * <pre>
-     * StringUtils.isBlank(null)      = true
-     * StringUtils.isBlank("")        = true
-     * StringUtils.isBlank(" ")       = true
-     * StringUtils.isBlank("bob")     = false
-     * StringUtils.isBlank("  bob  ") = false
-     * </pre>
-     *
-     * @param cs  the CharSequence to check, may be null
-     * @return {@code true} if the CharSequence is null, empty or whitespace
-     * @since 2.0
-     * @since 3.0 Changed signature from isBlank(String) to isBlank(CharSequence)
+     * @param charSequence the CharSequence to check, may be null
+     * @return true if the CharSequence is null, empty or whitespace
      */
-    public static boolean isBlank(final CharSequence cs) {
-        int strLen = cs == null ? 0 : cs.length();
-        if (strLen == 0) {
+    public static boolean isBlank(@Nullable final CharSequence charSequence) {
+        if (charSequence == null) {
             return true;
         }
-        for (int i = 0; i < strLen; i++) {
-            if (!Character.isWhitespace(cs.charAt(i))) {
+
+        final int sequenceLength = charSequence.length();
+
+        if (sequenceLength == 0) {
+            return true;
+        }
+
+        for (int i = 0; i < sequenceLength; i++) {
+            if (!Character.isWhitespace(charSequence.charAt(i))) {
                 return false;
             }
         }
+
         return true;
     }
+
 }
