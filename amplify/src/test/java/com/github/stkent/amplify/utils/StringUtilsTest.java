@@ -28,16 +28,19 @@ import static org.junit.Assert.assertTrue;
 
 public class StringUtilsTest extends BaseTest {
 
-    @SuppressLint("Assert")
+    private static final String SUPPRESS_ASSERT = "Assert";
+    private static final String SUPPRESS_CONSTANT_CONDITIONS = "ConstantConditions";
+    private static final String DEFAULT_STRING = "any other string";
+
+    @SuppressLint(SUPPRESS_ASSERT)
     @Test
     public void testThatDefaultIfBlankReturnsPrimaryStringIfItContainsAtLeastOneNonWhitespaceCharacter() {
         // Arrange
         final String primaryString = "any string containing at least one non-whitespace character";
-        final String defaultString = "any other string";
-        assert !primaryString.equals(defaultString);
+        assert !primaryString.equals(DEFAULT_STRING);
 
         // Act
-        final String sanitizedString = StringUtils.defaultIfBlank(primaryString, defaultString);
+        final String sanitizedString = StringUtils.defaultIfBlank(primaryString, DEFAULT_STRING);
 
         // Assert
         assertEquals(
@@ -46,61 +49,58 @@ public class StringUtilsTest extends BaseTest {
                 sanitizedString);
     }
 
-    @SuppressLint("Assert")
+    @SuppressLint(SUPPRESS_ASSERT)
     @Test
     public void testThatDefaultIfBlankReturnsDefaultStringIfPrimaryStringIsWhitespaceOnly() {
         // Arrange
         final String whitespaceOnlyPrimaryString = "    ";
-        final String defaultString = "any other string";
-        assert !defaultString.equals(whitespaceOnlyPrimaryString);
+        assert !DEFAULT_STRING.equals(whitespaceOnlyPrimaryString);
 
         // Act
-        final String sanitizedString = StringUtils.defaultIfBlank(whitespaceOnlyPrimaryString, defaultString);
+        final String sanitizedString = StringUtils.defaultIfBlank(whitespaceOnlyPrimaryString, DEFAULT_STRING);
 
         // Assert
         assertEquals(
                 "defaultIfBlank should have returned the default string",
-                defaultString,
+                DEFAULT_STRING,
                 sanitizedString);
     }
 
-    @SuppressLint("Assert")
+    @SuppressLint(SUPPRESS_ASSERT)
     @Test
     public void testThatDefaultIfBlankReturnsDefaultStringIfPrimaryStringIsEmpty() {
         // Arrange
         final String emptyPrimaryString = "";
-        final String defaultString = "any other string";
-        assert !defaultString.equals(emptyPrimaryString);
+        assert !DEFAULT_STRING.equals(emptyPrimaryString);
 
         // Act
-        final String sanitizedString = StringUtils.defaultIfBlank(emptyPrimaryString, defaultString);
+        final String sanitizedString = StringUtils.defaultIfBlank(emptyPrimaryString, DEFAULT_STRING);
 
         // Assert
         assertEquals(
                 "defaultIfBlank should have returned the default string",
-                defaultString,
+                DEFAULT_STRING,
                 sanitizedString);
     }
 
-    @SuppressLint("Assert")
+    @SuppressLint(SUPPRESS_ASSERT)
     @Test
     public void testThatDefaultIfBlankReturnsDefaultStringIfPrimaryStringIsNull() {
         // Arrange
         final String nullPrimaryString = null;
-        final String defaultString = "any other string";
-        assert !defaultString.equals(nullPrimaryString);
+        assert !DEFAULT_STRING.equals(nullPrimaryString);
 
         // Act
-        final String sanitizedString = StringUtils.defaultIfBlank(nullPrimaryString, defaultString);
+        final String sanitizedString = StringUtils.defaultIfBlank(nullPrimaryString, DEFAULT_STRING);
 
         // Assert
         assertEquals(
                 "defaultIfBlank should have returned the default string",
-                defaultString, sanitizedString);
+                DEFAULT_STRING, sanitizedString);
     }
 
-    @SuppressLint("Assert")
-    @SuppressWarnings("ConstantConditions")
+    @SuppressLint(SUPPRESS_ASSERT)
+    @SuppressWarnings(SUPPRESS_CONSTANT_CONDITIONS)
     @Test
     public void testThatIsBlankReturnsTrueIfStringIsNull() {
         // Arrange
@@ -115,8 +115,8 @@ public class StringUtilsTest extends BaseTest {
                 isBlank);
     }
 
-    @SuppressLint("Assert")
-    @SuppressWarnings("ConstantConditions")
+    @SuppressLint(SUPPRESS_ASSERT)
+    @SuppressWarnings(SUPPRESS_CONSTANT_CONDITIONS)
     @Test
     public void testThatIsBlankReturnsTrueIfStringIsEmpty() {
         // Arrange
@@ -131,8 +131,8 @@ public class StringUtilsTest extends BaseTest {
                 isBlank);
     }
 
-    @SuppressLint("Assert")
-    @SuppressWarnings("ConstantConditions")
+    @SuppressLint(SUPPRESS_ASSERT)
+    @SuppressWarnings(SUPPRESS_CONSTANT_CONDITIONS)
     @Test
     public void testThatIsBlankReturnsTrueIfStringIsWhitespaceOnly() {
         // Arrange
@@ -147,8 +147,8 @@ public class StringUtilsTest extends BaseTest {
                 isBlank);
     }
 
-    @SuppressLint("Assert")
-    @SuppressWarnings("ConstantConditions")
+    @SuppressLint(SUPPRESS_ASSERT)
+    @SuppressWarnings(SUPPRESS_CONSTANT_CONDITIONS)
     @Test
     public void testThatIsBlankReturnsFalseIfStringContainsAtLeastOneNonWhitespaceCharacter() {
         // Arrange
