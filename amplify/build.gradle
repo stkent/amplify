@@ -1,9 +1,10 @@
 buildscript {
     repositories {
+        mavenLocal()
         jcenter()
     }
     dependencies {
-        classpath 'com.btkelly:gnag:0.0.5'
+        classpath 'com.btkelly:gnag:0.0.6'
         classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.4.0x'
     }
 }
