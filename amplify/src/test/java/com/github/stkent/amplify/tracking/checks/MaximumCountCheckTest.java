@@ -34,7 +34,6 @@ public class MaximumCountCheckTest extends BaseTest {
         // Arrange
         final int maximumEventCount = 7;
         final int currentEventCount = 9;
-
         assert currentEventCount > maximumEventCount;
 
         final MaximumCountCheck maximumCountCheck = new MaximumCountCheck(maximumEventCount);
@@ -56,7 +55,6 @@ public class MaximumCountCheckTest extends BaseTest {
         // Arrange
         final int maximumEventCount = 7;
         final int currentEventCount = 2;
-
         assert currentEventCount < maximumEventCount;
 
         final MaximumCountCheck maximumCountCheck = new MaximumCountCheck(maximumEventCount);

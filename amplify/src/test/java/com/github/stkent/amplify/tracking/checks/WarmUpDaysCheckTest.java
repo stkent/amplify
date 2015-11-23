@@ -59,7 +59,6 @@ public class WarmUpDaysCheckTest extends BaseTest {
         // Arrange
         final int warmUpTimeDays = 7;
         final int daysSinceLastEvent = 2;
-
         assert daysSinceLastEvent < warmUpTimeDays;
 
         final WarmUpDaysCheck warmUpDaysCheck = new WarmUpDaysCheck(warmUpTimeDays);
@@ -82,7 +81,6 @@ public class WarmUpDaysCheckTest extends BaseTest {
         // Arrange
         final int warmUpTimeDays = 7;
         final int daysSinceLastEvent = 9;
-
         assert daysSinceLastEvent > warmUpTimeDays;
 
         final WarmUpDaysCheck warmUpDaysCheck = new WarmUpDaysCheck(warmUpTimeDays);
