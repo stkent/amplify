@@ -2,6 +2,12 @@
 
 <a href="https://travis-ci.org/stkent/amplify"><img src="https://travis-ci.org/stkent/amplify.svg"></a> [ ![Download](https://api.bintray.com/packages/stkent/android-libraries/amplify/images/download.svg) ](https://bintray.com/stkent/android-libraries/amplify/_latestVersion) [![Coverage Status](https://coveralls.io/repos/stkent/amplify/badge.svg?branch=master&service=github)](https://coveralls.io/github/stkent/amplify?branch=master)
 
+# Inline Licenses
+
+You can automatically generate license headers in new source files using the Gradle command:
+
+    ./gradlew licenseFormat
+
 # Tests
 
 You can execute library tests only using the Gradle command:
