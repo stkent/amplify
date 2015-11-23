@@ -16,10 +16,7 @@
  */
 package com.github.stkent.amplify.tracking.interfaces;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
-
-import com.github.stkent.amplify.ILogger;
 
 /**
  * An abstract representation of an event whose occurrences can be tracked
@@ -33,15 +30,5 @@ public interface IEvent {
      */
     @NonNull
     String getTrackingKey();
-
-    /**
-     * A method that can be used to perform any initialization required to
-     * track this event. Will be called once per launch of the consuming
-     * application.
-     *
-     * @param applicationContext the context of the consuming application
-     * @param logger logger to be used for messaging
-     */
-    void performRelatedInitialization(@NonNull final Context applicationContext, @NonNull final ILogger logger);
 
 }

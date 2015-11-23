@@ -21,11 +21,9 @@ import android.support.annotation.Nullable;
 
 public interface ISettings<T> {
 
-    void writeTrackingValue(@NonNull final ITrackedEvent event, final T value);
+    void writeTrackingValue(@NonNull final String trackingKey, final T value);
 
     @Nullable
-    T readTrackingValue(@NonNull final ITrackedEvent trackedEvent);
-
-    boolean hasEventValue(@NonNull final ITrackedEvent trackedEvent);
+    T readTrackingValue(@NonNull final String trackingKey);
 
 }

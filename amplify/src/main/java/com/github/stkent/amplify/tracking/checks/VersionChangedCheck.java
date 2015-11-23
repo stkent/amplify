@@ -52,10 +52,4 @@ public final class VersionChangedCheck implements IEventCheck<String> {
         return "Event last triggered for app version " + cachedEventValue + ". " + statusStringSuffix;
     }
 
-    @NonNull
-    @Override
-    public String getTrackingKey() {
-        return "VERSION_CHANGED_CHECK";
-    }
-
 }
