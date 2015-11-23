@@ -242,7 +242,7 @@ public class AmplifyView extends FrameLayout {
                     respondToPositiveFeedback();
                     break;
                 case NEGATIVE:
-                    ratingStateTracker.notifyEventTriggered(IntegratedEvent.USER_GAVE_NEGATIVE_FEEDBACK);
+                    ratingStateTracker.notifyEventTriggered(IntegratedEvent.USER_GAVE_CRITICAL_FEEDBACK);
                     thankUser();
                     respondToNegativeFeedback();
                     break;
@@ -262,11 +262,11 @@ public class AmplifyView extends FrameLayout {
                     break;
                 case POSITIVE:
                     hide();
-                    ratingStateTracker.notifyEventTriggered(IntegratedEvent.USER_DECLINED_RATING);
+                    ratingStateTracker.notifyEventTriggered(IntegratedEvent.USER_DECLINED_POSITIVE_FEEDBACK);
                     break;
                 case NEGATIVE:
                     hide();
-                    ratingStateTracker.notifyEventTriggered(IntegratedEvent.USER_DECLINED_FEEDBACK);
+                    ratingStateTracker.notifyEventTriggered(IntegratedEvent.USER_DECLINED_CRITICAL_FEEDBACK);
                     break;
                 default:
                     break;
