@@ -77,11 +77,10 @@ public class LastTimeTrackerTest extends BaseTest {
 
     @SuppressLint("Assert")
     @Test
-    public void testThatSecondEventTimesIsRecorded() {
+    public void testThatSecondEventTimeIsRecorded() {
         // Arrange
         final long fakeEventTimeEarlier = MARCH_18_2014_838PM_UTC;
         final long fakeEventTimeLater = fakeEventTimeEarlier + TimeUnit.DAYS.toMillis(1);
-
         assert fakeEventTimeEarlier < fakeEventTimeLater;
 
         // Act

@@ -63,7 +63,6 @@ public class VersionChangedCheckTest extends BaseTest {
         // Arrange
         final String fakeCachedVersionName = "any string";
         final String fakeCurrentVersionName = "any other string";
-
         assert !fakeCachedVersionName.equals(fakeCurrentVersionName);
 
         when(mockApplicationInfoProvider.getVersionName()).thenReturn(fakeCurrentVersionName);

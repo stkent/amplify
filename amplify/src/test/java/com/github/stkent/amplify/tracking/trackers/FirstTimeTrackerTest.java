@@ -17,7 +17,6 @@
 package com.github.stkent.amplify.tracking.trackers;
 
 import android.annotation.SuppressLint;
-import android.support.annotation.NonNull;
 
 import com.github.stkent.amplify.helpers.BaseTest;
 import com.github.stkent.amplify.helpers.FakeSettings;
@@ -65,7 +64,7 @@ public class FirstTimeTrackerTest extends BaseTest {
         final long fakeEventTime = MARCH_18_2014_838PM_UTC;
 
         // Act
-        triggerEventAtTime(mockEvent, fakeEventTime);
+        triggerEventAtTime(fakeEventTime);
 
         // Assert
         final Long savedEventTime = fakeSettings.getEventValue(mockEvent, mockEventCheck);
@@ -81,12 +80,11 @@ public class FirstTimeTrackerTest extends BaseTest {
         // Arrange
         final long fakeEventTimeEarlier = MARCH_18_2014_838PM_UTC;
         final long fakeEventTimeLater = fakeEventTimeEarlier + TimeUnit.DAYS.toMillis(1);
-
         assert fakeEventTimeEarlier < fakeEventTimeLater;
 
         // Act
-        triggerEventAtTime(mockEvent, fakeEventTimeEarlier);
-        triggerEventAtTime(mockEvent, fakeEventTimeLater);
+        triggerEventAtTime(fakeEventTimeEarlier);
+        triggerEventAtTime(fakeEventTimeLater);
 
         // Assert
         final Long savedEventTime = fakeSettings.getEventValue(mockEvent, mockEventCheck);
@@ -96,9 +94,9 @@ public class FirstTimeTrackerTest extends BaseTest {
                 Long.valueOf(fakeEventTimeEarlier), savedEventTime);
     }
 
-    private void triggerEventAtTime(@NonNull final IEvent event, final long time) {
+    private void triggerEventAtTime(final long time) {
         ClockUtil.setFakeCurrentTimeMillis(time);
-        firstTimeTracker.notifyEventTriggered(event);
+        firstTimeTracker.notifyEventTriggered(mockEvent);
     }
 
 }
