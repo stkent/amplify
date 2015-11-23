@@ -40,7 +40,7 @@ In the corresponding `Activity`/`Fragment`/`View` class (typically presented imm
     
     ...
     
-    AmplifyStateTracker.get(this).promptIfReady(amplifyView);
+    AmplifyStateTracker.get(context).promptIfReady(amplifyView);
 
 # Configuring
 
