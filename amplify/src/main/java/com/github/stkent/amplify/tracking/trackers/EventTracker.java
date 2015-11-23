@@ -14,7 +14,7 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package com.github.stkent.amplify.tracking.predicates;
+package com.github.stkent.amplify.tracking.trackers;
 
 import android.support.annotation.NonNull;
 
@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public abstract class EventPredicate<T> {
+public abstract class EventTracker<T> {
 
     private final ILogger logger;
     private final ISettings<T> settings;
@@ -41,7 +41,7 @@ public abstract class EventPredicate<T> {
     protected abstract void eventTriggered(@NonNull final ITrackedEvent event);
     protected abstract T defaultValue();
 
-    public EventPredicate(
+    public EventTracker(
             @NonNull final ILogger logger,
             @NonNull final ISettings<T> settings,
             @NonNull final IApplicationInfoProvider applicationInfoProvider) {

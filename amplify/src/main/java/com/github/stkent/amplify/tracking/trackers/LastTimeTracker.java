@@ -14,7 +14,7 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package com.github.stkent.amplify.tracking.predicates;
+package com.github.stkent.amplify.tracking.trackers;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -28,16 +28,14 @@ import com.github.stkent.amplify.ILogger;
 import com.github.stkent.amplify.tracking.interfaces.ISettings;
 import com.github.stkent.amplify.tracking.interfaces.ITrackedEvent;
 
-public class LastTimePredicate extends EventPredicate<Long> {
+public class LastTimeTracker extends EventTracker<Long> {
 
-    public LastTimePredicate(
-            @NonNull final ILogger logger,
-            @NonNull final Context applicationContext) {
+    public LastTimeTracker(@NonNull final ILogger logger, @NonNull final Context applicationContext) {
         this(logger, new Settings<Long>(applicationContext, logger), new ApplicationInfoProvider(applicationContext));
     }
 
     @VisibleForTesting
-    protected LastTimePredicate(
+    protected LastTimeTracker(
             @NonNull final ILogger logger,
             @NonNull final ISettings<Long> settings,
             @NonNull final IApplicationInfoProvider applicationInfoProvider) {

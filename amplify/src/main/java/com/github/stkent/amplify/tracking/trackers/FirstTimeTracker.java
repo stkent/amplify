@@ -14,46 +14,47 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package com.github.stkent.amplify.tracking.predicates;
+package com.github.stkent.amplify.tracking.trackers;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 
 import com.github.stkent.amplify.tracking.ApplicationInfoProvider;
+import com.github.stkent.amplify.tracking.ClockUtil;
 import com.github.stkent.amplify.tracking.Settings;
-import com.github.stkent.amplify.ILogger;
 import com.github.stkent.amplify.tracking.interfaces.IApplicationInfoProvider;
+import com.github.stkent.amplify.ILogger;
 import com.github.stkent.amplify.tracking.interfaces.ISettings;
 import com.github.stkent.amplify.tracking.interfaces.ITrackedEvent;
 
-public class TotalCountPredicate extends EventPredicate<Integer> {
+public class FirstTimeTracker extends EventTracker<Long> {
 
-    public TotalCountPredicate(
-            @NonNull final ILogger logger,
-            @NonNull final Context applicationContext) {
-        this(logger, new Settings<Integer>(applicationContext, logger), new ApplicationInfoProvider(applicationContext));
+    public FirstTimeTracker(@NonNull final ILogger logger, @NonNull final Context applicationContext) {
+        this(logger, new Settings<Long>(applicationContext, logger), new ApplicationInfoProvider(applicationContext));
     }
 
     @VisibleForTesting
-    protected TotalCountPredicate(
+    protected FirstTimeTracker(
             @NonNull final ILogger logger,
-            @NonNull final ISettings<Integer> settings,
+            @NonNull final ISettings<Long> settings,
             @NonNull final IApplicationInfoProvider applicationInfoProvider) {
         super(logger, settings, applicationInfoProvider);
     }
 
     @Override
     public void eventTriggered(@NonNull final ITrackedEvent event) {
+        final Long cachedTime = getEventValue(event);
 
-        final Integer cachedCount = getEventValue(event);
-        final Integer updatedCount = cachedCount + 1;
-        getLogger().d("TotalCountPredicate updating event value from: " + cachedCount + ", to: " + updatedCount);
-        updateEventValue(event, updatedCount);
+        if (cachedTime == Long.MAX_VALUE) {
+            final Long currentTime = ClockUtil.getCurrentTimeMillis();
+            getLogger().d("FirstTimePredicate updating event value from: " + cachedTime + ", to: " + currentTime);
+            updateEventValue(event, Math.min(cachedTime, currentTime));
+        }
     }
 
     @Override
-    public Integer defaultValue() {
-        return 0;
+    public Long defaultValue() {
+        return Long.MAX_VALUE;
     }
 }
