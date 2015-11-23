@@ -30,13 +30,13 @@ public final class StringUtils {
      * whitespace, empty ("") or null, the value of defaultString.
      *
      * @param <T> the specific kind of CharSequence
-     * @param string the CharSequence to check, may be null
+     * @param primaryString the CharSequence to check, may be null
      * @param defaultString the default CharSequence to return
      * @return the passed in CharSequence, or the default
      */
     @NonNull
-    public static <T extends CharSequence> T defaultIfBlank(@Nullable final T string, @NonNull final T defaultString) {
-        return isBlank(string) ? defaultString : string;
+    public static <T extends CharSequence> T defaultIfBlank(@Nullable final T primaryString, @NonNull final T defaultString) {
+        return isBlank(primaryString) ? defaultString : primaryString;
     }
 
     /**
