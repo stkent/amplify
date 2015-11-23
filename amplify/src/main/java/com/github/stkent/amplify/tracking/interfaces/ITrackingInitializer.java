@@ -17,19 +17,11 @@
 package com.github.stkent.amplify.tracking.interfaces;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.VisibleForTesting;
 
-public interface ITrackedEvent {
+import com.github.stkent.amplify.tracking.AmplifyStateTracker;
 
-    @NonNull
-    String getTrackingKey();
+public interface ITrackingInitializer {
 
-    @VisibleForTesting
-    @NonNull
-    IEvent getEvent();
-
-    @VisibleForTesting
-    @NonNull
-    IEventCheck getEventCheck();
+    void initialize(@NonNull final AmplifyStateTracker amplifyStateTracker, @NonNull final IEvent event);
 
 }

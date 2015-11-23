@@ -14,28 +14,18 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package com.github.stkent.amplify.helpers;
+package com.github.stkent.amplify.tracking.initializers;
 
 import android.support.annotation.NonNull;
 
-import com.github.stkent.amplify.Logger;
-import com.github.stkent.amplify.ILogger;
+import com.github.stkent.amplify.tracking.AmplifyStateTracker;
+import com.github.stkent.amplify.tracking.interfaces.IEvent;
+import com.github.stkent.amplify.tracking.interfaces.ITrackingInitializer;
 
-public class StubLogger implements ILogger {
-
-    @Override
-    public void setLogLevel(@NonNull final Logger.LogLevel logLevel) {
-        // no-op
-    }
+public class ImmediateEventTriggerInitializer implements ITrackingInitializer {
 
     @Override
-    public void d(@NonNull final String message) {
-        // no-op
+    public void initialize(@NonNull final AmplifyStateTracker amplifyStateTracker, @NonNull final IEvent event) {
+        amplifyStateTracker.notifyEventTriggered(event);
     }
-
-    @Override
-    public void e(@NonNull final String message) {
-        // no-op
-    }
-
 }

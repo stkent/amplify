@@ -23,7 +23,6 @@ import android.support.annotation.Nullable;
 
 import com.github.stkent.amplify.ILogger;
 import com.github.stkent.amplify.tracking.interfaces.ISettings;
-import com.github.stkent.amplify.tracking.interfaces.ITrackedEvent;
 
 import java.util.Map;
 
@@ -40,20 +39,20 @@ public class Settings<T> implements ISettings<T> {
                 .getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
     }
 
-    public void writeTrackingValue(@NonNull final ITrackedEvent event, final T value) {
+    public void writeTrackingValue(@NonNull final String trackingKey, final T value) {
 
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
         if (value.getClass().equals(String.class)) {
-            editor.putString(event.getTrackingKey(), (String) value);
+            editor.putString(trackingKey, (String) value);
         } else if (value.getClass().equals(Boolean.class)) {
-            editor.putBoolean(event.getTrackingKey(), (Boolean) value);
+            editor.putBoolean(trackingKey, (Boolean) value);
         } else if (value.getClass().equals(Long.class)) {
-            editor.putLong(event.getTrackingKey(), (Long) value);
+            editor.putLong(trackingKey, (Long) value);
         } else if (value.getClass().equals(Integer.class)) {
-            editor.putInt(event.getTrackingKey(), (Integer) value);
+            editor.putInt(trackingKey, (Integer) value);
         } else if (value.getClass().equals(Float.class)) {
-            editor.putLong(event.getTrackingKey(), (Long) value);
+            editor.putLong(trackingKey, (Long) value);
         } else {
             throw new IllegalArgumentException("Event value must be one of String, Boolean, Long, Integer or Float");
         }
@@ -63,22 +62,18 @@ public class Settings<T> implements ISettings<T> {
     }
 
     @Nullable
-    public T readTrackingValue(@NonNull final ITrackedEvent trackedEvent) {
+    public T readTrackingValue(@NonNull final String trackingKey) {
         final Map<String, ?> map = sharedPreferences.getAll();
 
         for (Map.Entry<String, ?> entry : map.entrySet()) {
-            if (entry.getKey().equals(trackedEvent.getTrackingKey())) {
+            if (entry.getKey().equals(trackingKey)) {
                 return (T) entry.getValue();
             }
         }
 
-        logger.e("No event value for " + trackedEvent);
+        logger.e("No event value for " + trackingKey);
 
         return null;
-    }
-
-    public boolean hasEventValue(@NonNull final ITrackedEvent trackedEvent) {
-        return sharedPreferences.contains(trackedEvent.getTrackingKey());
     }
 
 }

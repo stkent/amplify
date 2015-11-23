@@ -42,10 +42,8 @@ public class TotalCountTracker extends EventTracker<Integer> {
 
     @NonNull
     @Override
-    public Integer computeUpdatedTrackingValue(@NonNull final Integer cachedTrackingValue) {
-        final Integer updatedCount = cachedTrackingValue + 1;
-        getLogger().d("TotalCountPredicate updating event value from: " + cachedTrackingValue + ", to: " + updatedCount);
-        return updatedCount;
+    protected String getTrackingKeySuffix() {
+        return getClass().getSimpleName();
     }
 
     @NonNull
@@ -53,4 +51,11 @@ public class TotalCountTracker extends EventTracker<Integer> {
     public Integer defaultTrackingValue() {
         return 0;
     }
+
+    @NonNull
+    @Override
+    public Integer getUpdatedTrackingValue(@NonNull final Integer cachedTrackingValue) {
+        return cachedTrackingValue + 1;
+    }
+
 }
