@@ -17,6 +17,7 @@
 package com.github.stkent.amplify.tracking;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.VisibleForTesting;
 
 import com.github.stkent.amplify.tracking.interfaces.IEvent;
 import com.github.stkent.amplify.tracking.interfaces.IEventCheck;
@@ -24,7 +25,10 @@ import com.github.stkent.amplify.tracking.interfaces.ITrackedEvent;
 
 public class TrackedEvent implements ITrackedEvent {
 
+    @NonNull
     private final IEvent event;
+
+    @NonNull
     private final IEventCheck eventCheck;
 
     public TrackedEvent(@NonNull final IEvent event, @NonNull final IEventCheck eventCheck) {
@@ -36,6 +40,18 @@ public class TrackedEvent implements ITrackedEvent {
     @Override
     public String getTrackingKey() {
         return "AMPLIFY_" + event.getTrackingKey() + "_" + eventCheck.getTrackingKey();
+    }
+
+    @VisibleForTesting
+    @NonNull
+    public IEvent getEvent() {
+        return event;
+    }
+
+    @VisibleForTesting
+    @NonNull
+    public IEventCheck getEventCheck() {
+        return eventCheck;
     }
 
 }

@@ -18,12 +18,14 @@ package com.github.stkent.amplify.tracking.checks;
 
 import android.annotation.SuppressLint;
 
+import com.github.stkent.amplify.helpers.BaseTest;
+
 import org.junit.Test;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class MaximumCountCheckTest {
+public class MaximumCountCheckTest extends BaseTest {
 
     @SuppressLint("Assert")
     @SuppressWarnings("ConstantConditions")

@@ -18,6 +18,9 @@ package com.github.stkent.amplify.tracking.checks;
 
 import android.annotation.SuppressLint;
 
+import com.github.stkent.amplify.helpers.BaseTest;
+import com.github.stkent.amplify.tracking.ClockUtil;
+
 import org.junit.Test;
 
 import java.util.concurrent.TimeUnit;
@@ -25,7 +28,7 @@ import java.util.concurrent.TimeUnit;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class CooldownDaysCheckTest {
+public class CooldownDaysCheckTest extends BaseTest {
 
     @SuppressLint("Assert")
     @SuppressWarnings("ConstantConditions")
@@ -38,7 +41,7 @@ public class CooldownDaysCheckTest {
         assert daysSinceLastEvent < cooldownTimeDays;
 
         final CooldownDaysCheck cooldownDaysCheck = new CooldownDaysCheck(cooldownTimeDays);
-        final long lastEventTime = System.currentTimeMillis() - TimeUnit.DAYS.toMillis(daysSinceLastEvent);
+        final long lastEventTime = ClockUtil.getCurrentTimeMillis() - TimeUnit.DAYS.toMillis(daysSinceLastEvent);
 
         // Act
         // todo: figure out what to pass instead of the null context here
@@ -60,7 +63,7 @@ public class CooldownDaysCheckTest {
         assert daysSinceLastEvent > cooldownTimeDays;
 
         final CooldownDaysCheck cooldownDaysCheck = new CooldownDaysCheck(cooldownTimeDays);
-        final long lastEventTime = System.currentTimeMillis() - TimeUnit.DAYS.toMillis(daysSinceLastEvent);
+        final long lastEventTime = ClockUtil.getCurrentTimeMillis() - TimeUnit.DAYS.toMillis(daysSinceLastEvent);
 
         // Act
         final boolean checkShouldBlockFeedbackPrompt

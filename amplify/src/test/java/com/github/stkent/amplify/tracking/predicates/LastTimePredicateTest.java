@@ -34,9 +34,9 @@ import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertEquals;
 
-public class FirstTimePredicateTest extends BaseTest {
+public class LastTimePredicateTest extends BaseTest {
 
-    private FirstTimePredicate firstTimePredicate;
+    private LastTimePredicate lastTimePredicate;
 
     private MockSettings<Long> mockSettings;
 
@@ -51,12 +51,12 @@ public class FirstTimePredicateTest extends BaseTest {
     public void localSetUp() {
         mockSettings = new MockSettings<>();
 
-        firstTimePredicate = new FirstTimePredicate(
+        lastTimePredicate = new LastTimePredicate(
                 new StubbedLogger(),
                 mockSettings,
                 mockApplicationInfoProvider);
 
-        firstTimePredicate.trackEvent(mockEvent, mockEventCheck);
+        lastTimePredicate.trackEvent(mockEvent, mockEventCheck);
     }
 
     @Test
@@ -77,7 +77,7 @@ public class FirstTimePredicateTest extends BaseTest {
 
     @SuppressLint("Assert")
     @Test
-    public void testThatSecondAndSubsequentEventTimesAreNotRecorded() {
+    public void testThatSecondEventTimesIsRecorded() {
         // Arrange Act
         final long fakeEventTimeEarlier = MARCH_18_2014_838PM_UTC;
         final long fakeEventTimeLater
@@ -94,13 +94,13 @@ public class FirstTimePredicateTest extends BaseTest {
         // Check that the earlier event time was saved, and the second event time ignored:
         final Long savedEventTime = mockSettings.getEventValue(mockEvent, mockEventCheck);
 
-        assertEquals("The correct (earliest) time should have been recorded for this event",
-                Long.valueOf(fakeEventTimeEarlier), savedEventTime);
+        assertEquals("The correct (latest) time should have been recorded for this event",
+                Long.valueOf(fakeEventTimeLater), savedEventTime);
     }
 
     private void triggerEventAtTime(@NonNull final IEvent event, final long time) {
         ClockUtil.setFakeCurrentTimeMillis(time);
-        firstTimePredicate.eventTriggered(event);
+        lastTimePredicate.eventTriggered(event);
     }
 
 }
