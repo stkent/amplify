@@ -33,31 +33,11 @@ public interface IAmplifyStateTracker {
 
     IAmplifyStateTracker trackTotalEventCount(@NonNull final IEvent event, @NonNull final IEventCheck<Integer> eventCheck);
 
-    IAmplifyStateTracker trackTotalEventCount(
-            @NonNull final IEvent event,
-            @NonNull final IEventCheck<Integer> eventCheck,
-            @NonNull final ITrackingInitializer trackingInitializer);
-
     IAmplifyStateTracker trackFirstEventTime(@NonNull final IEvent event, @NonNull final IEventCheck<Long> eventCheck);
-
-    IAmplifyStateTracker trackFirstEventTime(
-            @NonNull final IEvent event,
-            @NonNull final IEventCheck<Long> eventCheck,
-            @NonNull final ITrackingInitializer trackingInitializer);
 
     IAmplifyStateTracker trackLastEventTime(@NonNull final IEvent event, @NonNull final IEventCheck<Long> eventCheck);
 
-    IAmplifyStateTracker trackLastEventTime(
-            @NonNull final IEvent event,
-            @NonNull final IEventCheck<Long> eventCheck,
-            @NonNull final ITrackingInitializer trackingInitializer);
-
     IAmplifyStateTracker trackLastEventVersion(@NonNull final IEvent event, @NonNull final IEventCheck<String> eventCheck);
-
-    IAmplifyStateTracker trackLastEventVersion(
-            @NonNull final IEvent event,
-            @NonNull final IEventCheck<String> eventCheck,
-            @NonNull final ITrackingInitializer trackingInitializer);
 
     IAmplifyStateTracker notifyEventTriggered(@NonNull final IEvent event);
 
