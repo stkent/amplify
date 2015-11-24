@@ -19,7 +19,6 @@ package com.github.stkent.amplify.tracking.trackers;
 import android.annotation.SuppressLint;
 import android.support.annotation.NonNull;
 
-import com.github.stkent.amplify.ILogger;
 import com.github.stkent.amplify.helpers.BaseTest;
 import com.github.stkent.amplify.helpers.FakeSettings;
 import com.github.stkent.amplify.tracking.ClockUtil;
@@ -43,8 +42,6 @@ public class FirstTimeTrackerTest extends BaseTest {
     private FakeSettings<Long> fakeSettings;
 
     @Mock
-    private ILogger mockLogger;
-    @Mock
     private IApplicationInfoProvider mockApplicationInfoProvider;
     @Mock
     private IEvent mockEvent;
@@ -56,7 +53,6 @@ public class FirstTimeTrackerTest extends BaseTest {
         fakeSettings = new FakeSettings<>();
 
         firstTimeTracker = new FirstTimeTracker(
-                mockLogger,
                 fakeSettings,
                 mockApplicationInfoProvider);
 

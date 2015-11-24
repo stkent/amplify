@@ -19,7 +19,6 @@ package com.github.stkent.amplify.tracking.trackers;
 import android.annotation.SuppressLint;
 import android.support.annotation.NonNull;
 
-import com.github.stkent.amplify.ILogger;
 import com.github.stkent.amplify.helpers.BaseTest;
 import com.github.stkent.amplify.helpers.FakeSettings;
 import com.github.stkent.amplify.tracking.interfaces.IApplicationInfoProvider;
@@ -40,8 +39,6 @@ public class TotalCountTrackerTest extends BaseTest {
     private FakeSettings<Integer> fakeSettings;
 
     @Mock
-    private ILogger mockLogger;
-    @Mock
     private IApplicationInfoProvider mockApplicationInfoProvider;
     @Mock
     private IEvent mockEvent;
@@ -53,7 +50,6 @@ public class TotalCountTrackerTest extends BaseTest {
         fakeSettings = new FakeSettings<>();
 
         totalCountTracker = new TotalCountTracker(
-                mockLogger,
                 fakeSettings,
                 mockApplicationInfoProvider);
 

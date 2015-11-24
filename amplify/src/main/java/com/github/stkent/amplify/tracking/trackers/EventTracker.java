@@ -18,7 +18,7 @@ package com.github.stkent.amplify.tracking.trackers;
 
 import android.support.annotation.NonNull;
 
-import com.github.stkent.amplify.ILogger;
+import com.github.stkent.amplify.AmplifyLogger;
 import com.github.stkent.amplify.tracking.interfaces.IApplicationInfoProvider;
 import com.github.stkent.amplify.tracking.interfaces.IEvent;
 import com.github.stkent.amplify.tracking.interfaces.IEventCheck;
@@ -33,7 +33,6 @@ public abstract class EventTracker<T> {
 
     private static final String AMPLIFY_TRACKING_KEY_PREFIX = "AMPLIFY_";
 
-    private final ILogger logger;
     private final IApplicationInfoProvider applicationInfoProvider;
     private final ISettings<T> settings;
     private final ConcurrentHashMap<IEvent, List<IEventCheck<T>>> internalMap;
@@ -52,10 +51,8 @@ public abstract class EventTracker<T> {
     protected abstract T getUpdatedTrackingValue(@NonNull final T cachedEventValue);
 
     public EventTracker(
-            @NonNull final ILogger logger,
             @NonNull final ISettings<T> settings,
             @NonNull final IApplicationInfoProvider applicationInfoProvider) {
-        this.logger = logger;
         this.settings = settings;
         this.applicationInfoProvider = applicationInfoProvider;
         this.internalMap = new ConcurrentHashMap<>();
@@ -68,7 +65,7 @@ public abstract class EventTracker<T> {
 
         internalMap.get(event).add(eventCheck);
 
-        logger.d(internalMap.get(event).toString());
+        AmplifyLogger.getLogger().d(internalMap.get(event).toString());
     }
 
     public void notifyEventTriggered(@NonNull final IEvent event) {
@@ -78,7 +75,7 @@ public abstract class EventTracker<T> {
             final T updatedTrackingValue = getUpdatedTrackingValue(cachedTrackingValue);
 
             if (!updatedTrackingValue.equals(cachedTrackingValue)) {
-                logger.d(IEventCheck.class.getSimpleName()
+                AmplifyLogger.getLogger().d(IEventCheck.class.getSimpleName()
                         + " updating event value from: "
                         + cachedTrackingValue
                         + " to "
@@ -97,10 +94,10 @@ public abstract class EventTracker<T> {
             for (final IEventCheck<T> eventCheck : eventCheckSet.getValue()) {
                 final T cachedEventValue = getCachedTrackingValue(event);
 
-                logger.d(getTrackingKey(event) + ": " + eventCheck.getStatusString(cachedEventValue, applicationInfoProvider));
+                AmplifyLogger.getLogger().d(getTrackingKey(event) + ": " + eventCheck.getStatusString(cachedEventValue, applicationInfoProvider));
 
                 if (eventCheck.shouldBlockFeedbackPrompt(cachedEventValue, applicationInfoProvider)) {
-                    logger.d("Blocking feedback for event: " + event + " because of check: " + eventCheck);
+                    AmplifyLogger.getLogger().d("Blocking feedback for event: " + event + " because of check: " + eventCheck);
                     return false;
                 }
             }
@@ -111,10 +108,6 @@ public abstract class EventTracker<T> {
 
     public boolean containsEvent(@NonNull final IEvent event) {
         return internalMap.containsKey(event);
-    }
-
-    protected ILogger getLogger() {
-        return logger;
     }
 
     protected IApplicationInfoProvider getApplicationInfoProvider() {
