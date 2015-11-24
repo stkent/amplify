@@ -57,7 +57,7 @@ public class AmplifyView extends FrameLayout {
     private static final LayoutParams CONTENT_VIEW_LAYOUT_PARAMS
             = new LayoutParams(MATCH_PARENT, MATCH_PARENT);
 
-    private IAmplifyStateTracker ratingStateTracker;
+    private IAmplifyStateTracker amplifyStateTracker;
 
     private LayoutState layoutState;
     private UserOpinion userOpinion = UserOpinion.UNKNOWN;
