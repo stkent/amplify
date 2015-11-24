@@ -29,8 +29,8 @@ public class BaseTest {
     public static final long MARCH_18_2014_838PM_UTC = 1395175090000L;
     public static final String DEFAULT_MOCK_EVENT_TRACKING_KEY = "DEFAULT_MOCK_EVENT_TRACKING_KEY";
 
-    private static final RealSystemTimeProvider realSystemTimeProvider = new RealSystemTimeProvider();
-    private static final FakeSystemTimeProvider defaultFakeSystemTimeProvider = new FakeSystemTimeProvider(MARCH_18_2014_838PM_UTC);
+    private static final RealSystemTimeProvider REAL_SYSTEM_TIME_PROVIDER = new RealSystemTimeProvider();
+    private static final FakeSystemTimeProvider DEFAULT_FAKE_SYSTEM_TIME_PROVIDER = new FakeSystemTimeProvider(MARCH_18_2014_838PM_UTC);
 
     protected BaseTest() {
         // This constructor is intentionally empty. Nothing special is needed here.
@@ -42,7 +42,7 @@ public class BaseTest {
 
     @Before
     public final void globalSetUp() {
-        SystemTimeUtil.setSharedInstance(defaultFakeSystemTimeProvider);
+        SystemTimeUtil.setSharedInstance(DEFAULT_FAKE_SYSTEM_TIME_PROVIDER);
 
         initMocks(this);
 
@@ -61,7 +61,7 @@ public class BaseTest {
     public final void globalTearDown() {
         localTearDown();
 
-        SystemTimeUtil.setSharedInstance(realSystemTimeProvider);
+        SystemTimeUtil.setSharedInstance(REAL_SYSTEM_TIME_PROVIDER);
     }
 
 }
