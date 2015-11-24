@@ -2,7 +2,7 @@ apply plugin: 'jacoco'
 apply plugin: 'com.github.kt3k.coveralls'
 
 def coverageSourceDirs = [
-        'src/main/java'
+    'src/main/java'
 ]
 
 task coverageDebugTestReport(type:JacocoReport) {
@@ -11,11 +11,11 @@ task coverageDebugTestReport(type:JacocoReport) {
     description = "Generate Jacoco coverage reports for debug build type"
 
     classDirectories = fileTree(
-            dir: 'build/intermediates/classes/debug',
-            excludes: ['**/R.class',
-                       '**/R$*.class',
-                       '**/BuildConfig.*',
-                       '**/Manifest*.*']
+        dir: 'build/intermediates/classes/debug',
+        excludes: ['**/R.class',
+                   '**/R$*.class',
+                   '**/BuildConfig.*',
+                   '**/Manifest*.*']
     )
 
     additionalSourceDirs = files(coverageSourceDirs)
