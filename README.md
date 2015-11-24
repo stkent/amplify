@@ -64,13 +64,13 @@ Code style and correctness is also enforced by several checkers. Running the Gra
 
     ./gradlew amplify:check
     
-will perform all the standard `check` tasks, as well as noting any violations detected by:
+will execute all the standard `check` tasks, as well as noting any violations detected by:
 
 - [FindBugs™](http://findbugs.sourceforge.net/);
 - [PMD](https://pmd.github.io/);
 - [checkstyle](http://checkstyle.sourceforge.net/).
 
-The Travis CI pull request build will fail if any violations are detected; these violations will be reported as top-level comments on the corresponding pull request.
+The Travis CI pull request build will fail if any violations are detected; these violations will be reported as top-level comments on the corresponding pull request. Violation detection and reporting is handled by the [Gnag](https://github.com/btkelly/gnag) Gradle plugin.
 
 ## Running Tests
 
