@@ -25,7 +25,8 @@ public interface IApplicationInfoProvider {
     @NonNull
     String getVersionName() throws PackageManager.NameNotFoundException;
 
-    int getVersionCode() throws PackageManager.NameNotFoundException;
+    @NonNull
+    String getApplicationVersionDisplayString() throws PackageManager.NameNotFoundException;
 
     @NonNull
     String getFeedbackEmailAddress() throws Resources.NotFoundException;

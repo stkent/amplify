@@ -31,8 +31,6 @@ import com.github.stkent.amplify.tracking.interfaces.IEnvironmentInfoProvider;
 
 public final class FeedbackUtil {
 
-    private static final int BASE_MESSAGE_LENGTH = 78;
-
     private final IApplicationInfoProvider applicationInfoProvider;
     private final IEnvironmentInfoProvider environmentInfoProvider;
     private final ILogger logger;
@@ -51,6 +49,7 @@ public final class FeedbackUtil {
 
         if (!environmentInfoProvider.canHandleIntent(feedbackEmailIntent)) {
             logger.e("Unable to present email client chooser.");
+
             return;
         }
 
@@ -86,29 +85,29 @@ public final class FeedbackUtil {
 
     @NonNull
     private String getApplicationInfoString() {
-        String versionString = "Error fetching version string";
+        String applicationVersionDisplayString;
 
         try {
-            versionString = applicationInfoProvider.getVersionCode() + " - " + applicationInfoProvider.getVersionName();
+            applicationVersionDisplayString = applicationInfoProvider.getApplicationVersionDisplayString();
         } catch (PackageManager.NameNotFoundException e) {
-            logger.e("Unable to extract consuming application version information.");
+            logger.e("Unable to determine application version information.");
+
+            applicationVersionDisplayString = "Unknown";
         }
 
-        return new StringBuilder(BASE_MESSAGE_LENGTH)
-                .append("\n\n\n---------------------\nApp Version: ")
+        return  "\n\n\n" +
+                "---------------------" + "" +
+                "\n" +
+                "App Version: " + applicationVersionDisplayString +
+                "\n" +
+                "Android OS Version: " + getAndroidOsVersionDisplayString() +
+                "\n" +
+                "Date: " + ClockUtil.getCurrentTimeMillis();
+    }
 
-                .append(versionString)
-                .append("\n")
-
-                .append("Android OS Version: ")
-                .append(Build.VERSION.RELEASE)
-                .append(" - ")
-                .append(Build.VERSION.SDK_INT)
-
-                .append("\n")
-                .append("Date: ")
-                .append(ClockUtil.getCurrentTimeMillis())
-                .toString();
+    private String getAndroidOsVersionDisplayString() {
+        // fixme: will this correctly reporting version information for the consuming application??
+        return Build.VERSION.RELEASE + " - " + Build.VERSION.SDK_INT;
     }
 
 }

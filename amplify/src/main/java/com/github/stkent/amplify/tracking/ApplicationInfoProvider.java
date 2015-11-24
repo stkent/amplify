@@ -39,9 +39,13 @@ public class ApplicationInfoProvider implements IApplicationInfoProvider {
         return ApplicationUtils.getPackageInfo(applicationContext, 0).versionName;
     }
 
+    @NonNull
     @Override
-    public int getVersionCode() throws PackageManager.NameNotFoundException {
-        return ApplicationUtils.getPackageInfo(applicationContext, 0).versionCode;
+    public String getApplicationVersionDisplayString() throws PackageManager.NameNotFoundException {
+        final int applicationVersionCode = ApplicationUtils.getPackageInfo(applicationContext, 0).versionCode;
+
+        // todo: prefer String.format here
+        return getVersionName() + " (" + applicationVersionCode + ")";
     }
 
     @NonNull
