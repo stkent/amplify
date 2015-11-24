@@ -28,6 +28,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
 
+import com.github.stkent.amplify.Logger;
 import com.github.stkent.amplify.R;
 import com.github.stkent.amplify.tracking.AmplifyStateTracker;
 import com.github.stkent.amplify.tracking.ApplicationInfoProvider;
@@ -94,9 +95,11 @@ public class AmplifyView extends FrameLayout {
     protected void respondToNegativeFeedback() {
         final Context applicationContext = getContext().getApplicationContext();
 
+        // todo: replace this logger with an injected logger:
         final FeedbackUtil feedbackUtil = new FeedbackUtil(
                 new ApplicationInfoProvider(applicationContext),
-                new EnvironmentInfoProvider(applicationContext));
+                new EnvironmentInfoProvider(applicationContext),
+                new Logger());
 
         if (getContext() instanceof Activity) {
             feedbackUtil.showFeedbackEmailChooser((Activity) getContext());

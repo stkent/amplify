@@ -23,8 +23,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
+import com.github.stkent.amplify.ILogger;
 import com.github.stkent.amplify.tracking.ClockUtil;
 import com.github.stkent.amplify.tracking.interfaces.IApplicationInfoProvider;
 import com.github.stkent.amplify.tracking.interfaces.IEnvironmentInfoProvider;
@@ -36,19 +36,22 @@ public final class FeedbackUtil {
 
     private final IApplicationInfoProvider applicationInfoProvider;
     private final IEnvironmentInfoProvider environmentInfoProvider;
+    private final ILogger logger;
 
     public FeedbackUtil(
             @NonNull final IApplicationInfoProvider applicationInfoProvider,
-            @NonNull final IEnvironmentInfoProvider environmentInfoProvider) {
+            @NonNull final IEnvironmentInfoProvider environmentInfoProvider,
+            @NonNull final ILogger logger) {
         this.applicationInfoProvider = applicationInfoProvider;
         this.environmentInfoProvider = environmentInfoProvider;
+        this.logger = logger;
     }
 
     public void showFeedbackEmailChooser(@Nullable final Activity activity) {
         final Intent feedbackEmailIntent = getFeedbackEmailIntent();
 
         if (!environmentInfoProvider.canHandleIntent(feedbackEmailIntent)) {
-            // fixme: log here
+            logger.e("Unable to present email client chooser.");
             return;
         }
 
@@ -69,7 +72,7 @@ public final class FeedbackUtil {
         try {
             uriStringBuilder.append(applicationInfoProvider.getFeedbackEmailAddress());
         } catch (final IllegalStateException e) {
-            Log.d(TAG, "ResourceNotFound", e);
+            logger.e("Feedback email address was not defined");
         }
 
         uriStringBuilder.append("?subject=")
@@ -89,7 +92,7 @@ public final class FeedbackUtil {
         try {
             versionString = applicationInfoProvider.getVersionCode() + " - " + applicationInfoProvider.getVersionName();
         } catch (PackageManager.NameNotFoundException e) {
-            Log.d(TAG, "MissingVersion", e);
+            logger.e("Unable to extract consuming application version information.");
         }
 
         return new StringBuilder(BASE_MESSAGE_LENGTH)
