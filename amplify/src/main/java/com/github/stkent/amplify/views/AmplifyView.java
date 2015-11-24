@@ -57,15 +57,17 @@ public class AmplifyView extends FrameLayout {
     private static final LayoutParams CONTENT_VIEW_LAYOUT_PARAMS
             = new LayoutParams(MATCH_PARENT, MATCH_PARENT);
 
-    private LayoutState layoutState;
     private IAmplifyStateTracker ratingStateTracker;
+
+    private LayoutState layoutState;
+    private UserOpinion userOpinion = UserOpinion.UNKNOWN;
+
     private String userOpinionQuestion;
     private String userOpinionTitle;
     private String positiveFeedbackQuestion;
     private String positiveFeedbackTitle;
     private String criticalFeedbackQuestion;
     private String criticalFeedbackTitle;
-    private UserOpinion userOpinion = UserOpinion.UNKNOWN;
 
     @LayoutRes
     private int questionLayoutResId;
