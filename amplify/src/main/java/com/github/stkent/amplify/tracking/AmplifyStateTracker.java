@@ -118,6 +118,24 @@ public final class AmplifyStateTracker implements IAmplifyStateTracker {
     }
 
     @Override
+    public IAmplifyStateTracker addInitialAppInstallTimeCheck(@NonNull final IEventCheck<Long> eventCheck) {
+        // fixme: fill this in
+        return this;
+    }
+
+    @Override
+    public IAmplifyStateTracker addLastAppUpdateTimeCheck(@NonNull final IEventCheck<Long> eventCheck) {
+        // fixme: fill this in
+        return this;
+    }
+
+    @Override
+    public IAmplifyStateTracker addLastCrashTimeCheck(@NonNull final IEventCheck<Long> eventCheck) {
+        // fixme: fill this in
+        return this;
+    }
+
+    @Override
     public IAmplifyStateTracker trackTotalEventCount(@NonNull final IEvent event, @NonNull final IEventCheck<Integer> eventCheck) {
         totalCountTracker.trackEvent(event, eventCheck);
         return this;
