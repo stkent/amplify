@@ -96,7 +96,7 @@ public final class FeedbackUtil {
         }
 
         return  "\n\n\n" +
-                "---------------------" + "" +
+                "---------------------" +
                 "\n" +
                 "App Version: " + applicationVersionDisplayString +
                 "\n" +
