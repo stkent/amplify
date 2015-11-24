@@ -18,14 +18,11 @@ package com.github.stkent.amplify.tracking.interfaces;
 
 import android.support.annotation.NonNull;
 
-import com.github.stkent.amplify.Logger;
 import com.github.stkent.amplify.views.AmplifyView;
 
 public interface IAmplifyStateTracker {
 
     IAmplifyStateTracker configureWithDefaults();
-
-    IAmplifyStateTracker setLogLevel(@NonNull final Logger.LogLevel logLevel);
 
     IAmplifyStateTracker setAlwaysShow(final boolean alwaysShow);
 

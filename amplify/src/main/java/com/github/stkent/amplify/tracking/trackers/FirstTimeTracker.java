@@ -20,7 +20,6 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 
-import com.github.stkent.amplify.ILogger;
 import com.github.stkent.amplify.tracking.ApplicationInfoProvider;
 import com.github.stkent.amplify.tracking.ClockUtil;
 import com.github.stkent.amplify.tracking.Settings;
@@ -29,16 +28,15 @@ import com.github.stkent.amplify.tracking.interfaces.ISettings;
 
 public class FirstTimeTracker extends EventTracker<Long> {
 
-    public FirstTimeTracker(@NonNull final ILogger logger, @NonNull final Context applicationContext) {
-        this(logger, new Settings<Long>(applicationContext, logger), new ApplicationInfoProvider(applicationContext));
+    public FirstTimeTracker(@NonNull final Context applicationContext) {
+        this(new Settings<Long>(applicationContext), new ApplicationInfoProvider(applicationContext));
     }
 
     @VisibleForTesting
     protected FirstTimeTracker(
-            @NonNull final ILogger logger,
             @NonNull final ISettings<Long> settings,
             @NonNull final IApplicationInfoProvider applicationInfoProvider) {
-        super(logger, settings, applicationInfoProvider);
+        super(settings, applicationInfoProvider);
     }
 
     @NonNull

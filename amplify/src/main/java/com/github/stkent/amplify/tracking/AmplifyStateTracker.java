@@ -19,8 +19,7 @@ package com.github.stkent.amplify.tracking;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
-import com.github.stkent.amplify.ILogger;
-import com.github.stkent.amplify.Logger;
+import com.github.stkent.amplify.AmplifyLogger;
 import com.github.stkent.amplify.tracking.checks.CooldownDaysCheck;
 import com.github.stkent.amplify.tracking.checks.GooglePlayStoreIsAvailableCheck;
 import com.github.stkent.amplify.tracking.checks.MaximumCountCheck;
@@ -59,18 +58,13 @@ public final class AmplifyStateTracker implements IAmplifyStateTracker {
     private final FirstTimeTracker firstTimeTracker;
     private final LastVersionTracker lastVersionTracker;
     private final TotalCountTracker totalCountTracker;
-    private final ILogger logger;
 
     private boolean alwaysShow;
 
     public static IAmplifyStateTracker get(@NonNull final Context context) {
-        return get(context, new Logger());
-    }
-
-    public static IAmplifyStateTracker get(@NonNull final Context context, @NonNull final ILogger logger) {
         synchronized (AmplifyStateTracker.class) {
             if (sharedInstance == null) {
-                sharedInstance = new AmplifyStateTracker(context, logger);
+                sharedInstance = new AmplifyStateTracker(context);
             }
         }
 
@@ -80,15 +74,13 @@ public final class AmplifyStateTracker implements IAmplifyStateTracker {
     // constructors
 
     private AmplifyStateTracker(
-            @NonNull final Context context,
-            @NonNull final ILogger logger) {
+            @NonNull final Context context) {
         final Context applicationContext = context.getApplicationContext();
         this.applicationInfoProvider = new EnvironmentInfoProvider(applicationContext);
-        this.logger = logger;
-        this.lastTimeTracker = new LastTimeTracker(logger, applicationContext);
-        this.firstTimeTracker = new FirstTimeTracker(logger, applicationContext);
-        this.lastVersionTracker = new LastVersionTracker(logger, applicationContext);
-        this.totalCountTracker = new TotalCountTracker(logger, applicationContext);
+        this.lastTimeTracker = new LastTimeTracker(applicationContext);
+        this.firstTimeTracker = new FirstTimeTracker(applicationContext);
+        this.lastVersionTracker = new LastVersionTracker(applicationContext);
+        this.totalCountTracker = new TotalCountTracker(applicationContext);
     }
 
     // configuration methods
@@ -106,12 +98,6 @@ public final class AmplifyStateTracker implements IAmplifyStateTracker {
                 .trackLastEventVersion(IntegratedEvent.USER_DECLINED_POSITIVE_FEEDBACK, new VersionChangedCheck())
                 .trackLastEventTime(IntegratedEvent.APP_CRASHED, new CooldownDaysCheck(ONE_WEEK), new ExceptionHandlingInitializer())
                 .trackLastEventVersion(IntegratedEvent.USER_GAVE_CRITICAL_FEEDBACK, new VersionChangedCheck());
-    }
-
-    @Override
-    public IAmplifyStateTracker setLogLevel(@NonNull final Logger.LogLevel logLevel) {
-        logger.setLogLevel(logLevel);
-        return this;
     }
 
     @Override
@@ -210,7 +196,7 @@ public final class AmplifyStateTracker implements IAmplifyStateTracker {
 
     @Override
     public IAmplifyStateTracker notifyEventTriggered(@NonNull final IEvent event) {
-        logger.d("Triggered Event: " + event);
+        AmplifyLogger.getLogger().d("Triggered Event: " + event);
         totalCountTracker.notifyEventTriggered(event);
         firstTimeTracker.notifyEventTriggered(event);
         lastTimeTracker.notifyEventTriggered(event);
@@ -241,7 +227,7 @@ public final class AmplifyStateTracker implements IAmplifyStateTracker {
     private boolean allEnvironmentRequirementsMet() {
         for (final IEnvironmentCheck environmentRequirement : environmentRequirements) {
             if (!environmentRequirement.isMet(applicationInfoProvider)) {
-                logger.d("Environment requirement not met: " + environmentRequirement);
+                AmplifyLogger.getLogger().d("Environment requirement not met: " + environmentRequirement);
                 return false;
             }
         }
