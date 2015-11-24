@@ -23,32 +23,33 @@ import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
+import com.github.stkent.amplify.ILogger;
 import com.github.stkent.amplify.tracking.ClockUtil;
 import com.github.stkent.amplify.tracking.interfaces.IApplicationInfoProvider;
 import com.github.stkent.amplify.tracking.interfaces.IEnvironmentInfoProvider;
 
 public final class FeedbackUtil {
 
-    private static final String TAG = "FeedbackUtils";
-    private static final int BASE_MESSAGE_LENGTH = 78;
-
     private final IApplicationInfoProvider applicationInfoProvider;
     private final IEnvironmentInfoProvider environmentInfoProvider;
+    private final ILogger logger;
 
     public FeedbackUtil(
             @NonNull final IApplicationInfoProvider applicationInfoProvider,
-            @NonNull final IEnvironmentInfoProvider environmentInfoProvider) {
+            @NonNull final IEnvironmentInfoProvider environmentInfoProvider,
+            @NonNull final ILogger logger) {
         this.applicationInfoProvider = applicationInfoProvider;
         this.environmentInfoProvider = environmentInfoProvider;
+        this.logger = logger;
     }
 
     public void showFeedbackEmailChooser(@Nullable final Activity activity) {
         final Intent feedbackEmailIntent = getFeedbackEmailIntent();
 
         if (!environmentInfoProvider.canHandleIntent(feedbackEmailIntent)) {
-            // fixme: log here
+            logger.e("Unable to present email client chooser.");
+
             return;
         }
 
@@ -69,7 +70,7 @@ public final class FeedbackUtil {
         try {
             uriStringBuilder.append(applicationInfoProvider.getFeedbackEmailAddress());
         } catch (final IllegalStateException e) {
-            Log.d(TAG, "ResourceNotFound", e);
+            logger.e("Feedback email address was not defined");
         }
 
         uriStringBuilder.append("?subject=")
@@ -84,29 +85,29 @@ public final class FeedbackUtil {
 
     @NonNull
     private String getApplicationInfoString() {
-        String versionString = "Error fetching version string";
+        String applicationVersionDisplayString;
 
         try {
-            versionString = applicationInfoProvider.getVersionCode() + " - " + applicationInfoProvider.getVersionName();
+            applicationVersionDisplayString = applicationInfoProvider.getApplicationVersionDisplayString();
         } catch (PackageManager.NameNotFoundException e) {
-            Log.d(TAG, "MissingVersion", e);
+            logger.e("Unable to determine application version information.");
+
+            applicationVersionDisplayString = "Unknown";
         }
 
-        return new StringBuilder(BASE_MESSAGE_LENGTH)
-                .append("\n\n\n---------------------\nApp Version: ")
+        return    "\n\n\n"
+                + "---------------------"
+                + "\n"
+                + "App Version: " + applicationVersionDisplayString
+                + "\n"
+                + "Android OS Version: " + getAndroidOsVersionDisplayString()
+                + "\n"
+                + "Date: " + ClockUtil.getCurrentTimeMillis();
+    }
 
-                .append(versionString)
-                .append("\n")
-
-                .append("Android OS Version: ")
-                .append(Build.VERSION.RELEASE)
-                .append(" - ")
-                .append(Build.VERSION.SDK_INT)
-
-                .append("\n")
-                .append("Date: ")
-                .append(ClockUtil.getCurrentTimeMillis())
-                .toString();
+    private String getAndroidOsVersionDisplayString() {
+        // fixme: will this correctly reporting version information for the consuming application??
+        return Build.VERSION.RELEASE + " - " + Build.VERSION.SDK_INT;
     }
 
 }
