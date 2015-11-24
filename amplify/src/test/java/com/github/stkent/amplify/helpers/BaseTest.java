@@ -16,7 +16,8 @@
  */
 package com.github.stkent.amplify.helpers;
 
-import com.github.stkent.amplify.utils.ClockUtil;
+import com.github.stkent.amplify.utils.time.RealSystemTimeProvider;
+import com.github.stkent.amplify.utils.time.SystemTimeUtil;
 
 import org.junit.After;
 import org.junit.Before;
@@ -28,13 +29,20 @@ public class BaseTest {
     public static final long MARCH_18_2014_838PM_UTC = 1395175090000L;
     public static final String DEFAULT_MOCK_EVENT_TRACKING_KEY = "DEFAULT_MOCK_EVENT_TRACKING_KEY";
 
+    private static final RealSystemTimeProvider realSystemTimeProvider = new RealSystemTimeProvider();
+    private static final FakeSystemTimeProvider defaultFakeSystemTimeProvider = new FakeSystemTimeProvider(MARCH_18_2014_838PM_UTC);
+
     protected BaseTest() {
         // This constructor is intentionally empty. Nothing special is needed here.
     }
 
+    protected final void setFakeCurrentTimeMillis(final long fakeCurrentTimeMillis) {
+        SystemTimeUtil.setSharedInstance(new FakeSystemTimeProvider(fakeCurrentTimeMillis));
+    }
+
     @Before
     public final void globalSetUp() {
-        ClockUtil.setFakeCurrentTimeMillis(MARCH_18_2014_838PM_UTC);
+        SystemTimeUtil.setSharedInstance(defaultFakeSystemTimeProvider);
 
         initMocks(this);
 
@@ -53,7 +61,7 @@ public class BaseTest {
     public final void globalTearDown() {
         localTearDown();
 
-        ClockUtil.clearFakeCurrentTimeMillis();
+        SystemTimeUtil.setSharedInstance(realSystemTimeProvider);
     }
 
 }

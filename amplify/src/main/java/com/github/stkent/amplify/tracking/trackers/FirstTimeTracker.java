@@ -22,7 +22,7 @@ import android.support.annotation.VisibleForTesting;
 
 import com.github.stkent.amplify.ILogger;
 import com.github.stkent.amplify.tracking.ApplicationInfoProvider;
-import com.github.stkent.amplify.utils.ClockUtil;
+import com.github.stkent.amplify.utils.time.SystemTimeUtil;
 import com.github.stkent.amplify.tracking.Settings;
 import com.github.stkent.amplify.tracking.interfaces.IApplicationInfoProvider;
 import com.github.stkent.amplify.tracking.interfaces.ISettings;
@@ -57,7 +57,7 @@ public class FirstTimeTracker extends EventTracker<Long> {
     @Override
     public Long getUpdatedTrackingValue(@NonNull final Long cachedTrackingValue) {
         if (cachedTrackingValue == Long.MAX_VALUE) {
-            return Math.min(cachedTrackingValue, ClockUtil.getCurrentTimeMillis());
+            return Math.min(cachedTrackingValue, SystemTimeUtil.currentTimeMillis());
         }
 
         return cachedTrackingValue;

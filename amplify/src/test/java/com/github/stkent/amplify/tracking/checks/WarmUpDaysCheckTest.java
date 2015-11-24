@@ -19,7 +19,7 @@ package com.github.stkent.amplify.tracking.checks;
 import android.annotation.SuppressLint;
 
 import com.github.stkent.amplify.helpers.BaseTest;
-import com.github.stkent.amplify.utils.ClockUtil;
+import com.github.stkent.amplify.utils.time.SystemTimeUtil;
 
 import org.junit.Test;
 
@@ -62,7 +62,7 @@ public class WarmUpDaysCheckTest extends BaseTest {
         assert daysSinceLastEvent < warmUpTimeDays;
 
         final WarmUpDaysCheck warmUpDaysCheck = new WarmUpDaysCheck(warmUpTimeDays);
-        final long lastEventTime = ClockUtil.getCurrentTimeMillis() - TimeUnit.DAYS.toMillis(daysSinceLastEvent);
+        final long lastEventTime = SystemTimeUtil.currentTimeMillis() - TimeUnit.DAYS.toMillis(daysSinceLastEvent);
 
         // Act
         // todo: figure out what to pass instead of the null context here
@@ -84,7 +84,7 @@ public class WarmUpDaysCheckTest extends BaseTest {
         assert daysSinceLastEvent > warmUpTimeDays;
 
         final WarmUpDaysCheck warmUpDaysCheck = new WarmUpDaysCheck(warmUpTimeDays);
-        final long lastEventTime = ClockUtil.getCurrentTimeMillis() - TimeUnit.DAYS.toMillis(daysSinceLastEvent);
+        final long lastEventTime = SystemTimeUtil.currentTimeMillis() - TimeUnit.DAYS.toMillis(daysSinceLastEvent);
 
         // Act
         final boolean checkShouldBlockFeedbackPrompt

@@ -22,7 +22,6 @@ import android.support.annotation.NonNull;
 import com.github.stkent.amplify.ILogger;
 import com.github.stkent.amplify.helpers.BaseTest;
 import com.github.stkent.amplify.helpers.FakeSettings;
-import com.github.stkent.amplify.utils.ClockUtil;
 import com.github.stkent.amplify.tracking.interfaces.IApplicationInfoProvider;
 import com.github.stkent.amplify.tracking.interfaces.IEvent;
 import com.github.stkent.amplify.tracking.interfaces.IEventCheck;
@@ -124,7 +123,7 @@ public class FirstTimeTrackerTest extends BaseTest {
     }
 
     private void triggerEventAtTime(final long time) {
-        ClockUtil.setFakeCurrentTimeMillis(time);
+        setFakeCurrentTimeMillis(time);
         firstTimeTracker.notifyEventTriggered(mockEvent);
     }
 
