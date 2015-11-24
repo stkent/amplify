@@ -28,7 +28,7 @@ import com.github.stkent.amplify.tracking.interfaces.IEnvironmentCheck;
 public class GooglePlayStoreIsAvailableCheck implements IEnvironmentCheck {
 
     @Override
-    public boolean isMet(@NonNull final IEnvironmentInfoProvider environmentInfoProvider) {
+    public boolean isSatisfied(@NonNull final IEnvironmentInfoProvider environmentInfoProvider) {
         return environmentInfoProvider.isGooglePlayStoreInstalled();
     }
 
