@@ -223,6 +223,7 @@ public final class AmplifyStateTracker implements IAmplifyStateTracker {
     @Override
     public void promptIfReady(@NonNull final AmplifyView amplifyView) {
         if (shouldAskForRating()) {
+            amplifyView.injectDependencies(this, logger);
             amplifyView.show();
         }
     }

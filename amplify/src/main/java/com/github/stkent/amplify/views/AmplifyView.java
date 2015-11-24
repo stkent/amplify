@@ -28,6 +28,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
 
+import com.github.stkent.amplify.ILogger;
 import com.github.stkent.amplify.Logger;
 import com.github.stkent.amplify.R;
 import com.github.stkent.amplify.tracking.AmplifyStateTracker;
@@ -57,7 +58,11 @@ public class AmplifyView extends FrameLayout {
     private static final LayoutParams CONTENT_VIEW_LAYOUT_PARAMS
             = new LayoutParams(MATCH_PARENT, MATCH_PARENT);
 
+    @Nullable
     private IAmplifyStateTracker amplifyStateTracker;
+
+    @Nullable
+    private ILogger logger;
 
     private LayoutState layoutState;
     private UserOpinion userOpinion = UserOpinion.UNKNOWN;
@@ -94,14 +99,22 @@ public class AmplifyView extends FrameLayout {
         init(context, attrs);
     }
 
+    public void injectDependencies(@NonNull final IAmplifyStateTracker amplifyStateTracker, @NonNull final ILogger logger) {
+        this.amplifyStateTracker = amplifyStateTracker;
+        this.logger = logger;
+    }
+
+    @SuppressWarnings("ConstantConditions")
     protected void respondToNegativeFeedback() {
+        checkDependenciesHaveBeenInjected();
+
         final Context applicationContext = getContext().getApplicationContext();
 
         // todo: replace this logger with an injected logger:
         final FeedbackUtil feedbackUtil = new FeedbackUtil(
                 new ApplicationInfoProvider(applicationContext),
                 new EnvironmentInfoProvider(applicationContext),
-                new Logger());
+                logger);
 
         if (getContext() instanceof Activity) {
             feedbackUtil.showFeedbackEmailChooser((Activity) getContext());
@@ -115,7 +128,7 @@ public class AmplifyView extends FrameLayout {
     private void init(final Context context, @Nullable final AttributeSet attrs) {
         hide();
 
-        ratingStateTracker = AmplifyStateTracker.get(context);
+        amplifyStateTracker = AmplifyStateTracker.get(context);
 
         final TypedArray typedArray = context.getTheme().obtainStyledAttributes(attrs, R.styleable.AmplifyView, 0, 0);
 
@@ -234,20 +247,23 @@ public class AmplifyView extends FrameLayout {
     }
 
     private final OnClickListener positiveButtonClickListener = new OnClickListener() {
+        @SuppressWarnings("ConstantConditions")
         @Override
         public void onClick(final View v) {
+            checkDependenciesHaveBeenInjected();
+
             switch (userOpinion) {
                 case UNKNOWN:
                     userOpinion = UserOpinion.POSITIVE;
                     askSecondQuestion();
                     break;
                 case POSITIVE:
-                    ratingStateTracker.notifyEventTriggered(IntegratedEvent.USER_GAVE_POSITIVE_FEEDBACK);
+                    amplifyStateTracker.notifyEventTriggered(IntegratedEvent.USER_GAVE_POSITIVE_FEEDBACK);
                     thankUser();
                     respondToPositiveFeedback();
                     break;
                 case NEGATIVE:
-                    ratingStateTracker.notifyEventTriggered(IntegratedEvent.USER_GAVE_CRITICAL_FEEDBACK);
+                    amplifyStateTracker.notifyEventTriggered(IntegratedEvent.USER_GAVE_CRITICAL_FEEDBACK);
                     thankUser();
                     respondToNegativeFeedback();
                     break;
@@ -258,8 +274,11 @@ public class AmplifyView extends FrameLayout {
     };
 
     private final OnClickListener negativeButtonClickListener = new OnClickListener() {
+        @SuppressWarnings("ConstantConditions")
         @Override
         public void onClick(final View v) {
+            checkDependenciesHaveBeenInjected();
+
             switch (userOpinion) {
                 case UNKNOWN:
                     userOpinion = UserOpinion.NEGATIVE;
@@ -267,16 +286,23 @@ public class AmplifyView extends FrameLayout {
                     break;
                 case POSITIVE:
                     hide();
-                    ratingStateTracker.notifyEventTriggered(IntegratedEvent.USER_DECLINED_POSITIVE_FEEDBACK);
+                    amplifyStateTracker.notifyEventTriggered(IntegratedEvent.USER_DECLINED_POSITIVE_FEEDBACK);
                     break;
                 case NEGATIVE:
                     hide();
-                    ratingStateTracker.notifyEventTriggered(IntegratedEvent.USER_DECLINED_CRITICAL_FEEDBACK);
+                    amplifyStateTracker.notifyEventTriggered(IntegratedEvent.USER_DECLINED_CRITICAL_FEEDBACK);
                     break;
                 default:
                     break;
             }
         }
     };
+
+    private void checkDependenciesHaveBeenInjected() {
+        if (amplifyStateTracker == null || logger == null) {
+            // todo: use the stack trace to print out the calling method name here!
+            throw new IllegalStateException("Dependencies must be injected before this method is called");
+        }
+    }
 
 }
