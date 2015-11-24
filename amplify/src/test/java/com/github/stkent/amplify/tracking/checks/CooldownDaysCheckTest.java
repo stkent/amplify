@@ -19,7 +19,7 @@ package com.github.stkent.amplify.tracking.checks;
 import android.annotation.SuppressLint;
 
 import com.github.stkent.amplify.helpers.BaseTest;
-import com.github.stkent.amplify.tracking.ClockUtil;
+import com.github.stkent.amplify.utils.ClockUtil;
 
 import org.junit.Test;
 

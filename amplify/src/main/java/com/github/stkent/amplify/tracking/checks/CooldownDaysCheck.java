@@ -18,7 +18,7 @@ package com.github.stkent.amplify.tracking.checks;
 
 import android.support.annotation.NonNull;
 
-import com.github.stkent.amplify.tracking.ClockUtil;
+import com.github.stkent.amplify.utils.ClockUtil;
 import com.github.stkent.amplify.tracking.interfaces.IApplicationInfoProvider;
 import com.github.stkent.amplify.tracking.interfaces.IEventCheck;
 

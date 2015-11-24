@@ -22,7 +22,7 @@ import android.support.annotation.VisibleForTesting;
 
 import com.github.stkent.amplify.ILogger;
 import com.github.stkent.amplify.tracking.ApplicationInfoProvider;
-import com.github.stkent.amplify.tracking.ClockUtil;
+import com.github.stkent.amplify.utils.ClockUtil;
 import com.github.stkent.amplify.tracking.Settings;
 import com.github.stkent.amplify.tracking.interfaces.IApplicationInfoProvider;
 import com.github.stkent.amplify.tracking.interfaces.ISettings;

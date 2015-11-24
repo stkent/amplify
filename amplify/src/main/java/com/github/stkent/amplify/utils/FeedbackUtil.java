@@ -25,7 +25,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.github.stkent.amplify.ILogger;
-import com.github.stkent.amplify.tracking.ClockUtil;
 import com.github.stkent.amplify.tracking.interfaces.IApplicationInfoProvider;
 import com.github.stkent.amplify.tracking.interfaces.IEnvironmentInfoProvider;
 

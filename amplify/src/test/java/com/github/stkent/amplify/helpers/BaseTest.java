@@ -16,7 +16,7 @@
  */
 package com.github.stkent.amplify.helpers;
 
-import com.github.stkent.amplify.tracking.ClockUtil;
+import com.github.stkent.amplify.utils.ClockUtil;
 
 import org.junit.After;
 import org.junit.Before;
