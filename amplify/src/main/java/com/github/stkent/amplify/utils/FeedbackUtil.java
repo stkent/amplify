@@ -31,7 +31,6 @@ import com.github.stkent.amplify.tracking.interfaces.IEnvironmentInfoProvider;
 
 public final class FeedbackUtil {
 
-    private static final String TAG = "FeedbackUtils";
     private static final int BASE_MESSAGE_LENGTH = 78;
 
     private final IApplicationInfoProvider applicationInfoProvider;
