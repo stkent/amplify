@@ -29,7 +29,6 @@ import android.view.View;
 import android.widget.FrameLayout;
 
 import com.github.stkent.amplify.ILogger;
-import com.github.stkent.amplify.Logger;
 import com.github.stkent.amplify.R;
 import com.github.stkent.amplify.tracking.AmplifyStateTracker;
 import com.github.stkent.amplify.tracking.ApplicationInfoProvider;
