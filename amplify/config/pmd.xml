@@ -16,7 +16,9 @@
 
     <rule ref="rulesets/java/clone.xml" />
 
-    <rule ref="rulesets/java/codesize.xml" />
+    <rule ref="rulesets/java/codesize.xml">
+        <exclude name="TooManyFields" />
+    </rule>
     <rule ref="rulesets/java/codesize.xml/CyclomaticComplexity">
         <properties>
             <property name="reportLevel" value="20" />
