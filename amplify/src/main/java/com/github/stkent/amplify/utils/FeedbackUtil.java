@@ -95,14 +95,14 @@ public final class FeedbackUtil {
             applicationVersionDisplayString = "Unknown";
         }
 
-        return  "\n\n\n" +
-                "---------------------" +
-                "\n" +
-                "App Version: " + applicationVersionDisplayString +
-                "\n" +
-                "Android OS Version: " + getAndroidOsVersionDisplayString() +
-                "\n" +
-                "Date: " + ClockUtil.getCurrentTimeMillis();
+        return    "\n\n\n"
+                + "---------------------"
+                + "\n"
+                + "App Version: " + applicationVersionDisplayString
+                + "\n"
+                + "Android OS Version: " + getAndroidOsVersionDisplayString()
+                + "\n"
+                + "Date: " + ClockUtil.getCurrentTimeMillis();
     }
 
     private String getAndroidOsVersionDisplayString() {
