@@ -18,9 +18,9 @@ package com.github.stkent.amplify.tracking;
 
 import android.support.annotation.NonNull;
 
-import com.github.stkent.amplify.tracking.interfaces.IEvent;
+import com.github.stkent.amplify.tracking.interfaces.IPublicEvent;
 
-public enum AmplifyViewEvent implements IEvent {
+public enum AmplifyViewEvent implements IPublicEvent {
 
     USER_GAVE_CRITICAL_FEEDBACK,
     USER_GAVE_POSITIVE_FEEDBACK,

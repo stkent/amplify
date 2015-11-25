@@ -25,6 +25,7 @@ import com.github.stkent.amplify.helpers.FakeSettings;
 import com.github.stkent.amplify.tracking.interfaces.IApplicationInfoProvider;
 import com.github.stkent.amplify.tracking.interfaces.IEvent;
 import com.github.stkent.amplify.tracking.interfaces.IEventCheck;
+import com.github.stkent.amplify.tracking.interfaces.IPublicEvent;
 
 import org.junit.Test;
 import org.mockito.Mock;
@@ -46,7 +47,7 @@ public class LastTimeTrackerTest extends BaseTest {
     @Mock
     private IApplicationInfoProvider mockApplicationInfoProvider;
     @Mock
-    private IEvent mockEvent;
+    private IPublicEvent mockPublicEvent;
     @Mock
     private IEventCheck<Long> mockEventCheck;
 
@@ -59,18 +60,18 @@ public class LastTimeTrackerTest extends BaseTest {
                 fakeSettings,
                 mockApplicationInfoProvider);
 
-        when(mockEvent.getTrackingKey()).thenReturn(DEFAULT_MOCK_EVENT_TRACKING_KEY);
-        lastTimeTracker.trackEvent(mockEvent, mockEventCheck);
+        when(mockPublicEvent.getTrackingKey()).thenReturn(DEFAULT_MOCK_EVENT_TRACKING_KEY);
+        lastTimeTracker.trackEvent(mockPublicEvent, mockEventCheck);
     }
 
     @Test
     public void testThatEventsAreSavedWithCorrectTrackingKey() {
         // Arrange
-        final String expectedTrackingKey = getExpectedTrackingKeyForEvent(mockEvent);
+        final String expectedTrackingKey = getExpectedTrackingKeyForEvent(mockPublicEvent);
         assert fakeSettings.readTrackingValue(expectedTrackingKey) == null;
 
         // Act
-        lastTimeTracker.notifyEventTriggered(mockEvent);
+        lastTimeTracker.notifyEventTriggered(mockPublicEvent);
 
         // Assert
         final Long trackedEventTime = fakeSettings.readTrackingValue(expectedTrackingKey);
@@ -86,10 +87,10 @@ public class LastTimeTrackerTest extends BaseTest {
         final long fakeEventTime = MARCH_18_2014_838PM_UTC;
 
         // Act
-        triggerEventAtTime(mockEvent, fakeEventTime);
+        triggerEventAtTime(mockPublicEvent, fakeEventTime);
 
         // Assert
-        final Long trackedEventTime = fakeSettings.readTrackingValue(getExpectedTrackingKeyForEvent(mockEvent));
+        final Long trackedEventTime = fakeSettings.readTrackingValue(getExpectedTrackingKeyForEvent(mockPublicEvent));
 
         assertEquals(
                 "The correct time should have been recorded for this event",
@@ -106,11 +107,11 @@ public class LastTimeTrackerTest extends BaseTest {
         assert fakeEventTimeEarlier < fakeEventTimeLater;
 
         // Act
-        triggerEventAtTime(mockEvent, fakeEventTimeEarlier);
-        triggerEventAtTime(mockEvent, fakeEventTimeLater);
+        triggerEventAtTime(mockPublicEvent, fakeEventTimeEarlier);
+        triggerEventAtTime(mockPublicEvent, fakeEventTimeLater);
 
         // Assert
-        final Long trackedEventTime = fakeSettings.readTrackingValue(getExpectedTrackingKeyForEvent(mockEvent));
+        final Long trackedEventTime = fakeSettings.readTrackingValue(getExpectedTrackingKeyForEvent(mockPublicEvent));
 
         assertEquals(
                 "The correct (latest) time should have been recorded for this event",
@@ -122,7 +123,7 @@ public class LastTimeTrackerTest extends BaseTest {
         return "AMPLIFY_" + event.getTrackingKey() + "_LASTTIMETRACKER";
     }
 
-    private void triggerEventAtTime(@NonNull final IEvent event, final long time) {
+    private void triggerEventAtTime(@NonNull final IPublicEvent event, final long time) {
         setFakeCurrentTimeMillis(time);
         lastTimeTracker.notifyEventTriggered(event);
     }

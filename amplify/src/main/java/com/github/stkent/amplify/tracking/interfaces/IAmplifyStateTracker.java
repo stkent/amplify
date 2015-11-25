@@ -37,15 +37,15 @@ public interface IAmplifyStateTracker {
 
     IAmplifyStateTracker addLastCrashTimeCheck(@NonNull final IEventCheck<Long> eventCheck);
 
-    IAmplifyStateTracker trackTotalEventCount(@NonNull final IEvent event, @NonNull final IEventCheck<Integer> eventCheck);
+    IAmplifyStateTracker trackTotalEventCount(@NonNull final IPublicEvent event, @NonNull final IEventCheck<Integer> eventCheck);
 
-    IAmplifyStateTracker trackFirstEventTime(@NonNull final IEvent event, @NonNull final IEventCheck<Long> eventCheck);
+    IAmplifyStateTracker trackFirstEventTime(@NonNull final IPublicEvent event, @NonNull final IEventCheck<Long> eventCheck);
 
-    IAmplifyStateTracker trackLastEventTime(@NonNull final IEvent event, @NonNull final IEventCheck<Long> eventCheck);
+    IAmplifyStateTracker trackLastEventTime(@NonNull final IPublicEvent event, @NonNull final IEventCheck<Long> eventCheck);
 
-    IAmplifyStateTracker trackLastEventVersion(@NonNull final IEvent event, @NonNull final IEventCheck<String> eventCheck);
+    IAmplifyStateTracker trackLastEventVersion(@NonNull final IPublicEvent event, @NonNull final IEventCheck<String> eventCheck);
 
-    IAmplifyStateTracker notifyEventTriggered(@NonNull final IEvent event);
+    IAmplifyStateTracker notifyEventTriggered(@NonNull final IPublicEvent event);
 
     void promptIfReady(@NonNull final AmplifyView amplifyView);
 

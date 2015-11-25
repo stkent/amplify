@@ -20,8 +20,8 @@ import android.support.annotation.NonNull;
 
 import com.github.stkent.amplify.ILogger;
 import com.github.stkent.amplify.tracking.interfaces.IApplicationInfoProvider;
-import com.github.stkent.amplify.tracking.interfaces.IEvent;
 import com.github.stkent.amplify.tracking.interfaces.IEventCheck;
+import com.github.stkent.amplify.tracking.interfaces.IPublicEvent;
 import com.github.stkent.amplify.tracking.interfaces.ISettings;
 
 import java.util.ArrayList;
@@ -29,14 +29,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public abstract class EventTracker<T> {
+public abstract class PublicEventTracker<T> {
 
     private static final String AMPLIFY_TRACKING_KEY_PREFIX = "AMPLIFY_";
 
     private final ILogger logger;
     private final IApplicationInfoProvider applicationInfoProvider;
     private final ISettings<T> settings;
-    private final ConcurrentHashMap<IEvent, List<IEventCheck<T>>> internalMap;
+    private final ConcurrentHashMap<IPublicEvent, List<IEventCheck<T>>> internalMap;
 
     /**
      * @return a key that uniquely identifies this event tracker within the
@@ -51,17 +51,14 @@ public abstract class EventTracker<T> {
     @NonNull
     protected abstract T getUpdatedTrackingValue(@NonNull final T cachedEventValue);
 
-    public EventTracker(
-            @NonNull final ILogger logger,
-            @NonNull final ISettings<T> settings,
-            @NonNull final IApplicationInfoProvider applicationInfoProvider) {
+    public PublicEventTracker(@NonNull final ILogger logger, @NonNull final ISettings<T> settings, @NonNull final IApplicationInfoProvider applicationInfoProvider) {
         this.logger = logger;
         this.settings = settings;
         this.applicationInfoProvider = applicationInfoProvider;
         this.internalMap = new ConcurrentHashMap<>();
     }
 
-    public void trackEvent(@NonNull final IEvent event, @NonNull final IEventCheck<T> eventCheck) {
+    public void trackEvent(@NonNull final IPublicEvent event, @NonNull final IEventCheck<T> eventCheck) {
         if (!containsEvent(event)) {
             internalMap.put(event, new ArrayList<IEventCheck<T>>());
         }
@@ -71,7 +68,7 @@ public abstract class EventTracker<T> {
         logger.d(internalMap.get(event).toString());
     }
 
-    public void notifyEventTriggered(@NonNull final IEvent event) {
+    public void notifyEventTriggered(@NonNull final IPublicEvent event) {
         if (containsEvent(event)) {
 
             final T cachedTrackingValue = getCachedTrackingValue(event);
@@ -91,8 +88,8 @@ public abstract class EventTracker<T> {
 
     public boolean allowFeedbackPrompt() {
 
-        for (final Map.Entry<IEvent, List<IEventCheck<T>>> eventCheckSet : internalMap.entrySet()) {
-            final IEvent event = eventCheckSet.getKey();
+        for (final Map.Entry<IPublicEvent, List<IEventCheck<T>>> eventCheckSet : internalMap.entrySet()) {
+            final IPublicEvent event = eventCheckSet.getKey();
 
             for (final IEventCheck<T> eventCheck : eventCheckSet.getValue()) {
                 final T cachedEventValue = getCachedTrackingValue(event);
@@ -109,7 +106,7 @@ public abstract class EventTracker<T> {
         return true;
     }
 
-    public boolean containsEvent(@NonNull final IEvent event) {
+    public boolean containsEvent(@NonNull final IPublicEvent event) {
         return internalMap.containsKey(event);
     }
 
@@ -121,14 +118,14 @@ public abstract class EventTracker<T> {
         return applicationInfoProvider;
     }
 
-    private String getTrackingKey(@NonNull final IEvent event) {
+    private String getTrackingKey(@NonNull final IPublicEvent event) {
         return AMPLIFY_TRACKING_KEY_PREFIX
                 + event.getTrackingKey()
                 + "_"
                 + this.getTrackingKeySuffix().toUpperCase();
     }
 
-    private T getCachedTrackingValue(@NonNull final IEvent event) {
+    private T getCachedTrackingValue(@NonNull final IPublicEvent event) {
         T value = settings.readTrackingValue(getTrackingKey(event));
         return value != null ? value : defaultTrackingValue();
     }

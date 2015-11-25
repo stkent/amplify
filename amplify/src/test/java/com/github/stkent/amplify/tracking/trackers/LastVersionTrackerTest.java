@@ -26,6 +26,7 @@ import com.github.stkent.amplify.helpers.FakeSettings;
 import com.github.stkent.amplify.tracking.interfaces.IApplicationInfoProvider;
 import com.github.stkent.amplify.tracking.interfaces.IEvent;
 import com.github.stkent.amplify.tracking.interfaces.IEventCheck;
+import com.github.stkent.amplify.tracking.interfaces.IPublicEvent;
 
 import org.junit.Test;
 import org.mockito.Mock;
@@ -45,7 +46,7 @@ public class LastVersionTrackerTest extends BaseTest {
     @Mock
     private IApplicationInfoProvider mockApplicationInfoProvider;
     @Mock
-    private IEvent mockEvent;
+    private IPublicEvent mockPublicEvent;
     @Mock
     private IEventCheck<String> mockEventCheck;
 
@@ -58,8 +59,8 @@ public class LastVersionTrackerTest extends BaseTest {
                 fakeSettings,
                 mockApplicationInfoProvider);
 
-        when(mockEvent.getTrackingKey()).thenReturn(DEFAULT_MOCK_EVENT_TRACKING_KEY);
-        lastVersionTracker.trackEvent(mockEvent, mockEventCheck);
+        when(mockPublicEvent.getTrackingKey()).thenReturn(DEFAULT_MOCK_EVENT_TRACKING_KEY);
+        lastVersionTracker.trackEvent(mockPublicEvent, mockEventCheck);
     }
 
     @Test
@@ -67,7 +68,7 @@ public class LastVersionTrackerTest extends BaseTest {
         // Arrange
         final String fakeVersionName = "any string";
 
-        final String expectedTrackingKey = getExpectedTrackingKeyForEvent(mockEvent);
+        final String expectedTrackingKey = getExpectedTrackingKeyForEvent(mockPublicEvent);
         assert fakeSettings.readTrackingValue(expectedTrackingKey) == null;
 
         // Act
@@ -91,7 +92,7 @@ public class LastVersionTrackerTest extends BaseTest {
         triggerEventForAppVersion(fakeVersionName);
 
         // Assert
-        final String trackedEventVersionName = fakeSettings.readTrackingValue(getExpectedTrackingKeyForEvent(mockEvent));
+        final String trackedEventVersionName = fakeSettings.readTrackingValue(getExpectedTrackingKeyForEvent(mockPublicEvent));
 
         assertEquals(
                 "The correct application version name should have been recorded",
@@ -112,7 +113,7 @@ public class LastVersionTrackerTest extends BaseTest {
         triggerEventForAppVersion(fakeSecondVersionName);
 
         // Assert
-        final String trackedEventVersionName = fakeSettings.readTrackingValue(getExpectedTrackingKeyForEvent(mockEvent));
+        final String trackedEventVersionName = fakeSettings.readTrackingValue(getExpectedTrackingKeyForEvent(mockPublicEvent));
 
         assertEquals(
                 "The correct (latest) application version name should have been recorded",
@@ -126,7 +127,7 @@ public class LastVersionTrackerTest extends BaseTest {
 
     private void triggerEventForAppVersion(@NonNull final String appVersionName) throws PackageManager.NameNotFoundException {
         when(mockApplicationInfoProvider.getVersionName()).thenReturn(appVersionName);
-        lastVersionTracker.notifyEventTriggered(mockEvent);
+        lastVersionTracker.notifyEventTriggered(mockPublicEvent);
     }
 
 }

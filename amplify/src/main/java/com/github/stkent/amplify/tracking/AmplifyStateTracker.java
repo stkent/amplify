@@ -29,8 +29,8 @@ import com.github.stkent.amplify.tracking.checks.WarmUpDaysCheck;
 import com.github.stkent.amplify.tracking.interfaces.IAmplifyStateTracker;
 import com.github.stkent.amplify.tracking.interfaces.IEnvironmentCheck;
 import com.github.stkent.amplify.tracking.interfaces.IEnvironmentInfoProvider;
-import com.github.stkent.amplify.tracking.interfaces.IEvent;
 import com.github.stkent.amplify.tracking.interfaces.IEventCheck;
+import com.github.stkent.amplify.tracking.interfaces.IPublicEvent;
 import com.github.stkent.amplify.tracking.trackers.FirstTimeTracker;
 import com.github.stkent.amplify.tracking.trackers.LastTimeTracker;
 import com.github.stkent.amplify.tracking.trackers.LastVersionTracker;
@@ -136,25 +136,25 @@ public final class AmplifyStateTracker implements IAmplifyStateTracker {
     }
 
     @Override
-    public IAmplifyStateTracker trackTotalEventCount(@NonNull final IEvent event, @NonNull final IEventCheck<Integer> eventCheck) {
+    public IAmplifyStateTracker trackTotalEventCount(@NonNull final IPublicEvent event, @NonNull final IEventCheck<Integer> eventCheck) {
         totalCountTracker.trackEvent(event, eventCheck);
         return this;
     }
 
     @Override
-    public IAmplifyStateTracker trackFirstEventTime(@NonNull final IEvent event, @NonNull final IEventCheck<Long> eventCheck) {
+    public IAmplifyStateTracker trackFirstEventTime(@NonNull final IPublicEvent event, @NonNull final IEventCheck<Long> eventCheck) {
         firstTimeTracker.trackEvent(event, eventCheck);
         return this;
     }
 
     @Override
-    public IAmplifyStateTracker trackLastEventTime(@NonNull final IEvent event, @NonNull final IEventCheck<Long> eventCheck) {
+    public IAmplifyStateTracker trackLastEventTime(@NonNull final IPublicEvent event, @NonNull final IEventCheck<Long> eventCheck) {
         lastTimeTracker.trackEvent(event, eventCheck);
         return this;
     }
 
     @Override
-    public IAmplifyStateTracker trackLastEventVersion(@NonNull final IEvent event, @NonNull final IEventCheck<String> eventCheck) {
+    public IAmplifyStateTracker trackLastEventVersion(@NonNull final IPublicEvent event, @NonNull final IEventCheck<String> eventCheck) {
         lastVersionTracker.trackEvent(event, eventCheck);
         return this;
     }
@@ -168,7 +168,7 @@ public final class AmplifyStateTracker implements IAmplifyStateTracker {
     // update methods
 
     @Override
-    public IAmplifyStateTracker notifyEventTriggered(@NonNull final IEvent event) {
+    public IAmplifyStateTracker notifyEventTriggered(@NonNull final IPublicEvent event) {
         logger.d("Triggered Event: " + event);
         totalCountTracker.notifyEventTriggered(event);
         firstTimeTracker.notifyEventTriggered(event);
