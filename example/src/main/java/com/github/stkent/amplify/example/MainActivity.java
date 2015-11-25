@@ -21,9 +21,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(final View v) {
-        AmplifyStateTracker.get(this)
-                .notifyEventTriggered(IntegratedEvent.APP_CRASHED)
-                .shouldAskForRating();
+        // fixme: replace with an example here
     }
 
 }

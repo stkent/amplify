@@ -22,9 +22,6 @@ import com.github.stkent.amplify.tracking.interfaces.IEvent;
 
 public enum IntegratedEvent implements IEvent {
 
-    APP_CRASHED,
-    APP_INSTALLED,
-    APP_UPDATED,
     USER_GAVE_CRITICAL_FEEDBACK,
     USER_GAVE_POSITIVE_FEEDBACK,
     USER_DECLINED_CRITICAL_FEEDBACK,

@@ -41,7 +41,8 @@ public class AmplifyExceptionHandler implements UncaughtExceptionHandler {
 
     @Override
     public void uncaughtException(final Thread thread, final Throwable throwable) {
-        amplifyStateTracker.notifyEventTriggered(IntegratedEvent.APP_CRASHED);
+        // fixme: replace this functionality
+//        amplifyStateTracker.notifyEventTriggered(IntegratedEvent.APP_CRASHED);
 
         // Call the original handler.
         defaultExceptionHandler.uncaughtException(thread, throwable);
