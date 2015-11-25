@@ -27,7 +27,7 @@ import com.github.stkent.amplify.tracking.Settings;
 import com.github.stkent.amplify.tracking.interfaces.IApplicationInfoProvider;
 import com.github.stkent.amplify.tracking.interfaces.ISettings;
 
-public class FirstTimeTracker extends PublicEventTracker<Long> {
+public class FirstTimeTracker extends EventTracker<Long> {
 
     public FirstTimeTracker(@NonNull final ILogger logger, @NonNull final Context applicationContext) {
         this(logger, new Settings<Long>(applicationContext, logger), new ApplicationInfoProvider(applicationContext));

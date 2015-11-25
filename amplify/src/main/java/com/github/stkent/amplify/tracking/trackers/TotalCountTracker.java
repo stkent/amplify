@@ -26,7 +26,7 @@ import com.github.stkent.amplify.tracking.Settings;
 import com.github.stkent.amplify.tracking.interfaces.IApplicationInfoProvider;
 import com.github.stkent.amplify.tracking.interfaces.ISettings;
 
-public class TotalCountTracker extends PublicEventTracker<Integer> {
+public class TotalCountTracker extends EventTracker<Integer> {
 
     public TotalCountTracker(@NonNull final ILogger logger, @NonNull final Context applicationContext) {
         this(logger, new Settings<Integer>(applicationContext, logger), new ApplicationInfoProvider(applicationContext));
