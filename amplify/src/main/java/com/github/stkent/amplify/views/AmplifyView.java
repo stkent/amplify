@@ -33,7 +33,7 @@ import com.github.stkent.amplify.R;
 import com.github.stkent.amplify.tracking.AmplifyStateTracker;
 import com.github.stkent.amplify.tracking.ApplicationInfoProvider;
 import com.github.stkent.amplify.tracking.EnvironmentInfoProvider;
-import com.github.stkent.amplify.tracking.IntegratedEvent;
+import com.github.stkent.amplify.tracking.AmplifyViewEvent;
 import com.github.stkent.amplify.tracking.interfaces.IAmplifyStateTracker;
 import com.github.stkent.amplify.utils.FeedbackUtil;
 import com.github.stkent.amplify.utils.PlayStoreUtil;
@@ -257,12 +257,12 @@ public class AmplifyView extends FrameLayout {
                     askSecondQuestion();
                     break;
                 case POSITIVE:
-                    amplifyStateTracker.notifyEventTriggered(IntegratedEvent.USER_GAVE_POSITIVE_FEEDBACK);
+                    amplifyStateTracker.notifyEventTriggered(AmplifyViewEvent.USER_GAVE_POSITIVE_FEEDBACK);
                     thankUser();
                     respondToPositiveFeedback();
                     break;
                 case NEGATIVE:
-                    amplifyStateTracker.notifyEventTriggered(IntegratedEvent.USER_GAVE_CRITICAL_FEEDBACK);
+                    amplifyStateTracker.notifyEventTriggered(AmplifyViewEvent.USER_GAVE_CRITICAL_FEEDBACK);
                     thankUser();
                     respondToNegativeFeedback();
                     break;
@@ -285,11 +285,11 @@ public class AmplifyView extends FrameLayout {
                     break;
                 case POSITIVE:
                     hide();
-                    amplifyStateTracker.notifyEventTriggered(IntegratedEvent.USER_DECLINED_POSITIVE_FEEDBACK);
+                    amplifyStateTracker.notifyEventTriggered(AmplifyViewEvent.USER_DECLINED_POSITIVE_FEEDBACK);
                     break;
                 case NEGATIVE:
                     hide();
-                    amplifyStateTracker.notifyEventTriggered(IntegratedEvent.USER_DECLINED_CRITICAL_FEEDBACK);
+                    amplifyStateTracker.notifyEventTriggered(AmplifyViewEvent.USER_DECLINED_CRITICAL_FEEDBACK);
                     break;
                 default:
                     break;
