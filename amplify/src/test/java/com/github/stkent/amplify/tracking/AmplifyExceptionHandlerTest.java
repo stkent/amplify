@@ -22,10 +22,10 @@ import com.github.stkent.amplify.tracking.interfaces.IAmplifyStateTracker;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
-import org.mockito.Matchers;
 import org.mockito.Mock;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -51,8 +51,7 @@ public class AmplifyExceptionHandlerTest extends BaseTest {
         amplifyExceptionHandler.uncaughtException(new Thread(), expectedThrowable);
 
         // Assert
-        verify(mockDefaultExceptionHandler, times(1))
-                .uncaughtException(Matchers.any(Thread.class), throwableCaptor.capture());
+        verify(mockDefaultExceptionHandler, times(1)).uncaughtException(any(Thread.class), throwableCaptor.capture());
 
         final Throwable actualThrowable = throwableCaptor.getValue();
 
