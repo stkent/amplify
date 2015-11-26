@@ -45,7 +45,7 @@ public class GooglePlayStoreIsAvailableCheckTest extends BaseTest {
 
         // Act
         final boolean isEnvironmentCheckMet =
-                googlePlayStoreIsAvailableCheck.isMet(mockEnvironmentInfoProvider);
+                googlePlayStoreIsAvailableCheck.isSatisfied(mockEnvironmentInfoProvider);
 
         // Assert
         assertTrue("Environment check should be met", isEnvironmentCheckMet);
@@ -58,7 +58,7 @@ public class GooglePlayStoreIsAvailableCheckTest extends BaseTest {
 
         // Act
         final boolean isEnvironmentCheckMet =
-                googlePlayStoreIsAvailableCheck.isMet(mockEnvironmentInfoProvider);
+                googlePlayStoreIsAvailableCheck.isSatisfied(mockEnvironmentInfoProvider);
 
         // Assert
         assertFalse("Environment check should not be met", isEnvironmentCheckMet);

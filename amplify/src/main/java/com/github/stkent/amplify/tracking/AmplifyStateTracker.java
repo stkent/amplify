@@ -53,8 +53,8 @@ public final class AmplifyStateTracker implements IAmplifyStateTracker {
 
     // instance fields
 
-    private final IEnvironmentInfoProvider applicationInfoProvider;
-    private final List<IEnvironmentCheck> environmentRequirements = new ArrayList<>();
+    private final IEnvironmentInfoProvider environmentInfoProvider;
+    private final List<IEnvironmentCheck> environmentChecks = new ArrayList<>();
     private final LastTimeTracker lastTimeTracker;
     private final FirstTimeTracker firstTimeTracker;
     private final LastVersionTracker lastVersionTracker;
@@ -83,7 +83,7 @@ public final class AmplifyStateTracker implements IAmplifyStateTracker {
             @NonNull final Context context,
             @NonNull final ILogger logger) {
         final Context applicationContext = context.getApplicationContext();
-        this.applicationInfoProvider = new EnvironmentInfoProvider(applicationContext);
+        this.environmentInfoProvider = new EnvironmentInfoProvider(applicationContext);
         this.logger = logger;
         this.lastTimeTracker = new LastTimeTracker(logger, applicationContext);
         this.firstTimeTracker = new FirstTimeTracker(logger, applicationContext);
@@ -201,8 +201,8 @@ public final class AmplifyStateTracker implements IAmplifyStateTracker {
     }
 
     @Override
-    public IAmplifyStateTracker addEnvironmentCheck(@NonNull final IEnvironmentCheck requirement) {
-        environmentRequirements.add(requirement);
+    public IAmplifyStateTracker addEnvironmentCheck(@NonNull final IEnvironmentCheck environmentCheck) {
+        environmentChecks.add(environmentCheck);
         return this;
     }
 
@@ -230,7 +230,7 @@ public final class AmplifyStateTracker implements IAmplifyStateTracker {
 
     @Override
     public boolean shouldAskForRating() {
-        return alwaysShow | (allEnvironmentRequirementsMet()
+        return alwaysShow | (allEnvironmentChecksMet()
                 & totalCountTracker.allowFeedbackPrompt()
                 & firstTimeTracker.allowFeedbackPrompt()
                 & lastTimeTracker.allowFeedbackPrompt()
@@ -239,10 +239,10 @@ public final class AmplifyStateTracker implements IAmplifyStateTracker {
 
     // private implementation:
 
-    private boolean allEnvironmentRequirementsMet() {
-        for (final IEnvironmentCheck environmentRequirement : environmentRequirements) {
-            if (!environmentRequirement.isMet(applicationInfoProvider)) {
-                logger.d("Environment requirement not met: " + environmentRequirement);
+    private boolean allEnvironmentChecksMet() {
+        for (final IEnvironmentCheck environmentCheck : environmentChecks) {
+            if (!environmentCheck.isSatisfied(environmentInfoProvider)) {
+                logger.d("Environment check not satisfied: " + environmentCheck);
                 return false;
             }
         }
