@@ -23,5 +23,5 @@ android {
 dependencies {
     testCompile 'junit:junit:4.12'
     compile project(':amplify')
-    compile 'com.android.support:appcompat-v7:23.1.0'
+    compile 'com.android.support:appcompat-v7:23.1.1'
 }
