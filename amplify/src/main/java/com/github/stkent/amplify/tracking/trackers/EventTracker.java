@@ -21,6 +21,7 @@ import android.support.annotation.NonNull;
 import com.github.stkent.amplify.ILogger;
 import com.github.stkent.amplify.tracking.interfaces.IApplicationInfoProvider;
 import com.github.stkent.amplify.tracking.interfaces.IEventCheck;
+import com.github.stkent.amplify.tracking.interfaces.IEventTracker;
 import com.github.stkent.amplify.tracking.interfaces.IPublicEvent;
 import com.github.stkent.amplify.tracking.interfaces.ISettings;
 
@@ -29,7 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public abstract class EventTracker<T> {
+public abstract class EventTracker<T> implements IEventTracker<T> {
 
     private static final String AMPLIFY_TRACKING_KEY_PREFIX = "AMPLIFY_";
 
@@ -58,6 +59,7 @@ public abstract class EventTracker<T> {
         this.internalMap = new ConcurrentHashMap<>();
     }
 
+    @Override
     public void trackEvent(@NonNull final IPublicEvent event, @NonNull final IEventCheck<T> eventCheck) {
         if (!containsEvent(event)) {
             internalMap.put(event, new ArrayList<IEventCheck<T>>());
@@ -68,6 +70,7 @@ public abstract class EventTracker<T> {
         logger.d(internalMap.get(event).toString());
     }
 
+    @Override
     public void notifyEventTriggered(@NonNull final IPublicEvent event) {
         if (containsEvent(event)) {
 
