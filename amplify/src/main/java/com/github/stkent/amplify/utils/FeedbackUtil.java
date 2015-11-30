@@ -88,7 +88,7 @@ public final class FeedbackUtil {
         String applicationVersionDisplayString;
 
         try {
-            applicationVersionDisplayString = applicationInfoProvider.getApplicationVersionDisplayString();
+            applicationVersionDisplayString = applicationInfoProvider.getVersionDisplayString();
         } catch (PackageManager.NameNotFoundException e) {
             logger.e("Unable to determine application version information.");
 

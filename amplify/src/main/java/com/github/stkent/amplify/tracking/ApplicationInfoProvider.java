@@ -17,6 +17,7 @@
 package com.github.stkent.amplify.tracking;
 
 import android.content.Context;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.support.annotation.NonNull;
@@ -33,16 +34,26 @@ public class ApplicationInfoProvider implements IApplicationInfoProvider {
         this.applicationContext = context.getApplicationContext();
     }
 
-    @NonNull
     @Override
-    public String getVersionName() throws PackageManager.NameNotFoundException {
-        return ApplicationUtils.getPackageInfo(applicationContext, 0).versionName;
+    public long getFirstInstalledTimeMs() throws PackageManager.NameNotFoundException {
+        return getPackageInto().firstInstallTime;
+    }
+
+    @Override
+    public long getLastUpdatedTimeMs() throws PackageManager.NameNotFoundException {
+        return getPackageInto().lastUpdateTime;
     }
 
     @NonNull
     @Override
-    public String getApplicationVersionDisplayString() throws PackageManager.NameNotFoundException {
-        final int applicationVersionCode = ApplicationUtils.getPackageInfo(applicationContext, 0).versionCode;
+    public String getVersionName() throws PackageManager.NameNotFoundException {
+        return getPackageInto().versionName;
+    }
+
+    @NonNull
+    @Override
+    public String getVersionDisplayString() throws PackageManager.NameNotFoundException {
+        final int applicationVersionCode = getPackageInto().versionCode;
 
         // todo: prefer String.format here
         return getVersionName() + " (" + applicationVersionCode + ")";
@@ -57,6 +68,10 @@ public class ApplicationInfoProvider implements IApplicationInfoProvider {
             throw new IllegalArgumentException("R.string.amp_feedback_email"
                     + "resource not found, you must set this in your strings file for the feedback util to function", e);
         }
+    }
+
+    private PackageInfo getPackageInto() throws PackageManager.NameNotFoundException {
+        return ApplicationUtils.getPackageInfo(applicationContext, 0);
     }
 
 }

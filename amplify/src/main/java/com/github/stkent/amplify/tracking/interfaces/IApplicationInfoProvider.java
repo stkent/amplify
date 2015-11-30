@@ -22,11 +22,15 @@ import android.support.annotation.NonNull;
 
 public interface IApplicationInfoProvider {
 
+    long getFirstInstalledTimeMs() throws PackageManager.NameNotFoundException;
+
+    long getLastUpdatedTimeMs() throws PackageManager.NameNotFoundException;
+
     @NonNull
     String getVersionName() throws PackageManager.NameNotFoundException;
 
     @NonNull
-    String getApplicationVersionDisplayString() throws PackageManager.NameNotFoundException;
+    String getVersionDisplayString() throws PackageManager.NameNotFoundException;
 
     @NonNull
     String getFeedbackEmailAddress() throws Resources.NotFoundException;
