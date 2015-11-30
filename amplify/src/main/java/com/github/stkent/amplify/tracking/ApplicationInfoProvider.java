@@ -20,11 +20,13 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.os.Build;
 import android.support.annotation.NonNull;
 
 import com.github.stkent.amplify.R;
 import com.github.stkent.amplify.tracking.interfaces.IApplicationInfoProvider;
 import com.github.stkent.amplify.utils.ApplicationUtils;
+import com.github.stkent.amplify.utils.StringUtils;
 
 public class ApplicationInfoProvider implements IApplicationInfoProvider {
 
@@ -42,6 +44,23 @@ public class ApplicationInfoProvider implements IApplicationInfoProvider {
     @Override
     public long getLastUpdatedTimeMs() throws PackageManager.NameNotFoundException {
         return getPackageInto().lastUpdateTime;
+    }
+
+    @NonNull
+    @Override
+    public String getDeviceName() {
+        final String manufacturer = Build.MANUFACTURER;
+        final String model = Build.MODEL;
+
+        String deviceName;
+
+        if (model.startsWith(manufacturer)) {
+            deviceName = StringUtils.capitalize(model);
+        } else {
+            deviceName = StringUtils.capitalize(manufacturer) + " " + model;
+        }
+
+        return deviceName == null ? "Unknown Device" : deviceName;
     }
 
     @NonNull

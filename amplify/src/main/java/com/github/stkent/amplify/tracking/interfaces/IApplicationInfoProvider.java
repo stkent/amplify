@@ -27,6 +27,9 @@ public interface IApplicationInfoProvider {
     long getLastUpdatedTimeMs() throws PackageManager.NameNotFoundException;
 
     @NonNull
+    String getDeviceName();
+
+    @NonNull
     String getVersionName() throws PackageManager.NameNotFoundException;
 
     @NonNull

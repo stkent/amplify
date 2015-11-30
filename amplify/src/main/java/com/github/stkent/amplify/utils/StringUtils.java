@@ -40,6 +40,34 @@ public final class StringUtils {
     }
 
     /**
+     * Capitalizes a String changing the first letter to title case
+     *
+     * @param string the String to capitalize, may be null
+     * @return the String with the first letter capitalized or null
+     */
+    @Nullable
+    public static String capitalize(@Nullable final String string) {
+        if (isBlank(string)) {
+            return string;
+        }
+
+        final char firstChar = string.charAt(0);
+        final char newChar = Character.toUpperCase(firstChar);
+        if (firstChar == newChar) {
+            return string;
+        }
+
+        int strLen = string.length();
+
+        char[] newChars = new char[strLen];
+        newChars[0] = newChar;
+        string.getChars(1, strLen, newChars, 1);
+
+        return String.valueOf(newChars);
+    }
+
+
+    /**
      * Checks if a CharSequence is whitespace, empty ("") or null.
      *
      * @param charSequence the CharSequence to check, may be null
