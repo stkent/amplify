@@ -31,10 +31,10 @@ import com.github.stkent.amplify.tracking.interfaces.IEnvironmentCheck;
 import com.github.stkent.amplify.tracking.interfaces.IEnvironmentInfoProvider;
 import com.github.stkent.amplify.tracking.interfaces.IEventCheck;
 import com.github.stkent.amplify.tracking.interfaces.IPublicEvent;
-import com.github.stkent.amplify.tracking.trackers.FirstTimeTracker;
-import com.github.stkent.amplify.tracking.trackers.LastTimeTracker;
-import com.github.stkent.amplify.tracking.trackers.LastVersionTracker;
-import com.github.stkent.amplify.tracking.trackers.TotalCountTracker;
+import com.github.stkent.amplify.tracking.trackers.FirstEventTimesManager;
+import com.github.stkent.amplify.tracking.trackers.LastEventTimesManager;
+import com.github.stkent.amplify.tracking.trackers.LastEventVersionsManager;
+import com.github.stkent.amplify.tracking.trackers.TotalEventCountsManager;
 import com.github.stkent.amplify.views.AmplifyView;
 
 import java.util.ArrayList;
@@ -53,10 +53,10 @@ public final class AmplifyStateTracker implements IAmplifyStateTracker {
     private final Context applicationContext;
     private final IEnvironmentInfoProvider environmentInfoProvider;
     private final List<IEnvironmentCheck> environmentChecks = new ArrayList<>();
-    private final LastTimeTracker lastTimeTracker;
-    private final FirstTimeTracker firstTimeTracker;
-    private final LastVersionTracker lastVersionTracker;
-    private final TotalCountTracker totalCountTracker;
+    private final LastEventTimesManager lastEventTimesManager;
+    private final FirstEventTimesManager firstEventTimesManager;
+    private final LastEventVersionsManager lastEventVersionsManager;
+    private final TotalEventCountsManager totalEventCountsManager;
     private final ILogger logger;
 
     private boolean alwaysShow;
@@ -83,10 +83,10 @@ public final class AmplifyStateTracker implements IAmplifyStateTracker {
         this.applicationContext = context.getApplicationContext();
         this.environmentInfoProvider = new EnvironmentInfoProvider(applicationContext);
         this.logger = logger;
-        this.lastTimeTracker = new LastTimeTracker(logger, applicationContext);
-        this.firstTimeTracker = new FirstTimeTracker(logger, applicationContext);
-        this.lastVersionTracker = new LastVersionTracker(logger, applicationContext);
-        this.totalCountTracker = new TotalCountTracker(logger, applicationContext);
+        this.lastEventTimesManager = new LastEventTimesManager(logger, applicationContext);
+        this.firstEventTimesManager = new FirstEventTimesManager(logger, applicationContext);
+        this.lastEventVersionsManager = new LastEventVersionsManager(logger, applicationContext);
+        this.totalEventCountsManager = new TotalEventCountsManager(logger, applicationContext);
     }
 
     // configuration methods
@@ -138,25 +138,25 @@ public final class AmplifyStateTracker implements IAmplifyStateTracker {
 
     @Override
     public IAmplifyStateTracker trackTotalEventCount(@NonNull final IPublicEvent event, @NonNull final IEventCheck<Integer> eventCheck) {
-        totalCountTracker.trackEvent(event, eventCheck);
+        totalEventCountsManager.trackEvent(event, eventCheck);
         return this;
     }
 
     @Override
     public IAmplifyStateTracker trackFirstEventTime(@NonNull final IPublicEvent event, @NonNull final IEventCheck<Long> eventCheck) {
-        firstTimeTracker.trackEvent(event, eventCheck);
+        firstEventTimesManager.trackEvent(event, eventCheck);
         return this;
     }
 
     @Override
     public IAmplifyStateTracker trackLastEventTime(@NonNull final IPublicEvent event, @NonNull final IEventCheck<Long> eventCheck) {
-        lastTimeTracker.trackEvent(event, eventCheck);
+        lastEventTimesManager.trackEvent(event, eventCheck);
         return this;
     }
 
     @Override
     public IAmplifyStateTracker trackLastEventVersion(@NonNull final IPublicEvent event, @NonNull final IEventCheck<String> eventCheck) {
-        lastVersionTracker.trackEvent(event, eventCheck);
+        lastEventVersionsManager.trackEvent(event, eventCheck);
         return this;
     }
 
@@ -171,10 +171,10 @@ public final class AmplifyStateTracker implements IAmplifyStateTracker {
     @Override
     public IAmplifyStateTracker notifyEventTriggered(@NonNull final IPublicEvent event) {
         logger.d("Triggered Event: " + event);
-        totalCountTracker.notifyEventTriggered(event);
-        firstTimeTracker.notifyEventTriggered(event);
-        lastTimeTracker.notifyEventTriggered(event);
-        lastVersionTracker.notifyEventTriggered(event);
+        totalEventCountsManager.notifyEventTriggered(event);
+        firstEventTimesManager.notifyEventTriggered(event);
+        lastEventTimesManager.notifyEventTriggered(event);
+        lastEventVersionsManager.notifyEventTriggered(event);
         return this;
     }
 
@@ -191,10 +191,10 @@ public final class AmplifyStateTracker implements IAmplifyStateTracker {
     @Override
     public boolean shouldAskForRating() {
         return alwaysShow | (allEnvironmentChecksMet()
-                & totalCountTracker.allowFeedbackPrompt()
-                & firstTimeTracker.allowFeedbackPrompt()
-                & lastTimeTracker.allowFeedbackPrompt()
-                & lastVersionTracker.allowFeedbackPrompt());
+                & totalEventCountsManager.shouldAllowFeedbackPrompt()
+                & firstEventTimesManager.shouldAllowFeedbackPrompt()
+                & lastEventTimesManager.shouldAllowFeedbackPrompt()
+                & lastEventVersionsManager.shouldAllowFeedbackPrompt());
     }
 
     // private implementation:

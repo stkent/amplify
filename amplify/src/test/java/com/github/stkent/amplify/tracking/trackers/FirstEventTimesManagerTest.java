@@ -17,7 +17,6 @@
 package com.github.stkent.amplify.tracking.trackers;
 
 import android.annotation.SuppressLint;
-import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 
 import com.github.stkent.amplify.ILogger;
@@ -31,15 +30,17 @@ import com.github.stkent.amplify.tracking.interfaces.IPublicEvent;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import java.util.concurrent.TimeUnit;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
 
-public class LastVersionTrackerTest extends BaseTest {
+public class FirstEventTimesManagerTest extends BaseTest {
 
-    private LastVersionTracker lastVersionTracker;
+    private FirstEventTimesManager firstEventTimesManager;
 
-    private FakeSettings<String> fakeSettings;
+    private FakeSettings<Long> fakeSettings;
 
     @Mock
     private ILogger mockLogger;
@@ -48,86 +49,83 @@ public class LastVersionTrackerTest extends BaseTest {
     @Mock
     private IPublicEvent mockPublicEvent;
     @Mock
-    private IEventCheck<String> mockEventCheck;
+    private IEventCheck<Long> mockEventCheck;
 
     @Override
     public void localSetUp() {
         fakeSettings = new FakeSettings<>();
 
-        lastVersionTracker = new LastVersionTracker(
+        firstEventTimesManager = new FirstEventTimesManager(
                 mockLogger,
                 fakeSettings,
                 mockApplicationInfoProvider);
 
         when(mockPublicEvent.getTrackingKey()).thenReturn(DEFAULT_MOCK_EVENT_TRACKING_KEY);
-        lastVersionTracker.trackEvent(mockPublicEvent, mockEventCheck);
+        firstEventTimesManager.trackEvent(mockPublicEvent, mockEventCheck);
     }
 
     @Test
-    public void testThatEventsAreSavedWithCorrectTrackingKey() throws PackageManager.NameNotFoundException {
+    public void testThatEventsAreSavedWithCorrectTrackingKey() {
         // Arrange
-        final String fakeVersionName = "any string";
-
         final String expectedTrackingKey = getExpectedTrackingKeyForEvent(mockPublicEvent);
         assert fakeSettings.readTrackingValue(expectedTrackingKey) == null;
 
         // Act
-        triggerEventForAppVersion(fakeVersionName);
+        firstEventTimesManager.notifyEventTriggered(mockPublicEvent);
 
         // Assert
-        final String trackedEventVersionName = fakeSettings.readTrackingValue(expectedTrackingKey);
+        final Long trackedEventTime = fakeSettings.readTrackingValue(expectedTrackingKey);
 
         assertNotNull(
                 "The event time should have been saved using the correct tracking key",
-                trackedEventVersionName);
+                trackedEventTime);
+    }
+
+    @Test
+    public void testThatFirstEventTimeIsRecorded() {
+        // Arrange
+        final long fakeEventTime = MARCH_18_2014_838PM_UTC;
+
+        // Act
+        triggerEventAtTime(fakeEventTime);
+
+        // Assert
+        final Long trackedEventTime = fakeSettings.readTrackingValue(getExpectedTrackingKeyForEvent(mockPublicEvent));
+
+        assertEquals(
+                "The correct time should have been recorded for this event",
+                Long.valueOf(fakeEventTime),
+                trackedEventTime);
     }
 
     @SuppressLint("Assert")
     @Test
-    public void testThatFirstApplicationVersionNameIsRecorded() throws PackageManager.NameNotFoundException {
+    public void testThatOnlyFirstEventTimeIsRecorded() {
         // Arrange
-        final String fakeVersionName = "any string";
+        final long fakeEventTimeEarlier = MARCH_18_2014_838PM_UTC;
+        final long fakeEventTimeLater = fakeEventTimeEarlier + TimeUnit.DAYS.toMillis(1);
+        assert fakeEventTimeEarlier < fakeEventTimeLater;
 
         // Act
-        triggerEventForAppVersion(fakeVersionName);
+        triggerEventAtTime(fakeEventTimeEarlier);
+        triggerEventAtTime(fakeEventTimeLater);
 
         // Assert
-        final String trackedEventVersionName = fakeSettings.readTrackingValue(getExpectedTrackingKeyForEvent(mockPublicEvent));
+        final Long trackedEventTime = fakeSettings.readTrackingValue(getExpectedTrackingKeyForEvent(mockPublicEvent));
 
         assertEquals(
-                "The correct application version name should have been recorded",
-                fakeVersionName,
-                trackedEventVersionName);
-    }
-
-    @SuppressLint("Assert")
-    @Test
-    public void testThatSecondApplicationVersionNameIsRecorded() throws PackageManager.NameNotFoundException {
-        // Arrange
-        final String fakeFirstVersionName = "any string";
-        final String fakeSecondVersionName = "any other string";
-        assert !fakeFirstVersionName.equals(fakeSecondVersionName);
-
-        // Act
-        triggerEventForAppVersion(fakeFirstVersionName);
-        triggerEventForAppVersion(fakeSecondVersionName);
-
-        // Assert
-        final String trackedEventVersionName = fakeSettings.readTrackingValue(getExpectedTrackingKeyForEvent(mockPublicEvent));
-
-        assertEquals(
-                "The correct (latest) application version name should have been recorded",
-                fakeSecondVersionName,
-                trackedEventVersionName);
+                "The correct (earliest) time should have been recorded for this event",
+                Long.valueOf(fakeEventTimeEarlier),
+                trackedEventTime);
     }
 
     private String getExpectedTrackingKeyForEvent(@NonNull final IEvent event) {
-        return "AMPLIFY_" + event.getTrackingKey() + "_LASTVERSIONTRACKER";
+        return "AMPLIFY_" + event.getTrackingKey() + "_FIRSTEVENTTIMESMANAGER";
     }
 
-    private void triggerEventForAppVersion(@NonNull final String appVersionName) throws PackageManager.NameNotFoundException {
-        when(mockApplicationInfoProvider.getVersionName()).thenReturn(appVersionName);
-        lastVersionTracker.notifyEventTriggered(mockPublicEvent);
+    private void triggerEventAtTime(final long time) {
+        setFakeCurrentTimeMillis(time);
+        firstEventTimesManager.notifyEventTriggered(mockPublicEvent);
     }
 
 }

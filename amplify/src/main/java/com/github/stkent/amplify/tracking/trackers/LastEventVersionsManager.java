@@ -27,14 +27,14 @@ import com.github.stkent.amplify.tracking.Settings;
 import com.github.stkent.amplify.tracking.interfaces.IApplicationInfoProvider;
 import com.github.stkent.amplify.tracking.interfaces.ISettings;
 
-public class LastVersionTracker extends EventTracker<String> {
+public class LastEventVersionsManager extends BaseEventManager<String> {
 
-    public LastVersionTracker(@NonNull final ILogger logger, @NonNull final Context applicationContext) {
+    public LastEventVersionsManager(@NonNull final ILogger logger, @NonNull final Context applicationContext) {
         this(logger, new Settings<String>(applicationContext, logger), new ApplicationInfoProvider(applicationContext));
     }
 
     @VisibleForTesting
-    protected LastVersionTracker(
+    protected LastEventVersionsManager(
             @NonNull final ILogger logger,
             @NonNull final ISettings<String> settings,
             @NonNull final IApplicationInfoProvider applicationInfoProvider) {

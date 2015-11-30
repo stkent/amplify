@@ -27,14 +27,14 @@ import com.github.stkent.amplify.tracking.Settings;
 import com.github.stkent.amplify.tracking.interfaces.IApplicationInfoProvider;
 import com.github.stkent.amplify.tracking.interfaces.ISettings;
 
-public class LastTimeTracker extends EventTracker<Long> {
+public class LastEventTimesManager extends BaseEventManager<Long> {
 
-    public LastTimeTracker(@NonNull final ILogger logger, @NonNull final Context applicationContext) {
+    public LastEventTimesManager(@NonNull final ILogger logger, @NonNull final Context applicationContext) {
         this(logger, new Settings<Long>(applicationContext, logger), new ApplicationInfoProvider(applicationContext));
     }
 
     @VisibleForTesting
-    protected LastTimeTracker(
+    protected LastEventTimesManager(
             @NonNull final ILogger logger,
             @NonNull final ISettings<Long> settings,
             @NonNull final IApplicationInfoProvider applicationInfoProvider) {

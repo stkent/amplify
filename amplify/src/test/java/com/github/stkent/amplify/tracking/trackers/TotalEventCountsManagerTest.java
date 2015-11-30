@@ -34,9 +34,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
 
-public class TotalCountTrackerTest extends BaseTest {
+public class TotalEventCountsManagerTest extends BaseTest {
 
-    private TotalCountTracker totalCountTracker;
+    private TotalEventCountsManager totalEventCountsManager;
 
     private FakeSettings<Integer> fakeSettings;
 
@@ -53,13 +53,13 @@ public class TotalCountTrackerTest extends BaseTest {
     public void localSetUp() {
         fakeSettings = new FakeSettings<>();
 
-        totalCountTracker = new TotalCountTracker(
+        totalEventCountsManager = new TotalEventCountsManager(
                 mockLogger,
                 fakeSettings,
                 mockApplicationInfoProvider);
 
         when(mockPublicEvent.getTrackingKey()).thenReturn(DEFAULT_MOCK_EVENT_TRACKING_KEY);
-        totalCountTracker.trackEvent(mockPublicEvent, mockEventCheck);
+        totalEventCountsManager.trackEvent(mockPublicEvent, mockEventCheck);
     }
 
     @Test
@@ -69,7 +69,7 @@ public class TotalCountTrackerTest extends BaseTest {
         assert fakeSettings.readTrackingValue(expectedTrackingKey) == null;
 
         // Act
-        totalCountTracker.notifyEventTriggered(mockPublicEvent);
+        totalEventCountsManager.notifyEventTriggered(mockPublicEvent);
 
         // Assert
         final Integer trackedTotalEventCount = fakeSettings.readTrackingValue(expectedTrackingKey);
@@ -83,14 +83,14 @@ public class TotalCountTrackerTest extends BaseTest {
     @Test
     public void testThatCorrectNumberOfEventsIsRecorded() {
         // Arrange
-        totalCountTracker.trackEvent(mockPublicEvent, mockEventCheck);
+        totalEventCountsManager.trackEvent(mockPublicEvent, mockEventCheck);
 
         final Integer expectedEventCount = 7;
         assert expectedEventCount > 0;
 
         // Act
         for (int i = 0; i < expectedEventCount; i++) {
-            totalCountTracker.notifyEventTriggered(mockPublicEvent);
+            totalEventCountsManager.notifyEventTriggered(mockPublicEvent);
         }
 
         // Assert
@@ -103,7 +103,7 @@ public class TotalCountTrackerTest extends BaseTest {
     }
 
     private String getExpectedTrackingKeyForEvent(@NonNull final IEvent event) {
-        return "AMPLIFY_" + event.getTrackingKey() + "_TOTALCOUNTTRACKER";
+        return "AMPLIFY_" + event.getTrackingKey() + "_TOTALEVENTCOUNTSMANAGER";
     }
 
 }

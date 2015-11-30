@@ -22,21 +22,20 @@ import android.support.annotation.VisibleForTesting;
 
 import com.github.stkent.amplify.ILogger;
 import com.github.stkent.amplify.tracking.ApplicationInfoProvider;
-import com.github.stkent.amplify.utils.time.SystemTimeUtil;
 import com.github.stkent.amplify.tracking.Settings;
 import com.github.stkent.amplify.tracking.interfaces.IApplicationInfoProvider;
 import com.github.stkent.amplify.tracking.interfaces.ISettings;
 
-public class FirstTimeTracker extends EventTracker<Long> {
+public class TotalEventCountsManager extends BaseEventManager<Integer> {
 
-    public FirstTimeTracker(@NonNull final ILogger logger, @NonNull final Context applicationContext) {
-        this(logger, new Settings<Long>(applicationContext, logger), new ApplicationInfoProvider(applicationContext));
+    public TotalEventCountsManager(@NonNull final ILogger logger, @NonNull final Context applicationContext) {
+        this(logger, new Settings<Integer>(applicationContext, logger), new ApplicationInfoProvider(applicationContext));
     }
 
     @VisibleForTesting
-    protected FirstTimeTracker(
+    protected TotalEventCountsManager(
             @NonNull final ILogger logger,
-            @NonNull final ISettings<Long> settings,
+            @NonNull final ISettings<Integer> settings,
             @NonNull final IApplicationInfoProvider applicationInfoProvider) {
         super(logger, settings, applicationInfoProvider);
     }
@@ -49,18 +48,14 @@ public class FirstTimeTracker extends EventTracker<Long> {
 
     @NonNull
     @Override
-    public Long defaultTrackingValue() {
-        return Long.MAX_VALUE;
+    public Integer defaultTrackingValue() {
+        return 0;
     }
 
     @NonNull
     @Override
-    public Long getUpdatedTrackingValue(@NonNull final Long cachedTrackingValue) {
-        if (cachedTrackingValue == Long.MAX_VALUE) {
-            return Math.min(cachedTrackingValue, SystemTimeUtil.currentTimeMillis());
-        }
-
-        return cachedTrackingValue;
+    public Integer getUpdatedTrackingValue(@NonNull final Integer cachedTrackingValue) {
+        return cachedTrackingValue + 1;
     }
 
 }

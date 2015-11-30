@@ -36,9 +36,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
 
-public class FirstTimeTrackerTest extends BaseTest {
+public class LastEventTimesManagerTest extends BaseTest {
 
-    private FirstTimeTracker firstTimeTracker;
+    private LastEventTimesManager lastEventTimesManager;
 
     private FakeSettings<Long> fakeSettings;
 
@@ -55,13 +55,13 @@ public class FirstTimeTrackerTest extends BaseTest {
     public void localSetUp() {
         fakeSettings = new FakeSettings<>();
 
-        firstTimeTracker = new FirstTimeTracker(
+        lastEventTimesManager = new LastEventTimesManager(
                 mockLogger,
                 fakeSettings,
                 mockApplicationInfoProvider);
 
         when(mockPublicEvent.getTrackingKey()).thenReturn(DEFAULT_MOCK_EVENT_TRACKING_KEY);
-        firstTimeTracker.trackEvent(mockPublicEvent, mockEventCheck);
+        lastEventTimesManager.trackEvent(mockPublicEvent, mockEventCheck);
     }
 
     @Test
@@ -71,7 +71,7 @@ public class FirstTimeTrackerTest extends BaseTest {
         assert fakeSettings.readTrackingValue(expectedTrackingKey) == null;
 
         // Act
-        firstTimeTracker.notifyEventTriggered(mockPublicEvent);
+        lastEventTimesManager.notifyEventTriggered(mockPublicEvent);
 
         // Assert
         final Long trackedEventTime = fakeSettings.readTrackingValue(expectedTrackingKey);
@@ -87,7 +87,7 @@ public class FirstTimeTrackerTest extends BaseTest {
         final long fakeEventTime = MARCH_18_2014_838PM_UTC;
 
         // Act
-        triggerEventAtTime(fakeEventTime);
+        triggerEventAtTime(mockPublicEvent, fakeEventTime);
 
         // Assert
         final Long trackedEventTime = fakeSettings.readTrackingValue(getExpectedTrackingKeyForEvent(mockPublicEvent));
@@ -100,32 +100,32 @@ public class FirstTimeTrackerTest extends BaseTest {
 
     @SuppressLint("Assert")
     @Test
-    public void testThatOnlyFirstEventTimeIsRecorded() {
+    public void testThatSecondEventTimeIsRecorded() {
         // Arrange
         final long fakeEventTimeEarlier = MARCH_18_2014_838PM_UTC;
         final long fakeEventTimeLater = fakeEventTimeEarlier + TimeUnit.DAYS.toMillis(1);
         assert fakeEventTimeEarlier < fakeEventTimeLater;
 
         // Act
-        triggerEventAtTime(fakeEventTimeEarlier);
-        triggerEventAtTime(fakeEventTimeLater);
+        triggerEventAtTime(mockPublicEvent, fakeEventTimeEarlier);
+        triggerEventAtTime(mockPublicEvent, fakeEventTimeLater);
 
         // Assert
         final Long trackedEventTime = fakeSettings.readTrackingValue(getExpectedTrackingKeyForEvent(mockPublicEvent));
 
         assertEquals(
-                "The correct (earliest) time should have been recorded for this event",
-                Long.valueOf(fakeEventTimeEarlier),
+                "The correct (latest) time should have been recorded for this event",
+                Long.valueOf(fakeEventTimeLater),
                 trackedEventTime);
     }
 
     private String getExpectedTrackingKeyForEvent(@NonNull final IEvent event) {
-        return "AMPLIFY_" + event.getTrackingKey() + "_FIRSTTIMETRACKER";
+        return "AMPLIFY_" + event.getTrackingKey() + "_LASTEVENTTIMESMANAGER";
     }
 
-    private void triggerEventAtTime(final long time) {
+    private void triggerEventAtTime(@NonNull final IPublicEvent event, final long time) {
         setFakeCurrentTimeMillis(time);
-        firstTimeTracker.notifyEventTriggered(mockPublicEvent);
+        lastEventTimesManager.notifyEventTriggered(event);
     }
 
 }

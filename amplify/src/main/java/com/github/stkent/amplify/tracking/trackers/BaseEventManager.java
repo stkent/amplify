@@ -21,7 +21,7 @@ import android.support.annotation.NonNull;
 import com.github.stkent.amplify.ILogger;
 import com.github.stkent.amplify.tracking.interfaces.IApplicationInfoProvider;
 import com.github.stkent.amplify.tracking.interfaces.IEventCheck;
-import com.github.stkent.amplify.tracking.interfaces.IEventTracker;
+import com.github.stkent.amplify.tracking.interfaces.IEventManager;
 import com.github.stkent.amplify.tracking.interfaces.IPublicEvent;
 import com.github.stkent.amplify.tracking.interfaces.ISettings;
 
@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public abstract class EventTracker<T> implements IEventTracker<T> {
+public abstract class BaseEventManager<T> implements IEventManager<T> {
 
     private static final String AMPLIFY_TRACKING_KEY_PREFIX = "AMPLIFY_";
 
@@ -52,7 +52,7 @@ public abstract class EventTracker<T> implements IEventTracker<T> {
     @NonNull
     protected abstract T getUpdatedTrackingValue(@NonNull final T cachedEventValue);
 
-    public EventTracker(
+    public BaseEventManager(
             @NonNull final ILogger logger,
             @NonNull final ISettings<T> settings,
             @NonNull final IApplicationInfoProvider applicationInfoProvider) {
@@ -92,7 +92,8 @@ public abstract class EventTracker<T> implements IEventTracker<T> {
         }
     }
 
-    public boolean allowFeedbackPrompt() {
+    @Override
+    public boolean shouldAllowFeedbackPrompt() {
 
         for (final Map.Entry<IPublicEvent, List<IEventCheck<T>>> eventCheckSet : internalMap.entrySet()) {
             final IPublicEvent event = eventCheckSet.getKey();
