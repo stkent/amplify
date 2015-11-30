@@ -64,7 +64,7 @@ public abstract class BaseEventManager<T> implements IEventManager<T> {
 
     @Override
     public void trackEvent(@NonNull final IEvent event, @NonNull final IEventCheck<T> eventCheck) {
-        if (!containsEvent(event)) {
+        if (!isTrackingEvent(event)) {
             internalMap.put(event, new ArrayList<IEventCheck<T>>());
         }
 
@@ -75,7 +75,7 @@ public abstract class BaseEventManager<T> implements IEventManager<T> {
 
     @Override
     public void notifyEventTriggered(@NonNull final IEvent event) {
-        if (containsEvent(event)) {
+        if (isTrackingEvent(event)) {
 
             final T cachedTrackingValue = getCachedTrackingValue(event);
             final T updatedTrackingValue = getUpdatedTrackingValue(cachedTrackingValue);
@@ -113,16 +113,16 @@ public abstract class BaseEventManager<T> implements IEventManager<T> {
         return true;
     }
 
-    public boolean containsEvent(@NonNull final IEvent event) {
-        return internalMap.containsKey(event);
-    }
-
     protected ILogger getLogger() {
         return logger;
     }
 
     protected IApplicationInfoProvider getApplicationInfoProvider() {
         return applicationInfoProvider;
+    }
+
+    private boolean isTrackingEvent(@NonNull final IEvent event) {
+        return internalMap.containsKey(event);
     }
 
     private String getTrackingKey(@NonNull final IEvent event) {
