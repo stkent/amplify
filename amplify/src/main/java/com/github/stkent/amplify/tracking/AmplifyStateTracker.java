@@ -31,10 +31,10 @@ import com.github.stkent.amplify.tracking.interfaces.IEnvironmentCheck;
 import com.github.stkent.amplify.tracking.interfaces.IEnvironmentInfoProvider;
 import com.github.stkent.amplify.tracking.interfaces.IEventCheck;
 import com.github.stkent.amplify.tracking.interfaces.IPublicEvent;
-import com.github.stkent.amplify.tracking.trackers.FirstEventTimesManager;
-import com.github.stkent.amplify.tracking.trackers.LastEventTimesManager;
-import com.github.stkent.amplify.tracking.trackers.LastEventVersionsManager;
-import com.github.stkent.amplify.tracking.trackers.TotalEventCountsManager;
+import com.github.stkent.amplify.tracking.managers.FirstEventTimesManager;
+import com.github.stkent.amplify.tracking.managers.LastEventTimesManager;
+import com.github.stkent.amplify.tracking.managers.LastEventVersionsManager;
+import com.github.stkent.amplify.tracking.managers.TotalEventCountsManager;
 import com.github.stkent.amplify.views.AmplifyView;
 
 import java.util.ArrayList;

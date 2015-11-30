@@ -14,29 +14,29 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package com.github.stkent.amplify.tracking.trackers;
+package com.github.stkent.amplify.tracking.managers;
 
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 
 import com.github.stkent.amplify.ILogger;
 import com.github.stkent.amplify.tracking.ApplicationInfoProvider;
+import com.github.stkent.amplify.utils.time.SystemTimeUtil;
 import com.github.stkent.amplify.tracking.Settings;
 import com.github.stkent.amplify.tracking.interfaces.IApplicationInfoProvider;
 import com.github.stkent.amplify.tracking.interfaces.ISettings;
 
-public class LastEventVersionsManager extends BaseEventManager<String> {
+public class FirstEventTimesManager extends BaseEventManager<Long> {
 
-    public LastEventVersionsManager(@NonNull final ILogger logger, @NonNull final Context applicationContext) {
-        this(logger, new Settings<String>(applicationContext, logger), new ApplicationInfoProvider(applicationContext));
+    public FirstEventTimesManager(@NonNull final ILogger logger, @NonNull final Context applicationContext) {
+        this(logger, new Settings<Long>(applicationContext, logger), new ApplicationInfoProvider(applicationContext));
     }
 
     @VisibleForTesting
-    protected LastEventVersionsManager(
+    protected FirstEventTimesManager(
             @NonNull final ILogger logger,
-            @NonNull final ISettings<String> settings,
+            @NonNull final ISettings<Long> settings,
             @NonNull final IApplicationInfoProvider applicationInfoProvider) {
         super(logger, settings, applicationInfoProvider);
     }
@@ -49,19 +49,18 @@ public class LastEventVersionsManager extends BaseEventManager<String> {
 
     @NonNull
     @Override
-    public String defaultTrackingValue() {
-        return "";
+    public Long defaultTrackingValue() {
+        return Long.MAX_VALUE;
     }
 
     @NonNull
     @Override
-    public String getUpdatedTrackingValue(@NonNull final String cachedTrackingValue) {
-        try {
-            return getApplicationInfoProvider().getVersionName();
-        } catch (final PackageManager.NameNotFoundException e) {
-            getLogger().d("Could not read current app version name.");
-            return cachedTrackingValue;
+    public Long getUpdatedTrackingValue(@NonNull final Long cachedTrackingValue) {
+        if (cachedTrackingValue == Long.MAX_VALUE) {
+            return Math.min(cachedTrackingValue, SystemTimeUtil.currentTimeMillis());
         }
+
+        return cachedTrackingValue;
     }
 
 }
