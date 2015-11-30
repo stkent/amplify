@@ -16,7 +16,7 @@
  */
 package com.github.stkent.amplify.tracking.interfaces;
 
-public interface IPromptPredicate {
+public interface IPromptCheck {
 
     boolean shouldAllowFeedbackPrompt();
 

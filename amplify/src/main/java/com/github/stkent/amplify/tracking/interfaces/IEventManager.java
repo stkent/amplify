@@ -16,6 +16,6 @@
  */
 package com.github.stkent.amplify.tracking.interfaces;
 
-public interface IEventManager<T> extends IEventTracker<T>, IPromptPredicate {
+public interface IEventManager<T> extends IEventTracker<T>, IPromptCheck {
 
 }
