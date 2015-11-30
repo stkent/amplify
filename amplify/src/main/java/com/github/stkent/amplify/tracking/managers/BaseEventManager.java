@@ -20,9 +20,9 @@ import android.support.annotation.NonNull;
 
 import com.github.stkent.amplify.ILogger;
 import com.github.stkent.amplify.tracking.interfaces.IApplicationInfoProvider;
+import com.github.stkent.amplify.tracking.interfaces.IEvent;
 import com.github.stkent.amplify.tracking.interfaces.IEventCheck;
 import com.github.stkent.amplify.tracking.interfaces.IEventManager;
-import com.github.stkent.amplify.tracking.interfaces.IPublicEvent;
 import com.github.stkent.amplify.tracking.interfaces.ISettings;
 
 import java.util.ArrayList;
@@ -37,7 +37,7 @@ public abstract class BaseEventManager<T> implements IEventManager<T> {
     private final ILogger logger;
     private final IApplicationInfoProvider applicationInfoProvider;
     private final ISettings<T> settings;
-    private final ConcurrentHashMap<IPublicEvent, List<IEventCheck<T>>> internalMap;
+    private final ConcurrentHashMap<IEvent, List<IEventCheck<T>>> internalMap;
 
     /**
      * @return a key that uniquely identifies this event tracker within the
@@ -63,7 +63,7 @@ public abstract class BaseEventManager<T> implements IEventManager<T> {
     }
 
     @Override
-    public void trackEvent(@NonNull final IPublicEvent event, @NonNull final IEventCheck<T> eventCheck) {
+    public void trackEvent(@NonNull final IEvent event, @NonNull final IEventCheck<T> eventCheck) {
         if (!containsEvent(event)) {
             internalMap.put(event, new ArrayList<IEventCheck<T>>());
         }
@@ -74,7 +74,7 @@ public abstract class BaseEventManager<T> implements IEventManager<T> {
     }
 
     @Override
-    public void notifyEventTriggered(@NonNull final IPublicEvent event) {
+    public void notifyEventTriggered(@NonNull final IEvent event) {
         if (containsEvent(event)) {
 
             final T cachedTrackingValue = getCachedTrackingValue(event);
@@ -95,8 +95,8 @@ public abstract class BaseEventManager<T> implements IEventManager<T> {
     @Override
     public boolean shouldAllowFeedbackPrompt() {
 
-        for (final Map.Entry<IPublicEvent, List<IEventCheck<T>>> eventCheckSet : internalMap.entrySet()) {
-            final IPublicEvent event = eventCheckSet.getKey();
+        for (final Map.Entry<IEvent, List<IEventCheck<T>>> eventCheckSet : internalMap.entrySet()) {
+            final IEvent event = eventCheckSet.getKey();
 
             for (final IEventCheck<T> eventCheck : eventCheckSet.getValue()) {
                 final T cachedEventValue = getCachedTrackingValue(event);
@@ -113,7 +113,7 @@ public abstract class BaseEventManager<T> implements IEventManager<T> {
         return true;
     }
 
-    public boolean containsEvent(@NonNull final IPublicEvent event) {
+    public boolean containsEvent(@NonNull final IEvent event) {
         return internalMap.containsKey(event);
     }
 
@@ -125,14 +125,14 @@ public abstract class BaseEventManager<T> implements IEventManager<T> {
         return applicationInfoProvider;
     }
 
-    private String getTrackingKey(@NonNull final IPublicEvent event) {
+    private String getTrackingKey(@NonNull final IEvent event) {
         return AMPLIFY_TRACKING_KEY_PREFIX
                 + event.getTrackingKey()
                 + "_"
                 + this.getTrackingKeySuffix().toUpperCase();
     }
 
-    private T getCachedTrackingValue(@NonNull final IPublicEvent event) {
+    private T getCachedTrackingValue(@NonNull final IEvent event) {
         T value = settings.readTrackingValue(getTrackingKey(event));
         return value != null ? value : defaultTrackingValue();
     }

@@ -20,8 +20,8 @@ import android.support.annotation.NonNull;
 
 public interface IEventTracker<T> {
 
-    void trackEvent(@NonNull final IPublicEvent event, @NonNull final IEventCheck<T> eventCheck);
+    void trackEvent(@NonNull final IEvent event, @NonNull final IEventCheck<T> eventCheck);
 
-    void notifyEventTriggered(@NonNull final IPublicEvent event);
+    void notifyEventTriggered(@NonNull final IEvent event);
 
 }
