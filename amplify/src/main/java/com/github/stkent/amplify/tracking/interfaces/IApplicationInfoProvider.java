@@ -23,6 +23,9 @@ import android.support.annotation.NonNull;
 public interface IApplicationInfoProvider {
 
     @NonNull
+    String getDeviceName();
+
+    @NonNull
     String getVersionName() throws PackageManager.NameNotFoundException;
 
     @NonNull
