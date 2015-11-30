@@ -50,7 +50,7 @@ group = amplifyGroupId
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.1"
+    buildToolsVersion "23.0.2"
 
     defaultConfig {
         minSdkVersion 16
@@ -94,8 +94,8 @@ gnag {
 dependencies {
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-all:1.10.19'
-    javadocDeps 'com.android.support:support-annotations:23.1.0'
-    compile 'com.android.support:appcompat-v7:23.1.0'
+    javadocDeps 'com.android.support:support-annotations:23.1.1'
+    compile 'com.android.support:appcompat-v7:23.1.1'
 }
 
 check {
