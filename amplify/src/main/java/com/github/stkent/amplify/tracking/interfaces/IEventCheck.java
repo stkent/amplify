@@ -32,10 +32,10 @@ public interface IEventCheck<T> {
      *        event this check is applied to
      * @param applicationInfoProvider exposes information about the consuming
      *        application
-     * @return true if the feedback prompt should be blocked from showing;
-     *         false otherwise
+     * @return true if the feedback prompt should be allowed to show; false
+     *         otherwise
      */
-    boolean shouldBlockFeedbackPrompt(
+    boolean shouldAllowFeedbackPrompt(
             @NonNull final T cachedEventValue,
             @NonNull final IApplicationInfoProvider applicationInfoProvider);
 

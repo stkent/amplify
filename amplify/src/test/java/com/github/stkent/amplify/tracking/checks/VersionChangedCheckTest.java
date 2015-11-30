@@ -49,17 +49,19 @@ public class VersionChangedCheckTest extends BaseTest {
         when(mockApplicationInfoProvider.getVersionName()).thenReturn(fakeVersionName);
 
         // Act
-        final boolean shouldBlockFeedbackPrompt = versionChangedCheck.shouldBlockFeedbackPrompt(
-                fakeVersionName, mockApplicationInfoProvider);
+        final boolean checkShouldAllowFeedbackPrompt =
+                versionChangedCheck.shouldAllowFeedbackPrompt(fakeVersionName, mockApplicationInfoProvider);
 
         // Assert
-        assertTrue("Feedback prompt should be blocked if the app version has not changed", shouldBlockFeedbackPrompt);
+        assertFalse(
+                "Feedback prompt should be blocked if the app version has not changed",
+                checkShouldAllowFeedbackPrompt);
     }
 
     @SuppressLint("Assert")
     @SuppressWarnings("ConstantConditions")
     @Test
-    public void testThatCheckDoesNotBlockPromptIfAppVersionHasChanged() throws PackageManager.NameNotFoundException {
+    public void testThatCheckAllowsPromptIfAppVersionHasChanged() throws PackageManager.NameNotFoundException {
         // Arrange
         final String fakeCachedVersionName = "any string";
         final String fakeCurrentVersionName = "any other string";
@@ -68,12 +70,13 @@ public class VersionChangedCheckTest extends BaseTest {
         when(mockApplicationInfoProvider.getVersionName()).thenReturn(fakeCurrentVersionName);
 
         // Act
-        final boolean shouldBlockFeedbackPrompt = versionChangedCheck.shouldBlockFeedbackPrompt(
-                fakeCachedVersionName, mockApplicationInfoProvider);
+        final boolean checkShouldAllowFeedbackPrompt =
+                versionChangedCheck.shouldAllowFeedbackPrompt(fakeCachedVersionName, mockApplicationInfoProvider);
 
         // Assert
-        assertFalse("Feedback prompt should not be blocked if the app version has changed",
-                shouldBlockFeedbackPrompt);
+        assertTrue(
+                "Feedback prompt should be allowed if the app version has changed",
+                checkShouldAllowFeedbackPrompt);
     }
 
 }

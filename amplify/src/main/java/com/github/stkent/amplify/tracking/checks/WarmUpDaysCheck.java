@@ -33,11 +33,11 @@ public class WarmUpDaysCheck implements IEventCheck<Long> {
     }
 
     @Override
-    public boolean shouldBlockFeedbackPrompt(
+    public boolean shouldAllowFeedbackPrompt(
             @NonNull final Long cachedEventValue,
             @NonNull final IApplicationInfoProvider applicationInfoProvider) {
-        return cachedEventValue == Long.MAX_VALUE
-                || (SystemTimeUtil.currentTimeMillis() - cachedEventValue) <= TimeUnit.DAYS.toMillis(warmUpPeriodDays);
+        return cachedEventValue != Long.MAX_VALUE
+                && (SystemTimeUtil.currentTimeMillis() - cachedEventValue) > TimeUnit.DAYS.toMillis(warmUpPeriodDays);
     }
 
     @NonNull

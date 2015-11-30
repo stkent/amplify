@@ -103,7 +103,7 @@ public abstract class BaseEventManager<T> implements IEventManager<T> {
 
                 logger.d(getTrackingKey(event) + ": " + eventCheck.getStatusString(cachedEventValue, applicationInfoProvider));
 
-                if (eventCheck.shouldBlockFeedbackPrompt(cachedEventValue, applicationInfoProvider)) {
+                if (eventCheck.shouldAllowFeedbackPrompt(cachedEventValue, applicationInfoProvider)) {
                     logger.d("Blocking feedback for event: " + event + " because of check: " + eventCheck);
                     return false;
                 }
