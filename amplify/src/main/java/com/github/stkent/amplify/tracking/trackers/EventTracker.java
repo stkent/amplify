@@ -52,7 +52,10 @@ public abstract class EventTracker<T> implements IEventTracker<T> {
     @NonNull
     protected abstract T getUpdatedTrackingValue(@NonNull final T cachedEventValue);
 
-    public EventTracker(@NonNull final ILogger logger, @NonNull final ISettings<T> settings, @NonNull final IApplicationInfoProvider applicationInfoProvider) {
+    public EventTracker(
+            @NonNull final ILogger logger,
+            @NonNull final ISettings<T> settings,
+            @NonNull final IApplicationInfoProvider applicationInfoProvider) {
         this.logger = logger;
         this.settings = settings;
         this.applicationInfoProvider = applicationInfoProvider;
