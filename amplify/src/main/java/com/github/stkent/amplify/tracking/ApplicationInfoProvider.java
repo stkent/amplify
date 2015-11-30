@@ -38,8 +38,8 @@ public class ApplicationInfoProvider implements IApplicationInfoProvider {
     @NonNull
     @Override
     public String getDeviceName() {
-        String manufacturer = Build.MANUFACTURER;
-        String model = Build.MODEL;
+        final String manufacturer = Build.MANUFACTURER;
+        final String model = Build.MODEL;
 
         String deviceName;
 
