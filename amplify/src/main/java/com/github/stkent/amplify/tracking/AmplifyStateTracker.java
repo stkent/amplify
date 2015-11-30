@@ -201,7 +201,7 @@ public final class AmplifyStateTracker implements IAmplifyStateTracker {
 
     private boolean allEnvironmentChecksMet() {
         for (final IEnvironmentCheck environmentCheck : environmentChecks) {
-            if (!environmentCheck.isSatisfied(environmentInfoProvider)) {
+            if (!environmentCheck.shouldAllowFeedbackPrompt(environmentInfoProvider)) {
                 logger.d("Environment check not satisfied: " + environmentCheck);
                 return false;
             }
