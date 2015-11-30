@@ -61,7 +61,7 @@ public final class StringUtils {
 
         char[] newChars = new char[strLen];
         newChars[0] = newChar;
-        string.getChars(1,strLen, newChars, 1);
+        string.getChars(1, strLen, newChars, 1);
 
         return String.valueOf(newChars);
     }
