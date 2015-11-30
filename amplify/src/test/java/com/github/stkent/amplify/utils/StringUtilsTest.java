@@ -24,6 +24,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 public class StringUtilsTest extends BaseTest {
@@ -161,6 +162,55 @@ public class StringUtilsTest extends BaseTest {
         assertFalse(
                 "isBlank should have returned false",
                 isBlank);
+    }
+
+    @Test
+    public void testThatCapitalizeOnlyFirstCharacterCaseIsChangedOnMixedCase() {
+        // Arrange
+        final String testString = "hElLO";
+        final String expectedString = "HElLO";
+
+        // Act
+        final String modifiedString = StringUtils.capitalize(testString);
+
+        // Assert
+        assertEquals(
+                "Only the first letter case should have been changed",
+                expectedString,
+                modifiedString);
+
+    }
+
+    @Test
+    public void testThatCapitalizeOnlyFirstCharacterIsCapitalizedOnAllLowercase() {
+        // Arrange
+        final String testString = "hello";
+        final String expectedString = "Hello";
+
+        // Act
+        final String modifiedString = StringUtils.capitalize(testString);
+
+        // Assert
+        assertEquals(
+                "The first letter of the string should have been capitalized",
+                expectedString,
+                modifiedString);
+
+    }
+
+    @Test
+    public void testThatCapitalizeNullReturnsNull() {
+        // Arrange
+        final String testString = null;
+
+        // Act
+        final String modifiedString = StringUtils.capitalize(testString);
+
+        // Assert
+        assertNull(
+                "Modified string should be null as null was passed in",
+                modifiedString);
+
     }
 
 }

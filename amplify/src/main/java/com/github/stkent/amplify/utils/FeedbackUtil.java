@@ -98,6 +98,8 @@ public final class FeedbackUtil {
         return    "\n\n\n"
                 + "---------------------"
                 + "\n"
+                + "Device: " + applicationInfoProvider.getDeviceName()
+                + "\n"
                 + "App Version: " + applicationVersionDisplayString
                 + "\n"
                 + "Android OS Version: " + getAndroidOsVersionDisplayString()
