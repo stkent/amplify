@@ -48,7 +48,9 @@ public class GooglePlayStoreIsAvailableCheckTest extends BaseTest {
                 googlePlayStoreIsAvailableCheck.shouldAllowFeedbackPrompt(mockEnvironmentInfoProvider);
 
         // Assert
-        assertTrue("Environment check should be met", isEnvironmentCheckMet);
+        assertTrue(
+                "Environment check should be met",
+                isEnvironmentCheckMet);
     }
 
     @Test
@@ -61,7 +63,9 @@ public class GooglePlayStoreIsAvailableCheckTest extends BaseTest {
                 googlePlayStoreIsAvailableCheck.shouldAllowFeedbackPrompt(mockEnvironmentInfoProvider);
 
         // Assert
-        assertFalse("Environment check should not be met", isEnvironmentCheckMet);
+        assertFalse(
+                "Environment check should not be met",
+                isEnvironmentCheckMet);
     }
 
 }
