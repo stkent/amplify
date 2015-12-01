@@ -47,6 +47,7 @@ public final class EnvironmentInfoProvider implements IEnvironmentInfoProvider {
     @Override
     public boolean isApplicationInstalled(@NonNull final String packageName) {
         try {
+            // fixme: this is borked
             ApplicationUtils.getPackageInfo(applicationContext, GET_ACTIVITIES);
             return true;
         } catch (final PackageManager.NameNotFoundException e) {
