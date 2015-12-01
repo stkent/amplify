@@ -23,7 +23,7 @@ import android.support.annotation.NonNull;
 import com.github.stkent.amplify.ILogger;
 import com.github.stkent.amplify.helpers.BaseTest;
 import com.github.stkent.amplify.helpers.FakeSettings;
-import com.github.stkent.amplify.tracking.interfaces.IApplicationInfoProvider;
+import com.github.stkent.amplify.tracking.interfaces.IApplicationVersionNameProvider;
 import com.github.stkent.amplify.tracking.interfaces.IEvent;
 import com.github.stkent.amplify.tracking.interfaces.IEventCheck;
 import com.github.stkent.amplify.tracking.interfaces.IPublicEvent;
@@ -44,7 +44,7 @@ public class LastEventVersionsManagerTest extends BaseTest {
     @Mock
     private ILogger mockLogger;
     @Mock
-    private IApplicationInfoProvider mockApplicationInfoProvider;
+    private IApplicationVersionNameProvider mockApplicationVersionNameProvider;
     @Mock
     private IPublicEvent mockPublicEvent;
     @Mock
@@ -57,7 +57,7 @@ public class LastEventVersionsManagerTest extends BaseTest {
         lastEventVersionsManager = new LastEventVersionsManager(
                 mockLogger,
                 fakeSettings,
-                mockApplicationInfoProvider);
+                mockApplicationVersionNameProvider);
 
         when(mockPublicEvent.getTrackingKey()).thenReturn(DEFAULT_MOCK_EVENT_TRACKING_KEY);
         lastEventVersionsManager.trackEvent(mockPublicEvent, mockEventCheck);
@@ -126,7 +126,7 @@ public class LastEventVersionsManagerTest extends BaseTest {
     }
 
     private void triggerEventForAppVersion(@NonNull final String appVersionName) throws PackageManager.NameNotFoundException {
-        when(mockApplicationInfoProvider.getVersionName()).thenReturn(appVersionName);
+        when(mockApplicationVersionNameProvider.getVersionName()).thenReturn(appVersionName);
         lastEventVersionsManager.notifyEventTriggered(mockPublicEvent);
     }
 

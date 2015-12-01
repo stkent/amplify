@@ -18,9 +18,8 @@ package com.github.stkent.amplify.tracking.checks;
 
 import android.support.annotation.NonNull;
 
-import com.github.stkent.amplify.utils.time.SystemTimeUtil;
-import com.github.stkent.amplify.tracking.interfaces.IApplicationInfoProvider;
 import com.github.stkent.amplify.tracking.interfaces.IEventCheck;
+import com.github.stkent.amplify.utils.time.SystemTimeUtil;
 
 import java.util.concurrent.TimeUnit;
 
@@ -33,13 +32,13 @@ public final class CooldownDaysCheck implements IEventCheck<Long> {
     }
 
     @Override
-    public boolean shouldAllowFeedbackPrompt(@NonNull final Long cachedEventValue, @NonNull final IApplicationInfoProvider applicationInfoProvider) {
+    public boolean shouldAllowFeedbackPrompt(@NonNull final Long cachedEventValue) {
         return (SystemTimeUtil.currentTimeMillis() - cachedEventValue) >= TimeUnit.DAYS.toMillis(cooldownPeriodDays);
     }
 
     @NonNull
     @Override
-    public String getStatusString(@NonNull final Long cachedEventValue, @NonNull final IApplicationInfoProvider applicationInfoProvider) {
+    public String getStatusString(@NonNull final Long cachedEventValue) {
         final Long daysSinceLastEvent = TimeUnit.MILLISECONDS.toDays(SystemTimeUtil.currentTimeMillis() - cachedEventValue);
         return "Cooldown period: " + cooldownPeriodDays + " days. Time since last event: " + daysSinceLastEvent + " days.";
     }

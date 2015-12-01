@@ -17,7 +17,6 @@
 package com.github.stkent.amplify.tracking;
 
 import android.content.Context;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.os.Build;
@@ -25,25 +24,31 @@ import android.support.annotation.NonNull;
 
 import com.github.stkent.amplify.R;
 import com.github.stkent.amplify.tracking.interfaces.IApplicationInfoProvider;
+import com.github.stkent.amplify.tracking.interfaces.IApplicationVersionNameProvider;
 import com.github.stkent.amplify.utils.ApplicationUtils;
 import com.github.stkent.amplify.utils.StringUtils;
 
 public class ApplicationInfoProvider implements IApplicationInfoProvider {
 
+    @NonNull
     private final Context applicationContext;
 
-    public ApplicationInfoProvider(@NonNull final Context context) {
-        this.applicationContext = context.getApplicationContext();
+    @NonNull
+    private final IApplicationVersionNameProvider applicationVersionNameProvider;
+
+    public ApplicationInfoProvider(@NonNull final Context applicationContext) {
+        this.applicationContext = applicationContext;
+        this.applicationVersionNameProvider = new ApplicationVersionNameProvider(applicationContext);
     }
 
     @Override
     public long getFirstInstalledTimeMs() throws PackageManager.NameNotFoundException {
-        return getPackageInto().firstInstallTime;
+        return ApplicationUtils.getPackageInfo(applicationContext).firstInstallTime;
     }
 
     @Override
     public long getLastUpdatedTimeMs() throws PackageManager.NameNotFoundException {
-        return getPackageInto().lastUpdateTime;
+        return ApplicationUtils.getPackageInfo(applicationContext).lastUpdateTime;
     }
 
     @NonNull
@@ -65,17 +70,11 @@ public class ApplicationInfoProvider implements IApplicationInfoProvider {
 
     @NonNull
     @Override
-    public String getVersionName() throws PackageManager.NameNotFoundException {
-        return getPackageInto().versionName;
-    }
-
-    @NonNull
-    @Override
     public String getVersionDisplayString() throws PackageManager.NameNotFoundException {
-        final int applicationVersionCode = getPackageInto().versionCode;
+        final int applicationVersionCode = ApplicationUtils.getPackageInfo(applicationContext).versionCode;
 
         // todo: prefer String.format here
-        return getVersionName() + " (" + applicationVersionCode + ")";
+        return applicationVersionNameProvider.getVersionName() + " (" + applicationVersionCode + ")";
     }
 
     @NonNull
@@ -87,10 +86,6 @@ public class ApplicationInfoProvider implements IApplicationInfoProvider {
             throw new IllegalArgumentException("R.string.amp_feedback_email"
                     + "resource not found, you must set this in your strings file for the feedback util to function", e);
         }
-    }
-
-    private PackageInfo getPackageInto() throws PackageManager.NameNotFoundException {
-        return ApplicationUtils.getPackageInfo(applicationContext, 0);
     }
 
 }

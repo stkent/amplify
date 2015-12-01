@@ -14,25 +14,28 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package com.github.stkent.amplify.tracking.interfaces;
+package com.github.stkent.amplify.tracking;
 
+import android.content.Context;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.support.annotation.NonNull;
 
-public interface IApplicationInfoProvider {
+import com.github.stkent.amplify.tracking.interfaces.IApplicationVersionNameProvider;
+import com.github.stkent.amplify.utils.ApplicationUtils;
 
-    long getFirstInstalledTimeMs() throws PackageManager.NameNotFoundException;
-
-    long getLastUpdatedTimeMs() throws PackageManager.NameNotFoundException;
-
-    @NonNull
-    String getDeviceName();
+public class ApplicationVersionNameProvider implements IApplicationVersionNameProvider {
 
     @NonNull
-    String getVersionDisplayString() throws PackageManager.NameNotFoundException;
+    private final Context applicationContext;
+
+    public ApplicationVersionNameProvider(@NonNull final Context applicationContext) {
+        this.applicationContext = applicationContext;
+    }
 
     @NonNull
-    String getFeedbackEmailAddress() throws Resources.NotFoundException;
+    @Override
+    public String getVersionName() throws PackageManager.NameNotFoundException {
+        return ApplicationUtils.getPackageInfo(applicationContext).versionName;
+    }
 
 }

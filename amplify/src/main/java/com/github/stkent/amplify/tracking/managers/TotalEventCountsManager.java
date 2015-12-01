@@ -21,23 +21,20 @@ import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 
 import com.github.stkent.amplify.ILogger;
-import com.github.stkent.amplify.tracking.ApplicationInfoProvider;
 import com.github.stkent.amplify.tracking.Settings;
-import com.github.stkent.amplify.tracking.interfaces.IApplicationInfoProvider;
 import com.github.stkent.amplify.tracking.interfaces.ISettings;
 
 public class TotalEventCountsManager extends BaseEventManager<Integer> {
 
     public TotalEventCountsManager(@NonNull final ILogger logger, @NonNull final Context applicationContext) {
-        this(logger, new Settings<Integer>(applicationContext, logger), new ApplicationInfoProvider(applicationContext));
+        this(logger, new Settings<Integer>(applicationContext, logger));
     }
 
     @VisibleForTesting
     protected TotalEventCountsManager(
             @NonNull final ILogger logger,
-            @NonNull final ISettings<Integer> settings,
-            @NonNull final IApplicationInfoProvider applicationInfoProvider) {
-        super(logger, settings, applicationInfoProvider);
+            @NonNull final ISettings<Integer> settings) {
+        super(logger, settings);
     }
 
     @NonNull

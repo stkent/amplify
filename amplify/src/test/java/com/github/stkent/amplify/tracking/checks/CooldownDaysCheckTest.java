@@ -43,9 +43,8 @@ public class CooldownDaysCheckTest extends BaseTest {
         final long lastEventTime = SystemTimeUtil.currentTimeMillis() - TimeUnit.DAYS.toMillis(daysSinceLastEvent);
 
         // Act
-        // todo: figure out what to pass instead of the null context here
         final boolean checkShouldAllowFeedbackPrompt
-                = cooldownDaysCheck.shouldAllowFeedbackPrompt(lastEventTime, null);
+                = cooldownDaysCheck.shouldAllowFeedbackPrompt(lastEventTime);
 
         // Assert
         assertFalse(
@@ -67,7 +66,7 @@ public class CooldownDaysCheckTest extends BaseTest {
 
         // Act
         final boolean checkShouldAllowFeedbackPrompt
-                = cooldownDaysCheck.shouldAllowFeedbackPrompt(lastEventTime, null);
+                = cooldownDaysCheck.shouldAllowFeedbackPrompt(lastEventTime);
 
         // Assert
         assertTrue(

@@ -57,8 +57,7 @@ public class FirstEventTimesManagerTest extends BaseTest {
 
         firstEventTimesManager = new FirstEventTimesManager(
                 mockLogger,
-                fakeSettings,
-                mockApplicationInfoProvider);
+                fakeSettings);
 
         when(mockPublicEvent.getTrackingKey()).thenReturn(DEFAULT_MOCK_EVENT_TRACKING_KEY);
         firstEventTimesManager.trackEvent(mockPublicEvent, mockEventCheck);

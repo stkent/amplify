@@ -19,7 +19,6 @@ package com.github.stkent.amplify.tracking.managers;
 import android.support.annotation.NonNull;
 
 import com.github.stkent.amplify.ILogger;
-import com.github.stkent.amplify.tracking.interfaces.IApplicationInfoProvider;
 import com.github.stkent.amplify.tracking.interfaces.IEvent;
 import com.github.stkent.amplify.tracking.interfaces.IEventCheck;
 import com.github.stkent.amplify.tracking.interfaces.IEventManager;
@@ -35,7 +34,6 @@ public abstract class BaseEventManager<T> implements IEventManager<T> {
     private static final String AMPLIFY_TRACKING_KEY_PREFIX = "AMPLIFY_";
 
     private final ILogger logger;
-    private final IApplicationInfoProvider applicationInfoProvider;
     private final ISettings<T> settings;
     private final ConcurrentHashMap<IEvent, List<IEventCheck<T>>> internalMap;
 
@@ -52,13 +50,11 @@ public abstract class BaseEventManager<T> implements IEventManager<T> {
     @NonNull
     protected abstract T getUpdatedTrackingValue(@NonNull final T cachedEventValue);
 
-    public BaseEventManager(
+    protected BaseEventManager(
             @NonNull final ILogger logger,
-            @NonNull final ISettings<T> settings,
-            @NonNull final IApplicationInfoProvider applicationInfoProvider) {
+            @NonNull final ISettings<T> settings) {
         this.logger = logger;
         this.settings = settings;
-        this.applicationInfoProvider = applicationInfoProvider;
         this.internalMap = new ConcurrentHashMap<>();
     }
 
@@ -101,9 +97,9 @@ public abstract class BaseEventManager<T> implements IEventManager<T> {
             for (final IEventCheck<T> eventCheck : eventCheckSet.getValue()) {
                 final T cachedEventValue = getCachedTrackingValue(event);
 
-                logger.d(getTrackingKey(event) + ": " + eventCheck.getStatusString(cachedEventValue, applicationInfoProvider));
+                logger.d(getTrackingKey(event) + ": " + eventCheck.getStatusString(cachedEventValue));
 
-                if (eventCheck.shouldAllowFeedbackPrompt(cachedEventValue, applicationInfoProvider)) {
+                if (eventCheck.shouldAllowFeedbackPrompt(cachedEventValue)) {
                     logger.d("Blocking feedback for event: " + event + " because of check: " + eventCheck);
                     return false;
                 }
@@ -115,10 +111,6 @@ public abstract class BaseEventManager<T> implements IEventManager<T> {
 
     protected ILogger getLogger() {
         return logger;
-    }
-
-    protected IApplicationInfoProvider getApplicationInfoProvider() {
-        return applicationInfoProvider;
     }
 
     private boolean isTrackingEvent(@NonNull final IEvent event) {

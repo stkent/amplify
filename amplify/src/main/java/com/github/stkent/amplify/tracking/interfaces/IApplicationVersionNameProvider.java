@@ -17,22 +17,11 @@
 package com.github.stkent.amplify.tracking.interfaces;
 
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.support.annotation.NonNull;
 
-public interface IApplicationInfoProvider {
-
-    long getFirstInstalledTimeMs() throws PackageManager.NameNotFoundException;
-
-    long getLastUpdatedTimeMs() throws PackageManager.NameNotFoundException;
+public interface IApplicationVersionNameProvider {
 
     @NonNull
-    String getDeviceName();
-
-    @NonNull
-    String getVersionDisplayString() throws PackageManager.NameNotFoundException;
-
-    @NonNull
-    String getFeedbackEmailAddress() throws Resources.NotFoundException;
+    String getVersionName() throws PackageManager.NameNotFoundException;
 
 }

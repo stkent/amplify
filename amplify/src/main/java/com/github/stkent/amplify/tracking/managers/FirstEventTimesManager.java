@@ -21,24 +21,21 @@ import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 
 import com.github.stkent.amplify.ILogger;
-import com.github.stkent.amplify.tracking.ApplicationInfoProvider;
-import com.github.stkent.amplify.utils.time.SystemTimeUtil;
 import com.github.stkent.amplify.tracking.Settings;
-import com.github.stkent.amplify.tracking.interfaces.IApplicationInfoProvider;
 import com.github.stkent.amplify.tracking.interfaces.ISettings;
+import com.github.stkent.amplify.utils.time.SystemTimeUtil;
 
 public class FirstEventTimesManager extends BaseEventManager<Long> {
 
     public FirstEventTimesManager(@NonNull final ILogger logger, @NonNull final Context applicationContext) {
-        this(logger, new Settings<Long>(applicationContext, logger), new ApplicationInfoProvider(applicationContext));
+        this(logger, new Settings<Long>(applicationContext, logger));
     }
 
     @VisibleForTesting
     protected FirstEventTimesManager(
             @NonNull final ILogger logger,
-            @NonNull final ISettings<Long> settings,
-            @NonNull final IApplicationInfoProvider applicationInfoProvider) {
-        super(logger, settings, applicationInfoProvider);
+            @NonNull final ISettings<Long> settings) {
+        super(logger, settings);
     }
 
     @NonNull

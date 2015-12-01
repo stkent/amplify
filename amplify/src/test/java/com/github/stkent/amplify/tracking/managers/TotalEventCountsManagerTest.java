@@ -22,7 +22,6 @@ import android.support.annotation.NonNull;
 import com.github.stkent.amplify.ILogger;
 import com.github.stkent.amplify.helpers.BaseTest;
 import com.github.stkent.amplify.helpers.FakeSettings;
-import com.github.stkent.amplify.tracking.interfaces.IApplicationInfoProvider;
 import com.github.stkent.amplify.tracking.interfaces.IEvent;
 import com.github.stkent.amplify.tracking.interfaces.IEventCheck;
 import com.github.stkent.amplify.tracking.interfaces.IPublicEvent;
@@ -43,8 +42,6 @@ public class TotalEventCountsManagerTest extends BaseTest {
     @Mock
     private ILogger mockLogger;
     @Mock
-    private IApplicationInfoProvider mockApplicationInfoProvider;
-    @Mock
     private IPublicEvent mockPublicEvent;
     @Mock
     private IEventCheck<Integer> mockEventCheck;
@@ -55,8 +52,7 @@ public class TotalEventCountsManagerTest extends BaseTest {
 
         totalEventCountsManager = new TotalEventCountsManager(
                 mockLogger,
-                fakeSettings,
-                mockApplicationInfoProvider);
+                fakeSettings);
 
         when(mockPublicEvent.getTrackingKey()).thenReturn(DEFAULT_MOCK_EVENT_TRACKING_KEY);
         totalEventCountsManager.trackEvent(mockPublicEvent, mockEventCheck);

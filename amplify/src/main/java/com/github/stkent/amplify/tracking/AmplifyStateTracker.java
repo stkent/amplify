@@ -27,6 +27,7 @@ import com.github.stkent.amplify.tracking.checks.MaximumCountCheck;
 import com.github.stkent.amplify.tracking.checks.VersionChangedCheck;
 import com.github.stkent.amplify.tracking.checks.WarmUpDaysCheck;
 import com.github.stkent.amplify.tracking.interfaces.IAmplifyStateTracker;
+import com.github.stkent.amplify.tracking.interfaces.IApplicationVersionNameProvider;
 import com.github.stkent.amplify.tracking.interfaces.IEnvironmentCheck;
 import com.github.stkent.amplify.tracking.interfaces.IEnvironmentInfoProvider;
 import com.github.stkent.amplify.tracking.interfaces.IEventCheck;
@@ -51,6 +52,7 @@ public final class AmplifyStateTracker implements IAmplifyStateTracker {
     // instance fields
 
     private final Context applicationContext;
+    private final IApplicationVersionNameProvider applicationVersionNameProvider;
     private final IEnvironmentInfoProvider environmentInfoProvider;
     private final List<IEnvironmentCheck> environmentChecks = new ArrayList<>();
     private final LastEventTimesManager lastEventTimesManager;
@@ -81,6 +83,7 @@ public final class AmplifyStateTracker implements IAmplifyStateTracker {
             @NonNull final Context context,
             @NonNull final ILogger logger) {
         this.applicationContext = context.getApplicationContext();
+        this.applicationVersionNameProvider = new ApplicationVersionNameProvider(applicationContext);
         this.environmentInfoProvider = new EnvironmentInfoProvider(applicationContext);
         this.logger = logger;
         this.lastEventTimesManager = new LastEventTimesManager(logger, applicationContext);
@@ -100,10 +103,10 @@ public final class AmplifyStateTracker implements IAmplifyStateTracker {
                 .trackTotalEventCount(AmplifyViewEvent.USER_GAVE_POSITIVE_FEEDBACK, new MaximumCountCheck(ONE_DAY))
                 .trackLastEventTime(AmplifyViewEvent.USER_GAVE_CRITICAL_FEEDBACK, new CooldownDaysCheck(ONE_WEEK))
                 .trackLastEventTime(AmplifyViewEvent.USER_DECLINED_CRITICAL_FEEDBACK, new CooldownDaysCheck(ONE_WEEK))
-                .trackLastEventVersion(AmplifyViewEvent.USER_DECLINED_CRITICAL_FEEDBACK, new VersionChangedCheck())
+                .trackLastEventVersion(AmplifyViewEvent.USER_DECLINED_CRITICAL_FEEDBACK, new VersionChangedCheck(applicationVersionNameProvider))
                 .trackLastEventTime(AmplifyViewEvent.USER_DECLINED_POSITIVE_FEEDBACK, new CooldownDaysCheck(ONE_WEEK))
-                .trackLastEventVersion(AmplifyViewEvent.USER_DECLINED_POSITIVE_FEEDBACK, new VersionChangedCheck())
-                .trackLastEventVersion(AmplifyViewEvent.USER_GAVE_CRITICAL_FEEDBACK, new VersionChangedCheck());
+                .trackLastEventVersion(AmplifyViewEvent.USER_DECLINED_POSITIVE_FEEDBACK, new VersionChangedCheck(applicationVersionNameProvider))
+                .trackLastEventVersion(AmplifyViewEvent.USER_GAVE_CRITICAL_FEEDBACK, new VersionChangedCheck(applicationVersionNameProvider));
     }
 
     @Override

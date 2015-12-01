@@ -20,7 +20,7 @@ import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 
 import com.github.stkent.amplify.helpers.BaseTest;
-import com.github.stkent.amplify.tracking.interfaces.IApplicationInfoProvider;
+import com.github.stkent.amplify.tracking.interfaces.IApplicationVersionNameProvider;
 
 import org.junit.Test;
 import org.mockito.Mock;
@@ -34,11 +34,11 @@ public class VersionChangedCheckTest extends BaseTest {
     private VersionChangedCheck versionChangedCheck;
 
     @Mock
-    private IApplicationInfoProvider mockApplicationInfoProvider;
+    private IApplicationVersionNameProvider mockApplicationVersionNameProvider;
 
     @Override
     public void localSetUp() {
-        versionChangedCheck = new VersionChangedCheck();
+        versionChangedCheck = new VersionChangedCheck(mockApplicationVersionNameProvider);
     }
 
     @Test
@@ -46,11 +46,11 @@ public class VersionChangedCheckTest extends BaseTest {
         // Arrange
         final String fakeVersionName = "any string";
 
-        when(mockApplicationInfoProvider.getVersionName()).thenReturn(fakeVersionName);
+        when(mockApplicationVersionNameProvider.getVersionName()).thenReturn(fakeVersionName);
 
         // Act
         final boolean checkShouldAllowFeedbackPrompt =
-                versionChangedCheck.shouldAllowFeedbackPrompt(fakeVersionName, mockApplicationInfoProvider);
+                versionChangedCheck.shouldAllowFeedbackPrompt(fakeVersionName);
 
         // Assert
         assertFalse(
@@ -67,11 +67,11 @@ public class VersionChangedCheckTest extends BaseTest {
         final String fakeCurrentVersionName = "any other string";
         assert !fakeCachedVersionName.equals(fakeCurrentVersionName);
 
-        when(mockApplicationInfoProvider.getVersionName()).thenReturn(fakeCurrentVersionName);
+        when(mockApplicationVersionNameProvider.getVersionName()).thenReturn(fakeCurrentVersionName);
 
         // Act
         final boolean checkShouldAllowFeedbackPrompt =
-                versionChangedCheck.shouldAllowFeedbackPrompt(fakeCachedVersionName, mockApplicationInfoProvider);
+                versionChangedCheck.shouldAllowFeedbackPrompt(fakeCachedVersionName);
 
         // Assert
         assertTrue(

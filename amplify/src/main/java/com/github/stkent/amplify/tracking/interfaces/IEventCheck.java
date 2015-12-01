@@ -30,26 +30,18 @@ public interface IEventCheck<T> {
     /**
      * @param cachedEventValue the current value associated with the tracked
      *        event this check is applied to
-     * @param applicationInfoProvider exposes information about the consuming
-     *        application
      * @return true if the feedback prompt should be allowed to show; false
      *         otherwise
      */
-    boolean shouldAllowFeedbackPrompt(
-            @NonNull final T cachedEventValue,
-            @NonNull final IApplicationInfoProvider applicationInfoProvider);
+    boolean shouldAllowFeedbackPrompt(@NonNull final T cachedEventValue);
 
     /**
      * @param cachedEventValue the current value associated with the tracked
      *        event this check is applied to
-     * @param applicationInfoProvider exposes information about the consuming
-     *        application
      * @return a string representation of the current check status; primarily
      *         used for debugging.
      */
     @NonNull
-    String getStatusString(
-            @NonNull final T cachedEventValue,
-            @NonNull final IApplicationInfoProvider applicationInfoProvider);
+    String getStatusString(@NonNull final T cachedEventValue);
 
 }

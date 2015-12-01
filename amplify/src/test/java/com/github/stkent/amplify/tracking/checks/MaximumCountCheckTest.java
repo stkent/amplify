@@ -39,9 +39,8 @@ public class MaximumCountCheckTest extends BaseTest {
         final MaximumCountCheck maximumCountCheck = new MaximumCountCheck(maximumEventCount);
 
         // Act
-        // todo: figure out what to pass instead of the null context here
         final boolean checkShouldAllowFeedbackPrompt
-                = maximumCountCheck.shouldAllowFeedbackPrompt(currentEventCount, null);
+                = maximumCountCheck.shouldAllowFeedbackPrompt(currentEventCount);
 
         // Assert
         assertFalse(
@@ -61,9 +60,8 @@ public class MaximumCountCheckTest extends BaseTest {
         final MaximumCountCheck maximumCountCheck = new MaximumCountCheck(maximumEventCount);
 
         // Act
-        // todo: figure out what to pass instead of the null context here
         final boolean checkShouldAllowFeedbackPrompt
-                = maximumCountCheck.shouldAllowFeedbackPrompt(currentEventCount, null);
+                = maximumCountCheck.shouldAllowFeedbackPrompt(currentEventCount);
 
         // Assert
         assertTrue(
