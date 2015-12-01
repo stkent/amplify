@@ -22,7 +22,6 @@ import android.support.annotation.NonNull;
 import com.github.stkent.amplify.ILogger;
 import com.github.stkent.amplify.helpers.BaseTest;
 import com.github.stkent.amplify.helpers.FakeSettings;
-import com.github.stkent.amplify.tracking.interfaces.IApplicationInfoProvider;
 import com.github.stkent.amplify.tracking.interfaces.IEvent;
 import com.github.stkent.amplify.tracking.interfaces.IEventCheck;
 import com.github.stkent.amplify.tracking.interfaces.IPublicEvent;
@@ -44,8 +43,6 @@ public class LastEventTimesManagerTest extends BaseTest {
 
     @Mock
     private ILogger mockLogger;
-    @Mock
-    private IApplicationInfoProvider mockApplicationInfoProvider;
     @Mock
     private IPublicEvent mockPublicEvent;
     @Mock

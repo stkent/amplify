@@ -23,12 +23,12 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 
 import com.github.stkent.amplify.R;
-import com.github.stkent.amplify.tracking.interfaces.IApplicationInfoProvider;
+import com.github.stkent.amplify.tracking.interfaces.IApplicationFeedbackDataProvider;
 import com.github.stkent.amplify.tracking.interfaces.IApplicationVersionNameProvider;
 import com.github.stkent.amplify.utils.ApplicationUtils;
 import com.github.stkent.amplify.utils.StringUtils;
 
-public class ApplicationInfoProvider implements IApplicationInfoProvider {
+public class ApplicationFeedbackDataProvider implements IApplicationFeedbackDataProvider {
 
     @NonNull
     private final Context applicationContext;
@@ -36,19 +36,9 @@ public class ApplicationInfoProvider implements IApplicationInfoProvider {
     @NonNull
     private final IApplicationVersionNameProvider applicationVersionNameProvider;
 
-    public ApplicationInfoProvider(@NonNull final Context applicationContext) {
+    public ApplicationFeedbackDataProvider(@NonNull final Context applicationContext) {
         this.applicationContext = applicationContext;
         this.applicationVersionNameProvider = new ApplicationVersionNameProvider(applicationContext);
-    }
-
-    @Override
-    public long getFirstInstalledTimeMs() throws PackageManager.NameNotFoundException {
-        return ApplicationUtils.getPackageInfo(applicationContext).firstInstallTime;
-    }
-
-    @Override
-    public long getLastUpdatedTimeMs() throws PackageManager.NameNotFoundException {
-        return ApplicationUtils.getPackageInfo(applicationContext).lastUpdateTime;
     }
 
     @NonNull

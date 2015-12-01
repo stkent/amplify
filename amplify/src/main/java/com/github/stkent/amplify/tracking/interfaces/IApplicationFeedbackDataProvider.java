@@ -20,11 +20,7 @@ import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.support.annotation.NonNull;
 
-public interface IApplicationInfoProvider {
-
-    long getFirstInstalledTimeMs() throws PackageManager.NameNotFoundException;
-
-    long getLastUpdatedTimeMs() throws PackageManager.NameNotFoundException;
+public interface IApplicationFeedbackDataProvider {
 
     @NonNull
     String getDeviceName();

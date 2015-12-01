@@ -25,18 +25,18 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.github.stkent.amplify.ILogger;
-import com.github.stkent.amplify.tracking.interfaces.IApplicationInfoProvider;
+import com.github.stkent.amplify.tracking.interfaces.IApplicationFeedbackDataProvider;
 import com.github.stkent.amplify.tracking.interfaces.IEnvironmentInfoProvider;
 import com.github.stkent.amplify.utils.time.SystemTimeUtil;
 
 public final class FeedbackUtil {
 
-    private final IApplicationInfoProvider applicationInfoProvider;
+    private final IApplicationFeedbackDataProvider applicationInfoProvider;
     private final IEnvironmentInfoProvider environmentInfoProvider;
     private final ILogger logger;
 
     public FeedbackUtil(
-            @NonNull final IApplicationInfoProvider applicationInfoProvider,
+            @NonNull final IApplicationFeedbackDataProvider applicationInfoProvider,
             @NonNull final IEnvironmentInfoProvider environmentInfoProvider,
             @NonNull final ILogger logger) {
         this.applicationInfoProvider = applicationInfoProvider;
