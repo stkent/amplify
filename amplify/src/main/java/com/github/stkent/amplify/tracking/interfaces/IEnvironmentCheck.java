@@ -25,11 +25,9 @@ import android.support.annotation.NonNull;
 public interface IEnvironmentCheck {
 
     /**
-     * @param applicationInfoProvider exposes information about the consuming
-     *        application
      * @return true if the consuming application is able to prompt the user
      *         for feedback; false otherwise
      */
-    boolean shouldAllowFeedbackPrompt(@NonNull final IEnvironmentInfoProvider applicationInfoProvider);
+    boolean shouldAllowFeedbackPrompt(@NonNull final IEnvironmentInfoProvider environmentInfoProvider);
 
 }
