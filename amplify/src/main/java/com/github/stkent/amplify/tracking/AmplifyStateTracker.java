@@ -30,16 +30,15 @@ import com.github.stkent.amplify.tracking.interfaces.IAmplifyStateTracker;
 import com.github.stkent.amplify.tracking.interfaces.IApplicationVersionNameProvider;
 import com.github.stkent.amplify.tracking.interfaces.IEnvironmentCheck;
 import com.github.stkent.amplify.tracking.interfaces.IEnvironmentInfoProvider;
+import com.github.stkent.amplify.tracking.interfaces.IEnvironmentManager;
 import com.github.stkent.amplify.tracking.interfaces.IEventCheck;
 import com.github.stkent.amplify.tracking.interfaces.IPublicEvent;
+import com.github.stkent.amplify.tracking.managers.EnvironmentManager;
 import com.github.stkent.amplify.tracking.managers.FirstEventTimesManager;
 import com.github.stkent.amplify.tracking.managers.LastEventTimesManager;
 import com.github.stkent.amplify.tracking.managers.LastEventVersionsManager;
 import com.github.stkent.amplify.tracking.managers.TotalEventCountsManager;
 import com.github.stkent.amplify.views.AmplifyView;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public final class AmplifyStateTracker implements IAmplifyStateTracker {
 
@@ -54,9 +53,9 @@ public final class AmplifyStateTracker implements IAmplifyStateTracker {
     private final Context applicationContext;
     private final IApplicationVersionNameProvider applicationVersionNameProvider;
     private final IEnvironmentInfoProvider environmentInfoProvider;
-    private final List<IEnvironmentCheck> environmentChecks = new ArrayList<>();
-    private final LastEventTimesManager lastEventTimesManager;
+    private final IEnvironmentManager environmentManager;
     private final FirstEventTimesManager firstEventTimesManager;
+    private final LastEventTimesManager lastEventTimesManager;
     private final LastEventVersionsManager lastEventVersionsManager;
     private final TotalEventCountsManager totalEventCountsManager;
     private final ILogger logger;
@@ -85,11 +84,12 @@ public final class AmplifyStateTracker implements IAmplifyStateTracker {
         this.applicationContext = context.getApplicationContext();
         this.applicationVersionNameProvider = new ApplicationVersionNameProvider(applicationContext);
         this.environmentInfoProvider = new EnvironmentInfoProvider(applicationContext);
-        this.logger = logger;
-        this.lastEventTimesManager = new LastEventTimesManager(logger, applicationContext);
+        this.environmentManager = new EnvironmentManager(logger, environmentInfoProvider);
         this.firstEventTimesManager = new FirstEventTimesManager(logger, applicationContext);
+        this.lastEventTimesManager = new LastEventTimesManager(logger, applicationContext);
         this.lastEventVersionsManager = new LastEventVersionsManager(logger, applicationContext);
         this.totalEventCountsManager = new TotalEventCountsManager(logger, applicationContext);
+        this.logger = logger;
     }
 
     // configuration methods
@@ -165,7 +165,7 @@ public final class AmplifyStateTracker implements IAmplifyStateTracker {
 
     @Override
     public IAmplifyStateTracker addEnvironmentCheck(@NonNull final IEnvironmentCheck environmentCheck) {
-        environmentChecks.add(environmentCheck);
+        environmentManager.addEnvironmentCheck(environmentCheck);
         return this;
     }
 
@@ -193,24 +193,12 @@ public final class AmplifyStateTracker implements IAmplifyStateTracker {
 
     @Override
     public boolean shouldAskForRating() {
-        return alwaysShow | (allEnvironmentChecksMet()
+        return alwaysShow | (
+                  environmentManager.shouldAllowFeedbackPrompt()
                 & totalEventCountsManager.shouldAllowFeedbackPrompt()
                 & firstEventTimesManager.shouldAllowFeedbackPrompt()
                 & lastEventTimesManager.shouldAllowFeedbackPrompt()
                 & lastEventVersionsManager.shouldAllowFeedbackPrompt());
-    }
-
-    // private implementation:
-
-    private boolean allEnvironmentChecksMet() {
-        for (final IEnvironmentCheck environmentCheck : environmentChecks) {
-            if (!environmentCheck.shouldAllowFeedbackPrompt(environmentInfoProvider)) {
-                logger.d("Environment check not satisfied: " + environmentCheck);
-                return false;
-            }
-        }
-
-        return true;
     }
 
 }
