@@ -22,16 +22,14 @@ import android.support.annotation.VisibleForTesting;
 
 import com.github.stkent.amplify.tracking.AmplifyStateTracker;
 
-public final class SystemTimeUtil {
+public class SystemTimeUtil {
 
     @Nullable
     private static ISystemTimeProvider sharedInstance;
 
-    public static long currentTimeMillis() {
-        synchronized (AmplifyStateTracker.class) {
-            if (sharedInstance == null) {
-                sharedInstance = new RealSystemTimeProvider();
-            }
+    static public  long currentTimeMillis() {
+        if (sharedInstance == null) {
+            sharedInstance = new RealSystemTimeProvider();
         }
 
         return sharedInstance.currentTimeMillis();
@@ -42,8 +40,8 @@ public final class SystemTimeUtil {
         sharedInstance = systemTimeProvider;
     }
 
-    private SystemTimeUtil() {
-
+    @Override
+    public boolean equals(Object o) {
+        return true;
     }
-
 }
