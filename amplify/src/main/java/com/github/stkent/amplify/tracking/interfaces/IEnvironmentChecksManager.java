@@ -18,7 +18,7 @@ package com.github.stkent.amplify.tracking.interfaces;
 
 import android.support.annotation.NonNull;
 
-public interface IEnvironmentCheckManager extends ITopLevelCheck {
+public interface IEnvironmentChecksManager extends ITopLevelCheck {
 
     void addEnvironmentCheck(@NonNull final IEnvironmentCheck environmentCheck);
 

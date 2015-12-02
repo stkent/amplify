@@ -24,7 +24,7 @@ import com.github.stkent.amplify.ILogger;
 import com.github.stkent.amplify.tracking.Settings;
 import com.github.stkent.amplify.tracking.interfaces.ISettings;
 
-public class TotalEventCountsManager extends BaseEventManager<Integer> {
+public class TotalEventCountsManager extends BaseTrackableEventsManager<Integer> {
 
     public TotalEventCountsManager(@NonNull final ILogger logger, @NonNull final Context applicationContext) {
         this(logger, new Settings<Integer>(applicationContext, logger));

@@ -18,9 +18,9 @@ package com.github.stkent.amplify.tracking;
 
 import android.support.annotation.NonNull;
 
-import com.github.stkent.amplify.tracking.interfaces.IEvent;
+import com.github.stkent.amplify.tracking.interfaces.ITrackableEvent;
 
-public enum ApplicationEvent implements IEvent {
+public enum ApplicationEvent implements ITrackableEvent {
 
     APP_INSTALLED,
     APP_UPDATED,

@@ -27,7 +27,7 @@ import com.github.stkent.amplify.tracking.Settings;
 import com.github.stkent.amplify.tracking.interfaces.IApplicationVersionNameProvider;
 import com.github.stkent.amplify.tracking.interfaces.ISettings;
 
-public class LastEventVersionsManager extends BaseEventManager<String> {
+public class LastEventVersionsManager extends BaseTrackableEventsManager<String> {
 
     private final IApplicationVersionNameProvider applicationVersionNameProvider;
 

@@ -22,9 +22,9 @@ import android.support.annotation.NonNull;
 import com.github.stkent.amplify.ILogger;
 import com.github.stkent.amplify.helpers.BaseTest;
 import com.github.stkent.amplify.helpers.FakeSettings;
-import com.github.stkent.amplify.tracking.interfaces.IEvent;
+import com.github.stkent.amplify.tracking.interfaces.ITrackableEvent;
 import com.github.stkent.amplify.tracking.interfaces.IEventCheck;
-import com.github.stkent.amplify.tracking.interfaces.IPublicEvent;
+import com.github.stkent.amplify.tracking.interfaces.IPublicTrackableEvent;
 
 import org.junit.Test;
 import org.mockito.Mock;
@@ -44,7 +44,7 @@ public class FirstEventTimesManagerTest extends BaseTest {
     @Mock
     private ILogger mockLogger;
     @Mock
-    private IPublicEvent mockPublicEvent;
+    private IPublicTrackableEvent mockPublicEvent;
     @Mock
     private IEventCheck<Long> mockEventCheck;
 
@@ -115,7 +115,7 @@ public class FirstEventTimesManagerTest extends BaseTest {
                 trackedEventTime);
     }
 
-    private String getExpectedTrackingKeyForEvent(@NonNull final IEvent event) {
+    private String getExpectedTrackingKeyForEvent(@NonNull final ITrackableEvent event) {
         return "AMPLIFY_" + event.getTrackingKey() + "_FIRSTEVENTTIMESMANAGER";
     }
 

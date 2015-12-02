@@ -16,6 +16,19 @@
  */
 package com.github.stkent.amplify.tracking.interfaces;
 
-public interface IApplicationCheckManager extends ITopLevelCheck {
+import android.support.annotation.NonNull;
+
+/**
+ * An abstract representation of an event whose occurrences can be tracked
+ * across consuming application launches.
+ */
+public interface ITrackableEvent {
+
+    /**
+     * @return a key that uniquely identifies this event within the
+     *         consuming application
+     */
+    @NonNull
+    String getTrackingKey();
 
 }

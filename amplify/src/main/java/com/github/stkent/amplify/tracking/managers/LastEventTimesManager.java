@@ -25,7 +25,7 @@ import com.github.stkent.amplify.tracking.Settings;
 import com.github.stkent.amplify.tracking.interfaces.ISettings;
 import com.github.stkent.amplify.utils.time.SystemTimeUtil;
 
-public class LastEventTimesManager extends BaseEventManager<Long> {
+public class LastEventTimesManager extends BaseTrackableEventsManager<Long> {
 
     public LastEventTimesManager(@NonNull final ILogger logger, @NonNull final Context applicationContext) {
         this(logger, new Settings<Long>(applicationContext, logger));

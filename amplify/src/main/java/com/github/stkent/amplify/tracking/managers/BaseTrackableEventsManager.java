@@ -19,9 +19,9 @@ package com.github.stkent.amplify.tracking.managers;
 import android.support.annotation.NonNull;
 
 import com.github.stkent.amplify.ILogger;
-import com.github.stkent.amplify.tracking.interfaces.IEvent;
+import com.github.stkent.amplify.tracking.interfaces.ITrackableEvent;
 import com.github.stkent.amplify.tracking.interfaces.IEventCheck;
-import com.github.stkent.amplify.tracking.interfaces.IEventManager;
+import com.github.stkent.amplify.tracking.interfaces.ITrackableEventsManager;
 import com.github.stkent.amplify.tracking.interfaces.ISettings;
 
 import java.util.ArrayList;
@@ -29,13 +29,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public abstract class BaseEventManager<T> implements IEventManager<T> {
+public abstract class BaseTrackableEventsManager<T> implements ITrackableEventsManager<T> {
 
     private static final String AMPLIFY_TRACKING_KEY_PREFIX = "AMPLIFY_";
 
     private final ILogger logger;
     private final ISettings<T> settings;
-    private final ConcurrentHashMap<IEvent, List<IEventCheck<T>>> internalMap;
+    private final ConcurrentHashMap<ITrackableEvent, List<IEventCheck<T>>> internalMap;
 
     /**
      * @return a key that uniquely identifies this event tracker within the
@@ -50,7 +50,7 @@ public abstract class BaseEventManager<T> implements IEventManager<T> {
     @NonNull
     protected abstract T getUpdatedTrackingValue(@NonNull final T cachedEventValue);
 
-    protected BaseEventManager(
+    protected BaseTrackableEventsManager(
             @NonNull final ILogger logger,
             @NonNull final ISettings<T> settings) {
         this.logger = logger;
@@ -59,7 +59,7 @@ public abstract class BaseEventManager<T> implements IEventManager<T> {
     }
 
     @Override
-    public void trackEvent(@NonNull final IEvent event, @NonNull final IEventCheck<T> eventCheck) {
+    public void trackEvent(@NonNull final ITrackableEvent event, @NonNull final IEventCheck<T> eventCheck) {
         if (!isTrackingEvent(event)) {
             internalMap.put(event, new ArrayList<IEventCheck<T>>());
         }
@@ -70,7 +70,7 @@ public abstract class BaseEventManager<T> implements IEventManager<T> {
     }
 
     @Override
-    public void notifyEventTriggered(@NonNull final IEvent event) {
+    public void notifyEventTriggered(@NonNull final ITrackableEvent event) {
         if (isTrackingEvent(event)) {
 
             final T cachedTrackingValue = getCachedTrackingValue(event);
@@ -91,8 +91,8 @@ public abstract class BaseEventManager<T> implements IEventManager<T> {
     @Override
     public boolean shouldAllowFeedbackPrompt() {
 
-        for (final Map.Entry<IEvent, List<IEventCheck<T>>> eventCheckSet : internalMap.entrySet()) {
-            final IEvent event = eventCheckSet.getKey();
+        for (final Map.Entry<ITrackableEvent, List<IEventCheck<T>>> eventCheckSet : internalMap.entrySet()) {
+            final ITrackableEvent event = eventCheckSet.getKey();
 
             for (final IEventCheck<T> eventCheck : eventCheckSet.getValue()) {
                 final T cachedEventValue = getCachedTrackingValue(event);
@@ -113,18 +113,18 @@ public abstract class BaseEventManager<T> implements IEventManager<T> {
         return logger;
     }
 
-    private boolean isTrackingEvent(@NonNull final IEvent event) {
+    private boolean isTrackingEvent(@NonNull final ITrackableEvent event) {
         return internalMap.containsKey(event);
     }
 
-    private String getTrackingKey(@NonNull final IEvent event) {
+    private String getTrackingKey(@NonNull final ITrackableEvent event) {
         return AMPLIFY_TRACKING_KEY_PREFIX
                 + event.getTrackingKey()
                 + "_"
                 + this.getTrackingKeySuffix().toUpperCase();
     }
 
-    private T getCachedTrackingValue(@NonNull final IEvent event) {
+    private T getCachedTrackingValue(@NonNull final ITrackableEvent event) {
         T value = settings.readTrackingValue(getTrackingKey(event));
         return value != null ? value : defaultTrackingValue();
     }
