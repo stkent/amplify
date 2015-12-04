@@ -22,9 +22,8 @@ import android.support.annotation.NonNull;
 import com.github.stkent.amplify.ILogger;
 import com.github.stkent.amplify.helpers.BaseTest;
 import com.github.stkent.amplify.helpers.FakeSettings;
-import com.github.stkent.amplify.tracking.interfaces.ITrackableEvent;
 import com.github.stkent.amplify.tracking.interfaces.IEventCheck;
-import com.github.stkent.amplify.tracking.interfaces.IPublicTrackableEvent;
+import com.github.stkent.amplify.tracking.interfaces.ITrackableEvent;
 
 import org.junit.Test;
 import org.mockito.Mock;
@@ -42,7 +41,7 @@ public class TotalEventCountsManagerTest extends BaseTest {
     @Mock
     private ILogger mockLogger;
     @Mock
-    private IPublicTrackableEvent mockPublicEvent;
+    private ITrackableEvent mockTrackableEvent;
     @Mock
     private IEventCheck<Integer> mockEventCheck;
 
@@ -54,18 +53,18 @@ public class TotalEventCountsManagerTest extends BaseTest {
                 mockLogger,
                 fakeSettings);
 
-        when(mockPublicEvent.getTrackingKey()).thenReturn(DEFAULT_MOCK_EVENT_TRACKING_KEY);
-        totalEventCountsManager.trackEvent(mockPublicEvent, mockEventCheck);
+        when(mockTrackableEvent.getTrackingKey()).thenReturn(DEFAULT_MOCK_EVENT_TRACKING_KEY);
+        totalEventCountsManager.trackEvent(mockTrackableEvent, mockEventCheck);
     }
 
     @Test
     public void testThatEventsAreSavedWithCorrectTrackingKey() {
         // Arrange
-        final String expectedTrackingKey = getExpectedTrackingKeyForEvent(mockPublicEvent);
+        final String expectedTrackingKey = getExpectedTrackingKeyForEvent(mockTrackableEvent);
         assert fakeSettings.readTrackingValue(expectedTrackingKey) == null;
 
         // Act
-        totalEventCountsManager.notifyEventTriggered(mockPublicEvent);
+        totalEventCountsManager.notifyEventTriggered(mockTrackableEvent);
 
         // Assert
         final Integer trackedTotalEventCount = fakeSettings.readTrackingValue(expectedTrackingKey);
@@ -79,18 +78,18 @@ public class TotalEventCountsManagerTest extends BaseTest {
     @Test
     public void testThatCorrectNumberOfEventsIsRecorded() {
         // Arrange
-        totalEventCountsManager.trackEvent(mockPublicEvent, mockEventCheck);
+        totalEventCountsManager.trackEvent(mockTrackableEvent, mockEventCheck);
 
         final Integer expectedEventCount = 7;
         assert expectedEventCount > 0;
 
         // Act
         for (int i = 0; i < expectedEventCount; i++) {
-            totalEventCountsManager.notifyEventTriggered(mockPublicEvent);
+            totalEventCountsManager.notifyEventTriggered(mockTrackableEvent);
         }
 
         // Assert
-        final Integer actualEventCount = fakeSettings.readTrackingValue(getExpectedTrackingKeyForEvent(mockPublicEvent));
+        final Integer actualEventCount = fakeSettings.readTrackingValue(getExpectedTrackingKeyForEvent(mockTrackableEvent));
 
         assertEquals(
                 "The correct number of events should have been recorded",
