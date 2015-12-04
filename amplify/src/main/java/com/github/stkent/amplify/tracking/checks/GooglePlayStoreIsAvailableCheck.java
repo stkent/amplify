@@ -18,7 +18,7 @@ package com.github.stkent.amplify.tracking.checks;
 
 import android.support.annotation.NonNull;
 
-import com.github.stkent.amplify.tracking.interfaces.IEnvironmentInfoProvider;
+import com.github.stkent.amplify.tracking.interfaces.IEnvironmentCapabilitiesProvider;
 import com.github.stkent.amplify.tracking.interfaces.IEnvironmentCheck;
 
 /**
@@ -28,7 +28,7 @@ import com.github.stkent.amplify.tracking.interfaces.IEnvironmentCheck;
 public class GooglePlayStoreIsAvailableCheck implements IEnvironmentCheck {
 
     @Override
-    public boolean shouldAllowFeedbackPrompt(@NonNull final IEnvironmentInfoProvider environmentInfoProvider) {
+    public boolean shouldAllowFeedbackPrompt(@NonNull final IEnvironmentCapabilitiesProvider environmentInfoProvider) {
         return environmentInfoProvider.isGooglePlayStoreInstalled();
     }
 

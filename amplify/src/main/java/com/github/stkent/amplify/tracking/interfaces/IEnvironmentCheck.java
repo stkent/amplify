@@ -28,6 +28,6 @@ public interface IEnvironmentCheck {
      * @return true if the consuming application is able to prompt the user
      *         for feedback; false otherwise
      */
-    boolean shouldAllowFeedbackPrompt(@NonNull final IEnvironmentInfoProvider environmentInfoProvider);
+    boolean shouldAllowFeedbackPrompt(@NonNull final IEnvironmentCapabilitiesProvider environmentInfoProvider);
 
 }

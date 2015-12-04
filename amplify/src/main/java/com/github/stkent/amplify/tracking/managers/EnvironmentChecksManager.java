@@ -20,7 +20,7 @@ import android.support.annotation.NonNull;
 
 import com.github.stkent.amplify.ILogger;
 import com.github.stkent.amplify.tracking.interfaces.IEnvironmentCheck;
-import com.github.stkent.amplify.tracking.interfaces.IEnvironmentInfoProvider;
+import com.github.stkent.amplify.tracking.interfaces.IEnvironmentCapabilitiesProvider;
 import com.github.stkent.amplify.tracking.interfaces.IEnvironmentChecksManager;
 
 import java.util.ArrayList;
@@ -32,14 +32,14 @@ public class EnvironmentChecksManager implements IEnvironmentChecksManager {
     private final ILogger logger;
 
     @NonNull
-    private final IEnvironmentInfoProvider environmentInfoProvider;
+    private final IEnvironmentCapabilitiesProvider environmentInfoProvider;
 
     @NonNull
     private final List<IEnvironmentCheck> environmentChecks = new ArrayList<>();
 
     public EnvironmentChecksManager(
             @NonNull final ILogger logger,
-            @NonNull final IEnvironmentInfoProvider environmentInfoProvider) {
+            @NonNull final IEnvironmentCapabilitiesProvider environmentInfoProvider) {
         this.logger = logger;
         this.environmentInfoProvider = environmentInfoProvider;
     }

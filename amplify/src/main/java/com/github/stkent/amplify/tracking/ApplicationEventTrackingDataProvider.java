@@ -20,15 +20,17 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 
-import com.github.stkent.amplify.tracking.interfaces.IApplicationInfoProvider;
+import com.github.stkent.amplify.tracking.interfaces.IApplicationEventTrackingDataProvider;
 import com.github.stkent.amplify.utils.ApplicationUtils;
 
-public class ApplicationInfoProvider implements IApplicationInfoProvider {
+public class ApplicationEventTrackingDataProvider implements IApplicationEventTrackingDataProvider {
+
+    private static final long DEFAULT_EVENT_TIME_MS = 0;
 
     @NonNull
     private final Context applicationContext;
 
-    public ApplicationInfoProvider(@NonNull final Context applicationContext) {
+    public ApplicationEventTrackingDataProvider(@NonNull final Context applicationContext) {
         this.applicationContext = applicationContext;
     }
 
@@ -37,7 +39,7 @@ public class ApplicationInfoProvider implements IApplicationInfoProvider {
         try {
             return ApplicationUtils.getPackageInfo(applicationContext).firstInstallTime;
         } catch (PackageManager.NameNotFoundException e) {
-            return Long.MAX_VALUE;
+            return DEFAULT_EVENT_TIME_MS;
         }
     }
 
@@ -46,7 +48,7 @@ public class ApplicationInfoProvider implements IApplicationInfoProvider {
         try {
             return ApplicationUtils.getPackageInfo(applicationContext).lastUpdateTime;
         } catch (PackageManager.NameNotFoundException e) {
-            return Long.MAX_VALUE;
+            return DEFAULT_EVENT_TIME_MS;
         }
     }
 

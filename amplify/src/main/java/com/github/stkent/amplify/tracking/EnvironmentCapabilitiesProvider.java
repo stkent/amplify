@@ -22,14 +22,14 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.support.annotation.NonNull;
 
-import com.github.stkent.amplify.tracking.interfaces.IEnvironmentInfoProvider;
+import com.github.stkent.amplify.tracking.interfaces.IEnvironmentCapabilitiesProvider;
 import com.github.stkent.amplify.utils.ApplicationUtils;
 
 import java.util.List;
 
 import static android.content.pm.PackageManager.GET_ACTIVITIES;
 
-public final class EnvironmentInfoProvider implements IEnvironmentInfoProvider {
+public final class EnvironmentCapabilitiesProvider implements IEnvironmentCapabilitiesProvider {
 
     /**
      * Package name for the Google Play Store. Value can be verified here:
@@ -40,7 +40,7 @@ public final class EnvironmentInfoProvider implements IEnvironmentInfoProvider {
     @NonNull
     private final Context applicationContext;
 
-    public EnvironmentInfoProvider(@NonNull final Context applicationContext) {
+    public EnvironmentCapabilitiesProvider(@NonNull final Context applicationContext) {
         this.applicationContext = applicationContext;
     }
 

@@ -27,11 +27,11 @@ import com.github.stkent.amplify.tracking.checks.MaximumCountCheck;
 import com.github.stkent.amplify.tracking.checks.VersionChangedCheck;
 import com.github.stkent.amplify.tracking.interfaces.IAmplifyStateTracker;
 import com.github.stkent.amplify.tracking.interfaces.IApplicationChecksManager;
-import com.github.stkent.amplify.tracking.interfaces.IApplicationInfoProvider;
+import com.github.stkent.amplify.tracking.interfaces.IApplicationEventTrackingDataProvider;
 import com.github.stkent.amplify.tracking.interfaces.IApplicationVersionNameProvider;
 import com.github.stkent.amplify.tracking.interfaces.IEnvironmentCheck;
 import com.github.stkent.amplify.tracking.interfaces.IEnvironmentChecksManager;
-import com.github.stkent.amplify.tracking.interfaces.IEnvironmentInfoProvider;
+import com.github.stkent.amplify.tracking.interfaces.IEnvironmentCapabilitiesProvider;
 import com.github.stkent.amplify.tracking.interfaces.IEventCheck;
 import com.github.stkent.amplify.tracking.interfaces.ITrackableEvent;
 import com.github.stkent.amplify.tracking.managers.ApplicationChecksManager;
@@ -54,9 +54,9 @@ public final class AmplifyStateTracker implements IAmplifyStateTracker {
 
     private final Context applicationContext;
 
-    private final IApplicationInfoProvider applicationInfoProvider;
+    private final IApplicationEventTrackingDataProvider applicationInfoProvider;
     private final IApplicationVersionNameProvider applicationVersionNameProvider;
-    private final IEnvironmentInfoProvider environmentInfoProvider;
+    private final IEnvironmentCapabilitiesProvider environmentInfoProvider;
 
     private final IApplicationChecksManager applicationChecksManager;
     private final IEnvironmentChecksManager environmentChecksManager;
@@ -90,9 +90,9 @@ public final class AmplifyStateTracker implements IAmplifyStateTracker {
             @NonNull final ILogger logger) {
         this.applicationContext = context.getApplicationContext();
 
-        this.applicationInfoProvider = new ApplicationInfoProvider(applicationContext);
+        this.applicationInfoProvider = new ApplicationEventTrackingDataProvider(applicationContext);
         this.applicationVersionNameProvider = new ApplicationVersionNameProvider(applicationContext);
-        this.environmentInfoProvider = new EnvironmentInfoProvider(applicationContext);
+        this.environmentInfoProvider = new EnvironmentCapabilitiesProvider(applicationContext);
 
         this.applicationChecksManager = new ApplicationChecksManager(applicationContext, applicationInfoProvider, logger);
         this.environmentChecksManager = new EnvironmentChecksManager(logger, environmentInfoProvider);

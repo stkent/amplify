@@ -17,7 +17,7 @@
 package com.github.stkent.amplify.tracking.checks;
 
 import com.github.stkent.amplify.helpers.BaseTest;
-import com.github.stkent.amplify.tracking.interfaces.IEnvironmentInfoProvider;
+import com.github.stkent.amplify.tracking.interfaces.IEnvironmentCapabilitiesProvider;
 
 import org.junit.Test;
 import org.mockito.Mock;
@@ -31,7 +31,7 @@ public class GooglePlayStoreIsAvailableCheckTest extends BaseTest {
     private GooglePlayStoreIsAvailableCheck googlePlayStoreIsAvailableCheck;
 
     @Mock
-    private IEnvironmentInfoProvider mockEnvironmentInfoProvider;
+    private IEnvironmentCapabilitiesProvider mockEnvironmentInfoProvider;
 
     @Override
     public void localSetUp() {

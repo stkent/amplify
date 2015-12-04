@@ -32,7 +32,7 @@ import com.github.stkent.amplify.ILogger;
 import com.github.stkent.amplify.R;
 import com.github.stkent.amplify.tracking.AmplifyStateTracker;
 import com.github.stkent.amplify.tracking.ApplicationFeedbackDataProvider;
-import com.github.stkent.amplify.tracking.EnvironmentInfoProvider;
+import com.github.stkent.amplify.tracking.EnvironmentCapabilitiesProvider;
 import com.github.stkent.amplify.tracking.AmplifyViewEvent;
 import com.github.stkent.amplify.tracking.interfaces.IAmplifyStateTracker;
 import com.github.stkent.amplify.utils.FeedbackUtil;
@@ -112,7 +112,7 @@ public class AmplifyView extends FrameLayout {
         // todo: replace this logger with an injected logger:
         final FeedbackUtil feedbackUtil = new FeedbackUtil(
                 new ApplicationFeedbackDataProvider(applicationContext),
-                new EnvironmentInfoProvider(applicationContext),
+                new EnvironmentCapabilitiesProvider(applicationContext),
                 logger);
 
         if (getContext() instanceof Activity) {
