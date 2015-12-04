@@ -18,4 +18,12 @@ package com.github.stkent.amplify.tracking.interfaces;
 
 public interface IApplicationChecksManager extends ITopLevelCheck {
 
+    void setInstallTimeCooldownDays(final int cooldownPeriodDays);
+
+    void setLastUpdateTimeCooldownDays(final int cooldownPeriodDays);
+
+    void setLastCrashTimeCooldownDays(final int cooldownPeriodDays);
+
+    void notifyOfCrash();
+
 }

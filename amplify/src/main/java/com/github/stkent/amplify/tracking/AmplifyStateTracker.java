@@ -25,14 +25,16 @@ import com.github.stkent.amplify.tracking.checks.CooldownDaysCheck;
 import com.github.stkent.amplify.tracking.checks.GooglePlayStoreIsAvailableCheck;
 import com.github.stkent.amplify.tracking.checks.MaximumCountCheck;
 import com.github.stkent.amplify.tracking.checks.VersionChangedCheck;
-import com.github.stkent.amplify.tracking.checks.WarmUpDaysCheck;
 import com.github.stkent.amplify.tracking.interfaces.IAmplifyStateTracker;
+import com.github.stkent.amplify.tracking.interfaces.IApplicationChecksManager;
+import com.github.stkent.amplify.tracking.interfaces.IApplicationInfoProvider;
 import com.github.stkent.amplify.tracking.interfaces.IApplicationVersionNameProvider;
 import com.github.stkent.amplify.tracking.interfaces.IEnvironmentCheck;
 import com.github.stkent.amplify.tracking.interfaces.IEnvironmentChecksManager;
 import com.github.stkent.amplify.tracking.interfaces.IEnvironmentInfoProvider;
 import com.github.stkent.amplify.tracking.interfaces.IEventCheck;
 import com.github.stkent.amplify.tracking.interfaces.ITrackableEvent;
+import com.github.stkent.amplify.tracking.managers.ApplicationChecksManager;
 import com.github.stkent.amplify.tracking.managers.EnvironmentChecksManager;
 import com.github.stkent.amplify.tracking.managers.FirstEventTimesManager;
 import com.github.stkent.amplify.tracking.managers.LastEventTimesManager;
@@ -51,13 +53,18 @@ public final class AmplifyStateTracker implements IAmplifyStateTracker {
     // instance fields
 
     private final Context applicationContext;
+
+    private final IApplicationInfoProvider applicationInfoProvider;
     private final IApplicationVersionNameProvider applicationVersionNameProvider;
     private final IEnvironmentInfoProvider environmentInfoProvider;
-    private final IEnvironmentChecksManager environmentManager;
+
+    private final IApplicationChecksManager applicationChecksManager;
+    private final IEnvironmentChecksManager environmentChecksManager;
     private final FirstEventTimesManager firstEventTimesManager;
     private final LastEventTimesManager lastEventTimesManager;
     private final LastEventVersionsManager lastEventVersionsManager;
     private final TotalEventCountsManager totalEventCountsManager;
+
     private final ILogger logger;
 
     private boolean alwaysShow;
@@ -82,13 +89,18 @@ public final class AmplifyStateTracker implements IAmplifyStateTracker {
             @NonNull final Context context,
             @NonNull final ILogger logger) {
         this.applicationContext = context.getApplicationContext();
+
+        this.applicationInfoProvider = new ApplicationInfoProvider(applicationContext);
         this.applicationVersionNameProvider = new ApplicationVersionNameProvider(applicationContext);
         this.environmentInfoProvider = new EnvironmentInfoProvider(applicationContext);
-        this.environmentManager = new EnvironmentChecksManager(logger, environmentInfoProvider);
+
+        this.applicationChecksManager = new ApplicationChecksManager(applicationContext, applicationInfoProvider, logger);
+        this.environmentChecksManager = new EnvironmentChecksManager(logger, environmentInfoProvider);
         this.firstEventTimesManager = new FirstEventTimesManager(logger, applicationContext);
         this.lastEventTimesManager = new LastEventTimesManager(logger, applicationContext);
         this.lastEventVersionsManager = new LastEventVersionsManager(logger, applicationContext);
         this.totalEventCountsManager = new TotalEventCountsManager(logger, applicationContext);
+
         this.logger = logger;
     }
 
@@ -98,8 +110,8 @@ public final class AmplifyStateTracker implements IAmplifyStateTracker {
     public IAmplifyStateTracker configureWithDefaults() {
         return this
                 .addEnvironmentCheck(new GooglePlayStoreIsAvailableCheck())
-                .addInitialAppInstallTimeCheck(new WarmUpDaysCheck(ONE_WEEK))
-                .addLastCrashTimeCheck(new CooldownDaysCheck(ONE_WEEK))
+                .setInstallTimeCooldownDays(ONE_WEEK)
+                .setLastCrashTimeCooldownDays(ONE_WEEK)
                 .trackTotalEventCount(AmplifyViewEvent.USER_GAVE_POSITIVE_FEEDBACK, new MaximumCountCheck(ONE_DAY))
                 .trackLastEventTime(AmplifyViewEvent.USER_GAVE_CRITICAL_FEEDBACK, new CooldownDaysCheck(ONE_WEEK))
                 .trackLastEventTime(AmplifyViewEvent.USER_DECLINED_CRITICAL_FEEDBACK, new CooldownDaysCheck(ONE_WEEK))
@@ -121,21 +133,18 @@ public final class AmplifyStateTracker implements IAmplifyStateTracker {
         return this;
     }
 
-    @Override
-    public IAmplifyStateTracker addInitialAppInstallTimeCheck(@NonNull final IEventCheck<Long> eventCheck) {
-        // fixme: fill this in
+    public IAmplifyStateTracker setInstallTimeCooldownDays(final int cooldownPeriodDays) {
+        applicationChecksManager.setInstallTimeCooldownDays(cooldownPeriodDays);
         return this;
     }
 
-    @Override
-    public IAmplifyStateTracker addLastAppUpdateTimeCheck(@NonNull final IEventCheck<Long> eventCheck) {
-        // fixme: fill this in
+    public IAmplifyStateTracker setLastUpdateTimeCooldownDays(final int cooldownPeriodDays) {
+        applicationChecksManager.setLastUpdateTimeCooldownDays(cooldownPeriodDays);
         return this;
     }
 
-    @Override
-    public IAmplifyStateTracker addLastCrashTimeCheck(@NonNull final IEventCheck<Long> eventCheck) {
-        // fixme: fill this in
+    public IAmplifyStateTracker setLastCrashTimeCooldownDays(final int cooldownPeriodDays) {
+        applicationChecksManager.setLastCrashTimeCooldownDays(cooldownPeriodDays);
         return this;
     }
 
@@ -165,7 +174,7 @@ public final class AmplifyStateTracker implements IAmplifyStateTracker {
 
     @Override
     public IAmplifyStateTracker addEnvironmentCheck(@NonNull final IEnvironmentCheck environmentCheck) {
-        environmentManager.addEnvironmentCheck(environmentCheck);
+        environmentChecksManager.addEnvironmentCheck(environmentCheck);
         return this;
     }
 
@@ -194,7 +203,7 @@ public final class AmplifyStateTracker implements IAmplifyStateTracker {
     @Override
     public boolean shouldAskForRating() {
         return alwaysShow | (
-                  environmentManager.shouldAllowFeedbackPrompt()
+                  environmentChecksManager.shouldAllowFeedbackPrompt()
                 & totalEventCountsManager.shouldAllowFeedbackPrompt()
                 & firstEventTimesManager.shouldAllowFeedbackPrompt()
                 & lastEventTimesManager.shouldAllowFeedbackPrompt()

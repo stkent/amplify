@@ -31,11 +31,11 @@ public interface IAmplifyStateTracker {
 
     IAmplifyStateTracker addEnvironmentCheck(@NonNull final IEnvironmentCheck requirement);
 
-    IAmplifyStateTracker addInitialAppInstallTimeCheck(@NonNull final IEventCheck<Long> eventCheck);
+    IAmplifyStateTracker setInstallTimeCooldownDays(final int cooldownPeriodDays);
 
-    IAmplifyStateTracker addLastAppUpdateTimeCheck(@NonNull final IEventCheck<Long> eventCheck);
+    IAmplifyStateTracker setLastUpdateTimeCooldownDays(final int cooldownPeriodDays);
 
-    IAmplifyStateTracker addLastCrashTimeCheck(@NonNull final IEventCheck<Long> eventCheck);
+    IAmplifyStateTracker setLastCrashTimeCooldownDays(final int cooldownPeriodDays);
 
     IAmplifyStateTracker trackTotalEventCount(@NonNull final ITrackableEvent event, @NonNull final IEventCheck<Integer> eventCheck);
 
