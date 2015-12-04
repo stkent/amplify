@@ -27,7 +27,7 @@ import com.github.stkent.amplify.utils.time.SystemTimeUtil;
 
 public class FirstEventTimesManager extends BaseTrackableEventsManager<Long> {
 
-    public FirstEventTimesManager(@NonNull final ILogger logger, @NonNull final Context applicationContext) {
+    public FirstEventTimesManager(@NonNull final Context applicationContext, @NonNull final ILogger logger) {
         this(logger, new Settings<Long>(applicationContext, logger));
     }
 

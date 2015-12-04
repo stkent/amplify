@@ -101,7 +101,7 @@ public class ApplicationChecksManager implements IApplicationChecksManager {
 
     @Override
     public void setLastCrashTimeCooldownDays(final int cooldownPeriodDays) {
-        lastCrashTimeManager = new LastEventTimesManager(logger, applicationContext);
+        lastCrashTimeManager = new LastEventTimesManager(applicationContext, logger);
         lastCrashTimeManager.trackEvent(APP_CRASHED, new CooldownDaysCheck(cooldownPeriodDays));
 
         final Thread.UncaughtExceptionHandler defaultUncaughtExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();

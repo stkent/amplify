@@ -31,7 +31,7 @@ public class LastEventVersionsManager extends BaseTrackableEventsManager<String>
 
     private final IApplicationVersionNameProvider applicationVersionNameProvider;
 
-    public LastEventVersionsManager(@NonNull final ILogger logger, @NonNull final Context applicationContext) {
+    public LastEventVersionsManager(@NonNull final Context applicationContext, @NonNull final ILogger logger) {
         this(logger, new Settings<String>(applicationContext, logger), new ApplicationVersionNameProvider(applicationContext));
     }
 

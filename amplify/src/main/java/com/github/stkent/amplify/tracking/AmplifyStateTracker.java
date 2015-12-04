@@ -95,11 +95,11 @@ public final class AmplifyStateTracker implements IAmplifyStateTracker {
         this.environmentInfoProvider = new EnvironmentCapabilitiesProvider(applicationContext);
 
         this.applicationChecksManager = new ApplicationChecksManager(applicationContext, applicationInfoProvider, logger);
-        this.environmentChecksManager = new EnvironmentChecksManager(logger, environmentInfoProvider);
-        this.firstEventTimesManager = new FirstEventTimesManager(logger, applicationContext);
-        this.lastEventTimesManager = new LastEventTimesManager(logger, applicationContext);
-        this.lastEventVersionsManager = new LastEventVersionsManager(logger, applicationContext);
-        this.totalEventCountsManager = new TotalEventCountsManager(logger, applicationContext);
+        this.environmentChecksManager = new EnvironmentChecksManager(environmentInfoProvider, logger);
+        this.firstEventTimesManager = new FirstEventTimesManager(applicationContext, logger);
+        this.lastEventTimesManager = new LastEventTimesManager(applicationContext, logger);
+        this.lastEventVersionsManager = new LastEventVersionsManager(applicationContext, logger);
+        this.totalEventCountsManager = new TotalEventCountsManager(applicationContext, logger);
 
         this.logger = logger;
     }

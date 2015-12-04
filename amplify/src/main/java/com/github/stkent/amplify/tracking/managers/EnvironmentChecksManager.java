@@ -37,9 +37,7 @@ public class EnvironmentChecksManager implements IEnvironmentChecksManager {
     @NonNull
     private final List<IEnvironmentCheck> environmentChecks = new ArrayList<>();
 
-    public EnvironmentChecksManager(
-            @NonNull final ILogger logger,
-            @NonNull final IEnvironmentCapabilitiesProvider environmentInfoProvider) {
+    public EnvironmentChecksManager(@NonNull final IEnvironmentCapabilitiesProvider environmentInfoProvider, @NonNull final ILogger logger) {
         this.logger = logger;
         this.environmentInfoProvider = environmentInfoProvider;
     }
