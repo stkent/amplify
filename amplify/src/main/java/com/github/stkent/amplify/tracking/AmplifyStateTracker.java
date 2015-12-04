@@ -51,12 +51,7 @@ public final class AmplifyStateTracker implements IAmplifyStateTracker {
     private static final int ONE_DAY = 1;
 
     // instance fields
-
-    private final Context applicationContext;
-
-    private final IApplicationEventTrackingDataProvider applicationInfoProvider;
     private final IApplicationVersionNameProvider applicationVersionNameProvider;
-    private final IEnvironmentCapabilitiesProvider environmentInfoProvider;
 
     private final IApplicationChecksManager applicationChecksManager;
     private final IEnvironmentChecksManager environmentChecksManager;
@@ -88,14 +83,14 @@ public final class AmplifyStateTracker implements IAmplifyStateTracker {
     private AmplifyStateTracker(
             @NonNull final Context context,
             @NonNull final ILogger logger) {
-        this.applicationContext = context.getApplicationContext();
+        final Context applicationContext = context.getApplicationContext();
+        final IApplicationEventTrackingDataProvider applicationInfoProvider = new ApplicationEventTrackingDataProvider(applicationContext);
+        final IEnvironmentCapabilitiesProvider environmentInfoProvider = new EnvironmentCapabilitiesProvider(applicationContext);
 
-        this.applicationInfoProvider = new ApplicationEventTrackingDataProvider(applicationContext);
         this.applicationVersionNameProvider = new ApplicationVersionNameProvider(applicationContext);
-        this.environmentInfoProvider = new EnvironmentCapabilitiesProvider(applicationContext);
 
         this.applicationChecksManager = new ApplicationChecksManager(applicationContext, applicationInfoProvider, logger);
-        this.environmentChecksManager = new EnvironmentChecksManager(environmentInfoProvider, logger);
+        this.environmentChecksManager = new EnvironmentChecksManager(environmentInfoProvider);
         this.firstEventTimesManager = new FirstEventTimesManager(applicationContext, logger);
         this.lastEventTimesManager = new LastEventTimesManager(applicationContext, logger);
         this.lastEventVersionsManager = new LastEventVersionsManager(applicationContext, logger);
