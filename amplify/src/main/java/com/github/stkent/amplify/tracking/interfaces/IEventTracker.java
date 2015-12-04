@@ -18,17 +18,10 @@ package com.github.stkent.amplify.tracking.interfaces;
 
 import android.support.annotation.NonNull;
 
-/**
- * An abstract representation of an event whose occurrences can be tracked
- * across consuming application launches.
- */
-public interface IEvent {
+public interface IEventTracker<T> {
 
-    /**
-     * @return a key that uniquely identifies this event within the
-     *         consuming application
-     */
-    @NonNull
-    String getTrackingKey();
+    void trackEvent(@NonNull final ITrackableEvent event, @NonNull final IEventCheck<T> eventCheck);
+
+    void notifyEventTriggered(@NonNull final ITrackableEvent event);
 
 }

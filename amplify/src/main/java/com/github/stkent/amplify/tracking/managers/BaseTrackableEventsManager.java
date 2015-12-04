@@ -14,14 +14,14 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package com.github.stkent.amplify.tracking.trackers;
+package com.github.stkent.amplify.tracking.managers;
 
 import android.support.annotation.NonNull;
 
 import com.github.stkent.amplify.ILogger;
-import com.github.stkent.amplify.tracking.interfaces.IApplicationInfoProvider;
-import com.github.stkent.amplify.tracking.interfaces.IEvent;
+import com.github.stkent.amplify.tracking.interfaces.ITrackableEvent;
 import com.github.stkent.amplify.tracking.interfaces.IEventCheck;
+import com.github.stkent.amplify.tracking.interfaces.ITrackableEventsManager;
 import com.github.stkent.amplify.tracking.interfaces.ISettings;
 
 import java.util.ArrayList;
@@ -29,14 +29,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public abstract class EventTracker<T> {
+public abstract class BaseTrackableEventsManager<T> implements ITrackableEventsManager<T> {
 
     private static final String AMPLIFY_TRACKING_KEY_PREFIX = "AMPLIFY_";
 
     private final ILogger logger;
-    private final IApplicationInfoProvider applicationInfoProvider;
     private final ISettings<T> settings;
-    private final ConcurrentHashMap<IEvent, List<IEventCheck<T>>> internalMap;
+    private final ConcurrentHashMap<ITrackableEvent, List<IEventCheck<T>>> internalMap;
 
     /**
      * @return a key that uniquely identifies this event tracker within the
@@ -51,18 +50,17 @@ public abstract class EventTracker<T> {
     @NonNull
     protected abstract T getUpdatedTrackingValue(@NonNull final T cachedEventValue);
 
-    public EventTracker(
+    protected BaseTrackableEventsManager(
             @NonNull final ILogger logger,
-            @NonNull final ISettings<T> settings,
-            @NonNull final IApplicationInfoProvider applicationInfoProvider) {
+            @NonNull final ISettings<T> settings) {
         this.logger = logger;
         this.settings = settings;
-        this.applicationInfoProvider = applicationInfoProvider;
         this.internalMap = new ConcurrentHashMap<>();
     }
 
-    public void trackEvent(@NonNull final IEvent event, @NonNull final IEventCheck<T> eventCheck) {
-        if (!containsEvent(event)) {
+    @Override
+    public void trackEvent(@NonNull final ITrackableEvent event, @NonNull final IEventCheck<T> eventCheck) {
+        if (!isTrackingEvent(event)) {
             internalMap.put(event, new ArrayList<IEventCheck<T>>());
         }
 
@@ -71,8 +69,9 @@ public abstract class EventTracker<T> {
         logger.d(internalMap.get(event).toString());
     }
 
-    public void notifyEventTriggered(@NonNull final IEvent event) {
-        if (containsEvent(event)) {
+    @Override
+    public void notifyEventTriggered(@NonNull final ITrackableEvent event) {
+        if (isTrackingEvent(event)) {
 
             final T cachedTrackingValue = getCachedTrackingValue(event);
             final T updatedTrackingValue = getUpdatedTrackingValue(cachedTrackingValue);
@@ -89,17 +88,18 @@ public abstract class EventTracker<T> {
         }
     }
 
-    public boolean allowFeedbackPrompt() {
+    @Override
+    public boolean shouldAllowFeedbackPrompt() {
 
-        for (final Map.Entry<IEvent, List<IEventCheck<T>>> eventCheckSet : internalMap.entrySet()) {
-            final IEvent event = eventCheckSet.getKey();
+        for (final Map.Entry<ITrackableEvent, List<IEventCheck<T>>> eventCheckSet : internalMap.entrySet()) {
+            final ITrackableEvent event = eventCheckSet.getKey();
 
             for (final IEventCheck<T> eventCheck : eventCheckSet.getValue()) {
                 final T cachedEventValue = getCachedTrackingValue(event);
 
-                logger.d(getTrackingKey(event) + ": " + eventCheck.getStatusString(cachedEventValue, applicationInfoProvider));
+                logger.d(getTrackingKey(event) + ": " + eventCheck.getStatusString(cachedEventValue));
 
-                if (eventCheck.shouldBlockFeedbackPrompt(cachedEventValue, applicationInfoProvider)) {
+                if (eventCheck.shouldAllowFeedbackPrompt(cachedEventValue)) {
                     logger.d("Blocking feedback for event: " + event + " because of check: " + eventCheck);
                     return false;
                 }
@@ -109,26 +109,22 @@ public abstract class EventTracker<T> {
         return true;
     }
 
-    public boolean containsEvent(@NonNull final IEvent event) {
-        return internalMap.containsKey(event);
-    }
-
     protected ILogger getLogger() {
         return logger;
     }
 
-    protected IApplicationInfoProvider getApplicationInfoProvider() {
-        return applicationInfoProvider;
+    private boolean isTrackingEvent(@NonNull final ITrackableEvent event) {
+        return internalMap.containsKey(event);
     }
 
-    private String getTrackingKey(@NonNull final IEvent event) {
+    private String getTrackingKey(@NonNull final ITrackableEvent event) {
         return AMPLIFY_TRACKING_KEY_PREFIX
                 + event.getTrackingKey()
                 + "_"
                 + this.getTrackingKeySuffix().toUpperCase();
     }
 
-    private T getCachedTrackingValue(@NonNull final IEvent event) {
+    private T getCachedTrackingValue(@NonNull final ITrackableEvent event) {
         T value = settings.readTrackingValue(getTrackingKey(event));
         return value != null ? value : defaultTrackingValue();
     }

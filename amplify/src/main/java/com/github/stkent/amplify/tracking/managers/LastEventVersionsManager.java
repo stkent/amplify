@@ -14,7 +14,7 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package com.github.stkent.amplify.tracking.trackers;
+package com.github.stkent.amplify.tracking.managers;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -22,23 +22,27 @@ import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 
 import com.github.stkent.amplify.ILogger;
-import com.github.stkent.amplify.tracking.ApplicationInfoProvider;
+import com.github.stkent.amplify.tracking.ApplicationVersionNameProvider;
 import com.github.stkent.amplify.tracking.Settings;
-import com.github.stkent.amplify.tracking.interfaces.IApplicationInfoProvider;
+import com.github.stkent.amplify.tracking.interfaces.IApplicationVersionNameProvider;
 import com.github.stkent.amplify.tracking.interfaces.ISettings;
 
-public class LastVersionTracker extends EventTracker<String> {
+public class LastEventVersionsManager extends BaseTrackableEventsManager<String> {
 
-    public LastVersionTracker(@NonNull final ILogger logger, @NonNull final Context applicationContext) {
-        this(logger, new Settings<String>(applicationContext, logger), new ApplicationInfoProvider(applicationContext));
+    private final IApplicationVersionNameProvider applicationVersionNameProvider;
+
+    public LastEventVersionsManager(@NonNull final Context applicationContext, @NonNull final ILogger logger) {
+        this(logger, new Settings<String>(applicationContext, logger), new ApplicationVersionNameProvider(applicationContext));
     }
 
     @VisibleForTesting
-    protected LastVersionTracker(
+    protected LastEventVersionsManager(
             @NonNull final ILogger logger,
             @NonNull final ISettings<String> settings,
-            @NonNull final IApplicationInfoProvider applicationInfoProvider) {
-        super(logger, settings, applicationInfoProvider);
+            @NonNull final IApplicationVersionNameProvider applicationVersionNameProvider) {
+        super(logger, settings);
+
+        this.applicationVersionNameProvider = applicationVersionNameProvider;
     }
 
     @NonNull
@@ -57,7 +61,7 @@ public class LastVersionTracker extends EventTracker<String> {
     @Override
     public String getUpdatedTrackingValue(@NonNull final String cachedTrackingValue) {
         try {
-            return getApplicationInfoProvider().getVersionName();
+            return applicationVersionNameProvider.getVersionName();
         } catch (final PackageManager.NameNotFoundException e) {
             getLogger().d("Could not read current app version name.");
             return cachedTrackingValue;

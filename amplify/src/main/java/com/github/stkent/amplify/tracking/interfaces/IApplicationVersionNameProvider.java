@@ -14,22 +14,14 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package com.github.stkent.amplify.tracking.checks;
+package com.github.stkent.amplify.tracking.interfaces;
 
+import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 
-import com.github.stkent.amplify.tracking.interfaces.IEnvironmentCapabilitiesProvider;
-import com.github.stkent.amplify.tracking.interfaces.IEnvironmentCheck;
+public interface IApplicationVersionNameProvider {
 
-/**
- * An implementation of {@code IEnvironmentCheck} that verifies whether or not
- * the Google Play Store is installed on the current device.
- */
-public class GooglePlayStoreIsAvailableCheck implements IEnvironmentCheck {
-
-    @Override
-    public boolean shouldAllowFeedbackPrompt(@NonNull final IEnvironmentCapabilitiesProvider environmentInfoProvider) {
-        return environmentInfoProvider.isGooglePlayStoreInstalled();
-    }
+    @NonNull
+    String getVersionName() throws PackageManager.NameNotFoundException;
 
 }

@@ -16,18 +16,19 @@
  */
 package com.github.stkent.amplify.tracking.interfaces;
 
+import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.support.annotation.NonNull;
 
-/**
- * An abstract representation of an event-independent prerequisite for
- * prompting the user for feedback.
- */
-public interface IEnvironmentCheck {
+public interface IApplicationFeedbackDataProvider {
 
-    /**
-     * @return true if the consuming application is able to prompt the user
-     *         for feedback; false otherwise
-     */
-    boolean shouldAllowFeedbackPrompt(@NonNull final IEnvironmentCapabilitiesProvider environmentInfoProvider);
+    @NonNull
+    String getDeviceName();
+
+    @NonNull
+    String getVersionDisplayString() throws PackageManager.NameNotFoundException;
+
+    @NonNull
+    String getFeedbackEmailAddress() throws Resources.NotFoundException;
 
 }

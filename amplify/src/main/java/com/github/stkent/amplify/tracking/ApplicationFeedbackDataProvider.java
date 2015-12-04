@@ -23,16 +23,22 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 
 import com.github.stkent.amplify.R;
-import com.github.stkent.amplify.tracking.interfaces.IApplicationInfoProvider;
+import com.github.stkent.amplify.tracking.interfaces.IApplicationFeedbackDataProvider;
+import com.github.stkent.amplify.tracking.interfaces.IApplicationVersionNameProvider;
 import com.github.stkent.amplify.utils.ApplicationUtils;
 import com.github.stkent.amplify.utils.StringUtils;
 
-public class ApplicationInfoProvider implements IApplicationInfoProvider {
+public class ApplicationFeedbackDataProvider implements IApplicationFeedbackDataProvider {
 
+    @NonNull
     private final Context applicationContext;
 
-    public ApplicationInfoProvider(@NonNull final Context context) {
-        this.applicationContext = context.getApplicationContext();
+    @NonNull
+    private final IApplicationVersionNameProvider applicationVersionNameProvider;
+
+    public ApplicationFeedbackDataProvider(@NonNull final Context applicationContext) {
+        this.applicationContext = applicationContext;
+        this.applicationVersionNameProvider = new ApplicationVersionNameProvider(applicationContext);
     }
 
     @NonNull
@@ -54,17 +60,11 @@ public class ApplicationInfoProvider implements IApplicationInfoProvider {
 
     @NonNull
     @Override
-    public String getVersionName() throws PackageManager.NameNotFoundException {
-        return ApplicationUtils.getPackageInfo(applicationContext, 0).versionName;
-    }
-
-    @NonNull
-    @Override
-    public String getApplicationVersionDisplayString() throws PackageManager.NameNotFoundException {
-        final int applicationVersionCode = ApplicationUtils.getPackageInfo(applicationContext, 0).versionCode;
+    public String getVersionDisplayString() throws PackageManager.NameNotFoundException {
+        final int applicationVersionCode = ApplicationUtils.getPackageInfo(applicationContext).versionCode;
 
         // todo: prefer String.format here
-        return getVersionName() + " (" + applicationVersionCode + ")";
+        return applicationVersionNameProvider.getVersionName() + " (" + applicationVersionCode + ")";
     }
 
     @NonNull

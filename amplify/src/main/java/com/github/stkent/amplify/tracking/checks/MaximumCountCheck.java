@@ -18,7 +18,6 @@ package com.github.stkent.amplify.tracking.checks;
 
 import android.support.annotation.NonNull;
 
-import com.github.stkent.amplify.tracking.interfaces.IApplicationInfoProvider;
 import com.github.stkent.amplify.tracking.interfaces.IEventCheck;
 
 public final class MaximumCountCheck implements IEventCheck<Integer> {
@@ -30,15 +29,13 @@ public final class MaximumCountCheck implements IEventCheck<Integer> {
     }
 
     @Override
-    public boolean shouldBlockFeedbackPrompt(
-            @NonNull final Integer cachedEventValue,
-            @NonNull final IApplicationInfoProvider applicationInfoProvider) {
-        return cachedEventValue >= maximumCount;
+    public boolean shouldAllowFeedbackPrompt(@NonNull final Integer cachedEventValue) {
+        return cachedEventValue < maximumCount;
     }
 
     @NonNull
     @Override
-    public String getStatusString(@NonNull final Integer cachedEventValue, @NonNull final IApplicationInfoProvider applicationInfoProvider) {
+    public String getStatusString(@NonNull final Integer cachedEventValue) {
         return "Maximum allowed event count: " + maximumCount + ". Current event count: " + cachedEventValue + ".";
     }
 

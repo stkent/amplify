@@ -14,22 +14,21 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package com.github.stkent.amplify.tracking.checks;
+package com.github.stkent.amplify.tracking.interfaces;
 
 import android.support.annotation.NonNull;
 
-import com.github.stkent.amplify.tracking.interfaces.IEnvironmentCapabilitiesProvider;
-import com.github.stkent.amplify.tracking.interfaces.IEnvironmentCheck;
-
 /**
- * An implementation of {@code IEnvironmentCheck} that verifies whether or not
- * the Google Play Store is installed on the current device.
+ * An abstract representation of an event whose occurrences can be tracked
+ * across consuming application launches.
  */
-public class GooglePlayStoreIsAvailableCheck implements IEnvironmentCheck {
+public interface ITrackableEvent {
 
-    @Override
-    public boolean shouldAllowFeedbackPrompt(@NonNull final IEnvironmentCapabilitiesProvider environmentInfoProvider) {
-        return environmentInfoProvider.isGooglePlayStoreInstalled();
-    }
+    /**
+     * @return a key that uniquely identifies this event within the
+     *         consuming application
+     */
+    @NonNull
+    String getTrackingKey();
 
 }

@@ -27,6 +27,10 @@ public final class ApplicationUtils {
 
     }
 
+    public static PackageInfo getPackageInfo(@NonNull final Context applicationContext) throws PackageManager.NameNotFoundException {
+        return getPackageInfo(applicationContext, 0);
+    }
+
     public static PackageInfo getPackageInfo(@NonNull final Context applicationContext, final int flags) throws PackageManager.NameNotFoundException {
         final PackageManager packageManager = applicationContext.getPackageManager();
         final String applicationPackageName = applicationContext.getPackageName();

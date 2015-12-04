@@ -16,18 +16,14 @@
  */
 package com.github.stkent.amplify.tracking.interfaces;
 
-import android.support.annotation.NonNull;
+public interface IApplicationChecksManager extends ITopLevelCheck {
 
-/**
- * An abstract representation of an event-independent prerequisite for
- * prompting the user for feedback.
- */
-public interface IEnvironmentCheck {
+    void setInstallTimeCooldownDays(final int cooldownPeriodDays);
 
-    /**
-     * @return true if the consuming application is able to prompt the user
-     *         for feedback; false otherwise
-     */
-    boolean shouldAllowFeedbackPrompt(@NonNull final IEnvironmentCapabilitiesProvider environmentInfoProvider);
+    void setLastUpdateTimeCooldownDays(final int cooldownPeriodDays);
+
+    void setLastCrashTimeCooldownDays(final int cooldownPeriodDays);
+
+    void notifyOfCrash();
 
 }

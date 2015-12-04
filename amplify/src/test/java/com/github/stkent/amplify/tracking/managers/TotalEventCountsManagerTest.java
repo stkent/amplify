@@ -14,7 +14,7 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package com.github.stkent.amplify.tracking.trackers;
+package com.github.stkent.amplify.tracking.managers;
 
 import android.annotation.SuppressLint;
 import android.support.annotation.NonNull;
@@ -22,9 +22,8 @@ import android.support.annotation.NonNull;
 import com.github.stkent.amplify.ILogger;
 import com.github.stkent.amplify.helpers.BaseTest;
 import com.github.stkent.amplify.helpers.FakeSettings;
-import com.github.stkent.amplify.tracking.interfaces.IApplicationInfoProvider;
-import com.github.stkent.amplify.tracking.interfaces.IEvent;
 import com.github.stkent.amplify.tracking.interfaces.IEventCheck;
+import com.github.stkent.amplify.tracking.interfaces.ITrackableEvent;
 
 import org.junit.Test;
 import org.mockito.Mock;
@@ -33,18 +32,16 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
 
-public class TotalCountTrackerTest extends BaseTest {
+public class TotalEventCountsManagerTest extends BaseTest {
 
-    private TotalCountTracker totalCountTracker;
+    private TotalEventCountsManager totalEventCountsManager;
 
     private FakeSettings<Integer> fakeSettings;
 
     @Mock
     private ILogger mockLogger;
     @Mock
-    private IApplicationInfoProvider mockApplicationInfoProvider;
-    @Mock
-    private IEvent mockEvent;
+    private ITrackableEvent mockTrackableEvent;
     @Mock
     private IEventCheck<Integer> mockEventCheck;
 
@@ -52,23 +49,22 @@ public class TotalCountTrackerTest extends BaseTest {
     public void localSetUp() {
         fakeSettings = new FakeSettings<>();
 
-        totalCountTracker = new TotalCountTracker(
+        totalEventCountsManager = new TotalEventCountsManager(
                 mockLogger,
-                fakeSettings,
-                mockApplicationInfoProvider);
+                fakeSettings);
 
-        when(mockEvent.getTrackingKey()).thenReturn(DEFAULT_MOCK_EVENT_TRACKING_KEY);
-        totalCountTracker.trackEvent(mockEvent, mockEventCheck);
+        when(mockTrackableEvent.getTrackingKey()).thenReturn(DEFAULT_MOCK_EVENT_TRACKING_KEY);
+        totalEventCountsManager.trackEvent(mockTrackableEvent, mockEventCheck);
     }
 
     @Test
     public void testThatEventsAreSavedWithCorrectTrackingKey() {
         // Arrange
-        final String expectedTrackingKey = getExpectedTrackingKeyForEvent(mockEvent);
+        final String expectedTrackingKey = getExpectedTrackingKeyForEvent(mockTrackableEvent);
         assert fakeSettings.readTrackingValue(expectedTrackingKey) == null;
 
         // Act
-        totalCountTracker.notifyEventTriggered(mockEvent);
+        totalEventCountsManager.notifyEventTriggered(mockTrackableEvent);
 
         // Assert
         final Integer trackedTotalEventCount = fakeSettings.readTrackingValue(expectedTrackingKey);
@@ -82,18 +78,18 @@ public class TotalCountTrackerTest extends BaseTest {
     @Test
     public void testThatCorrectNumberOfEventsIsRecorded() {
         // Arrange
-        totalCountTracker.trackEvent(mockEvent, mockEventCheck);
+        totalEventCountsManager.trackEvent(mockTrackableEvent, mockEventCheck);
 
         final Integer expectedEventCount = 7;
         assert expectedEventCount > 0;
 
         // Act
         for (int i = 0; i < expectedEventCount; i++) {
-            totalCountTracker.notifyEventTriggered(mockEvent);
+            totalEventCountsManager.notifyEventTriggered(mockTrackableEvent);
         }
 
         // Assert
-        final Integer actualEventCount = fakeSettings.readTrackingValue(getExpectedTrackingKeyForEvent(mockEvent));
+        final Integer actualEventCount = fakeSettings.readTrackingValue(getExpectedTrackingKeyForEvent(mockTrackableEvent));
 
         assertEquals(
                 "The correct number of events should have been recorded",
@@ -101,8 +97,8 @@ public class TotalCountTrackerTest extends BaseTest {
                 actualEventCount);
     }
 
-    private String getExpectedTrackingKeyForEvent(@NonNull final IEvent event) {
-        return "AMPLIFY_" + event.getTrackingKey() + "_TOTALCOUNTTRACKER";
+    private String getExpectedTrackingKeyForEvent(@NonNull final ITrackableEvent event) {
+        return "AMPLIFY_" + event.getTrackingKey() + "_TOTALEVENTCOUNTSMANAGER";
     }
 
 }

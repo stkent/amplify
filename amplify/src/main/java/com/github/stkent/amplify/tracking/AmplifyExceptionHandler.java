@@ -17,8 +17,9 @@
 package com.github.stkent.amplify.tracking;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
-import com.github.stkent.amplify.tracking.interfaces.IAmplifyStateTracker;
+import com.github.stkent.amplify.tracking.interfaces.IApplicationChecksManager;
 
 import static java.lang.Thread.UncaughtExceptionHandler;
 
@@ -29,22 +30,27 @@ import static java.lang.Thread.UncaughtExceptionHandler;
 public class AmplifyExceptionHandler implements UncaughtExceptionHandler {
 
     @NonNull
-    private final IAmplifyStateTracker amplifyStateTracker;
+    private final IApplicationChecksManager applicationChecksManager;
+
+    @Nullable
     private final UncaughtExceptionHandler defaultExceptionHandler;
 
     public AmplifyExceptionHandler(
-            @NonNull final IAmplifyStateTracker amplifyStateTracker,
-            final UncaughtExceptionHandler defaultExceptionHandler) {
-        this.amplifyStateTracker = amplifyStateTracker;
+            @NonNull final IApplicationChecksManager applicationChecksManager,
+            @Nullable final UncaughtExceptionHandler defaultExceptionHandler) {
+        this.applicationChecksManager = applicationChecksManager;
         this.defaultExceptionHandler = defaultExceptionHandler;
     }
 
     @Override
     public void uncaughtException(final Thread thread, final Throwable throwable) {
-        amplifyStateTracker.notifyEventTriggered(IntegratedEvent.APP_CRASHED);
+        applicationChecksManager.notifyOfCrash();
 
-        // Call the original handler.
-        defaultExceptionHandler.uncaughtException(thread, throwable);
+        // Call the original handler if provided.
+
+        if (defaultExceptionHandler != null) {
+            defaultExceptionHandler.uncaughtException(thread, throwable);
+        }
     }
 
 }

@@ -14,18 +14,8 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package com.github.stkent.amplify.tracking.initializers;
+package com.github.stkent.amplify.tracking.interfaces;
 
-import android.support.annotation.NonNull;
+public interface ITrackableEventsManager<T> extends IEventTracker<T>, ITopLevelCheck {
 
-import com.github.stkent.amplify.tracking.AmplifyStateTracker;
-import com.github.stkent.amplify.tracking.interfaces.IEvent;
-import com.github.stkent.amplify.tracking.interfaces.ITrackingInitializer;
-
-public class ImmediateEventTriggerInitializer implements ITrackingInitializer {
-
-    @Override
-    public void initialize(@NonNull final AmplifyStateTracker amplifyStateTracker, @NonNull final IEvent event) {
-        amplifyStateTracker.notifyEventTriggered(event);
-    }
 }

@@ -17,7 +17,7 @@
 package com.github.stkent.amplify.tracking.checks;
 
 import com.github.stkent.amplify.helpers.BaseTest;
-import com.github.stkent.amplify.tracking.interfaces.IEnvironmentInfoProvider;
+import com.github.stkent.amplify.tracking.interfaces.IEnvironmentCapabilitiesProvider;
 
 import org.junit.Test;
 import org.mockito.Mock;
@@ -31,7 +31,7 @@ public class GooglePlayStoreIsAvailableCheckTest extends BaseTest {
     private GooglePlayStoreIsAvailableCheck googlePlayStoreIsAvailableCheck;
 
     @Mock
-    private IEnvironmentInfoProvider mockEnvironmentInfoProvider;
+    private IEnvironmentCapabilitiesProvider mockEnvironmentInfoProvider;
 
     @Override
     public void localSetUp() {
@@ -45,10 +45,12 @@ public class GooglePlayStoreIsAvailableCheckTest extends BaseTest {
 
         // Act
         final boolean isEnvironmentCheckMet =
-                googlePlayStoreIsAvailableCheck.isSatisfied(mockEnvironmentInfoProvider);
+                googlePlayStoreIsAvailableCheck.shouldAllowFeedbackPrompt(mockEnvironmentInfoProvider);
 
         // Assert
-        assertTrue("Environment check should be met", isEnvironmentCheckMet);
+        assertTrue(
+                "Environment check should be met",
+                isEnvironmentCheckMet);
     }
 
     @Test
@@ -58,10 +60,12 @@ public class GooglePlayStoreIsAvailableCheckTest extends BaseTest {
 
         // Act
         final boolean isEnvironmentCheckMet =
-                googlePlayStoreIsAvailableCheck.isSatisfied(mockEnvironmentInfoProvider);
+                googlePlayStoreIsAvailableCheck.shouldAllowFeedbackPrompt(mockEnvironmentInfoProvider);
 
         // Assert
-        assertFalse("Environment check should not be met", isEnvironmentCheckMet);
+        assertFalse(
+                "Environment check should not be met",
+                isEnvironmentCheckMet);
     }
 
 }

@@ -20,7 +20,7 @@ import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 
 import com.github.stkent.amplify.helpers.BaseTest;
-import com.github.stkent.amplify.tracking.interfaces.IApplicationInfoProvider;
+import com.github.stkent.amplify.tracking.interfaces.IApplicationVersionNameProvider;
 
 import org.junit.Test;
 import org.mockito.Mock;
@@ -34,11 +34,11 @@ public class VersionChangedCheckTest extends BaseTest {
     private VersionChangedCheck versionChangedCheck;
 
     @Mock
-    private IApplicationInfoProvider mockApplicationInfoProvider;
+    private IApplicationVersionNameProvider mockApplicationVersionNameProvider;
 
     @Override
     public void localSetUp() {
-        versionChangedCheck = new VersionChangedCheck();
+        versionChangedCheck = new VersionChangedCheck(mockApplicationVersionNameProvider);
     }
 
     @Test
@@ -46,34 +46,37 @@ public class VersionChangedCheckTest extends BaseTest {
         // Arrange
         final String fakeVersionName = "any string";
 
-        when(mockApplicationInfoProvider.getVersionName()).thenReturn(fakeVersionName);
+        when(mockApplicationVersionNameProvider.getVersionName()).thenReturn(fakeVersionName);
 
         // Act
-        final boolean shouldBlockFeedbackPrompt = versionChangedCheck.shouldBlockFeedbackPrompt(
-                fakeVersionName, mockApplicationInfoProvider);
+        final boolean checkShouldAllowFeedbackPrompt =
+                versionChangedCheck.shouldAllowFeedbackPrompt(fakeVersionName);
 
         // Assert
-        assertTrue("Feedback prompt should be blocked if the app version has not changed", shouldBlockFeedbackPrompt);
+        assertFalse(
+                "Feedback prompt should be blocked if the app version has not changed",
+                checkShouldAllowFeedbackPrompt);
     }
 
     @SuppressLint("Assert")
     @SuppressWarnings("ConstantConditions")
     @Test
-    public void testThatCheckDoesNotBlockPromptIfAppVersionHasChanged() throws PackageManager.NameNotFoundException {
+    public void testThatCheckAllowsPromptIfAppVersionHasChanged() throws PackageManager.NameNotFoundException {
         // Arrange
         final String fakeCachedVersionName = "any string";
         final String fakeCurrentVersionName = "any other string";
         assert !fakeCachedVersionName.equals(fakeCurrentVersionName);
 
-        when(mockApplicationInfoProvider.getVersionName()).thenReturn(fakeCurrentVersionName);
+        when(mockApplicationVersionNameProvider.getVersionName()).thenReturn(fakeCurrentVersionName);
 
         // Act
-        final boolean shouldBlockFeedbackPrompt = versionChangedCheck.shouldBlockFeedbackPrompt(
-                fakeCachedVersionName, mockApplicationInfoProvider);
+        final boolean checkShouldAllowFeedbackPrompt =
+                versionChangedCheck.shouldAllowFeedbackPrompt(fakeCachedVersionName);
 
         // Assert
-        assertFalse("Feedback prompt should not be blocked if the app version has changed",
-                shouldBlockFeedbackPrompt);
+        assertTrue(
+                "Feedback prompt should be allowed if the app version has changed",
+                checkShouldAllowFeedbackPrompt);
     }
 
 }

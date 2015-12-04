@@ -17,7 +17,7 @@
 package com.github.stkent.amplify.tracking;
 
 import com.github.stkent.amplify.helpers.BaseTest;
-import com.github.stkent.amplify.tracking.interfaces.IAmplifyStateTracker;
+import com.github.stkent.amplify.tracking.interfaces.IApplicationChecksManager;
 
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -32,7 +32,7 @@ import static org.mockito.Mockito.verify;
 public class AmplifyExceptionHandlerTest extends BaseTest {
 
     @Mock
-    private IAmplifyStateTracker mockAmplifyStateTracker;
+    private IApplicationChecksManager mockApplicationChecksManager;
     @Mock
     private Thread.UncaughtExceptionHandler mockDefaultExceptionHandler;
 
@@ -43,7 +43,7 @@ public class AmplifyExceptionHandlerTest extends BaseTest {
     public void testThatDefaultExceptionHandlerIsAlwaysCalled() {
         // Arrange
         final AmplifyExceptionHandler amplifyExceptionHandler =
-                new AmplifyExceptionHandler(mockAmplifyStateTracker, mockDefaultExceptionHandler);
+                new AmplifyExceptionHandler(mockApplicationChecksManager, mockDefaultExceptionHandler);
 
         final Throwable expectedThrowable = new Throwable("any string");
 

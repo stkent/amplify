@@ -19,33 +19,36 @@ package com.github.stkent.amplify.tracking.checks;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 
-import com.github.stkent.amplify.tracking.interfaces.IApplicationInfoProvider;
+import com.github.stkent.amplify.tracking.interfaces.IApplicationVersionNameProvider;
 import com.github.stkent.amplify.tracking.interfaces.IEventCheck;
 
 public final class VersionChangedCheck implements IEventCheck<String> {
 
+    @NonNull
+    private final IApplicationVersionNameProvider applicationVersionNameProvider;
+
+    public VersionChangedCheck(@NonNull final IApplicationVersionNameProvider applicationVersionNameProvider) {
+        this.applicationVersionNameProvider = applicationVersionNameProvider;
+    }
+
     @Override
-    public boolean shouldBlockFeedbackPrompt(
-            @NonNull final String cachedEventValue,
-            @NonNull final IApplicationInfoProvider applicationInfoProvider) {
+    public boolean shouldAllowFeedbackPrompt(@NonNull final String cachedEventValue) {
         try {
-            final String currentAppVersion = applicationInfoProvider.getVersionName();
-            return cachedEventValue.equals(currentAppVersion);
-        } catch (PackageManager.NameNotFoundException e) {
-            // TODO: log here
-            // TODO: be safe (return false) or strict (return true) here?
-            return true;
+            final String currentAppVersion = applicationVersionNameProvider.getVersionName();
+            return !cachedEventValue.equals(currentAppVersion);
+        } catch (final PackageManager.NameNotFoundException e) {
+            return false;
         }
     }
 
     @NonNull
     @Override
-    public String getStatusString(@NonNull final String cachedEventValue, @NonNull final IApplicationInfoProvider applicationInfoProvider) {
+    public String getStatusString(@NonNull final String cachedEventValue) {
         String statusStringSuffix;
 
         try {
-            statusStringSuffix = "Current app version: " + applicationInfoProvider.getVersionName();
-        } catch (PackageManager.NameNotFoundException e) {
+            statusStringSuffix = "Current app version: " + applicationVersionNameProvider.getVersionName();
+        } catch (final PackageManager.NameNotFoundException e) {
             statusStringSuffix = "Current app version cannot be determined.";
         }
 

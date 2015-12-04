@@ -31,37 +31,24 @@ public interface IAmplifyStateTracker {
 
     IAmplifyStateTracker addEnvironmentCheck(@NonNull final IEnvironmentCheck requirement);
 
-    IAmplifyStateTracker trackTotalEventCount(@NonNull final IEvent event, @NonNull final IEventCheck<Integer> eventCheck);
+    IAmplifyStateTracker setInstallTimeCooldownDays(final int cooldownPeriodDays);
 
-    IAmplifyStateTracker trackTotalEventCount(
-            @NonNull final IEvent event,
-            @NonNull final IEventCheck<Integer> eventCheck,
-            @NonNull final ITrackingInitializer trackingInitializer);
+    IAmplifyStateTracker setLastUpdateTimeCooldownDays(final int cooldownPeriodDays);
 
-    IAmplifyStateTracker trackFirstEventTime(@NonNull final IEvent event, @NonNull final IEventCheck<Long> eventCheck);
+    IAmplifyStateTracker setLastCrashTimeCooldownDays(final int cooldownPeriodDays);
 
-    IAmplifyStateTracker trackFirstEventTime(
-            @NonNull final IEvent event,
-            @NonNull final IEventCheck<Long> eventCheck,
-            @NonNull final ITrackingInitializer trackingInitializer);
+    IAmplifyStateTracker trackTotalEventCount(@NonNull final ITrackableEvent event, @NonNull final IEventCheck<Integer> eventCheck);
 
-    IAmplifyStateTracker trackLastEventTime(@NonNull final IEvent event, @NonNull final IEventCheck<Long> eventCheck);
+    IAmplifyStateTracker trackFirstEventTime(@NonNull final ITrackableEvent event, @NonNull final IEventCheck<Long> eventCheck);
 
-    IAmplifyStateTracker trackLastEventTime(
-            @NonNull final IEvent event,
-            @NonNull final IEventCheck<Long> eventCheck,
-            @NonNull final ITrackingInitializer trackingInitializer);
+    IAmplifyStateTracker trackLastEventTime(@NonNull final ITrackableEvent event, @NonNull final IEventCheck<Long> eventCheck);
 
-    IAmplifyStateTracker trackLastEventVersion(@NonNull final IEvent event, @NonNull final IEventCheck<String> eventCheck);
+    IAmplifyStateTracker trackLastEventVersion(@NonNull final ITrackableEvent event, @NonNull final IEventCheck<String> eventCheck);
 
-    IAmplifyStateTracker trackLastEventVersion(
-            @NonNull final IEvent event,
-            @NonNull final IEventCheck<String> eventCheck,
-            @NonNull final ITrackingInitializer trackingInitializer);
-
-    IAmplifyStateTracker notifyEventTriggered(@NonNull final IEvent event);
+    IAmplifyStateTracker notifyEventTriggered(@NonNull final ITrackableEvent event);
 
     void promptIfReady(@NonNull final AmplifyView amplifyView);
 
     boolean shouldAskForRating();
+
 }

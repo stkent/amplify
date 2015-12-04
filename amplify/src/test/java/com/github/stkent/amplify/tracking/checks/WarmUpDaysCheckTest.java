@@ -43,13 +43,13 @@ public class WarmUpDaysCheckTest extends BaseTest {
         final long lastEventTime = Long.MAX_VALUE;
 
         // Act
-        // todo: figure out what to pass instead of the null context here
-        final boolean checkShouldBlockFeedbackPrompt
-                = warmUpDaysCheck.shouldBlockFeedbackPrompt(lastEventTime, null);
+        final boolean checkShouldAllowFeedbackPrompt
+                = warmUpDaysCheck.shouldAllowFeedbackPrompt(lastEventTime);
 
         // Assert
-        assertTrue("Feedback prompt should be blocked if the event has not occurred yet",
-                checkShouldBlockFeedbackPrompt);
+        assertFalse(
+                "Feedback prompt should be blocked if the event has not occurred yet",
+                checkShouldAllowFeedbackPrompt);
     }
 
     @SuppressLint("Assert")
@@ -65,19 +65,19 @@ public class WarmUpDaysCheckTest extends BaseTest {
         final long lastEventTime = SystemTimeUtil.currentTimeMillis() - TimeUnit.DAYS.toMillis(daysSinceLastEvent);
 
         // Act
-        // todo: figure out what to pass instead of the null context here
-        final boolean checkShouldBlockFeedbackPrompt
-                = warmUpDaysCheck.shouldBlockFeedbackPrompt(lastEventTime, null);
+        final boolean checkShouldAllowFeedbackPrompt
+                = warmUpDaysCheck.shouldAllowFeedbackPrompt(lastEventTime);
 
         // Assert
-        assertTrue("Feedback prompt should be blocked if the warm-up period has not passed",
-                checkShouldBlockFeedbackPrompt);
+        assertFalse(
+                "Feedback prompt should be blocked if the warm-up period has not passed",
+                checkShouldAllowFeedbackPrompt);
     }
 
     @SuppressLint("Assert")
     @SuppressWarnings("ConstantConditions")
     @Test
-    public void testThatCheckDoesNotBlockPromptIfWarmUpPeriodHasPassed() {
+    public void testThatCheckAllowsPromptIfWarmUpPeriodHasPassed() {
         // Arrange
         final int warmUpTimeDays = 7;
         final int daysSinceLastEvent = 9;
@@ -87,12 +87,13 @@ public class WarmUpDaysCheckTest extends BaseTest {
         final long lastEventTime = SystemTimeUtil.currentTimeMillis() - TimeUnit.DAYS.toMillis(daysSinceLastEvent);
 
         // Act
-        final boolean checkShouldBlockFeedbackPrompt
-                = warmUpDaysCheck.shouldBlockFeedbackPrompt(lastEventTime, null);
+        final boolean checkShouldAllowFeedbackPrompt
+                = warmUpDaysCheck.shouldAllowFeedbackPrompt(lastEventTime);
 
         // Assert
-        assertFalse("Feedback prompt should not be blocked if the warm-up period has passed",
-                checkShouldBlockFeedbackPrompt);
+        assertTrue(
+                "Feedback prompt should be allowed if the warm-up period has passed",
+                checkShouldAllowFeedbackPrompt);
     }
 
 }

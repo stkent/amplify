@@ -5,9 +5,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
-import com.github.stkent.amplify.tracking.AmplifyStateTracker;
-import com.github.stkent.amplify.tracking.IntegratedEvent;
-
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     @Override
@@ -21,9 +18,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(final View v) {
-        AmplifyStateTracker.get(this)
-                .notifyEventTriggered(IntegratedEvent.APP_CRASHED)
-                .shouldAskForRating();
+        // fixme: replace with an example here
     }
 
 }

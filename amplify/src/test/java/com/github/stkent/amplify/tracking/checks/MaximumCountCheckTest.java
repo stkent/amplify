@@ -39,19 +39,19 @@ public class MaximumCountCheckTest extends BaseTest {
         final MaximumCountCheck maximumCountCheck = new MaximumCountCheck(maximumEventCount);
 
         // Act
-        // todo: figure out what to pass instead of the null context here
-        final boolean checkShouldBlockFeedbackPrompt
-                = maximumCountCheck.shouldBlockFeedbackPrompt(currentEventCount, null);
+        final boolean checkShouldAllowFeedbackPrompt
+                = maximumCountCheck.shouldAllowFeedbackPrompt(currentEventCount);
 
         // Assert
-        assertTrue("Feedback prompt should be blocked if the count threshold has been exceeded",
-                checkShouldBlockFeedbackPrompt);
+        assertFalse(
+                "Feedback prompt should be blocked if the count threshold has been exceeded",
+                checkShouldAllowFeedbackPrompt);
     }
 
     @SuppressLint("Assert")
     @SuppressWarnings("ConstantConditions")
     @Test
-    public void testThatCheckDoesNotBlockPromptIfCountThresholdHasNotBeenExceeded() {
+    public void testThatCheckAllowsPromptIfCountThresholdHasNotBeenExceeded() {
         // Arrange
         final int maximumEventCount = 7;
         final int currentEventCount = 2;
@@ -60,13 +60,13 @@ public class MaximumCountCheckTest extends BaseTest {
         final MaximumCountCheck maximumCountCheck = new MaximumCountCheck(maximumEventCount);
 
         // Act
-        // todo: figure out what to pass instead of the null context here
-        final boolean checkShouldBlockFeedbackPrompt
-                = maximumCountCheck.shouldBlockFeedbackPrompt(currentEventCount, null);
+        final boolean checkShouldAllowFeedbackPrompt
+                = maximumCountCheck.shouldAllowFeedbackPrompt(currentEventCount);
 
         // Assert
-        assertFalse("Feedback prompt should be blocked if the count threshold has been exceeded",
-                checkShouldBlockFeedbackPrompt);
+        assertTrue(
+                "Feedback prompt should be allowed if the count threshold has not been exceeded",
+                checkShouldAllowFeedbackPrompt);
     }
 
 }

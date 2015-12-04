@@ -14,26 +14,12 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package com.github.stkent.amplify.tracking;
+package com.github.stkent.amplify.tracking.interfaces;
 
-import android.support.annotation.NonNull;
+public interface IApplicationEventTrackingDataProvider {
 
-import com.github.stkent.amplify.tracking.interfaces.IEvent;
+    long getInstallTime();
 
-public enum IntegratedEvent implements IEvent {
-
-    APP_CRASHED,
-    APP_INSTALLED,
-    APP_UPDATED,
-    USER_GAVE_CRITICAL_FEEDBACK,
-    USER_GAVE_POSITIVE_FEEDBACK,
-    USER_DECLINED_CRITICAL_FEEDBACK,
-    USER_DECLINED_POSITIVE_FEEDBACK;
-
-    @NonNull
-    @Override
-    public String getTrackingKey() {
-        return name();
-    }
+    long getLastUpdateTime();
 
 }

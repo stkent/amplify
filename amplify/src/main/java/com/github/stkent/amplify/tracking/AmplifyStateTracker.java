@@ -25,23 +25,22 @@ import com.github.stkent.amplify.tracking.checks.CooldownDaysCheck;
 import com.github.stkent.amplify.tracking.checks.GooglePlayStoreIsAvailableCheck;
 import com.github.stkent.amplify.tracking.checks.MaximumCountCheck;
 import com.github.stkent.amplify.tracking.checks.VersionChangedCheck;
-import com.github.stkent.amplify.tracking.checks.WarmUpDaysCheck;
-import com.github.stkent.amplify.tracking.initializers.ExceptionHandlingInitializer;
-import com.github.stkent.amplify.tracking.initializers.ImmediateEventTriggerInitializer;
 import com.github.stkent.amplify.tracking.interfaces.IAmplifyStateTracker;
+import com.github.stkent.amplify.tracking.interfaces.IApplicationChecksManager;
+import com.github.stkent.amplify.tracking.interfaces.IApplicationEventTrackingDataProvider;
+import com.github.stkent.amplify.tracking.interfaces.IApplicationVersionNameProvider;
 import com.github.stkent.amplify.tracking.interfaces.IEnvironmentCheck;
-import com.github.stkent.amplify.tracking.interfaces.IEnvironmentInfoProvider;
-import com.github.stkent.amplify.tracking.interfaces.IEvent;
+import com.github.stkent.amplify.tracking.interfaces.IEnvironmentChecksManager;
+import com.github.stkent.amplify.tracking.interfaces.IEnvironmentCapabilitiesProvider;
 import com.github.stkent.amplify.tracking.interfaces.IEventCheck;
-import com.github.stkent.amplify.tracking.interfaces.ITrackingInitializer;
-import com.github.stkent.amplify.tracking.trackers.FirstTimeTracker;
-import com.github.stkent.amplify.tracking.trackers.LastTimeTracker;
-import com.github.stkent.amplify.tracking.trackers.LastVersionTracker;
-import com.github.stkent.amplify.tracking.trackers.TotalCountTracker;
+import com.github.stkent.amplify.tracking.interfaces.ITrackableEvent;
+import com.github.stkent.amplify.tracking.managers.ApplicationChecksManager;
+import com.github.stkent.amplify.tracking.managers.EnvironmentChecksManager;
+import com.github.stkent.amplify.tracking.managers.FirstEventTimesManager;
+import com.github.stkent.amplify.tracking.managers.LastEventTimesManager;
+import com.github.stkent.amplify.tracking.managers.LastEventVersionsManager;
+import com.github.stkent.amplify.tracking.managers.TotalEventCountsManager;
 import com.github.stkent.amplify.views.AmplifyView;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public final class AmplifyStateTracker implements IAmplifyStateTracker {
 
@@ -52,13 +51,15 @@ public final class AmplifyStateTracker implements IAmplifyStateTracker {
     private static final int ONE_DAY = 1;
 
     // instance fields
+    private final IApplicationVersionNameProvider applicationVersionNameProvider;
 
-    private final IEnvironmentInfoProvider environmentInfoProvider;
-    private final List<IEnvironmentCheck> environmentChecks = new ArrayList<>();
-    private final LastTimeTracker lastTimeTracker;
-    private final FirstTimeTracker firstTimeTracker;
-    private final LastVersionTracker lastVersionTracker;
-    private final TotalCountTracker totalCountTracker;
+    private final IApplicationChecksManager applicationChecksManager;
+    private final IEnvironmentChecksManager environmentChecksManager;
+    private final FirstEventTimesManager firstEventTimesManager;
+    private final LastEventTimesManager lastEventTimesManager;
+    private final LastEventVersionsManager lastEventVersionsManager;
+    private final TotalEventCountsManager totalEventCountsManager;
+
     private final ILogger logger;
 
     private boolean alwaysShow;
@@ -83,12 +84,19 @@ public final class AmplifyStateTracker implements IAmplifyStateTracker {
             @NonNull final Context context,
             @NonNull final ILogger logger) {
         final Context applicationContext = context.getApplicationContext();
-        this.environmentInfoProvider = new EnvironmentInfoProvider(applicationContext);
+        final IApplicationEventTrackingDataProvider applicationInfoProvider = new ApplicationEventTrackingDataProvider(applicationContext);
+        final IEnvironmentCapabilitiesProvider environmentInfoProvider = new EnvironmentCapabilitiesProvider(applicationContext);
+
+        this.applicationVersionNameProvider = new ApplicationVersionNameProvider(applicationContext);
+
+        this.applicationChecksManager = new ApplicationChecksManager(applicationContext, applicationInfoProvider, logger);
+        this.environmentChecksManager = new EnvironmentChecksManager(environmentInfoProvider);
+        this.firstEventTimesManager = new FirstEventTimesManager(applicationContext, logger);
+        this.lastEventTimesManager = new LastEventTimesManager(applicationContext, logger);
+        this.lastEventVersionsManager = new LastEventVersionsManager(applicationContext, logger);
+        this.totalEventCountsManager = new TotalEventCountsManager(applicationContext, logger);
+
         this.logger = logger;
-        this.lastTimeTracker = new LastTimeTracker(logger, applicationContext);
-        this.firstTimeTracker = new FirstTimeTracker(logger, applicationContext);
-        this.lastVersionTracker = new LastVersionTracker(logger, applicationContext);
-        this.totalCountTracker = new TotalCountTracker(logger, applicationContext);
     }
 
     // configuration methods
@@ -97,15 +105,15 @@ public final class AmplifyStateTracker implements IAmplifyStateTracker {
     public IAmplifyStateTracker configureWithDefaults() {
         return this
                 .addEnvironmentCheck(new GooglePlayStoreIsAvailableCheck())
-                .trackFirstEventTime(IntegratedEvent.APP_INSTALLED, new WarmUpDaysCheck(ONE_WEEK), new ImmediateEventTriggerInitializer())
-                .trackTotalEventCount(IntegratedEvent.USER_GAVE_POSITIVE_FEEDBACK, new MaximumCountCheck(ONE_DAY))
-                .trackLastEventTime(IntegratedEvent.USER_GAVE_CRITICAL_FEEDBACK, new CooldownDaysCheck(ONE_WEEK))
-                .trackLastEventTime(IntegratedEvent.USER_DECLINED_CRITICAL_FEEDBACK, new CooldownDaysCheck(ONE_WEEK))
-                .trackLastEventVersion(IntegratedEvent.USER_DECLINED_CRITICAL_FEEDBACK, new VersionChangedCheck())
-                .trackLastEventTime(IntegratedEvent.USER_DECLINED_POSITIVE_FEEDBACK, new CooldownDaysCheck(ONE_WEEK))
-                .trackLastEventVersion(IntegratedEvent.USER_DECLINED_POSITIVE_FEEDBACK, new VersionChangedCheck())
-                .trackLastEventTime(IntegratedEvent.APP_CRASHED, new CooldownDaysCheck(ONE_WEEK), new ExceptionHandlingInitializer())
-                .trackLastEventVersion(IntegratedEvent.USER_GAVE_CRITICAL_FEEDBACK, new VersionChangedCheck());
+                .setInstallTimeCooldownDays(ONE_WEEK)
+                .setLastCrashTimeCooldownDays(ONE_WEEK)
+                .trackTotalEventCount(AmplifyViewEvent.USER_GAVE_POSITIVE_FEEDBACK, new MaximumCountCheck(ONE_DAY))
+                .trackLastEventTime(AmplifyViewEvent.USER_GAVE_CRITICAL_FEEDBACK, new CooldownDaysCheck(ONE_WEEK))
+                .trackLastEventTime(AmplifyViewEvent.USER_DECLINED_CRITICAL_FEEDBACK, new CooldownDaysCheck(ONE_WEEK))
+                .trackLastEventVersion(AmplifyViewEvent.USER_DECLINED_CRITICAL_FEEDBACK, new VersionChangedCheck(applicationVersionNameProvider))
+                .trackLastEventTime(AmplifyViewEvent.USER_DECLINED_POSITIVE_FEEDBACK, new CooldownDaysCheck(ONE_WEEK))
+                .trackLastEventVersion(AmplifyViewEvent.USER_DECLINED_POSITIVE_FEEDBACK, new VersionChangedCheck(applicationVersionNameProvider))
+                .trackLastEventVersion(AmplifyViewEvent.USER_GAVE_CRITICAL_FEEDBACK, new VersionChangedCheck(applicationVersionNameProvider));
     }
 
     @Override
@@ -120,101 +128,60 @@ public final class AmplifyStateTracker implements IAmplifyStateTracker {
         return this;
     }
 
-    @Override
-    public IAmplifyStateTracker trackTotalEventCount(@NonNull final IEvent event, @NonNull final IEventCheck<Integer> eventCheck) {
-        totalCountTracker.trackEvent(event, eventCheck);
+    public IAmplifyStateTracker setInstallTimeCooldownDays(final int cooldownPeriodDays) {
+        applicationChecksManager.setInstallTimeCooldownDays(cooldownPeriodDays);
+        return this;
+    }
+
+    public IAmplifyStateTracker setLastUpdateTimeCooldownDays(final int cooldownPeriodDays) {
+        applicationChecksManager.setLastUpdateTimeCooldownDays(cooldownPeriodDays);
+        return this;
+    }
+
+    public IAmplifyStateTracker setLastCrashTimeCooldownDays(final int cooldownPeriodDays) {
+        applicationChecksManager.setLastCrashTimeCooldownDays(cooldownPeriodDays);
         return this;
     }
 
     @Override
-    public IAmplifyStateTracker trackTotalEventCount(
-            @NonNull final IEvent event,
-            @NonNull final IEventCheck<Integer> eventCheck,
-            @NonNull final ITrackingInitializer trackingInitializer) {
-        trackTotalEventCount(event, eventCheck);
-
-        if (!totalCountTracker.containsEvent(event)) {
-            trackingInitializer.initialize(this, event);
-        }
-
+    public IAmplifyStateTracker trackTotalEventCount(@NonNull final ITrackableEvent event, @NonNull final IEventCheck<Integer> eventCheck) {
+        totalEventCountsManager.trackEvent(event, eventCheck);
         return this;
     }
 
     @Override
-    public IAmplifyStateTracker trackFirstEventTime(@NonNull final IEvent event, @NonNull final IEventCheck<Long> eventCheck) {
-        firstTimeTracker.trackEvent(event, eventCheck);
+    public IAmplifyStateTracker trackFirstEventTime(@NonNull final ITrackableEvent event, @NonNull final IEventCheck<Long> eventCheck) {
+        firstEventTimesManager.trackEvent(event, eventCheck);
         return this;
     }
 
     @Override
-    public IAmplifyStateTracker trackFirstEventTime(
-            @NonNull final IEvent event,
-            @NonNull final IEventCheck<Long> eventCheck,
-            @NonNull final ITrackingInitializer trackingInitializer) {
-        trackFirstEventTime(event, eventCheck);
-
-        if (!firstTimeTracker.containsEvent(event)) {
-            trackingInitializer.initialize(this, event);
-        }
-
+    public IAmplifyStateTracker trackLastEventTime(@NonNull final ITrackableEvent event, @NonNull final IEventCheck<Long> eventCheck) {
+        lastEventTimesManager.trackEvent(event, eventCheck);
         return this;
     }
 
     @Override
-    public IAmplifyStateTracker trackLastEventTime(@NonNull final IEvent event, @NonNull final IEventCheck<Long> eventCheck) {
-        lastTimeTracker.trackEvent(event, eventCheck);
-        return this;
-    }
-
-    @Override
-    public IAmplifyStateTracker trackLastEventTime(
-            @NonNull final IEvent event,
-            @NonNull final IEventCheck<Long> eventCheck,
-            @NonNull final ITrackingInitializer trackingInitializer) {
-        trackLastEventTime(event, eventCheck);
-
-        if (!lastTimeTracker.containsEvent(event)) {
-            trackingInitializer.initialize(this, event);
-        }
-
-        return this;
-    }
-
-    @Override
-    public IAmplifyStateTracker trackLastEventVersion(@NonNull final IEvent event, @NonNull final IEventCheck<String> eventCheck) {
-        lastVersionTracker.trackEvent(event, eventCheck);
-        return this;
-    }
-
-    @Override
-    public IAmplifyStateTracker trackLastEventVersion(
-            @NonNull final IEvent event,
-            @NonNull final IEventCheck<String> eventCheck,
-            @NonNull final ITrackingInitializer trackingInitializer) {
-        trackLastEventVersion(event, eventCheck);
-
-        if (!lastVersionTracker.containsEvent(event)) {
-            trackingInitializer.initialize(this, event);
-        }
-
+    public IAmplifyStateTracker trackLastEventVersion(@NonNull final ITrackableEvent event, @NonNull final IEventCheck<String> eventCheck) {
+        lastEventVersionsManager.trackEvent(event, eventCheck);
         return this;
     }
 
     @Override
     public IAmplifyStateTracker addEnvironmentCheck(@NonNull final IEnvironmentCheck environmentCheck) {
-        environmentChecks.add(environmentCheck);
+        environmentChecksManager.addEnvironmentCheck(environmentCheck);
         return this;
     }
 
     // update methods
 
     @Override
-    public IAmplifyStateTracker notifyEventTriggered(@NonNull final IEvent event) {
+    public IAmplifyStateTracker notifyEventTriggered(@NonNull final ITrackableEvent event) {
         logger.d("Triggered Event: " + event);
-        totalCountTracker.notifyEventTriggered(event);
-        firstTimeTracker.notifyEventTriggered(event);
-        lastTimeTracker.notifyEventTriggered(event);
-        lastVersionTracker.notifyEventTriggered(event);
+        totalEventCountsManager.notifyEventTriggered(event);
+        firstEventTimesManager.notifyEventTriggered(event);
+        lastEventTimesManager.notifyEventTriggered(event);
+        lastEventVersionsManager.notifyEventTriggered(event);
         return this;
     }
 
@@ -230,24 +197,13 @@ public final class AmplifyStateTracker implements IAmplifyStateTracker {
 
     @Override
     public boolean shouldAskForRating() {
-        return alwaysShow | (allEnvironmentChecksMet()
-                & totalCountTracker.allowFeedbackPrompt()
-                & firstTimeTracker.allowFeedbackPrompt()
-                & lastTimeTracker.allowFeedbackPrompt()
-                & lastVersionTracker.allowFeedbackPrompt());
-    }
-
-    // private implementation:
-
-    private boolean allEnvironmentChecksMet() {
-        for (final IEnvironmentCheck environmentCheck : environmentChecks) {
-            if (!environmentCheck.isSatisfied(environmentInfoProvider)) {
-                logger.d("Environment check not satisfied: " + environmentCheck);
-                return false;
-            }
-        }
-
-        return true;
+        return alwaysShow | (
+                  applicationChecksManager.shouldAllowFeedbackPrompt()
+                & environmentChecksManager.shouldAllowFeedbackPrompt()
+                & totalEventCountsManager.shouldAllowFeedbackPrompt()
+                & firstEventTimesManager.shouldAllowFeedbackPrompt()
+                & lastEventTimesManager.shouldAllowFeedbackPrompt()
+                & lastEventVersionsManager.shouldAllowFeedbackPrompt());
     }
 
 }

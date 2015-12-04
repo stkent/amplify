@@ -43,18 +43,19 @@ public class CooldownDaysCheckTest extends BaseTest {
         final long lastEventTime = SystemTimeUtil.currentTimeMillis() - TimeUnit.DAYS.toMillis(daysSinceLastEvent);
 
         // Act
-        // todo: figure out what to pass instead of the null context here
-        final boolean checkShouldBlockFeedbackPrompt
-                = cooldownDaysCheck.shouldBlockFeedbackPrompt(lastEventTime, null);
+        final boolean checkShouldAllowFeedbackPrompt
+                = cooldownDaysCheck.shouldAllowFeedbackPrompt(lastEventTime);
 
         // Assert
-        assertTrue("Feedback prompt should be blocked if the cooldown period has not passed", checkShouldBlockFeedbackPrompt);
+        assertFalse(
+                "Feedback prompt should be blocked if the cooldown period has not passed",
+                checkShouldAllowFeedbackPrompt);
     }
 
     @SuppressLint("Assert")
     @SuppressWarnings("ConstantConditions")
     @Test
-    public void testThatCheckDoesNotBlockPromptIfCooldownPeriodHasPassed() {
+    public void testThatCheckAllowsPromptIfCooldownPeriodHasPassed() {
         // Arrange
         final int cooldownTimeDays = 7;
         final int daysSinceLastEvent = 9;
@@ -64,12 +65,13 @@ public class CooldownDaysCheckTest extends BaseTest {
         final long lastEventTime = SystemTimeUtil.currentTimeMillis() - TimeUnit.DAYS.toMillis(daysSinceLastEvent);
 
         // Act
-        final boolean checkShouldBlockFeedbackPrompt
-                = cooldownDaysCheck.shouldBlockFeedbackPrompt(lastEventTime, null);
+        final boolean checkShouldAllowFeedbackPrompt
+                = cooldownDaysCheck.shouldAllowFeedbackPrompt(lastEventTime);
 
         // Assert
-        assertFalse("Feedback prompt should not be blocked if the cooldown period has passed",
-                checkShouldBlockFeedbackPrompt);
+        assertTrue(
+                "Feedback prompt should be allowed if the cooldown period has passed",
+                checkShouldAllowFeedbackPrompt);
     }
 
 }

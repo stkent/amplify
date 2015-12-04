@@ -14,24 +14,23 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package com.github.stkent.amplify.tracking.interfaces;
+package com.github.stkent.amplify.tracking;
 
-import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.support.annotation.NonNull;
 
-public interface IApplicationInfoProvider {
+import com.github.stkent.amplify.tracking.interfaces.ITrackableEvent;
+
+public enum AmplifyViewEvent implements ITrackableEvent {
+
+    USER_GAVE_CRITICAL_FEEDBACK,
+    USER_GAVE_POSITIVE_FEEDBACK,
+    USER_DECLINED_CRITICAL_FEEDBACK,
+    USER_DECLINED_POSITIVE_FEEDBACK;
 
     @NonNull
-    String getDeviceName();
-
-    @NonNull
-    String getVersionName() throws PackageManager.NameNotFoundException;
-
-    @NonNull
-    String getApplicationVersionDisplayString() throws PackageManager.NameNotFoundException;
-
-    @NonNull
-    String getFeedbackEmailAddress() throws Resources.NotFoundException;
+    @Override
+    public String getTrackingKey() {
+        return name();
+    }
 
 }
