@@ -203,7 +203,8 @@ public final class AmplifyStateTracker implements IAmplifyStateTracker {
     @Override
     public boolean shouldAskForRating() {
         return alwaysShow | (
-                  environmentChecksManager.shouldAllowFeedbackPrompt()
+                  applicationChecksManager.shouldAllowFeedbackPrompt()
+                & environmentChecksManager.shouldAllowFeedbackPrompt()
                 & totalEventCountsManager.shouldAllowFeedbackPrompt()
                 & firstEventTimesManager.shouldAllowFeedbackPrompt()
                 & lastEventTimesManager.shouldAllowFeedbackPrompt()
