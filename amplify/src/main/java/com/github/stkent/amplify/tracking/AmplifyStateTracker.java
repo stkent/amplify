@@ -200,9 +200,9 @@ public final class AmplifyStateTracker implements IAmplifyStateTracker {
         return alwaysShow | (
                   applicationChecksManager.shouldAllowFeedbackPrompt()
                 & environmentChecksManager.shouldAllowFeedbackPrompt()
-                & totalEventCountsManager.shouldAllowFeedbackPrompt()
-                & firstEventTimesManager.shouldAllowFeedbackPrompt()
-                & lastEventTimesManager.shouldAllowFeedbackPrompt()
+                & totalEventCountsManager .shouldAllowFeedbackPrompt()
+                & firstEventTimesManager  .shouldAllowFeedbackPrompt()
+                & lastEventTimesManager   .shouldAllowFeedbackPrompt()
                 & lastEventVersionsManager.shouldAllowFeedbackPrompt());
     }
 
