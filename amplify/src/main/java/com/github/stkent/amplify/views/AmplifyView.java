@@ -30,10 +30,9 @@ import android.widget.FrameLayout;
 
 import com.github.stkent.amplify.ILogger;
 import com.github.stkent.amplify.R;
-import com.github.stkent.amplify.tracking.AmplifyStateTracker;
+import com.github.stkent.amplify.tracking.AmplifyViewEvent;
 import com.github.stkent.amplify.tracking.ApplicationFeedbackDataProvider;
 import com.github.stkent.amplify.tracking.EnvironmentCapabilitiesProvider;
-import com.github.stkent.amplify.tracking.AmplifyViewEvent;
 import com.github.stkent.amplify.tracking.interfaces.IAmplifyStateTracker;
 import com.github.stkent.amplify.utils.FeedbackUtil;
 import com.github.stkent.amplify.utils.PlayStoreUtil;
@@ -126,8 +125,6 @@ public class AmplifyView extends FrameLayout {
 
     private void init(final Context context, @Nullable final AttributeSet attrs) {
         hide();
-
-        amplifyStateTracker = AmplifyStateTracker.get(context);
 
         final TypedArray typedArray = context.getTheme().obtainStyledAttributes(attrs, R.styleable.AmplifyView, 0, 0);
 

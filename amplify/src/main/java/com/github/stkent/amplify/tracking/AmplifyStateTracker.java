@@ -46,7 +46,7 @@ public final class AmplifyStateTracker implements IAmplifyStateTracker {
 
     // static fields
 
-    private static IAmplifyStateTracker sharedInstance;
+    private static AmplifyStateTracker sharedInstance;
 
     private static final int DEFAULT_USER_GAVE_POSITIVE_FEEDBACK_MAXIMUM_COUNT = 7;
     private static final int DEFAULT_INSTALL_TIME_COOLDOWN_DAYS = 7;
@@ -69,11 +69,11 @@ public final class AmplifyStateTracker implements IAmplifyStateTracker {
 
     private boolean alwaysShow;
 
-    public static IAmplifyStateTracker get(@NonNull final Context context) {
+    public static AmplifyStateTracker get(@NonNull final Context context) {
         return get(context, new Logger());
     }
 
-    public static IAmplifyStateTracker get(@NonNull final Context context, @NonNull final ILogger logger) {
+    public static AmplifyStateTracker get(@NonNull final Context context, @NonNull final ILogger logger) {
         synchronized (AmplifyStateTracker.class) {
             if (sharedInstance == null) {
                 sharedInstance = new AmplifyStateTracker(context, logger);
@@ -106,8 +106,7 @@ public final class AmplifyStateTracker implements IAmplifyStateTracker {
 
     // configuration methods
 
-    @Override
-    public IAmplifyStateTracker configureWithDefaults() {
+    public AmplifyStateTracker configureWithDefaults() {
         return this
                 .addEnvironmentCheck(new GooglePlayStoreIsAvailableCheck())
                 .setInstallTimeCooldownDays(DEFAULT_INSTALL_TIME_COOLDOWN_DAYS)
@@ -128,59 +127,52 @@ public final class AmplifyStateTracker implements IAmplifyStateTracker {
                         new VersionChangedCheck(applicationVersionNameProvider));
     }
 
-    @Override
-    public IAmplifyStateTracker setLogLevel(@NonNull final Logger.LogLevel logLevel) {
+    public AmplifyStateTracker setLogLevel(@NonNull final Logger.LogLevel logLevel) {
         logger.setLogLevel(logLevel);
         return this;
     }
 
-    @Override
-    public IAmplifyStateTracker setAlwaysShow(final boolean alwaysShow) {
+    public AmplifyStateTracker setAlwaysShow(final boolean alwaysShow) {
         this.alwaysShow = alwaysShow;
         return this;
     }
 
-    public IAmplifyStateTracker setInstallTimeCooldownDays(final int cooldownPeriodDays) {
+    public AmplifyStateTracker setInstallTimeCooldownDays(final int cooldownPeriodDays) {
         applicationChecksManager.setInstallTimeCooldownDays(cooldownPeriodDays);
         return this;
     }
 
-    public IAmplifyStateTracker setLastUpdateTimeCooldownDays(final int cooldownPeriodDays) {
+    public AmplifyStateTracker setLastUpdateTimeCooldownDays(final int cooldownPeriodDays) {
         applicationChecksManager.setLastUpdateTimeCooldownDays(cooldownPeriodDays);
         return this;
     }
 
-    public IAmplifyStateTracker setLastCrashTimeCooldownDays(final int cooldownPeriodDays) {
+    public AmplifyStateTracker setLastCrashTimeCooldownDays(final int cooldownPeriodDays) {
         applicationChecksManager.setLastCrashTimeCooldownDays(cooldownPeriodDays);
         return this;
     }
 
-    @Override
-    public IAmplifyStateTracker trackTotalEventCount(@NonNull final ITrackableEvent event, @NonNull final IEventCheck<Integer> eventCheck) {
+    public AmplifyStateTracker trackTotalEventCount(@NonNull final ITrackableEvent event, @NonNull final IEventCheck<Integer> eventCheck) {
         totalEventCountsManager.trackEvent(event, eventCheck);
         return this;
     }
 
-    @Override
-    public IAmplifyStateTracker trackFirstEventTime(@NonNull final ITrackableEvent event, @NonNull final IEventCheck<Long> eventCheck) {
+    public AmplifyStateTracker trackFirstEventTime(@NonNull final ITrackableEvent event, @NonNull final IEventCheck<Long> eventCheck) {
         firstEventTimesManager.trackEvent(event, eventCheck);
         return this;
     }
 
-    @Override
-    public IAmplifyStateTracker trackLastEventTime(@NonNull final ITrackableEvent event, @NonNull final IEventCheck<Long> eventCheck) {
+    public AmplifyStateTracker trackLastEventTime(@NonNull final ITrackableEvent event, @NonNull final IEventCheck<Long> eventCheck) {
         lastEventTimesManager.trackEvent(event, eventCheck);
         return this;
     }
 
-    @Override
-    public IAmplifyStateTracker trackLastEventVersion(@NonNull final ITrackableEvent event, @NonNull final IEventCheck<String> eventCheck) {
+    public AmplifyStateTracker trackLastEventVersion(@NonNull final ITrackableEvent event, @NonNull final IEventCheck<String> eventCheck) {
         lastEventVersionsManager.trackEvent(event, eventCheck);
         return this;
     }
 
-    @Override
-    public IAmplifyStateTracker addEnvironmentCheck(@NonNull final IEnvironmentCheck environmentCheck) {
+    public AmplifyStateTracker addEnvironmentCheck(@NonNull final IEnvironmentCheck environmentCheck) {
         environmentChecksManager.addEnvironmentCheck(environmentCheck);
         return this;
     }
@@ -188,7 +180,7 @@ public final class AmplifyStateTracker implements IAmplifyStateTracker {
     // update methods
 
     @Override
-    public IAmplifyStateTracker notifyEventTriggered(@NonNull final ITrackableEvent event) {
+    public AmplifyStateTracker notifyEventTriggered(@NonNull final ITrackableEvent event) {
         logger.d("Triggered Event: " + event);
         totalEventCountsManager.notifyEventTriggered(event);
         firstEventTimesManager.notifyEventTriggered(event);
@@ -199,7 +191,6 @@ public final class AmplifyStateTracker implements IAmplifyStateTracker {
 
     // query methods
 
-    @Override
     public void promptIfReady(@NonNull final AmplifyView amplifyView) {
         if (shouldAskForRating()) {
             amplifyView.injectDependencies(this, logger);
@@ -207,7 +198,6 @@ public final class AmplifyStateTracker implements IAmplifyStateTracker {
         }
     }
 
-    @Override
     public boolean shouldAskForRating() {
         return alwaysShow | (
                   applicationChecksManager.shouldAllowFeedbackPrompt()
