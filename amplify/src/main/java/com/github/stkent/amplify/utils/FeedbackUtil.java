@@ -31,23 +31,23 @@ import com.github.stkent.amplify.utils.time.SystemTimeUtil;
 
 public final class FeedbackUtil {
 
-    private final IApplicationFeedbackDataProvider applicationInfoProvider;
-    private final IEnvironmentCapabilitiesProvider environmentInfoProvider;
+    private final IApplicationFeedbackDataProvider applicationFeedbackDataProvider;
+    private final IEnvironmentCapabilitiesProvider environmentCapabilitiesProvider;
     private final ILogger logger;
 
     public FeedbackUtil(
-            @NonNull final IApplicationFeedbackDataProvider applicationInfoProvider,
-            @NonNull final IEnvironmentCapabilitiesProvider environmentInfoProvider,
+            @NonNull final IApplicationFeedbackDataProvider applicationFeedbackDataProvider,
+            @NonNull final IEnvironmentCapabilitiesProvider environmentCapabilitiesProvider,
             @NonNull final ILogger logger) {
-        this.applicationInfoProvider = applicationInfoProvider;
-        this.environmentInfoProvider = environmentInfoProvider;
+        this.applicationFeedbackDataProvider = applicationFeedbackDataProvider;
+        this.environmentCapabilitiesProvider = environmentCapabilitiesProvider;
         this.logger = logger;
     }
 
     public void showFeedbackEmailChooser(@Nullable final Activity activity) {
         final Intent feedbackEmailIntent = getFeedbackEmailIntent();
 
-        if (!environmentInfoProvider.canHandleIntent(feedbackEmailIntent)) {
+        if (!environmentCapabilitiesProvider.canHandleIntent(feedbackEmailIntent)) {
             logger.e("Unable to present email client chooser.");
 
             return;
@@ -68,7 +68,7 @@ public final class FeedbackUtil {
         final StringBuilder uriStringBuilder = new StringBuilder("mailto:");
 
         try {
-            uriStringBuilder.append(applicationInfoProvider.getFeedbackEmailAddress());
+            uriStringBuilder.append(applicationFeedbackDataProvider.getFeedbackEmailAddress());
         } catch (final IllegalStateException e) {
             logger.e("Feedback email address was not defined");
         }
@@ -88,7 +88,7 @@ public final class FeedbackUtil {
         String applicationVersionDisplayString;
 
         try {
-            applicationVersionDisplayString = applicationInfoProvider.getVersionDisplayString();
+            applicationVersionDisplayString = applicationFeedbackDataProvider.getVersionDisplayString();
         } catch (PackageManager.NameNotFoundException e) {
             logger.e("Unable to determine application version information.");
 
@@ -98,7 +98,7 @@ public final class FeedbackUtil {
         return    "\n\n\n"
                 + "---------------------"
                 + "\n"
-                + "Device: " + applicationInfoProvider.getDeviceName()
+                + "Device: " + applicationFeedbackDataProvider.getDeviceName()
                 + "\n"
                 + "App Version: " + applicationVersionDisplayString
                 + "\n"
