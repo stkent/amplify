@@ -112,13 +112,20 @@ public final class AmplifyStateTracker implements IAmplifyStateTracker {
                 .addEnvironmentCheck(new GooglePlayStoreIsAvailableCheck())
                 .setInstallTimeCooldownDays(DEFAULT_INSTALL_TIME_COOLDOWN_DAYS)
                 .setLastCrashTimeCooldownDays(DEFAULT_LAST_UPDATE_TIME_COOLDOWN_DAYS)
-                .trackTotalEventCount( AmplifyViewEvent.USER_GAVE_POSITIVE_FEEDBACK,     new MaximumCountCheck(DEFAULT_USER_GAVE_POSITIVE_FEEDBACK_MAXIMUM_COUNT))
-                .trackLastEventTime(   AmplifyViewEvent.USER_GAVE_CRITICAL_FEEDBACK,     new CooldownDaysCheck(DEFAULT_USER_GAVE_CRITICAL_FEEDBACK_COOLDOWN_DAYS))
-                .trackLastEventTime(   AmplifyViewEvent.USER_DECLINED_CRITICAL_FEEDBACK, new CooldownDaysCheck(DEFAULT_USER_DECLINED_CRITICAL_FEEDBACK_COOLDOWN_DAYS))
-                .trackLastEventTime(   AmplifyViewEvent.USER_DECLINED_POSITIVE_FEEDBACK, new CooldownDaysCheck(DEFAULT_USER_DECLINED_POSITIVE_FEEDBACK_COOLDOWN_DAYS))
-                .trackLastEventVersion(AmplifyViewEvent.USER_DECLINED_CRITICAL_FEEDBACK, new VersionChangedCheck(applicationVersionNameProvider))
-                .trackLastEventVersion(AmplifyViewEvent.USER_DECLINED_POSITIVE_FEEDBACK, new VersionChangedCheck(applicationVersionNameProvider))
-                .trackLastEventVersion(AmplifyViewEvent.USER_GAVE_CRITICAL_FEEDBACK,     new VersionChangedCheck(applicationVersionNameProvider));
+                .trackTotalEventCount(AmplifyViewEvent.USER_GAVE_POSITIVE_FEEDBACK,
+                        new MaximumCountCheck(DEFAULT_USER_GAVE_POSITIVE_FEEDBACK_MAXIMUM_COUNT))
+                .trackLastEventTime(AmplifyViewEvent.USER_GAVE_CRITICAL_FEEDBACK,
+                        new CooldownDaysCheck(DEFAULT_USER_GAVE_CRITICAL_FEEDBACK_COOLDOWN_DAYS))
+                .trackLastEventTime(AmplifyViewEvent.USER_DECLINED_CRITICAL_FEEDBACK,
+                        new CooldownDaysCheck(DEFAULT_USER_DECLINED_CRITICAL_FEEDBACK_COOLDOWN_DAYS))
+                .trackLastEventTime(AmplifyViewEvent.USER_DECLINED_POSITIVE_FEEDBACK,
+                        new CooldownDaysCheck(DEFAULT_USER_DECLINED_POSITIVE_FEEDBACK_COOLDOWN_DAYS))
+                .trackLastEventVersion(AmplifyViewEvent.USER_DECLINED_CRITICAL_FEEDBACK,
+                        new VersionChangedCheck(applicationVersionNameProvider))
+                .trackLastEventVersion(AmplifyViewEvent.USER_DECLINED_POSITIVE_FEEDBACK,
+                        new VersionChangedCheck(applicationVersionNameProvider))
+                .trackLastEventVersion(AmplifyViewEvent.USER_GAVE_CRITICAL_FEEDBACK,
+                        new VersionChangedCheck(applicationVersionNameProvider));
     }
 
     @Override
