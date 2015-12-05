@@ -28,19 +28,13 @@ public final class ApplicationUtils {
     }
 
     public static PackageInfo getPackageInfo(@NonNull final Context applicationContext) throws PackageManager.NameNotFoundException {
-        return getPackageInfo(applicationContext, applicationContext.getPackageName(), 0);
+        return getPackageInfo(applicationContext, applicationContext.getPackageName());
     }
 
     public static PackageInfo getPackageInfo(
             @NonNull final Context applicationContext,
             @NonNull final String packageName) throws PackageManager.NameNotFoundException {
         return getPackageInfo(applicationContext, packageName, 0);
-    }
-
-    public static PackageInfo getPackageInfo(
-            @NonNull final Context applicationContext,
-            final int flags) throws PackageManager.NameNotFoundException {
-        return getPackageInfo(applicationContext, applicationContext.getPackageName(), flags);
     }
 
     public static PackageInfo getPackageInfo(
