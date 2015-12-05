@@ -47,8 +47,7 @@ public final class EnvironmentCapabilitiesProvider implements IEnvironmentCapabi
     @Override
     public boolean isApplicationInstalled(@NonNull final String packageName) {
         try {
-            // fixme: this is borked
-            ApplicationUtils.getPackageInfo(applicationContext, GET_ACTIVITIES);
+            ApplicationUtils.getPackageInfo(applicationContext, packageName, GET_ACTIVITIES);
             return true;
         } catch (final PackageManager.NameNotFoundException e) {
             return false;
