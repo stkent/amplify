@@ -63,8 +63,7 @@ public class ApplicationFeedbackDataProvider implements IApplicationFeedbackData
     public String getVersionDisplayString() throws PackageManager.NameNotFoundException {
         final int applicationVersionCode = ApplicationUtils.getPackageInfo(applicationContext).versionCode;
 
-        // todo: prefer String.format here
-        return applicationVersionNameProvider.getVersionName() + " (" + applicationVersionCode + ")";
+        return String.format("%s (%s)", applicationVersionNameProvider.getVersionName(), applicationVersionCode);
     }
 
     @NonNull
