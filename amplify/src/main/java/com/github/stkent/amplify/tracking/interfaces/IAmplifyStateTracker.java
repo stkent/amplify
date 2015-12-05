@@ -18,37 +18,8 @@ package com.github.stkent.amplify.tracking.interfaces;
 
 import android.support.annotation.NonNull;
 
-import com.github.stkent.amplify.Logger;
-import com.github.stkent.amplify.views.AmplifyView;
-
 public interface IAmplifyStateTracker {
 
-    IAmplifyStateTracker configureWithDefaults();
-
-    IAmplifyStateTracker setLogLevel(@NonNull final Logger.LogLevel logLevel);
-
-    IAmplifyStateTracker setAlwaysShow(final boolean alwaysShow);
-
-    IAmplifyStateTracker addEnvironmentCheck(@NonNull final IEnvironmentCheck requirement);
-
-    IAmplifyStateTracker setInstallTimeCooldownDays(final int cooldownPeriodDays);
-
-    IAmplifyStateTracker setLastUpdateTimeCooldownDays(final int cooldownPeriodDays);
-
-    IAmplifyStateTracker setLastCrashTimeCooldownDays(final int cooldownPeriodDays);
-
-    IAmplifyStateTracker trackTotalEventCount(@NonNull final ITrackableEvent event, @NonNull final IEventCheck<Integer> eventCheck);
-
-    IAmplifyStateTracker trackFirstEventTime(@NonNull final ITrackableEvent event, @NonNull final IEventCheck<Long> eventCheck);
-
-    IAmplifyStateTracker trackLastEventTime(@NonNull final ITrackableEvent event, @NonNull final IEventCheck<Long> eventCheck);
-
-    IAmplifyStateTracker trackLastEventVersion(@NonNull final ITrackableEvent event, @NonNull final IEventCheck<String> eventCheck);
-
     IAmplifyStateTracker notifyEventTriggered(@NonNull final ITrackableEvent event);
-
-    void promptIfReady(@NonNull final AmplifyView amplifyView);
-
-    boolean shouldAskForRating();
 
 }
