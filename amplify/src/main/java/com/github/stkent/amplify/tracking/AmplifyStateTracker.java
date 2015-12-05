@@ -46,7 +46,7 @@ public final class AmplifyStateTracker implements IAmplifyStateTracker {
 
     // static fields
 
-    private static IAmplifyStateTracker sharedInstance;
+    private static AmplifyStateTracker sharedInstance;
     private static final int ONE_WEEK = 7;
     private static final int ONE_DAY = 1;
 
@@ -64,11 +64,11 @@ public final class AmplifyStateTracker implements IAmplifyStateTracker {
 
     private boolean alwaysShow;
 
-    public static IAmplifyStateTracker get(@NonNull final Context context) {
+    public static AmplifyStateTracker get(@NonNull final Context context) {
         return get(context, new Logger());
     }
 
-    public static IAmplifyStateTracker get(@NonNull final Context context, @NonNull final ILogger logger) {
+    public static AmplifyStateTracker get(@NonNull final Context context, @NonNull final ILogger logger) {
         synchronized (AmplifyStateTracker.class) {
             if (sharedInstance == null) {
                 sharedInstance = new AmplifyStateTracker(context, logger);
