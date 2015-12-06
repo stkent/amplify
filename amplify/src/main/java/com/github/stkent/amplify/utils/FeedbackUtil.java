@@ -65,6 +65,7 @@ public final class FeedbackUtil {
         final String feedbackEmailSubject = Uri.encode("Android App Feedback", "UTF-8");
         final String appInfo = getApplicationInfoString();
 
+        // Uri.Builder is not useful here; see http://stackoverflow.com/a/12035226/2911458
         final StringBuilder uriStringBuilder = new StringBuilder("mailto:");
 
         try {
