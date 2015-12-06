@@ -295,7 +295,6 @@ public class AmplifyView extends FrameLayout {
 
     private void checkDependenciesHaveBeenInjected() {
         if (amplifyStateTracker == null || logger == null) {
-            // todo: use the stack trace to print out the calling method name here!
             throw new IllegalStateException("Dependencies must be injected before this method is called");
         }
     }
