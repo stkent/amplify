@@ -108,7 +108,6 @@ public class AmplifyView extends FrameLayout {
 
         final Context applicationContext = getContext().getApplicationContext();
 
-        // todo: replace this logger with an injected logger:
         final FeedbackUtil feedbackUtil = new FeedbackUtil(
                 new ApplicationFeedbackDataProvider(applicationContext),
                 new EnvironmentCapabilitiesProvider(applicationContext),
