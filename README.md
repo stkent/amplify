@@ -12,35 +12,44 @@ Respectfully request feedback in your Android app.
 
 In your `build.gradle`:
 
-    dependencies {
-        compile 'com.github.stkent:amplify:0.1.0'
-    }
+```groovy
+dependencies {
+    compile 'com.github.stkent:amplify:0.1.0'
+}
+```
     
 In your `Application` class:
 
-    public class ExampleApplication extends Application {
-        @Override public void onCreate() {
-            super.onCreate();
-            AmplifyStateTracker.get(this)
-                    .configureWithDefaults()
-                    .setLogLevel(BuildConfig.DEBUG ? Logger.LogLevel.DEBUG : Logger.LogLevel.NONE);
-        }
+```java
+public class ExampleApplication extends Application {
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        AmplifyStateTracker.get(this)
+                .configureWithDefaults()
+                .setLogLevel(BuildConfig.DEBUG ? Logger.LogLevel.DEBUG : Logger.LogLevel.NONE);
     }
+}
+```
 
 In your xml layout(s):
 
-    <com.github.stkent.amplify.views.AmplifyView
-        android:id="@+id/amplifyView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+```xml
+<com.github.stkent.amplify.views.AmplifyView
+    android:id="@+id/amplifyView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" />
+```
 
 In the corresponding `Activity`/`Fragment`/`View` class (typically presented immediately after a successfully-completed 'transaction'):
 
-    final AmplifyView amplifyView = (AmplifyView) findViewById(R.id.amplifyView);
-    
-    ...
-    
-    AmplifyStateTracker.get(context).promptIfReady(amplifyView);
+```java
+final AmplifyView amplifyView = (AmplifyView) findViewById(R.id.amplifyView);
+
+...
+
+AmplifyStateTracker.get(context).promptIfReady(amplifyView);
+```
 
 # Configuring
 
@@ -62,8 +71,10 @@ In the corresponding `Activity`/`Fragment`/`View` class (typically presented imm
 
 Code style and correctness is also enforced by several checkers. Running the Gradle command
 
-    ./gradlew amplify:check
-    
+```shell
+./gradlew amplify:check
+```
+
 will execute all the standard `check` tasks, as well as noting any violations detected by:
 
 - [FindBugs™](http://findbugs.sourceforge.net/);
@@ -76,16 +87,20 @@ The Travis CI pull request build will fail if any violations are detected; these
 
 Execute the library unit test suite using the Gradle command:
 
-    ./gradlew amplify:testRelease
-    
+```shell
+./gradlew amplify:testRelease
+```
+
 The Travis CI pull request build will fail if any test fails.
 
 ## Generating Inline Licenses
 
 Automatically generate license headers in new source files using the Gradle command:
 
-    ./gradlew licenseFormat
-    
+```shell
+./gradlew licenseFormat
+```
+
 The Travis CI pull request build will fail if any source files is missing this generated header.
 
 # License
