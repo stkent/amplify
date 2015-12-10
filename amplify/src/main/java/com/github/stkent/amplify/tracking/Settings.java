@@ -41,6 +41,7 @@ public class Settings<T> implements ISettings<T> {
 
     public void writeTrackingValue(@NonNull final String trackingKey, final T value) {
 
+        // fixme: we probably need sync locking around this access
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
         if (value.getClass().equals(String.class)) {

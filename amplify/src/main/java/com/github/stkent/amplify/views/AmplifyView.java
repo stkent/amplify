@@ -108,7 +108,6 @@ public class AmplifyView extends FrameLayout {
 
         final Context applicationContext = getContext().getApplicationContext();
 
-        // todo: replace this logger with an injected logger:
         final FeedbackUtil feedbackUtil = new FeedbackUtil(
                 new ApplicationFeedbackDataProvider(applicationContext),
                 new EnvironmentCapabilitiesProvider(applicationContext),
@@ -296,7 +295,6 @@ public class AmplifyView extends FrameLayout {
 
     private void checkDependenciesHaveBeenInjected() {
         if (amplifyStateTracker == null || logger == null) {
-            // todo: use the stack trace to print out the calling method name here!
             throw new IllegalStateException("Dependencies must be injected before this method is called");
         }
     }
