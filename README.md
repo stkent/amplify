@@ -94,7 +94,7 @@ Travis CI runs the same checks for each pull request and marks the build as fail
 
 ## Running Tests
 
-Execute the library unit test suite using the Gradle command:
+Run the library unit test suite by executing the Gradle command:
 
 ```shell
 ./gradlew amplify:testRelease
@@ -104,13 +104,13 @@ The Travis CI pull request build will fail if any test fails.
 
 ## Generating Inline Licenses
 
-Automatically generate license headers in new source files using the Gradle command:
+Before opening a pull request, you must generate license headers in any new source files by executing the Gradle command:
 
 ```shell
 ./gradlew licenseFormat
 ```
 
-The Travis CI pull request build will fail if any source files is missing this generated header.
+The Travis CI pull request build will fail if any source file is missing this generated header.
 
 # License
 
