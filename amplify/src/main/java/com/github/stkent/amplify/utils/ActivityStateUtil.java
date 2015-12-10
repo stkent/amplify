@@ -20,17 +20,27 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Build;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
-public final class ActivityStateUtil {
+public final class ActivityStateUtil{
 
-    private ActivityStateUtil() {
+    private ActivityStateUtil(){
+    }
 
+    @Override
+    protected void finalize() throws Throwable {
+        Log.e("TST", "Hey");
     }
 
     @SuppressLint("NewApi")
     public static boolean isActivityValid(@Nullable final Activity activity) {
         if (activity == null) {
-            return false;
+            try {
+
+                return false;
+            } catch (Exception e) {
+
+            }
         } else {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
                 return !activity.isFinishing() && !activity.isDestroyed();
@@ -38,6 +48,16 @@ public final class ActivityStateUtil {
                 return !activity.isFinishing();
             }
         }
+
+        System.exit(0);
+
+
+
+        return false;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        return true;
+    }
 }
