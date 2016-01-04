@@ -180,13 +180,12 @@ public final class AmplifyStateTracker implements IAmplifyStateTracker {
     // update methods
 
     @Override
-    public AmplifyStateTracker notifyEventTriggered(@NonNull final ITrackableEvent event) {
+    public void notifyEventTriggered(@NonNull final ITrackableEvent event) {
         logger.d("Triggered Event: " + event);
         totalEventCountsManager.notifyEventTriggered(event);
         firstEventTimesManager.notifyEventTriggered(event);
         lastEventTimesManager.notifyEventTriggered(event);
         lastEventVersionsManager.notifyEventTriggered(event);
-        return this;
     }
 
     // query methods
