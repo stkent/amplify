@@ -4,9 +4,7 @@ Respectfully request feedback in your Android app.
 
 <!-- TODO: add example image or gif here -->
 
-# Project Status
-
-<a href="https://travis-ci.org/stkent/amplify"><img src="https://travis-ci.org/stkent/amplify.svg"></a> [![Coverage Status](https://coveralls.io/repos/stkent/amplify/badge.svg?branch=master&service=github)](https://coveralls.io/github/stkent/amplify?branch=master) [![Download](https://api.bintray.com/packages/stkent/android-libraries/amplify/images/download.svg)](https://bintray.com/stkent/android-libraries/amplify/_latestVersion)
+<a href="https://travis-ci.org/stkent/amplify"><img src="https://travis-ci.org/stkent/amplify.svg"></a>
 
 # Introduction
 
@@ -56,23 +54,85 @@ AmplifyView amplifyView = (AmplifyView) findViewById(R.id.amplifyView);
 AmplifyStateTracker.get(context).promptIfReady(amplifyView);
 ```
 
+# Library structure
+
+TODO: Here we need some discussion of the fact that this library essentially comes in two pieces:
+
+- the state-tracking portion
+- the default prompt views that enforce a particular flow (and also allow for automatic tracking of prompt-related event occurrences.)
+
+---
+
+The `AmplifyStateTracker` singleton has two main responsibilities:
+
+- tracking occurrences of registered events;
+- evaluating checks based on (a) the application's 'environment', and (b) each registered event, that collectively determine whether or not the user should be shown your feedback prompt. If any check fails, the user will not be prompted.
+
+Calling `configureWithDefaults()` on the `AmplifyStateTracker` instance registers a number of events and checks and provides a sensible baseline configuration.
+
 # Configuring
+
+## Default Environment Checks
+
+The `GooglePlayStoreIsAvailableCheck` check will pass if the Google Play Store is available on a user's device, and will fail otherwise.
 
 ## Default Events
 
-## Default Rules
+### Feedback Prompt Events
+
+These events are associated with user actions related to the feedback prompt UI.
+
+- User agreed to provide positive feedback
+- User agreed to provide critical feedback
+- User declined to provide positive feedback
+- User declined to provide critical feedback
+
+### Application-level Events
+
+- Application installed
+- Application updated
+- Application crashed
+
+These (pseudo-)events are associated with application-level actions.
+
+## Default Event Checks
+
+When calling `configureWithDefaults` on the `AmplifyStateTracker` instance, the following checks are registered by default:
+
+- the `GooglePlayStoreIsAvailableCheck`, which will block all prompts if the Google Play Store is not available.
 
 ## Default Prompt UI
 
 # Customizing
 
+## Custom Environment Checks
+
+A new custom environment check can be added by implementing the `IEnvironmentCheck` interface and passing an instance of the implementation to the `AmplifyStateTracker` instance method `addEnvironmentCheck()`.
+
 ## Custom Events
 
-## Custom Rules
+A new custom event can be tracked by implementing the `ITrackableEvent` interface and passing an instance of the implementation to one of the following `AmplifyStateTracker` instance methods:
+
+- `trackTotalEventCount()`
+- `trackFirstEventTime()`
+- `trackLastEventTime()`
+- `trackLastEventVersion()`
+
+You will also need to provide an event check when calling any of these methods. The data passed to this paired event check is linked to the particular tracking method called. For example, if you register an event using the `trackTotalEventCount()` method, the corresponding event check will be called with integer values that represent the number of event occurrences to date.
+
+## Custom Event Checks
+
+A new custom event check can be created by implementing the `IEventCheck<T>` interface. The generic type `T` must be one of: `Integer`, `Long`, or `String`. The type you select will depend on which tracked event aspect (time, count, etc.) you wish to apply this check to.
 
 ## Custom Prompt UI
 
 # Contributing
+
+## Issue Tracking
+
+Library issues are tracked using [GitHub Issues](https://github.com/stkent/amplify/issues). Please review all tag types to understand issue categorization.
+
+Always review open issues before opening a new one. If you would like to work on an existing issue, please comment to that effect and assign yourself to the issue.
 
 ## Conventions
 
