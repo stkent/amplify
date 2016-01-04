@@ -19,10 +19,28 @@ package com.github.stkent.amplify.tracking.interfaces;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+/**
+ * An abstract representation of a class capable of persisting values across application launches.
+ *
+ * @param <T> the type of the value that can be written and read by implementations (Integer, Long
+ *        or String)
+ */
 public interface ISettings<T> {
 
+    /**
+     * Write a new value to persistent storage.
+     *
+     * @param trackingKey the key with which to associate the new value
+     * @param value the new value to be persisted
+     */
     void writeTrackingValue(@NonNull final String trackingKey, final T value);
 
+    /**
+     * Retrieve a value (if it exists) from persistent storage.
+     *
+     * @param trackingKey the key whose associated value we wish to retrieve
+     * @return the persisted value, if it exists; null otherwise
+     */
     @Nullable
     T readTrackingValue(@NonNull final String trackingKey);
 
