@@ -19,8 +19,16 @@ package com.github.stkent.amplify.tracking.interfaces;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 
+/**
+ * An abstract representation of a class that provides the version name of the application in which
+ * this library is embedded.
+ */
 public interface IApplicationVersionNameProvider {
 
+    /**
+     * @return the version name of the application in which this library is embedded
+     * @throws PackageManager.NameNotFoundException
+     */
     @NonNull
     String getVersionName() throws PackageManager.NameNotFoundException;
 
