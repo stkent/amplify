@@ -20,14 +20,29 @@ import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.support.annotation.NonNull;
 
+/**
+ * An abstract representation of a class that provides the (necessary and nice-to-have) data for
+ * receiving critical feedback from the user.
+ */
 public interface IApplicationFeedbackDataProvider {
 
+    /**
+     * @return the human-readable name of the current device
+     */
     @NonNull
     String getDeviceName();
 
+    /**
+     * @return the current version string of the application in which this library is embedded
+     * @throws PackageManager.NameNotFoundException
+     */
     @NonNull
     String getVersionDisplayString() throws PackageManager.NameNotFoundException;
 
+    /**
+     * @return the email address to which critical feedback should be sent
+     * @throws Resources.NotFoundException
+     */
     @NonNull
     String getFeedbackEmailAddress() throws Resources.NotFoundException;
 
