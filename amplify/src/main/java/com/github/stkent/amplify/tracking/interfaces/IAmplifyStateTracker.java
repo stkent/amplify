@@ -18,8 +18,18 @@ package com.github.stkent.amplify.tracking.interfaces;
 
 import android.support.annotation.NonNull;
 
+/**
+ * An abstract representation of a consuming class that is interested in receiving notifications
+ * when events of interest occur.
+ */
 public interface IAmplifyStateTracker {
 
-    IAmplifyStateTracker notifyEventTriggered(@NonNull final ITrackableEvent event);
+    /**
+     * Call this method to notify an implementing class that an event occurred.
+     *
+     * @param event the event that occurred.
+     */
+    // TODO: handle event not being registered with the tracker
+    void notifyEventTriggered(@NonNull final ITrackableEvent event);
 
 }
