@@ -16,14 +16,38 @@
  */
 package com.github.stkent.amplify.tracking.interfaces;
 
+/**
+ * An abstract representation of a class that manages application-level checks.
+ */
 public interface IApplicationChecksManager extends ITopLevelCheck {
 
+    /**
+     * Set a new cooldown duration for application install.
+     *
+     * @param cooldownPeriodDays the number of days that must pass after the application is first
+     *                           installed before the user can be prompted.
+     */
     void setInstallTimeCooldownDays(final int cooldownPeriodDays);
 
+    /**
+     * Set a new cooldown duration for application updates.
+     *
+     * @param cooldownPeriodDays the number of days that must pass after the application is
+     *                           updated before the user can be prompted.
+     */
     void setLastUpdateTimeCooldownDays(final int cooldownPeriodDays);
 
+    /**
+     * Set a new cooldown duration for application crashes.
+     *
+     * @param cooldownPeriodDays the number of days that must pass after the application crashes
+     *                           before the user can be prompted.
+     */
     void setLastCrashTimeCooldownDays(final int cooldownPeriodDays);
 
+    /**
+     * Notifies the implementing class that the application has crashed.
+     */
     void notifyOfCrash();
 
 }
