@@ -20,8 +20,8 @@ import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 
 /**
- * An abstract representation of a class that provides the version name of the application in which
- * this library is embedded.
+ * An abstract representation of a class that provides the version name of the embedding
+ * application.
  */
 public interface IApplicationVersionNameProvider {
 

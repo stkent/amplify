@@ -19,12 +19,34 @@ package com.github.stkent.amplify.tracking.interfaces;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 
+/**
+ * An abstract representation of a class that provides information about the environment in which
+ * the embedding application is currently running.
+ */
 public interface IEnvironmentCapabilitiesProvider {
 
+    /**
+     * Call to check whether an application with a given package name is installed on this device.
+     *
+     * @param packageName the package name to look for
+     * @return true if an application with the given package name is installed on the current
+     *         device; false otherwise
+     */
     boolean isApplicationInstalled(@NonNull final String packageName);
 
+    /**
+     * Call to check whether the Google Play Store is installed on this device.
+     *
+     * @return true if the Google Play Store is installed on the current device; false otherwise
+     */
     boolean isGooglePlayStoreInstalled();
 
+    /**
+     * Call to check whether any activities on the current device can handle the given intent.
+     *
+     * @param intent the intent we would like to handle
+     * @return true if the given intent can be handled one the current device; false otherwise
+     */
     boolean canHandleIntent(@NonNull final Intent intent);
 
 }
