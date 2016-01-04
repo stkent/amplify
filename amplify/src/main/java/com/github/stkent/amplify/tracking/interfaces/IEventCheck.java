@@ -39,7 +39,7 @@ public interface IEventCheck<T> {
      * @param cachedEventValue the current value associated with the tracked
      *        event this check is applied to
      * @return a string representation of the current check status; primarily
-     *         used for debugging.
+     *         used for debugging
      */
     @NonNull
     String getStatusString(@NonNull final T cachedEventValue);

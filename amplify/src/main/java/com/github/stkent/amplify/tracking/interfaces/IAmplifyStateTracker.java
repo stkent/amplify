@@ -27,7 +27,7 @@ public interface IAmplifyStateTracker {
     /**
      * Call this method to notify an implementing class that an event occurred.
      *
-     * @param event the event that occurred.
+     * @param event the event that occurred
      */
     // TODO: handle event not being registered with the tracker
     void notifyEventTriggered(@NonNull final ITrackableEvent event);

@@ -27,7 +27,7 @@ import com.github.stkent.amplify.tracking.checks.MaximumCountCheck;
 import com.github.stkent.amplify.tracking.checks.VersionChangedCheck;
 import com.github.stkent.amplify.tracking.interfaces.IAmplifyStateTracker;
 import com.github.stkent.amplify.tracking.interfaces.IApplicationChecksManager;
-import com.github.stkent.amplify.tracking.interfaces.IApplicationEventTrackingDataProvider;
+import com.github.stkent.amplify.tracking.interfaces.IApplicationEventTimeProvider;
 import com.github.stkent.amplify.tracking.interfaces.IApplicationVersionNameProvider;
 import com.github.stkent.amplify.tracking.interfaces.IEnvironmentCheck;
 import com.github.stkent.amplify.tracking.interfaces.IEnvironmentChecksManager;
@@ -89,13 +89,13 @@ public final class AmplifyStateTracker implements IAmplifyStateTracker {
             @NonNull final Context context,
             @NonNull final ILogger logger) {
         final Context applicationContext = context.getApplicationContext();
-        final IApplicationEventTrackingDataProvider applicationInfoProvider = new ApplicationEventTrackingDataProvider(applicationContext);
-        final IEnvironmentCapabilitiesProvider environmentInfoProvider = new EnvironmentCapabilitiesProvider(applicationContext);
+        final IApplicationEventTimeProvider applicationEventTimeProvider = new ApplicationEventTimeProvider(applicationContext);
+        final IEnvironmentCapabilitiesProvider environmentCapabilitiesProvider = new EnvironmentCapabilitiesProvider(applicationContext);
 
         this.applicationVersionNameProvider = new ApplicationVersionNameProvider(applicationContext);
 
-        this.applicationChecksManager = new ApplicationChecksManager(applicationContext, applicationInfoProvider, logger);
-        this.environmentChecksManager = new EnvironmentChecksManager(environmentInfoProvider);
+        this.applicationChecksManager = new ApplicationChecksManager(applicationContext, applicationEventTimeProvider, logger);
+        this.environmentChecksManager = new EnvironmentChecksManager(environmentCapabilitiesProvider);
         this.firstEventTimesManager = new FirstEventTimesManager(applicationContext, logger);
         this.lastEventTimesManager = new LastEventTimesManager(applicationContext, logger);
         this.lastEventVersionsManager = new LastEventVersionsManager(applicationContext, logger);
