@@ -20,17 +20,17 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 
-import com.github.stkent.amplify.tracking.interfaces.IApplicationEventTrackingDataProvider;
+import com.github.stkent.amplify.tracking.interfaces.IApplicationEventTimeProvider;
 import com.github.stkent.amplify.utils.ApplicationUtils;
 
-public class ApplicationEventTrackingDataProvider implements IApplicationEventTrackingDataProvider {
+public class ApplicationEventTimeProvider implements IApplicationEventTimeProvider {
 
     private static final long DEFAULT_EVENT_TIME_MS = 0;
 
     @NonNull
     private final Context applicationContext;
 
-    public ApplicationEventTrackingDataProvider(@NonNull final Context applicationContext) {
+    public ApplicationEventTimeProvider(@NonNull final Context applicationContext) {
         this.applicationContext = applicationContext;
     }
 

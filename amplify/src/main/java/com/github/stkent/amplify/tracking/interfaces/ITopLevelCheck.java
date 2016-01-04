@@ -16,8 +16,18 @@
  */
 package com.github.stkent.amplify.tracking.interfaces;
 
+/**
+ * An abstract representation of an check that does not depend on application or device state. This
+ * must be satisfied whenever we prompt the user for feedback.
+ *
+ * Typically used to wrap and aggregate the states of several other checks.
+ */
 public interface ITopLevelCheck {
 
+    /**
+     * @return true if this check is satisfied and should allow the feedback prompt to be shown;
+     *         false otherwise
+     */
     boolean shouldAllowFeedbackPrompt();
 
 }

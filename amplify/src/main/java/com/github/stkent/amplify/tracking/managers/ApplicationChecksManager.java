@@ -24,7 +24,7 @@ import com.github.stkent.amplify.ILogger;
 import com.github.stkent.amplify.tracking.AmplifyExceptionHandler;
 import com.github.stkent.amplify.tracking.checks.CooldownDaysCheck;
 import com.github.stkent.amplify.tracking.interfaces.IApplicationChecksManager;
-import com.github.stkent.amplify.tracking.interfaces.IApplicationEventTrackingDataProvider;
+import com.github.stkent.amplify.tracking.interfaces.IApplicationEventTimeProvider;
 import com.github.stkent.amplify.tracking.interfaces.IEventCheck;
 import com.github.stkent.amplify.tracking.interfaces.ITrackableEvent;
 import com.github.stkent.amplify.tracking.interfaces.ITrackableEventsManager;
@@ -46,7 +46,7 @@ public class ApplicationChecksManager implements IApplicationChecksManager {
     private final ILogger logger;
 
     @NonNull
-    private final IApplicationEventTrackingDataProvider applicationInfoProvider;
+    private final IApplicationEventTimeProvider applicationInfoProvider;
 
     @Nullable
     private IEventCheck<Long> installTimeEventCheck;
@@ -59,7 +59,7 @@ public class ApplicationChecksManager implements IApplicationChecksManager {
 
     public ApplicationChecksManager(
             @NonNull final Context applicationContext,
-            @NonNull final IApplicationEventTrackingDataProvider applicationInfoProvider,
+            @NonNull final IApplicationEventTimeProvider applicationInfoProvider,
             @NonNull final ILogger logger) {
         this.applicationContext = applicationContext;
         this.applicationInfoProvider = applicationInfoProvider;

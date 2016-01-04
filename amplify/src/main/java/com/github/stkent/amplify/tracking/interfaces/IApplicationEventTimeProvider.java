@@ -16,10 +16,20 @@
  */
 package com.github.stkent.amplify.tracking.interfaces;
 
-public interface IApplicationEventTrackingDataProvider {
+/**
+ * An abstract representation of a class that provides the times at which significant
+ * application-level events last occurred.
+ */
+public interface IApplicationEventTimeProvider {
 
+    /**
+     * @return the time in milliseconds since the application was first installed
+     */
     long getInstallTime();
 
+    /**
+     * @return the time in milliseconds since the applications was last updated
+     */
     long getLastUpdateTime();
 
 }

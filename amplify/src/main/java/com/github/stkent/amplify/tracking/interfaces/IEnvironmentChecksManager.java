@@ -18,8 +18,16 @@ package com.github.stkent.amplify.tracking.interfaces;
 
 import android.support.annotation.NonNull;
 
+/**
+ * An abstract representation of a class that manages environment-level checks.
+ */
 public interface IEnvironmentChecksManager extends ITopLevelCheck {
 
+    /**
+     * Register a new environment check.
+     *
+     * @param environmentCheck the environment check to be registered
+     */
     void addEnvironmentCheck(@NonNull final IEnvironmentCheck environmentCheck);
 
 }

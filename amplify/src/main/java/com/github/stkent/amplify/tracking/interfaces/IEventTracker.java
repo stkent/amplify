@@ -18,10 +18,26 @@ package com.github.stkent.amplify.tracking.interfaces;
 
 import android.support.annotation.NonNull;
 
+/**
+ * An abstract representation of a class that can track event occurrences over time.
+ *
+ * @param <T> the type of the value tracked by this tracker (Integer, Long or String)
+ */
 public interface IEventTracker<T> {
 
+    /**
+     * Register a new event/check pair for tracking.
+     *
+     * @param event the event to be tracked
+     * @param eventCheck the new check to be registered, based on this event
+     */
     void trackEvent(@NonNull final ITrackableEvent event, @NonNull final IEventCheck<T> eventCheck);
 
+    /**
+     * Call this method to notify an implementing class that an event occurred.
+     *
+     * @param event the event that occurred
+     */
     void notifyEventTriggered(@NonNull final ITrackableEvent event);
 
 }

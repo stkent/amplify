@@ -19,27 +19,26 @@ package com.github.stkent.amplify.tracking.interfaces;
 import android.support.annotation.NonNull;
 
 /**
- * An abstract representation of an event-based prerequisite for prompting the
- * user for feedback.
+ * An abstract representation of an event-dependent check that must be satisfied whenever we prompt
+ * the user for feedback.
  *
- * @param <T> the type of the value tracked by this event (Integer, Long or
- *        String)
+ * @param <T> the type of the value tracked by this event (Integer, Long or String)
  */
 public interface IEventCheck<T> {
 
     /**
-     * @param cachedEventValue the current value associated with the tracked
-     *        event this check is applied to
-     * @return true if the feedback prompt should be allowed to show; false
-     *         otherwise
+     * Call this method to determine whether or not to prompt the user for feedback at this time.
+     * @param cachedEventValue the current value associated with the tracked event this check is
+     *        associated with
+     * @return true if this check is satisfied and should allow the feedback prompt to be shown;
+     *         false otherwise
      */
     boolean shouldAllowFeedbackPrompt(@NonNull final T cachedEventValue);
 
     /**
-     * @param cachedEventValue the current value associated with the tracked
-     *        event this check is applied to
-     * @return a string representation of the current check status; primarily
-     *         used for debugging.
+     * @param cachedEventValue the current value associated with the tracked event this check is
+     *        applied to
+     * @return a string representation of the current check status; primarily used for debugging
      */
     @NonNull
     String getStatusString(@NonNull final T cachedEventValue);

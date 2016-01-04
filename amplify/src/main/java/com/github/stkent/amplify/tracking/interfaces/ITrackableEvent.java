@@ -19,14 +19,13 @@ package com.github.stkent.amplify.tracking.interfaces;
 import android.support.annotation.NonNull;
 
 /**
- * An abstract representation of an event whose occurrences can be tracked
- * across consuming application launches.
+ * An abstract representation of an event whose occurrences can be tracked across launches of the
+ * embedding application.
  */
 public interface ITrackableEvent {
 
     /**
-     * @return a key that uniquely identifies this event within the
-     *         consuming application
+     * @return a key that uniquely identifies this event within the embedding application
      */
     @NonNull
     String getTrackingKey();

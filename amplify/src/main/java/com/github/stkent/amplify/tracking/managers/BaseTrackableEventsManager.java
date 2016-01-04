@@ -38,8 +38,7 @@ public abstract class BaseTrackableEventsManager<T> implements ITrackableEventsM
     private final ConcurrentHashMap<ITrackableEvent, List<IEventCheck<T>>> internalMap;
 
     /**
-     * @return a key that uniquely identifies this event tracker within the
-     *         consuming application
+     * @return a key that uniquely identifies this event tracker within the embedding application
      */
     @NonNull
     protected abstract String getTrackingKeySuffix();

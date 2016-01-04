@@ -16,6 +16,12 @@
  */
 package com.github.stkent.amplify.tracking.interfaces;
 
+/**
+ * An abstract representation of a class capable of tracking a single dimension of multiple events
+ * that also provides a simple interface to query the state of all tracked events simultaneously.
+ *
+ * @param <T> the type of the values tracked by this manager (Integer, Long or String)
+ */
 public interface ITrackableEventsManager<T> extends IEventTracker<T>, ITopLevelCheck {
 
 }
