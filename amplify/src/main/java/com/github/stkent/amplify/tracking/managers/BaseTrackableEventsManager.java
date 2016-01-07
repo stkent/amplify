@@ -98,7 +98,7 @@ public abstract class BaseTrackableEventsManager<T> implements ITrackableEventsM
 
                 logger.d(getTrackingKey(event) + ": " + eventCheck.getStatusString(cachedEventValue));
 
-                if (eventCheck.shouldAllowFeedbackPrompt(cachedEventValue)) {
+                if (!eventCheck.shouldAllowFeedbackPrompt(cachedEventValue)) {
                     logger.d("Blocking feedback for event: " + event + " because of check: " + eventCheck);
                     return false;
                 }
