@@ -92,7 +92,7 @@ public class ApplicationChecksManager implements IApplicationChecksManager {
                 logger.d("Blocking prompt based on last update check");
             }
 
-            result = result && lastUpdateTimeTimeEventCheck.shouldAllowFeedbackPrompt(lastUpdateTime);
+            result = result && lastUpdateResult;
         }
 
         if (lastCrashTimeManager != null) {
