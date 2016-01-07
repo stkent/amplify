@@ -33,7 +33,8 @@ public final class CooldownDaysCheck implements IEventCheck<Long> {
 
     @Override
     public boolean shouldAllowFeedbackPrompt(@NonNull final Long cachedEventValue) {
-        return cachedEventValue == Long.MAX_VALUE || (SystemTimeUtil.currentTimeMillis() - cachedEventValue) >= TimeUnit.DAYS.toMillis(cooldownPeriodDays);
+        return cachedEventValue == Long.MAX_VALUE
+                || (SystemTimeUtil.currentTimeMillis() - cachedEventValue) >= TimeUnit.DAYS.toMillis(cooldownPeriodDays);
     }
 
     @NonNull
