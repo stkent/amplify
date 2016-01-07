@@ -22,7 +22,7 @@ apply from: 'coverage.gradle'
 // Shared project metadata
 
 ext {
-    amplifyVersion = "0.3.0"
+    amplifyVersion = "0.4.1"
     amplifyWebsiteUrl = 'https://github.com/stkent/amplify'
     amplifyVcsUrl = 'https://github.com/stkent/amplify.git'
     amplifyGroupId = 'com.github.stkent'
