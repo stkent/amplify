@@ -18,6 +18,7 @@ package com.github.stkent.amplify.tracking.managers;
 
 import android.support.annotation.NonNull;
 
+import com.github.stkent.amplify.ILogger;
 import com.github.stkent.amplify.tracking.interfaces.IEnvironmentCapabilitiesProvider;
 import com.github.stkent.amplify.tracking.interfaces.IEnvironmentCheck;
 import com.github.stkent.amplify.tracking.interfaces.IEnvironmentChecksManager;
@@ -28,13 +29,18 @@ import java.util.List;
 public class EnvironmentChecksManager implements IEnvironmentChecksManager {
 
     @NonNull
+    private final ILogger logger;
+
+    @NonNull
     private final IEnvironmentCapabilitiesProvider environmentInfoProvider;
 
     @NonNull
     private final List<IEnvironmentCheck> environmentChecks = new ArrayList<>();
 
-    public EnvironmentChecksManager(@NonNull final IEnvironmentCapabilitiesProvider environmentInfoProvider) {
+    public EnvironmentChecksManager(@NonNull final IEnvironmentCapabilitiesProvider environmentInfoProvider,
+                                    @NonNull final ILogger logger) {
         this.environmentInfoProvider = environmentInfoProvider;
+        this.logger = logger;
     }
 
     @Override
@@ -46,6 +52,7 @@ public class EnvironmentChecksManager implements IEnvironmentChecksManager {
     public boolean shouldAllowFeedbackPrompt() {
         for (final IEnvironmentCheck environmentCheck : environmentChecks) {
             if (!environmentCheck.shouldAllowFeedbackPrompt(environmentInfoProvider)) {
+                logger.d("Blocking feedback because of environment check: " + environmentCheck);
                 return false;
             }
         }

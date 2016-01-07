@@ -74,16 +74,36 @@ public class ApplicationChecksManager implements IApplicationChecksManager {
             final long installTime = applicationInfoProvider.getInstallTime();
 
             //noinspection ConstantConditions
-            result = result && installTimeEventCheck.shouldAllowFeedbackPrompt(installTime);
+            boolean installResult = installTimeEventCheck.shouldAllowFeedbackPrompt(installTime);
+
+            if (!installResult) {
+                logger.d("Blocking prompt based on install time check");
+            }
+
+            result = result && installResult;
         }
 
         if (lastUpdateTimeTimeEventCheck != null) {
             final long lastUpdateTime = applicationInfoProvider.getLastUpdateTime();
+
+            boolean lastUpdateResult = lastUpdateTimeTimeEventCheck.shouldAllowFeedbackPrompt(lastUpdateTime);
+
+            if (!lastUpdateResult) {
+                logger.d("Blocking prompt based on last update check");
+            }
+
             result = result && lastUpdateTimeTimeEventCheck.shouldAllowFeedbackPrompt(lastUpdateTime);
         }
 
         if (lastCrashTimeManager != null) {
-            result = result && lastCrashTimeManager.shouldAllowFeedbackPrompt();
+
+            boolean lastCrashResult = lastCrashTimeManager.shouldAllowFeedbackPrompt();
+
+            if (!lastCrashResult) {
+                logger.d("Blocking prompt based on last crash check");
+            }
+
+            result = result && lastCrashResult;
         }
 
         return result;
