@@ -48,7 +48,7 @@ public class LastEventVersionsManager extends BaseTrackableEventsManager<String>
     @NonNull
     @Override
     protected String getTrackingKeySuffix() {
-        return getClass().getSimpleName();
+        return "LASTEVENTVERSIONSMANAGER";
     }
 
     @NonNull
