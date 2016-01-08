@@ -41,7 +41,7 @@ public class LastEventTimesManager extends BaseTrackableEventsManager<Long> {
     @NonNull
     @Override
     protected String getTrackingKeySuffix() {
-        return getClass().getSimpleName();
+        return "LASTEVENTTIMESMANAGER";
     }
 
     @NonNull

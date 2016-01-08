@@ -40,7 +40,7 @@ public class TotalEventCountsManager extends BaseTrackableEventsManager<Integer>
     @NonNull
     @Override
     protected String getTrackingKeySuffix() {
-        return getClass().getSimpleName();
+        return "TOTALEVENTCOUNTSMANAGER";
     }
 
     @NonNull
