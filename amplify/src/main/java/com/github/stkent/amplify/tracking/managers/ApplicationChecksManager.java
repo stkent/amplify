@@ -52,7 +52,7 @@ public class ApplicationChecksManager implements IApplicationChecksManager {
     private IEventCheck<Long> installTimeEventCheck;
 
     @Nullable
-    private IEventCheck<Long> lastUpdateTimeTimeEventCheck;
+    private IEventCheck<Long> lastUpdateTimeEventCheck;
 
     @Nullable
     private ITrackableEventsManager<Long> lastCrashTimeManager;
@@ -83,10 +83,10 @@ public class ApplicationChecksManager implements IApplicationChecksManager {
             result = result && installResult;
         }
 
-        if (lastUpdateTimeTimeEventCheck != null) {
+        if (lastUpdateTimeEventCheck != null) {
             final long lastUpdateTime = applicationInfoProvider.getLastUpdateTime();
 
-            boolean lastUpdateResult = lastUpdateTimeTimeEventCheck.shouldAllowFeedbackPrompt(lastUpdateTime);
+            boolean lastUpdateResult = lastUpdateTimeEventCheck.shouldAllowFeedbackPrompt(lastUpdateTime);
 
             if (!lastUpdateResult) {
                 logger.d("Blocking prompt based on last update check");
@@ -116,7 +116,7 @@ public class ApplicationChecksManager implements IApplicationChecksManager {
 
     @Override
     public void setLastUpdateTimeCooldownDays(final int cooldownPeriodDays) {
-        lastUpdateTimeTimeEventCheck = new CooldownDaysCheck(cooldownPeriodDays);
+        lastUpdateTimeEventCheck = new CooldownDaysCheck(cooldownPeriodDays);
     }
 
     @Override
