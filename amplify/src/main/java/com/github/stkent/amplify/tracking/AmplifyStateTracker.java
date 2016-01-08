@@ -29,9 +29,9 @@ import com.github.stkent.amplify.tracking.interfaces.IAmplifyStateTracker;
 import com.github.stkent.amplify.tracking.interfaces.IApplicationChecksManager;
 import com.github.stkent.amplify.tracking.interfaces.IApplicationEventTimeProvider;
 import com.github.stkent.amplify.tracking.interfaces.IApplicationVersionNameProvider;
+import com.github.stkent.amplify.tracking.interfaces.IEnvironmentCapabilitiesProvider;
 import com.github.stkent.amplify.tracking.interfaces.IEnvironmentCheck;
 import com.github.stkent.amplify.tracking.interfaces.IEnvironmentChecksManager;
-import com.github.stkent.amplify.tracking.interfaces.IEnvironmentCapabilitiesProvider;
 import com.github.stkent.amplify.tracking.interfaces.IEventCheck;
 import com.github.stkent.amplify.tracking.interfaces.ITrackableEvent;
 import com.github.stkent.amplify.tracking.managers.ApplicationChecksManager;
@@ -48,7 +48,7 @@ public final class AmplifyStateTracker implements IAmplifyStateTracker {
 
     private static AmplifyStateTracker sharedInstance;
 
-    private static final int DEFAULT_USER_GAVE_POSITIVE_FEEDBACK_MAXIMUM_COUNT = 7;
+    private static final int DEFAULT_USER_GAVE_POSITIVE_FEEDBACK_MAXIMUM_COUNT = 1;
     private static final int DEFAULT_INSTALL_TIME_COOLDOWN_DAYS = 7;
     private static final int DEFAULT_LAST_UPDATE_TIME_COOLDOWN_DAYS = 7;
     private static final int DEFAULT_USER_DECLINED_CRITICAL_FEEDBACK_COOLDOWN_DAYS = 7;
@@ -95,7 +95,7 @@ public final class AmplifyStateTracker implements IAmplifyStateTracker {
         this.applicationVersionNameProvider = new ApplicationVersionNameProvider(applicationContext);
 
         this.applicationChecksManager = new ApplicationChecksManager(applicationContext, applicationEventTimeProvider, logger);
-        this.environmentChecksManager = new EnvironmentChecksManager(environmentCapabilitiesProvider);
+        this.environmentChecksManager = new EnvironmentChecksManager(environmentCapabilitiesProvider, logger);
         this.firstEventTimesManager = new FirstEventTimesManager(applicationContext, logger);
         this.lastEventTimesManager = new LastEventTimesManager(applicationContext, logger);
         this.lastEventVersionsManager = new LastEventVersionsManager(applicationContext, logger);

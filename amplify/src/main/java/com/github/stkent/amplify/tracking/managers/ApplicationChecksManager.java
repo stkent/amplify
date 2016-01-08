@@ -52,7 +52,7 @@ public class ApplicationChecksManager implements IApplicationChecksManager {
     private IEventCheck<Long> installTimeEventCheck;
 
     @Nullable
-    private IEventCheck<Long> lastUpdateTimeTimeEventCheck;
+    private IEventCheck<Long> lastUpdateTimeEventCheck;
 
     @Nullable
     private ITrackableEventsManager<Long> lastCrashTimeManager;
@@ -74,16 +74,36 @@ public class ApplicationChecksManager implements IApplicationChecksManager {
             final long installTime = applicationInfoProvider.getInstallTime();
 
             //noinspection ConstantConditions
-            result = result && installTimeEventCheck.shouldAllowFeedbackPrompt(installTime);
+            boolean installResult = installTimeEventCheck.shouldAllowFeedbackPrompt(installTime);
+
+            if (!installResult) {
+                logger.d("Blocking prompt based on install time check");
+            }
+
+            result = result && installResult;
         }
 
-        if (lastUpdateTimeTimeEventCheck != null) {
+        if (lastUpdateTimeEventCheck != null) {
             final long lastUpdateTime = applicationInfoProvider.getLastUpdateTime();
-            result = result && lastUpdateTimeTimeEventCheck.shouldAllowFeedbackPrompt(lastUpdateTime);
+
+            boolean lastUpdateResult = lastUpdateTimeEventCheck.shouldAllowFeedbackPrompt(lastUpdateTime);
+
+            if (!lastUpdateResult) {
+                logger.d("Blocking prompt based on last update check");
+            }
+
+            result = result && lastUpdateResult;
         }
 
         if (lastCrashTimeManager != null) {
-            result = result && lastCrashTimeManager.shouldAllowFeedbackPrompt();
+
+            boolean lastCrashResult = lastCrashTimeManager.shouldAllowFeedbackPrompt();
+
+            if (!lastCrashResult) {
+                logger.d("Blocking prompt based on last crash check");
+            }
+
+            result = result && lastCrashResult;
         }
 
         return result;
@@ -96,7 +116,7 @@ public class ApplicationChecksManager implements IApplicationChecksManager {
 
     @Override
     public void setLastUpdateTimeCooldownDays(final int cooldownPeriodDays) {
-        lastUpdateTimeTimeEventCheck = new CooldownDaysCheck(cooldownPeriodDays);
+        lastUpdateTimeEventCheck = new CooldownDaysCheck(cooldownPeriodDays);
     }
 
     @Override
