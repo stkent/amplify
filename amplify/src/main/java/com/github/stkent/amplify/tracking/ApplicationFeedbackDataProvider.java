@@ -18,11 +18,9 @@ package com.github.stkent.amplify.tracking;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.os.Build;
 import android.support.annotation.NonNull;
 
-import com.github.stkent.amplify.R;
 import com.github.stkent.amplify.tracking.interfaces.IApplicationFeedbackDataProvider;
 import com.github.stkent.amplify.tracking.interfaces.IApplicationVersionNameProvider;
 import com.github.stkent.amplify.utils.ApplicationUtils;
@@ -64,17 +62,6 @@ public class ApplicationFeedbackDataProvider implements IApplicationFeedbackData
         final int applicationVersionCode = ApplicationUtils.getPackageInfo(applicationContext).versionCode;
 
         return String.format("%s (%s)", applicationVersionNameProvider.getVersionName(), applicationVersionCode);
-    }
-
-    @NonNull
-    @Override
-    public String getFeedbackEmailAddress() throws IllegalStateException {
-        try {
-            return applicationContext.getString(R.string.amp_feedback_email);
-        } catch (Resources.NotFoundException e) {
-            throw new IllegalArgumentException("R.string.amp_feedback_email"
-                    + "resource not found, you must set this in your strings file for the feedback util to function", e);
-        }
     }
 
 }

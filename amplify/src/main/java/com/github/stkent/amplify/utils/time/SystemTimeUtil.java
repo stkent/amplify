@@ -20,15 +20,13 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 
-import com.github.stkent.amplify.tracking.AmplifyStateTracker;
-
 public final class SystemTimeUtil {
 
     @Nullable
     private static ISystemTimeProvider sharedInstance;
 
     public static long currentTimeMillis() {
-        synchronized (AmplifyStateTracker.class) {
+        synchronized (SystemTimeUtil.class) {
             if (sharedInstance == null) {
                 sharedInstance = new RealSystemTimeProvider();
             }

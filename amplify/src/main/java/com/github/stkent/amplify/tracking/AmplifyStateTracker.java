@@ -68,6 +68,8 @@ public final class AmplifyStateTracker implements IAmplifyStateTracker {
     private final ILogger logger;
 
     private boolean alwaysShow;
+    private String packageName;
+    private String feedbackEmail;
 
     public static AmplifyStateTracker get(@NonNull final Context context) {
         return get(context, new Logger());
@@ -137,6 +139,16 @@ public final class AmplifyStateTracker implements IAmplifyStateTracker {
         return this;
     }
 
+    public AmplifyStateTracker setPackageName(String packageName) {
+        this.packageName = packageName;
+        return this;
+    }
+
+    public AmplifyStateTracker setFeedbackEmail(String feedbackEmail) {
+        this.feedbackEmail = feedbackEmail;
+        return this;
+    }
+
     public AmplifyStateTracker setInstallTimeCooldownDays(final int cooldownPeriodDays) {
         applicationChecksManager.setInstallTimeCooldownDays(cooldownPeriodDays);
         return this;
@@ -192,7 +204,7 @@ public final class AmplifyStateTracker implements IAmplifyStateTracker {
 
     public void promptIfReady(@NonNull final AmplifyView amplifyView) {
         if (shouldAskForRating()) {
-            amplifyView.injectDependencies(this, logger);
+            amplifyView.injectDependencies(this, logger, packageName, feedbackEmail);
             amplifyView.show();
         }
     }

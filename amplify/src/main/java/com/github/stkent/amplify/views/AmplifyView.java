@@ -71,6 +71,8 @@ public class AmplifyView extends FrameLayout {
     private String positiveFeedbackTitle;
     private String criticalFeedbackQuestion;
     private String criticalFeedbackTitle;
+    private String packageName;
+    private String feedbackEmail;
 
     @LayoutRes
     private int questionLayoutResId;
@@ -97,9 +99,14 @@ public class AmplifyView extends FrameLayout {
         init(context, attrs);
     }
 
-    public void injectDependencies(@NonNull final IAmplifyStateTracker amplifyStateTracker, @NonNull final ILogger logger) {
+    public void injectDependencies(@NonNull final IAmplifyStateTracker amplifyStateTracker,
+                                   @NonNull final ILogger logger,
+                                   @NonNull final String packageName,
+                                   @NonNull final String feedbackEmail) {
         this.amplifyStateTracker = amplifyStateTracker;
         this.logger = logger;
+        this.packageName = packageName;
+        this.feedbackEmail = feedbackEmail;
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -111,6 +118,7 @@ public class AmplifyView extends FrameLayout {
         final FeedbackUtil feedbackUtil = new FeedbackUtil(
                 new ApplicationFeedbackDataProvider(applicationContext),
                 new EnvironmentCapabilitiesProvider(applicationContext),
+                this.feedbackEmail,
                 logger);
 
         if (getContext() instanceof Activity) {
@@ -119,7 +127,7 @@ public class AmplifyView extends FrameLayout {
     }
 
     protected void respondToPositiveFeedback() {
-        PlayStoreUtil.openPlayStoreToRate((Activity) getContext());
+        PlayStoreUtil.openPlayStoreToRate((Activity) getContext(), this.packageName);
     }
 
     private void init(final Context context, @Nullable final AttributeSet attrs) {
