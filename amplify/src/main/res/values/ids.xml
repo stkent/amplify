@@ -22,6 +22,5 @@
     <item name="amp_question_text_view" type="id" />
     <item name="amp_positive_button" type="id" />
     <item name="amp_negative_button" type="id" />
-    <item name="amp_feedback_email" type="string" />
 
 </resources>

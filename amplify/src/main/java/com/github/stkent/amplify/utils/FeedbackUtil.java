@@ -23,24 +23,32 @@ import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.github.stkent.amplify.ILogger;
 import com.github.stkent.amplify.tracking.interfaces.IApplicationFeedbackDataProvider;
 import com.github.stkent.amplify.tracking.interfaces.IEnvironmentCapabilitiesProvider;
 import com.github.stkent.amplify.utils.time.SystemTimeUtil;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 public final class FeedbackUtil {
 
     private final IApplicationFeedbackDataProvider applicationFeedbackDataProvider;
     private final IEnvironmentCapabilitiesProvider environmentCapabilitiesProvider;
     private final ILogger logger;
+    private final String feedbackEmail;
 
     public FeedbackUtil(
             @NonNull final IApplicationFeedbackDataProvider applicationFeedbackDataProvider,
             @NonNull final IEnvironmentCapabilitiesProvider environmentCapabilitiesProvider,
+            @NonNull final String feedbackEmail,
             @NonNull final ILogger logger) {
         this.applicationFeedbackDataProvider = applicationFeedbackDataProvider;
         this.environmentCapabilitiesProvider = environmentCapabilitiesProvider;
+        this.feedbackEmail = feedbackEmail;
         this.logger = logger;
     }
 
@@ -69,7 +77,7 @@ public final class FeedbackUtil {
         final StringBuilder uriStringBuilder = new StringBuilder("mailto:");
 
         try {
-            uriStringBuilder.append(applicationFeedbackDataProvider.getFeedbackEmailAddress());
+            uriStringBuilder.append(this.feedbackEmail);
         } catch (final IllegalStateException e) {
             logger.e("Feedback email address was not defined");
         }
@@ -77,9 +85,15 @@ public final class FeedbackUtil {
         uriStringBuilder.append("?subject=")
                 .append(feedbackEmailSubject)
                 .append("&body=")
-                .append(appInfo);
+                .append(Uri.encode(appInfo));
+
+        String encodedUri = Uri.encode(uriStringBuilder.toString());
+
+        Log.e("TEST", "Encoded String Uri: " + encodedUri);
 
         final Uri uri = Uri.parse(uriStringBuilder.toString());
+
+        Log.e("TEST", "Encoded Uri: " + uri);
 
         return new Intent(Intent.ACTION_SENDTO, uri);
     }
@@ -96,6 +110,10 @@ public final class FeedbackUtil {
             applicationVersionDisplayString = "Unknown";
         }
 
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMMM d, yyyy - hh:mm:ss a ZZZZ", Locale.getDefault());
+        Date date = new Date(SystemTimeUtil.currentTimeMillis());
+        String dateString = simpleDateFormat.format(date);
+
         return    "\n\n\n"
                 + "---------------------"
                 + "\n"
@@ -105,7 +123,7 @@ public final class FeedbackUtil {
                 + "\n"
                 + "Android OS Version: " + getAndroidOsVersionDisplayString()
                 + "\n"
-                + "Date: " + SystemTimeUtil.currentTimeMillis();
+                + "Date: " + dateString;
     }
 
     private String getAndroidOsVersionDisplayString() {

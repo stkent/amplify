@@ -34,9 +34,8 @@ public final class PlayStoreUtil {
 
     }
 
-    public static void openPlayStoreToRate(@Nullable final Activity activity) {
+    public static void openPlayStoreToRate(@Nullable final Activity activity, @Nullable final String packageName) {
         if (ActivityStateUtil.isActivityValid(activity)) {
-            final String packageName = activity.getPackageName();
 
             try {
                 activity.startActivity(

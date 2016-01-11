@@ -17,7 +17,6 @@
 package com.github.stkent.amplify.tracking.interfaces;
 
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.support.annotation.NonNull;
 
 /**
@@ -38,12 +37,5 @@ public interface IApplicationFeedbackDataProvider {
      */
     @NonNull
     String getVersionDisplayString() throws PackageManager.NameNotFoundException;
-
-    /**
-     * @return the email address to which critical feedback should be sent
-     * @throws Resources.NotFoundException
-     */
-    @NonNull
-    String getFeedbackEmailAddress() throws Resources.NotFoundException;
 
 }
