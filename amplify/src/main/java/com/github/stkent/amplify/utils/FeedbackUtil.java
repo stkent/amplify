@@ -23,7 +23,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import com.github.stkent.amplify.ILogger;
 import com.github.stkent.amplify.tracking.interfaces.IApplicationFeedbackDataProvider;
@@ -87,13 +86,7 @@ public final class FeedbackUtil {
                 .append("&body=")
                 .append(Uri.encode(appInfo));
 
-        String encodedUri = Uri.encode(uriStringBuilder.toString());
-
-        Log.e("TEST", "Encoded String Uri: " + encodedUri);
-
         final Uri uri = Uri.parse(uriStringBuilder.toString());
-
-        Log.e("TEST", "Encoded Uri: " + uri);
 
         return new Intent(Intent.ACTION_SENDTO, uri);
     }
