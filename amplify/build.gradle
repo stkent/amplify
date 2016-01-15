@@ -3,7 +3,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.btkelly:gnag:0.1.1'
+        classpath 'com.btkelly:gnag:0.1.2'
         classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.4.0x'
     }
 }
