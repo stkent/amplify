@@ -68,8 +68,20 @@ public final class FeedbackUtil {
 
     @NonNull
     private Intent getFeedbackEmailIntent() {
-        // fixme: pull in app name here?
-        final String feedbackEmailSubject = Uri.encode("Android App Feedback", "UTF-8");
+
+        CharSequence appName;
+
+        try {
+            appName = applicationFeedbackDataProvider.getApplicationNameString() + " ";
+        } catch (PackageManager.NameNotFoundException e) {
+            appName = "";
+        }
+
+        String feedbackEmailSubject = appName
+                + "Android App Feedback"
+                + " " + getDateString();
+
+        final String encodedFeedbackEmailSubject = Uri.encode(feedbackEmailSubject, "UTF-8");
         final String appInfo = getApplicationInfoString();
 
         // Uri.Builder is not useful here; see http://stackoverflow.com/a/12035226/2911458
@@ -82,7 +94,7 @@ public final class FeedbackUtil {
         }
 
         uriStringBuilder.append("?subject=")
-                .append(feedbackEmailSubject)
+                .append(encodedFeedbackEmailSubject)
                 .append("&body=")
                 .append(Uri.encode(appInfo));
 
@@ -103,10 +115,6 @@ public final class FeedbackUtil {
             applicationVersionDisplayString = "Unknown";
         }
 
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMMM d, yyyy - hh:mm:ss a ZZZZ", Locale.getDefault());
-        Date date = new Date(SystemTimeUtil.currentTimeMillis());
-        String dateString = simpleDateFormat.format(date);
-
         return    "\n\n\n"
                 + "---------------------"
                 + "\n"
@@ -116,11 +124,16 @@ public final class FeedbackUtil {
                 + "\n"
                 + "Android OS Version: " + getAndroidOsVersionDisplayString()
                 + "\n"
-                + "Date: " + dateString;
+                + "Date: " + getDateString();
+    }
+
+    private String getDateString() {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy kk:mm:ss", Locale.getDefault());
+        Date date = new Date(SystemTimeUtil.currentTimeMillis());
+        return simpleDateFormat.format(date);
     }
 
     private String getAndroidOsVersionDisplayString() {
-        // fixme: will this correctly reporting version information for the consuming application??
         return Build.VERSION.RELEASE + " - " + Build.VERSION.SDK_INT;
     }
 
