@@ -17,7 +17,6 @@
 package com.github.stkent.amplify.tracking;
 
 import android.content.Context;
-import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -67,9 +66,9 @@ public class ApplicationFeedbackDataProvider implements IApplicationFeedbackData
 
     @NonNull
     @Override
-    public CharSequence getApplicationNameString() throws PackageManager.NameNotFoundException {
-        ApplicationInfo applicationInfo = ApplicationUtils.getPackageInfo(applicationContext).applicationInfo;
-        return applicationInfo.loadLabel(applicationContext.getPackageManager());
+    public CharSequence getApplicationNameString() {
+        return applicationContext.getApplicationInfo()
+                .loadLabel(applicationContext.getPackageManager());
     }
 
 }
