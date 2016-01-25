@@ -40,9 +40,8 @@ public interface IApplicationFeedbackDataProvider {
 
     /**
      * @return the name of the application in which this library is embedded
-     * @throws PackageManager.NameNotFoundException
      */
     @NonNull
-    CharSequence getApplicationNameString() throws PackageManager.NameNotFoundException;
+    CharSequence getApplicationNameString();
 
 }

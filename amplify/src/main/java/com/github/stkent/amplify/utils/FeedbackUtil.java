@@ -68,17 +68,11 @@ public final class FeedbackUtil {
 
     @NonNull
     private Intent getFeedbackEmailIntent() {
+        final CharSequence appName = applicationFeedbackDataProvider.getApplicationNameString();
 
-        CharSequence appName;
-
-        try {
-            appName = applicationFeedbackDataProvider.getApplicationNameString() + " ";
-        } catch (PackageManager.NameNotFoundException e) {
-            appName = "";
-        }
-
-        String feedbackEmailSubject = appName
-                + "Android App Feedback"
+        final String feedbackEmailSubject =
+                appName
+                + " Android App Feedback"
                 + " " + getDateString();
 
         final String encodedFeedbackEmailSubject = Uri.encode(feedbackEmailSubject, "UTF-8");
