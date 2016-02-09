@@ -29,7 +29,7 @@ ext {
     amplifyVcsUrl = "https://github.com/${amplifyGitHubRepoName}.git"
     amplifyGroupId = 'com.github.stkent'
     amplifyArtifactId = 'amplify'
-    amplifyDescription = ""
+    amplifyDescription = "Respectfully request feedback in your Android app."
 }
 
 license {
@@ -180,12 +180,14 @@ bintray {
         repo = 'android-libraries'
         name = 'amplify'
         desc = amplifyDescription
-        licenses = ['Apache-2.0']
-        vcsUrl = amplifyVcsUrl
         websiteUrl = amplifyWebsiteUrl
-        issueTrackerUrl = 'https://github.com/stkent/amplify/issues'
         labels = ['android', 'ratings', 'feedback']
+        licenses = ['Apache-2.0']
         publicDownloadNumbers = true
+
+        vcsUrl = amplifyVcsUrl
+        githubRepo = amplifyGitHubRepoName
+        issueTrackerUrl = "https://github.com/${amplifyGitHubRepoName}/issues"
 
         version {
             name = amplifyVersion
