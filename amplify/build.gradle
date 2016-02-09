@@ -25,7 +25,8 @@ apply from: 'coverage.gradle'
 ext {
     amplifyVersion = "0.4.4"
     amplifyWebsiteUrl = 'https://github.com/stkent/amplify'
-    amplifyVcsUrl = 'https://github.com/stkent/amplify.git'
+    amplifyGitHubRepoName = 'stkent/bugshaker-android'
+    amplifyVcsUrl = "https://github.com/${amplifyGitHubRepoName}.git"
     amplifyGroupId = 'com.github.stkent'
     amplifyArtifactId = 'amplify'
     amplifyDescription = ""
