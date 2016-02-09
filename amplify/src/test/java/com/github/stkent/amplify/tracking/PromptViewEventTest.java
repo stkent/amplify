@@ -22,12 +22,12 @@ import com.github.stkent.amplify.tracking.interfaces.ITrackableEvent;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class AmplifyViewEventTest extends BaseTest {
+public class PromptViewEventTest extends BaseTest {
 
     @Test
     public void testThatUserDeclinedCriticalFeedbackEventHasCorrectTrackingKey() {
         // Arrange
-        final ITrackableEvent appCrashedEvent = AmplifyViewEvent.USER_DECLINED_CRITICAL_FEEDBACK;
+        final ITrackableEvent appCrashedEvent = PromptViewEvent.USER_DECLINED_CRITICAL_FEEDBACK;
 
         // Assert
         Assert.assertEquals(
@@ -39,7 +39,7 @@ public class AmplifyViewEventTest extends BaseTest {
     @Test
     public void testThatUserDeclinedPositiveFeedbackEventHasCorrectTrackingKey() {
         // Arrange
-        final ITrackableEvent appCrashedEvent = AmplifyViewEvent.USER_DECLINED_POSITIVE_FEEDBACK;
+        final ITrackableEvent appCrashedEvent = PromptViewEvent.USER_DECLINED_POSITIVE_FEEDBACK;
 
         // Assert
         Assert.assertEquals(
@@ -51,7 +51,7 @@ public class AmplifyViewEventTest extends BaseTest {
     @Test
     public void testThatUserGaveCriticalFeedbackEventHasCorrectTrackingKey() {
         // Arrange
-        final ITrackableEvent appCrashedEvent = AmplifyViewEvent.USER_GAVE_CRITICAL_FEEDBACK;
+        final ITrackableEvent appCrashedEvent = PromptViewEvent.USER_GAVE_CRITICAL_FEEDBACK;
 
         // Assert
         Assert.assertEquals(
@@ -63,7 +63,7 @@ public class AmplifyViewEventTest extends BaseTest {
     @Test
     public void testThatUserGavePositiveFeedbackEventHasCorrectTrackingKey() {
         // Arrange
-        final ITrackableEvent appCrashedEvent = AmplifyViewEvent.USER_GAVE_POSITIVE_FEEDBACK;
+        final ITrackableEvent appCrashedEvent = PromptViewEvent.USER_GAVE_POSITIVE_FEEDBACK;
 
         // Assert
         Assert.assertEquals(

@@ -30,17 +30,17 @@ import android.widget.FrameLayout;
 
 import com.github.stkent.amplify.ILogger;
 import com.github.stkent.amplify.R;
-import com.github.stkent.amplify.tracking.AmplifyViewEvent;
+import com.github.stkent.amplify.tracking.PromptViewEvent;
 import com.github.stkent.amplify.tracking.ApplicationFeedbackDataProvider;
 import com.github.stkent.amplify.tracking.EnvironmentCapabilitiesProvider;
-import com.github.stkent.amplify.tracking.interfaces.IAmplifyStateTracker;
+import com.github.stkent.amplify.tracking.interfaces.ITrackableEventListener;
 import com.github.stkent.amplify.utils.FeedbackUtil;
 import com.github.stkent.amplify.utils.PlayStoreUtil;
 import com.github.stkent.amplify.utils.StringUtils;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
-public class AmplifyView extends FrameLayout {
+public class PromptView extends FrameLayout {
 
     private enum UserOpinion {
         UNKNOWN,
@@ -57,7 +57,7 @@ public class AmplifyView extends FrameLayout {
             = new LayoutParams(MATCH_PARENT, MATCH_PARENT);
 
     @Nullable
-    private IAmplifyStateTracker amplifyStateTracker;
+    private ITrackableEventListener amplifyStateTracker;
 
     @Nullable
     private ILogger logger;
@@ -86,20 +86,20 @@ public class AmplifyView extends FrameLayout {
     @Nullable
     private View cachedConfirmationView;
 
-    public AmplifyView(final Context context) {
+    public PromptView(final Context context) {
         this(context, null);
     }
 
-    public AmplifyView(final Context context, final AttributeSet attrs) {
+    public PromptView(final Context context, final AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public AmplifyView(final Context context, final AttributeSet attrs, final int defStyleAttr) {
+    public PromptView(final Context context, final AttributeSet attrs, final int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context, attrs);
     }
 
-    public void injectDependencies(@NonNull final IAmplifyStateTracker amplifyStateTracker,
+    public void injectDependencies(@NonNull final ITrackableEventListener amplifyStateTracker,
                                    @NonNull final ILogger logger,
                                    @NonNull final String packageName,
                                    @NonNull final String feedbackEmail) {
@@ -261,12 +261,12 @@ public class AmplifyView extends FrameLayout {
                     askSecondQuestion();
                     break;
                 case POSITIVE:
-                    amplifyStateTracker.notifyEventTriggered(AmplifyViewEvent.USER_GAVE_POSITIVE_FEEDBACK);
+                    amplifyStateTracker.notifyEventTriggered(PromptViewEvent.USER_GAVE_POSITIVE_FEEDBACK);
                     thankUser();
                     respondToPositiveFeedback();
                     break;
                 case NEGATIVE:
-                    amplifyStateTracker.notifyEventTriggered(AmplifyViewEvent.USER_GAVE_CRITICAL_FEEDBACK);
+                    amplifyStateTracker.notifyEventTriggered(PromptViewEvent.USER_GAVE_CRITICAL_FEEDBACK);
                     thankUser();
                     respondToNegativeFeedback();
                     break;
@@ -289,11 +289,11 @@ public class AmplifyView extends FrameLayout {
                     break;
                 case POSITIVE:
                     hide();
-                    amplifyStateTracker.notifyEventTriggered(AmplifyViewEvent.USER_DECLINED_POSITIVE_FEEDBACK);
+                    amplifyStateTracker.notifyEventTriggered(PromptViewEvent.USER_DECLINED_POSITIVE_FEEDBACK);
                     break;
                 case NEGATIVE:
                     hide();
-                    amplifyStateTracker.notifyEventTriggered(AmplifyViewEvent.USER_DECLINED_CRITICAL_FEEDBACK);
+                    amplifyStateTracker.notifyEventTriggered(PromptViewEvent.USER_DECLINED_CRITICAL_FEEDBACK);
                     break;
                 default:
                     break;
