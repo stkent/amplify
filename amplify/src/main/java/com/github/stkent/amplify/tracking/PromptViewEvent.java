@@ -20,7 +20,7 @@ import android.support.annotation.NonNull;
 
 import com.github.stkent.amplify.tracking.interfaces.ITrackableEvent;
 
-public enum AmplifyViewEvent implements ITrackableEvent {
+public enum PromptViewEvent implements ITrackableEvent {
 
     USER_GAVE_CRITICAL_FEEDBACK,
     USER_GAVE_POSITIVE_FEEDBACK,

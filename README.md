@@ -31,27 +31,27 @@ public class ExampleApplication extends Application {
     public void onCreate() {
         super.onCreate();
         
-        AmplifyStateTracker.get(this).configureWithDefaults()
+        Amplify.get(this).configureWithDefaults()
     }
     
 }
 ```
 
-(3) Add an `AmplifyView` instance to all xml layouts in which you may want to prompt the user for their feedback:
+(3) Add an `PromptView` instance to all xml layouts in which you may want to prompt the user for their feedback:
 
 ```xml
-<com.github.stkent.amplify.views.AmplifyView
-    android:id="@+id/amplifyView"
+<com.github.stkent.amplify.views.PromptView
+    android:id="@+id/promptView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content" />
 ```
 
-(4) Call the state tracker's `promptIfReady` method when appropriate, passing in your `AmplifyView` instance:
+(4) Call the state tracker's `promptIfReady` method when appropriate, passing in your `PromptView` instance:
 
 ```java
-AmplifyView amplifyView = (AmplifyView) findViewById(R.id.amplifyView);
+PromptView promptView = (PromptView) findViewById(R.id.promptView);
 
-AmplifyStateTracker.get(context).promptIfReady(amplifyView);
+Amplify.get(context).promptIfReady(promptView);
 ```
 
 # Library structure
@@ -63,12 +63,12 @@ TODO: Here we need some discussion of the fact that this library essentially com
 
 ---
 
-The `AmplifyStateTracker` singleton has two main responsibilities:
+The `Amplify` singleton has two main responsibilities:
 
 - tracking occurrences of registered events;
 - evaluating checks based on (a) the application's 'environment', and (b) each registered event, that collectively determine whether or not the user should be shown your feedback prompt. If any check fails, the user will not be prompted.
 
-Calling `configureWithDefaults()` on the `AmplifyStateTracker` instance registers a number of events and checks and provides a sensible baseline configuration.
+Calling `configureWithDefaults()` on the `Amplify` instance registers a number of events and checks and provides a sensible baseline configuration.
 
 # Configuring
 
@@ -97,7 +97,7 @@ These (pseudo-)events are associated with application-level actions.
 
 ## Default Event Checks
 
-When calling `configureWithDefaults` on the `AmplifyStateTracker` instance, the following checks are registered by default:
+When calling `configureWithDefaults` on the `Amplify` instance, the following checks are registered by default:
 
 - the `GooglePlayStoreIsAvailableCheck`, which will block all prompts if the Google Play Store is not available.
 
@@ -107,11 +107,11 @@ When calling `configureWithDefaults` on the `AmplifyStateTracker` instance, the 
 
 ## Custom Environment Checks
 
-A new custom environment check can be added by implementing the `IEnvironmentCheck` interface and passing an instance of the implementation to the `AmplifyStateTracker` instance method `addEnvironmentCheck()`.
+A new custom environment check can be added by implementing the `IEnvironmentCheck` interface and passing an instance of the implementation to the `Amplify` instance method `addEnvironmentCheck()`.
 
 ## Custom Events
 
-A new custom event can be tracked by implementing the `ITrackableEvent` interface and passing an instance of the implementation to one of the following `AmplifyStateTracker` instance methods:
+A new custom event can be tracked by implementing the `ITrackableEvent` interface and passing an instance of the implementation to one of the following `Amplify` instance methods:
 
 - `trackTotalEventCount()`
 - `trackFirstEventTime()`

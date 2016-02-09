@@ -3,7 +3,7 @@ package com.github.stkent.amplify.example;
 import android.app.Application;
 
 import com.github.stkent.amplify.Logger;
-import com.github.stkent.amplify.tracking.AmplifyStateTracker;
+import com.github.stkent.amplify.tracking.Amplify;
 
 import static com.github.stkent.amplify.BuildConfig.DEBUG;
 
@@ -13,7 +13,7 @@ public class ExampleApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        AmplifyStateTracker.get(this)
+        Amplify.get(this)
                 .configureWithDefaults()
                 .setLogLevel(DEBUG ? Logger.LogLevel.DEBUG : Logger.LogLevel.NONE);
     }

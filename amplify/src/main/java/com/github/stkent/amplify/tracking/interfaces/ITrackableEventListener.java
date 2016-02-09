@@ -20,12 +20,12 @@ import android.support.annotation.NonNull;
 
 /**
  * An abstract representation of a consuming class that is interested in receiving notifications
- * when events of interest occur.
+ * when trackable events occur.
  */
-public interface IAmplifyStateTracker {
+public interface ITrackableEventListener {
 
     /**
-     * Call this method to notify an implementing class that an event occurred.
+     * Call this method to notify an implementing class that a trackable event occurred.
      *
      * @param event the event that occurred
      */

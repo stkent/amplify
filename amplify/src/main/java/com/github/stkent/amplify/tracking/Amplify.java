@@ -25,7 +25,7 @@ import com.github.stkent.amplify.tracking.checks.CooldownDaysCheck;
 import com.github.stkent.amplify.tracking.checks.GooglePlayStoreIsAvailableCheck;
 import com.github.stkent.amplify.tracking.checks.MaximumCountCheck;
 import com.github.stkent.amplify.tracking.checks.VersionChangedCheck;
-import com.github.stkent.amplify.tracking.interfaces.IAmplifyStateTracker;
+import com.github.stkent.amplify.tracking.interfaces.ITrackableEventListener;
 import com.github.stkent.amplify.tracking.interfaces.IApplicationChecksManager;
 import com.github.stkent.amplify.tracking.interfaces.IApplicationEventTimeProvider;
 import com.github.stkent.amplify.tracking.interfaces.IApplicationVersionNameProvider;
@@ -40,13 +40,12 @@ import com.github.stkent.amplify.tracking.managers.FirstEventTimesManager;
 import com.github.stkent.amplify.tracking.managers.LastEventTimesManager;
 import com.github.stkent.amplify.tracking.managers.LastEventVersionsManager;
 import com.github.stkent.amplify.tracking.managers.TotalEventCountsManager;
-import com.github.stkent.amplify.views.AmplifyView;
+import com.github.stkent.amplify.views.PromptView;
 
-public final class AmplifyStateTracker implements IAmplifyStateTracker {
+public final class Amplify implements ITrackableEventListener {
 
     // static fields
-
-    private static AmplifyStateTracker sharedInstance;
+    private static Amplify sharedInstance;
 
     private static final int DEFAULT_USER_GAVE_POSITIVE_FEEDBACK_MAXIMUM_COUNT = 1;
     private static final int DEFAULT_INSTALL_TIME_COOLDOWN_DAYS = 7;
@@ -71,14 +70,14 @@ public final class AmplifyStateTracker implements IAmplifyStateTracker {
     private String packageName;
     private String feedbackEmail;
 
-    public static AmplifyStateTracker get(@NonNull final Context context) {
+    public static Amplify get(@NonNull final Context context) {
         return get(context, new Logger());
     }
 
-    public static AmplifyStateTracker get(@NonNull final Context context, @NonNull final ILogger logger) {
-        synchronized (AmplifyStateTracker.class) {
+    public static Amplify get(@NonNull final Context context, @NonNull final ILogger logger) {
+        synchronized (Amplify.class) {
             if (sharedInstance == null) {
-                sharedInstance = new AmplifyStateTracker(context, logger);
+                sharedInstance = new Amplify(context, logger);
             }
         }
 
@@ -87,7 +86,7 @@ public final class AmplifyStateTracker implements IAmplifyStateTracker {
 
     // constructors
 
-    private AmplifyStateTracker(
+    private Amplify(
             @NonNull final Context context,
             @NonNull final ILogger logger) {
         final Context applicationContext = context.getApplicationContext();
@@ -108,83 +107,83 @@ public final class AmplifyStateTracker implements IAmplifyStateTracker {
 
     // configuration methods
 
-    public AmplifyStateTracker configureWithDefaults() {
+    public Amplify configureWithDefaults() {
         return this
                 .addEnvironmentCheck(new GooglePlayStoreIsAvailableCheck())
                 .setInstallTimeCooldownDays(DEFAULT_INSTALL_TIME_COOLDOWN_DAYS)
                 .setLastCrashTimeCooldownDays(DEFAULT_LAST_UPDATE_TIME_COOLDOWN_DAYS)
-                .trackTotalEventCount(AmplifyViewEvent.USER_GAVE_POSITIVE_FEEDBACK,
+                .trackTotalEventCount(PromptViewEvent.USER_GAVE_POSITIVE_FEEDBACK,
                         new MaximumCountCheck(DEFAULT_USER_GAVE_POSITIVE_FEEDBACK_MAXIMUM_COUNT))
-                .trackLastEventTime(AmplifyViewEvent.USER_GAVE_CRITICAL_FEEDBACK,
+                .trackLastEventTime(PromptViewEvent.USER_GAVE_CRITICAL_FEEDBACK,
                         new CooldownDaysCheck(DEFAULT_USER_GAVE_CRITICAL_FEEDBACK_COOLDOWN_DAYS))
-                .trackLastEventTime(AmplifyViewEvent.USER_DECLINED_CRITICAL_FEEDBACK,
+                .trackLastEventTime(PromptViewEvent.USER_DECLINED_CRITICAL_FEEDBACK,
                         new CooldownDaysCheck(DEFAULT_USER_DECLINED_CRITICAL_FEEDBACK_COOLDOWN_DAYS))
-                .trackLastEventTime(AmplifyViewEvent.USER_DECLINED_POSITIVE_FEEDBACK,
+                .trackLastEventTime(PromptViewEvent.USER_DECLINED_POSITIVE_FEEDBACK,
                         new CooldownDaysCheck(DEFAULT_USER_DECLINED_POSITIVE_FEEDBACK_COOLDOWN_DAYS))
-                .trackLastEventVersion(AmplifyViewEvent.USER_DECLINED_CRITICAL_FEEDBACK,
+                .trackLastEventVersion(PromptViewEvent.USER_DECLINED_CRITICAL_FEEDBACK,
                         new VersionChangedCheck(applicationVersionNameProvider))
-                .trackLastEventVersion(AmplifyViewEvent.USER_DECLINED_POSITIVE_FEEDBACK,
+                .trackLastEventVersion(PromptViewEvent.USER_DECLINED_POSITIVE_FEEDBACK,
                         new VersionChangedCheck(applicationVersionNameProvider))
-                .trackLastEventVersion(AmplifyViewEvent.USER_GAVE_CRITICAL_FEEDBACK,
+                .trackLastEventVersion(PromptViewEvent.USER_GAVE_CRITICAL_FEEDBACK,
                         new VersionChangedCheck(applicationVersionNameProvider));
     }
 
-    public AmplifyStateTracker setLogLevel(@NonNull final Logger.LogLevel logLevel) {
+    public Amplify setLogLevel(@NonNull final Logger.LogLevel logLevel) {
         logger.setLogLevel(logLevel);
         return this;
     }
 
-    public AmplifyStateTracker setAlwaysShow(final boolean alwaysShow) {
+    public Amplify setAlwaysShow(final boolean alwaysShow) {
         this.alwaysShow = alwaysShow;
         return this;
     }
 
-    public AmplifyStateTracker setPackageName(String packageName) {
+    public Amplify setPackageName(String packageName) {
         this.packageName = packageName;
         return this;
     }
 
-    public AmplifyStateTracker setFeedbackEmail(String feedbackEmail) {
+    public Amplify setFeedbackEmail(String feedbackEmail) {
         this.feedbackEmail = feedbackEmail;
         return this;
     }
 
-    public AmplifyStateTracker setInstallTimeCooldownDays(final int cooldownPeriodDays) {
+    public Amplify setInstallTimeCooldownDays(final int cooldownPeriodDays) {
         applicationChecksManager.setInstallTimeCooldownDays(cooldownPeriodDays);
         return this;
     }
 
-    public AmplifyStateTracker setLastUpdateTimeCooldownDays(final int cooldownPeriodDays) {
+    public Amplify setLastUpdateTimeCooldownDays(final int cooldownPeriodDays) {
         applicationChecksManager.setLastUpdateTimeCooldownDays(cooldownPeriodDays);
         return this;
     }
 
-    public AmplifyStateTracker setLastCrashTimeCooldownDays(final int cooldownPeriodDays) {
+    public Amplify setLastCrashTimeCooldownDays(final int cooldownPeriodDays) {
         applicationChecksManager.setLastCrashTimeCooldownDays(cooldownPeriodDays);
         return this;
     }
 
-    public AmplifyStateTracker trackTotalEventCount(@NonNull final ITrackableEvent event, @NonNull final IEventCheck<Integer> eventCheck) {
+    public Amplify trackTotalEventCount(@NonNull final ITrackableEvent event, @NonNull final IEventCheck<Integer> eventCheck) {
         totalEventCountsManager.trackEvent(event, eventCheck);
         return this;
     }
 
-    public AmplifyStateTracker trackFirstEventTime(@NonNull final ITrackableEvent event, @NonNull final IEventCheck<Long> eventCheck) {
+    public Amplify trackFirstEventTime(@NonNull final ITrackableEvent event, @NonNull final IEventCheck<Long> eventCheck) {
         firstEventTimesManager.trackEvent(event, eventCheck);
         return this;
     }
 
-    public AmplifyStateTracker trackLastEventTime(@NonNull final ITrackableEvent event, @NonNull final IEventCheck<Long> eventCheck) {
+    public Amplify trackLastEventTime(@NonNull final ITrackableEvent event, @NonNull final IEventCheck<Long> eventCheck) {
         lastEventTimesManager.trackEvent(event, eventCheck);
         return this;
     }
 
-    public AmplifyStateTracker trackLastEventVersion(@NonNull final ITrackableEvent event, @NonNull final IEventCheck<String> eventCheck) {
+    public Amplify trackLastEventVersion(@NonNull final ITrackableEvent event, @NonNull final IEventCheck<String> eventCheck) {
         lastEventVersionsManager.trackEvent(event, eventCheck);
         return this;
     }
 
-    public AmplifyStateTracker addEnvironmentCheck(@NonNull final IEnvironmentCheck environmentCheck) {
+    public Amplify addEnvironmentCheck(@NonNull final IEnvironmentCheck environmentCheck) {
         environmentChecksManager.addEnvironmentCheck(environmentCheck);
         return this;
     }
@@ -202,10 +201,10 @@ public final class AmplifyStateTracker implements IAmplifyStateTracker {
 
     // query methods
 
-    public void promptIfReady(@NonNull final AmplifyView amplifyView) {
+    public void promptIfReady(@NonNull final PromptView promptView) {
         if (shouldAskForRating()) {
-            amplifyView.injectDependencies(this, logger, packageName, feedbackEmail);
-            amplifyView.show();
+            promptView.injectDependencies(this, logger, packageName, feedbackEmail);
+            promptView.show();
         }
     }
 
