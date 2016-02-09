@@ -136,26 +136,26 @@ public class PromptView extends FrameLayout {
         final TypedArray typedArray = context.getTheme().obtainStyledAttributes(attrs, R.styleable.AmplifyView, 0, 0);
 
         // TODO: add proper default handling; checking for resource type
-        questionLayoutResId = typedArray.getResourceId(R.styleable.AmplifyView_amplify_question_layout, 0);
-        confirmationLayoutResId = typedArray.getResourceId(R.styleable.AmplifyView_amplify_confirmation_layout, 0);
+        questionLayoutResId = typedArray.getResourceId(R.styleable.PromptView_amplify_question_layout, 0);
+        confirmationLayoutResId = typedArray.getResourceId(R.styleable.PromptView_amplify_confirmation_layout, 0);
 
         //TODO add default string loading
         userOpinionQuestion = StringUtils.defaultIfBlank(typedArray.getString(
-                R.styleable.AmplifyView_amplify_user_opinion_question), "");
+                R.styleable.PromptView_amplify_user_opinion_question), "");
         userOpinionTitle = StringUtils.defaultIfBlank(typedArray.getString(
-                R.styleable.AmplifyView_amplify_user_opinion_title), "");
+                R.styleable.PromptView_amplify_user_opinion_title), "");
 
         //TODO add default string loading
         positiveFeedbackQuestion = StringUtils.defaultIfBlank(typedArray.getString(
-                R.styleable.AmplifyView_amplify_positive_feedback_question), "");
+                R.styleable.PromptView_amplify_positive_feedback_question), "");
         positiveFeedbackTitle = StringUtils.defaultIfBlank(typedArray.getString(
-                R.styleable.AmplifyView_amplify_positive_feedback_title), "");
+                R.styleable.PromptView_amplify_positive_feedback_title), "");
 
         //TODO add default string loading
         criticalFeedbackQuestion = StringUtils.defaultIfBlank(typedArray.getString(
-                R.styleable.AmplifyView_amplify_critical_feedback_question), "");
+                R.styleable.PromptView_amplify_critical_feedback_question), "");
         criticalFeedbackTitle = StringUtils.defaultIfBlank(typedArray.getString(
-                R.styleable.AmplifyView_amplify_critical_feedback_title), "");
+                R.styleable.PromptView_amplify_critical_feedback_title), "");
 
         typedArray.recycle();
 
