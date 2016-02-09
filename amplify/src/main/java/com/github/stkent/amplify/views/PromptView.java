@@ -57,7 +57,7 @@ public class PromptView extends FrameLayout {
             = new LayoutParams(MATCH_PARENT, MATCH_PARENT);
 
     @Nullable
-    private ITrackableEventListener amplifyStateTracker;
+    private ITrackableEventListener trackableEventListener;
 
     @Nullable
     private ILogger logger;
@@ -99,11 +99,11 @@ public class PromptView extends FrameLayout {
         init(context, attrs);
     }
 
-    public void injectDependencies(@NonNull final ITrackableEventListener amplifyStateTracker,
+    public void injectDependencies(@NonNull final ITrackableEventListener trackableEventListener,
                                    @NonNull final ILogger logger,
                                    @NonNull final String packageName,
                                    @NonNull final String feedbackEmail) {
-        this.amplifyStateTracker = amplifyStateTracker;
+        this.trackableEventListener = trackableEventListener;
         this.logger = logger;
         this.packageName = packageName;
         this.feedbackEmail = feedbackEmail;
@@ -133,7 +133,7 @@ public class PromptView extends FrameLayout {
     private void init(final Context context, @Nullable final AttributeSet attrs) {
         hide();
 
-        final TypedArray typedArray = context.getTheme().obtainStyledAttributes(attrs, R.styleable.AmplifyView, 0, 0);
+        final TypedArray typedArray = context.getTheme().obtainStyledAttributes(attrs, R.styleable.PromptView, 0, 0);
 
         // TODO: add proper default handling; checking for resource type
         questionLayoutResId = typedArray.getResourceId(R.styleable.PromptView_amplify_question_layout, 0);
@@ -261,12 +261,12 @@ public class PromptView extends FrameLayout {
                     askSecondQuestion();
                     break;
                 case POSITIVE:
-                    amplifyStateTracker.notifyEventTriggered(PromptViewEvent.USER_GAVE_POSITIVE_FEEDBACK);
+                    trackableEventListener.notifyEventTriggered(PromptViewEvent.USER_GAVE_POSITIVE_FEEDBACK);
                     thankUser();
                     respondToPositiveFeedback();
                     break;
                 case NEGATIVE:
-                    amplifyStateTracker.notifyEventTriggered(PromptViewEvent.USER_GAVE_CRITICAL_FEEDBACK);
+                    trackableEventListener.notifyEventTriggered(PromptViewEvent.USER_GAVE_CRITICAL_FEEDBACK);
                     thankUser();
                     respondToNegativeFeedback();
                     break;
@@ -289,11 +289,11 @@ public class PromptView extends FrameLayout {
                     break;
                 case POSITIVE:
                     hide();
-                    amplifyStateTracker.notifyEventTriggered(PromptViewEvent.USER_DECLINED_POSITIVE_FEEDBACK);
+                    trackableEventListener.notifyEventTriggered(PromptViewEvent.USER_DECLINED_POSITIVE_FEEDBACK);
                     break;
                 case NEGATIVE:
                     hide();
-                    amplifyStateTracker.notifyEventTriggered(PromptViewEvent.USER_DECLINED_CRITICAL_FEEDBACK);
+                    trackableEventListener.notifyEventTriggered(PromptViewEvent.USER_DECLINED_CRITICAL_FEEDBACK);
                     break;
                 default:
                     break;
@@ -302,7 +302,7 @@ public class PromptView extends FrameLayout {
     };
 
     private void checkDependenciesHaveBeenInjected() {
-        if (amplifyStateTracker == null || logger == null) {
+        if (trackableEventListener == null || logger == null) {
             throw new IllegalStateException("Dependencies must be injected before this method is called");
         }
     }
