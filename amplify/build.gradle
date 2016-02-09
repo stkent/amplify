@@ -2,7 +2,12 @@ buildscript {
     repositories {
         jcenter()
     }
+
     dependencies {
+        classpath 'com.github.ben-manes:gradle-versions-plugin:0.12.0'
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.6'
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:1.3'
+        classpath 'com.noveogroup.android:check:1.2.3'
         classpath 'com.btkelly:gnag:0.1.2'
         classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.4.0x'
     }
@@ -13,10 +18,11 @@ plugins {
 }
 
 apply plugin: 'com.android.library'
-apply plugin: 'com.noveogroup.android.check'
+apply plugin: 'com.github.ben-manes.versions'
 apply plugin: 'com.jfrog.bintray'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'gnag-plugin'
+apply plugin: 'com.noveogroup.android.check'
 apply from: 'coverage.gradle'
 
 // Shared project metadata
@@ -24,10 +30,11 @@ apply from: 'coverage.gradle'
 ext {
     amplifyVersion = "0.4.4"
     amplifyWebsiteUrl = 'https://github.com/stkent/amplify'
-    amplifyVcsUrl = 'https://github.com/stkent/amplify.git'
+    amplifyGitHubRepoName = 'stkent/bugshaker-android'
+    amplifyVcsUrl = "https://github.com/${amplifyGitHubRepoName}.git"
     amplifyGroupId = 'com.github.stkent'
     amplifyArtifactId = 'amplify'
-    amplifyDescription = ""
+    amplifyDescription = "Respectfully request feedback in your Android app."
 }
 
 license {
@@ -161,11 +168,13 @@ ext {
 }
 
 bintray {
-    user = project.hasProperty(bintrayUserParameterName) ?
-            project.property(bintrayUserParameterName) : System.getenv(bintrayUserEnvVarName)
+    user = project.hasProperty((String) bintrayUserParameterName) ?
+            project.property((String) bintrayUserParameterName) :
+            System.getenv((String) bintrayUserEnvVarName)
 
-    key = project.hasProperty(bintrayKeyParameterName) ?
-            project.property(bintrayKeyParameterName) : System.getenv(bintrayKeyEnvVarName)
+    key = project.hasProperty((String) bintrayKeyParameterName) ?
+            project.property((String) bintrayKeyParameterName) :
+            System.getenv((String) bintrayKeyEnvVarName)
 
     dryRun = false
     publish = true
@@ -176,17 +185,17 @@ bintray {
         repo = 'android-libraries'
         name = 'amplify'
         desc = amplifyDescription
-        licenses = ['Apache-2.0']
-        vcsUrl = amplifyVcsUrl
         websiteUrl = amplifyWebsiteUrl
-        issueTrackerUrl = 'https://github.com/stkent/amplify/issues'
         labels = ['android', 'ratings', 'feedback']
+        licenses = ['Apache-2.0']
         publicDownloadNumbers = true
+
+        vcsUrl = amplifyVcsUrl
+        githubRepo = amplifyGitHubRepoName
+        issueTrackerUrl = "https://github.com/${amplifyGitHubRepoName}/issues"
 
         version {
             name = amplifyVersion
-            // todo: set this up later for pulling release notes from github
-            // vcsTag = amplifyVersion
             released = new Date()
         }
     }
