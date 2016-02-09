@@ -187,8 +187,6 @@ bintray {
 
         version {
             name = amplifyVersion
-            // todo: set this up later for pulling release notes from github
-            // vcsTag = amplifyVersion
             released = new Date()
         }
     }
