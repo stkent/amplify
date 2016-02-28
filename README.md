@@ -9,6 +9,11 @@ Respectfully request feedback in your Android app.
 # Table Of Contents
 
 - [Introduction](#introduction)
+- [How It Works](#how-it-works)
+- [Getting Started](#getting-started)
+- [Configuring](#configuring)
+- [Customizing](#customizing)
+- [License](#license)
 
 # Introduction
 
