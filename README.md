@@ -1,4 +1,4 @@
-# Amplify
+# amplify
 
 Respectfully request feedback in your Android app.
 
@@ -8,9 +8,35 @@ Respectfully request feedback in your Android app.
 
 # Introduction
 
-## What
+_amplify_ focuses on helping Android developers prompt their users for feedback at the right times and in the right way. Inspired by [Circa News](https://medium.com/circa/the-right-way-to-ask-users-to-review-your-app-9a32fd604fca), we built this library based on the following UX principles: 
 
-## Why
+1. **No interruptions.** The inline prompt we provide can be inserted right into your view hierarchy and customized to complement your existing UI. Users are free to interact with the prompt as much or as little as they like. This approach shows respect for your users and preserves the app flow you have carefully crafted.
+
+2. **No nagging.** _amplify_ intelligently tracks significant events to make sure your users are only prompted for feedback at appropriate times.
+
+3. **Maximum impact.** When users indicate they are willing to provide feedback, we direct them to the highest-impact outlet:
+
+    - Users with positive feedback are asked to leave a quick rating or review in the Google Play Store, improving the rating and discoverability of your app. All of these ratings and reviews reflect genuine user experiences - _amplify_ just makes it easier for happy customers to choose to express their appreciation.
+
+    - Users with critical feedback are instead asked to send a more detailed email that will automatically include pertinent app and device information. This gives you an opportunity to engage these users in a more meaningful dialogue, allowing you to better understand and accommodate their feedback.
+
+We also aim to embody the following technical traits:
+
+1. **Easy to integrate.** Default prompt timing rules allow you to get up and running as quickly as possible.
+
+2. **Easy to customize.** Tracking custom events is easy, and to specify their own custom prompt timing rules.
+
+# How It Works
+
+_amplify_ consists of two main components:
+
+- An **event-tracking engine**, responsible for tracking occurrences of significant events and evaluating rules based on these events to determine appropriate times to ask for feedback;
+
+- An inline **prompt** that guides users through the flow depicted below:
+
+![]("/assets/flow.png")
+
+## Library Structure
 
 # Getting Started
 
@@ -18,11 +44,11 @@ Respectfully request feedback in your Android app.
 
 ```groovy
 dependencies {
-    compile 'com.github.stkent:amplify:0.1.0'
+    compile 'com.github.stkent:amplify:{latest-version}'
 }
 ```
     
-(2) Initialize the state tracker in your `Application` class:
+(2) Initialize the shared `Amplify` instance in your custom `Application` subclass:
 
 ```java
 public class ExampleApplication extends Application {
@@ -31,17 +57,17 @@ public class ExampleApplication extends Application {
     public void onCreate() {
         super.onCreate();
         
-        Amplify.get(this).configureWithDefaults()
+        Amplify.get(this).configureWithDefaults();
     }
     
 }
 ```
 
-(3) Add an `PromptView` instance to all xml layouts in which you may want to prompt the user for their feedback:
+(3) Add a `PromptView` instance to all xml layouts in which you may want to prompt the user for their feedback:
 
 ```xml
 <com.github.stkent.amplify.views.PromptView
-    android:id="@+id/promptView"
+    android:id="@+id/prompt_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content" />
 ```
@@ -49,36 +75,22 @@ public class ExampleApplication extends Application {
 (4) Call the state tracker's `promptIfReady` method when appropriate, passing in your `PromptView` instance:
 
 ```java
-PromptView promptView = (PromptView) findViewById(R.id.promptView);
+PromptView promptView = (PromptView) findViewById(R.id.prompt_view);
 
 Amplify.get(context).promptIfReady(promptView);
 ```
 
-# Library structure
-
-TODO: Here we need some discussion of the fact that this library essentially comes in two pieces:
-
-- the state-tracking portion
-- the default prompt views that enforce a particular flow (and also allow for automatic tracking of prompt-related event occurrences.)
-
----
-
-The `Amplify` singleton has two main responsibilities:
-
-- tracking occurrences of registered events;
-- evaluating checks based on (a) the application's 'environment', and (b) each registered event, that collectively determine whether or not the user should be shown your feedback prompt. If any check fails, the user will not be prompted.
-
-Calling `configureWithDefaults()` on the `Amplify` instance registers a number of events and checks and provides a sensible baseline configuration.
-
 # Configuring
 
-## Default Environment Checks
+## Event Tracking
+
+### Default Environment Checks
 
 The `GooglePlayStoreIsAvailableCheck` check will pass if the Google Play Store is available on a user's device, and will fail otherwise.
 
-## Default Events
+### Default Events
 
-### Feedback Prompt Events
+#### Feedback Prompt Events
 
 These events are associated with user actions related to the feedback prompt UI.
 
@@ -87,7 +99,7 @@ These events are associated with user actions related to the feedback prompt UI.
 - User declined to provide positive feedback
 - User declined to provide critical feedback
 
-### Application-level Events
+#### Application-level Events
 
 - Application installed
 - Application updated
@@ -95,21 +107,23 @@ These events are associated with user actions related to the feedback prompt UI.
 
 These (pseudo-)events are associated with application-level actions.
 
-## Default Event Checks
+### Default Event Checks
 
 When calling `configureWithDefaults` on the `Amplify` instance, the following checks are registered by default:
 
 - the `GooglePlayStoreIsAvailableCheck`, which will block all prompts if the Google Play Store is not available.
 
-## Default Prompt UI
+## Prompt UI
 
 # Customizing
 
-## Custom Environment Checks
+## Event Tracking
+
+### Custom Environment Checks
 
 A new custom environment check can be added by implementing the `IEnvironmentCheck` interface and passing an instance of the implementation to the `Amplify` instance method `addEnvironmentCheck()`.
 
-## Custom Events
+### Custom Events
 
 A new custom event can be tracked by implementing the `ITrackableEvent` interface and passing an instance of the implementation to one of the following `Amplify` instance methods:
 
@@ -120,11 +134,11 @@ A new custom event can be tracked by implementing the `ITrackableEvent` interfac
 
 You will also need to provide an event check when calling any of these methods. The data passed to this paired event check is linked to the particular tracking method called. For example, if you register an event using the `trackTotalEventCount()` method, the corresponding event check will be called with integer values that represent the number of event occurrences to date.
 
-## Custom Event Checks
+### Custom Event Checks
 
 A new custom event check can be created by implementing the `IEventCheck<T>` interface. The generic type `T` must be one of: `Integer`, `Long`, or `String`. The type you select will depend on which tracked event aspect (time, count, etc.) you wish to apply this check to.
 
-## Custom Prompt UI
+## Prompt UI
 
 # Contributing
 
