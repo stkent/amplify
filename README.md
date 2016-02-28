@@ -6,25 +6,37 @@ Respectfully request feedback in your Android app.
 
 <a href="https://travis-ci.org/stkent/amplify"><img src="https://travis-ci.org/stkent/amplify.svg" /></a> <a href="https://bintray.com/stkent/android-libraries/amplify/"><img src="https://img.shields.io/bintray/v/stkent/android-libraries/amplify.svg" /></a> <a href="http://www.detroitlabs.com/"><img src="https://img.shields.io/badge/Sponsor-Detroit%20Labs-000000.svg" /></a>
 
+# Table Of Contents
+
+- [Introduction](#introduction)
+
 # Introduction
 
-_amplify_ focuses on helping Android developers prompt their users for feedback at the right times and in the right way. Inspired by [Circa News](https://medium.com/circa/the-right-way-to-ask-users-to-review-your-app-9a32fd604fca), we built this library based on the following UX principles: 
+_amplify_ focuses on helping Android developers prompt their users for feedback at the right times and in the right way. Inspired by [Circa News](https://medium.com/circa/the-right-way-to-ask-users-to-review-your-app-9a32fd604fca), we built this library based on the following principles: 
 
-1. **No interruptions.** The inline prompt we provide can be inserted right into your view hierarchy and customized to complement your existing UI. Users are free to interact with the prompt as much or as little as they like. This approach shows respect for your users and preserves the app flow you have carefully crafted.
+#### No interruptions
 
-2. **No nagging.** _amplify_ intelligently tracks significant events to make sure your users are only prompted for feedback at appropriate times.
+The inline prompt we provide can be inserted right into your view hierarchy and customized to complement your existing UI. Users are free to interact with the prompt as much or as little as they like. This approach shows respect for your users and preserves the app flow you have carefully crafted.
 
-3. **Maximum impact.** When users indicate they are willing to provide feedback, we direct them to the highest-impact outlet:
+#### No nagging
 
-    - Users with positive feedback are asked to leave a quick rating or review in the Google Play Store, improving the rating and discoverability of your app. All of these ratings and reviews reflect genuine user experiences - _amplify_ just makes it easier for happy customers to choose to express their appreciation.
+_amplify_ intelligently tracks significant events to make sure your users are only prompted for feedback at appropriate times.
 
-    - Users with critical feedback are instead asked to send a more detailed email that will automatically include pertinent app and device information. This gives you an opportunity to engage these users in a more meaningful dialogue, allowing you to better understand and accommodate their feedback.
+#### Maximum impact
 
-We also aim to embody the following technical traits:
+When users indicate they are willing to provide feedback, we direct them to the highest-impact outlet:
 
-1. **Easy to integrate.** Default prompt timing rules allow you to get up and running as quickly as possible.
+- Users with positive feedback are asked to leave a quick rating or review in the Google Play Store, improving the rating and discoverability of your app. All of these ratings and reviews reflect genuine user experiences - _amplify_ just makes it easier for happy customers to choose to express their appreciation.
 
-2. **Easy to customize.** Tracking custom events is easy, and to specify their own custom prompt timing rules.
+- Users with critical feedback are instead asked to send a more detailed email that will automatically include pertinent app and device information. This gives you an opportunity to engage these users in a more meaningful dialogue, allowing you to better understand and accommodate their feedback.
+
+#### Easy to integrate
+
+Default prompt timing rules allow you to get up and running as quickly as possible.
+
+#### Easy to customize
+
+Use both built-in and custom events to create a collection of prompt timing rules. Tweak the provided inline prompt UI via xml or in code.
 
 # How It Works
 
@@ -32,11 +44,15 @@ _amplify_ consists of two main components:
 
 - An **event-tracking engine**, responsible for tracking occurrences of significant events and evaluating rules based on these events to determine appropriate times to ask for feedback;
 
-- An inline **prompt** that guides users through the flow depicted below:
+- **Inline prompt UI** that guides users through the flow depicted below to determine the appropriate outlet for their feedback:
 
-![]("/assets/flow.png")
+<br />
 
-## Library Structure
+<p align="center">
+	<img src="https://raw.githubusercontent.com/stkent/amplify/master/assets/flow.png" width="60%" />
+</p>
+
+<br />
 
 # Getting Started
 
