@@ -43,13 +43,13 @@ Default prompt timing rules allow you to get up and running as quickly as possib
 
 Use both built-in and custom events to create a collection of prompt timing rules. Tweak the provided inline prompt UI via xml or in code.
 
-# How It Works
+# Library Structure
 
 _amplify_ consists of two main components:
 
 - An **event-tracking engine**, responsible for tracking occurrences of significant events and evaluating rules based on these events to determine appropriate times to ask for feedback;
 
-- **Inline prompt UI** that guides users through the flow depicted below to determine the appropriate outlet for their feedback:
+- A custom **inline feedback prompt** that guides users through the flow depicted below to determine the appropriate outlet for their feedback:
 
 <br />
 
@@ -58,6 +58,8 @@ _amplify_ consists of two main components:
 </p>
 
 <br />
+
+These components are designed to complement each other, and combining them as described in the [Getting Started](#getting-started) section below is the easiest way to integrate _amplify_ into your application. However, it is perfectly possible to couple the event-tracking engine with your own prompt flow and UI if desired. (This could be useful if you have highly-customized requirements for the prompt flow.) If you pursue this route, we would encourage you to ensure your prompting mechanism still reflects the principles outlined in the [Introduction](#introduction).
 
 # Getting Started
 
