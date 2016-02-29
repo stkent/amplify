@@ -14,24 +14,20 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package com.github.stkent.amplify.tracking;
+package com.github.stkent.amplify.tracking.interfaces;
 
-import android.support.annotation.NonNull;
+/**
+ * An abstract representation of a rule that does not depend on application or device state. This
+ * must be satisfied whenever we prompt the user for feedback.
+ *
+ * Typically used to wrap and aggregate the states of several other rules.
+ */
+public interface ITopLevelRules {
 
-import com.github.stkent.amplify.tracking.interfaces.ITrackableEvent;
-
-public enum PromptViewEvent implements ITrackableEvent {
-
-    USER_GAVE_CRITICAL_FEEDBACK,
-    USER_GAVE_POSITIVE_FEEDBACK,
-    USER_DECLINED_CRITICAL_FEEDBACK,
-    USER_DECLINED_POSITIVE_FEEDBACK;
-
-    @NonNull
-    @Override
-    public String getTrackingKey() {
-        // fixme: do not use name here, it's not proguard-safe?
-        return name();
-    }
+    /**
+     * @return true if this rule is satisfied and should allow the feedback prompt to be shown;
+     *         false otherwise
+     */
+    boolean shouldAllowFeedbackPrompt();
 
 }

@@ -16,22 +16,26 @@
  */
 package com.github.stkent.amplify.tracking;
 
+import android.content.Context;
+import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 
-import com.github.stkent.amplify.tracking.interfaces.ITrackableEvent;
+import com.github.stkent.amplify.tracking.interfaces.IAppVersionNameProvider;
+import com.github.stkent.amplify.utils.AppUtils;
 
-public enum PromptViewEvent implements ITrackableEvent {
+public class AppVersionNameProvider implements IAppVersionNameProvider {
 
-    USER_GAVE_CRITICAL_FEEDBACK,
-    USER_GAVE_POSITIVE_FEEDBACK,
-    USER_DECLINED_CRITICAL_FEEDBACK,
-    USER_DECLINED_POSITIVE_FEEDBACK;
+    @NonNull
+    private final Context appContext;
+
+    public AppVersionNameProvider(@NonNull final Context appContext) {
+        this.appContext = appContext;
+    }
 
     @NonNull
     @Override
-    public String getTrackingKey() {
-        // fixme: do not use name here, it's not proguard-safe?
-        return name();
+    public String getVersionName() throws PackageManager.NameNotFoundException {
+        return AppUtils.getPackageInfo(appContext).versionName;
     }
 
 }

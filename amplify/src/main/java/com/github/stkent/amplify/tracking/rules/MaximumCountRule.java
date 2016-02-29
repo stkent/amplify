@@ -14,24 +14,29 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package com.github.stkent.amplify.tracking;
+package com.github.stkent.amplify.tracking.rules;
 
 import android.support.annotation.NonNull;
 
-import com.github.stkent.amplify.tracking.interfaces.ITrackableEvent;
+import com.github.stkent.amplify.tracking.interfaces.IPromptRule;
 
-public enum PromptViewEvent implements ITrackableEvent {
+public final class MaximumCountRule implements IPromptRule<Integer> {
 
-    USER_GAVE_CRITICAL_FEEDBACK,
-    USER_GAVE_POSITIVE_FEEDBACK,
-    USER_DECLINED_CRITICAL_FEEDBACK,
-    USER_DECLINED_POSITIVE_FEEDBACK;
+    private final int maximumCount;
+
+    public MaximumCountRule(final int maximumCount) {
+        this.maximumCount = maximumCount;
+    }
+
+    @Override
+    public boolean shouldAllowFeedbackPrompt(@NonNull final Integer cachedEventValue) {
+        return cachedEventValue < maximumCount;
+    }
 
     @NonNull
     @Override
-    public String getTrackingKey() {
-        // fixme: do not use name here, it's not proguard-safe?
-        return name();
+    public String getStatusString(@NonNull final Integer cachedEventValue) {
+        return "Maximum allowed event count: " + maximumCount + ". Current event count: " + cachedEventValue + ".";
     }
 
 }

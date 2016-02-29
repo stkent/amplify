@@ -17,7 +17,7 @@
 package com.github.stkent.amplify.tracking;
 
 import com.github.stkent.amplify.helpers.BaseTest;
-import com.github.stkent.amplify.tracking.interfaces.IApplicationChecksManager;
+import com.github.stkent.amplify.tracking.interfaces.IAppLevelEventRulesManager;
 
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -32,7 +32,7 @@ import static org.mockito.Mockito.verify;
 public class AmplifyExceptionHandlerTest extends BaseTest {
 
     @Mock
-    private IApplicationChecksManager mockApplicationChecksManager;
+    private IAppLevelEventRulesManager mockAppLevelEventRulesManager;
     @Mock
     private Thread.UncaughtExceptionHandler mockDefaultExceptionHandler;
 
@@ -42,8 +42,8 @@ public class AmplifyExceptionHandlerTest extends BaseTest {
     @Test
     public void testThatDefaultExceptionHandlerIsAlwaysCalled() {
         // Arrange
-        final AmplifyExceptionHandler amplifyExceptionHandler =
-                new AmplifyExceptionHandler(mockApplicationChecksManager, mockDefaultExceptionHandler);
+        final AmplifyExceptionHandler amplifyExceptionHandler
+                = new AmplifyExceptionHandler(mockAppLevelEventRulesManager, mockDefaultExceptionHandler);
 
         final Throwable expectedThrowable = new Throwable("any string");
 
@@ -51,7 +51,8 @@ public class AmplifyExceptionHandlerTest extends BaseTest {
         amplifyExceptionHandler.uncaughtException(new Thread(), expectedThrowable);
 
         // Assert
-        verify(mockDefaultExceptionHandler, times(1)).uncaughtException(any(Thread.class), throwableCaptor.capture());
+        verify(mockDefaultExceptionHandler, times(1))
+                .uncaughtException(any(Thread.class), throwableCaptor.capture());
 
         final Throwable actualThrowable = throwableCaptor.getValue();
 

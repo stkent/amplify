@@ -30,8 +30,8 @@ import android.widget.FrameLayout;
 
 import com.github.stkent.amplify.ILogger;
 import com.github.stkent.amplify.R;
+import com.github.stkent.amplify.tracking.AppFeedbackDataProvider;
 import com.github.stkent.amplify.tracking.PromptViewEvent;
-import com.github.stkent.amplify.tracking.ApplicationFeedbackDataProvider;
 import com.github.stkent.amplify.tracking.EnvironmentCapabilitiesProvider;
 import com.github.stkent.amplify.tracking.interfaces.ITrackableEventListener;
 import com.github.stkent.amplify.utils.FeedbackUtil;
@@ -113,11 +113,11 @@ public class PromptView extends FrameLayout {
     protected void respondToNegativeFeedback() {
         checkDependenciesHaveBeenInjected();
 
-        final Context applicationContext = getContext().getApplicationContext();
+        final Context appContext = getContext().getApplicationContext();
 
         final FeedbackUtil feedbackUtil = new FeedbackUtil(
-                new ApplicationFeedbackDataProvider(applicationContext),
-                new EnvironmentCapabilitiesProvider(applicationContext),
+                new AppFeedbackDataProvider(appContext),
+                new EnvironmentCapabilitiesProvider(appContext),
                 this.feedbackEmail,
                 logger);
 

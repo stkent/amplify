@@ -33,9 +33,12 @@ public class Settings<T> implements ISettings<T> {
     private final SharedPreferences sharedPreferences;
     private final ILogger logger;
 
-    public Settings(Context applicationContext, ILogger logger) {
+    public Settings(
+            @NonNull final Context appContext,
+            @NonNull final ILogger logger) {
+
         this.logger = logger;
-        this.sharedPreferences = applicationContext
+        this.sharedPreferences = appContext
                 .getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
     }
 

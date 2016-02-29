@@ -25,7 +25,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.github.stkent.amplify.ILogger;
-import com.github.stkent.amplify.tracking.interfaces.IApplicationFeedbackDataProvider;
+import com.github.stkent.amplify.tracking.interfaces.IAppFeedbackDataProvider;
 import com.github.stkent.amplify.tracking.interfaces.IEnvironmentCapabilitiesProvider;
 import com.github.stkent.amplify.utils.time.SystemTimeUtil;
 
@@ -35,17 +35,17 @@ import java.util.Locale;
 
 public final class FeedbackUtil {
 
-    private final IApplicationFeedbackDataProvider applicationFeedbackDataProvider;
+    private final IAppFeedbackDataProvider appFeedbackDataProvider;
     private final IEnvironmentCapabilitiesProvider environmentCapabilitiesProvider;
     private final ILogger logger;
     private final String feedbackEmail;
 
     public FeedbackUtil(
-            @NonNull final IApplicationFeedbackDataProvider applicationFeedbackDataProvider,
+            @NonNull final IAppFeedbackDataProvider appFeedbackDataProvider,
             @NonNull final IEnvironmentCapabilitiesProvider environmentCapabilitiesProvider,
             @NonNull final String feedbackEmail,
             @NonNull final ILogger logger) {
-        this.applicationFeedbackDataProvider = applicationFeedbackDataProvider;
+        this.appFeedbackDataProvider = appFeedbackDataProvider;
         this.environmentCapabilitiesProvider = environmentCapabilitiesProvider;
         this.feedbackEmail = feedbackEmail;
         this.logger = logger;
@@ -68,7 +68,7 @@ public final class FeedbackUtil {
 
     @NonNull
     private Intent getFeedbackEmailIntent() {
-        final CharSequence appName = applicationFeedbackDataProvider.getApplicationNameString();
+        final CharSequence appName = appFeedbackDataProvider.getAppNameString();
 
         final String feedbackEmailSubject =
                 appName
@@ -76,7 +76,7 @@ public final class FeedbackUtil {
                 + " " + getDateString();
 
         final String encodedFeedbackEmailSubject = Uri.encode(feedbackEmailSubject, "UTF-8");
-        final String appInfo = getApplicationInfoString();
+        final String appInfo = getAppInfoString();
 
         // Uri.Builder is not useful here; see http://stackoverflow.com/a/12035226/2911458
         final StringBuilder uriStringBuilder = new StringBuilder("mailto:");
@@ -98,23 +98,23 @@ public final class FeedbackUtil {
     }
 
     @NonNull
-    private String getApplicationInfoString() {
-        String applicationVersionDisplayString;
+    private String getAppInfoString() {
+        String appVersionDisplayString;
 
         try {
-            applicationVersionDisplayString = applicationFeedbackDataProvider.getVersionDisplayString();
+            appVersionDisplayString = appFeedbackDataProvider.getVersionDisplayString();
         } catch (PackageManager.NameNotFoundException e) {
             logger.e("Unable to determine application version information.");
 
-            applicationVersionDisplayString = "Unknown";
+            appVersionDisplayString = "Unknown";
         }
 
         return    "\n\n\n"
                 + "---------------------"
                 + "\n"
-                + "Device: " + applicationFeedbackDataProvider.getDeviceName()
+                + "Device: " + appFeedbackDataProvider.getDeviceName()
                 + "\n"
-                + "App Version: " + applicationVersionDisplayString
+                + "App Version: " + appVersionDisplayString
                 + "\n"
                 + "Android OS Version: " + getAndroidOsVersionDisplayString()
                 + "\n"

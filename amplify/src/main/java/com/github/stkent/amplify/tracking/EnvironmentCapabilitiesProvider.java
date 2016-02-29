@@ -23,7 +23,7 @@ import android.content.pm.ResolveInfo;
 import android.support.annotation.NonNull;
 
 import com.github.stkent.amplify.tracking.interfaces.IEnvironmentCapabilitiesProvider;
-import com.github.stkent.amplify.utils.ApplicationUtils;
+import com.github.stkent.amplify.utils.AppUtils;
 
 import java.util.List;
 
@@ -38,16 +38,16 @@ public final class EnvironmentCapabilitiesProvider implements IEnvironmentCapabi
     private static final String GOOGLE_PLAY_STORE_PACKAGE_NAME = "com.android.vending";
 
     @NonNull
-    private final Context applicationContext;
+    private final Context appContext;
 
-    public EnvironmentCapabilitiesProvider(@NonNull final Context applicationContext) {
-        this.applicationContext = applicationContext;
+    public EnvironmentCapabilitiesProvider(@NonNull final Context appContext) {
+        this.appContext = appContext;
     }
 
     @Override
-    public boolean isApplicationInstalled(@NonNull final String packageName) {
+    public boolean isAppInstalled(@NonNull final String packageName) {
         try {
-            ApplicationUtils.getPackageInfo(applicationContext, packageName, GET_ACTIVITIES);
+            AppUtils.getPackageInfo(appContext, packageName, GET_ACTIVITIES);
             return true;
         } catch (final PackageManager.NameNotFoundException e) {
             return false;
@@ -59,12 +59,12 @@ public final class EnvironmentCapabilitiesProvider implements IEnvironmentCapabi
         // Note that we do not need to worry about differentiating between
         // Android Market and the Google Play Store because the Android Market
         // is only available on phones running 3.0-3.2.
-        return isApplicationInstalled(GOOGLE_PLAY_STORE_PACKAGE_NAME);
+        return isAppInstalled(GOOGLE_PLAY_STORE_PACKAGE_NAME);
     }
 
     @Override
     public boolean canHandleIntent(@NonNull final Intent intent) {
-        final List<ResolveInfo> resolveInfoList = applicationContext.getPackageManager()
+        final List<ResolveInfo> resolveInfoList = appContext.getPackageManager()
                 .queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
 
         return !resolveInfoList.isEmpty();
