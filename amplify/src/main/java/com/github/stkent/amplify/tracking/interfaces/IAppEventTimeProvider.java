@@ -14,24 +14,22 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package com.github.stkent.amplify.tracking;
+package com.github.stkent.amplify.tracking.interfaces;
 
-import android.support.annotation.NonNull;
+/**
+ * An abstract representation of a class that provides the times at which significant
+ * application-level events last occurred.
+ */
+public interface IAppEventTimeProvider {
 
-import com.github.stkent.amplify.tracking.interfaces.ITrackableEvent;
+    /**
+     * @return the time in milliseconds since the application was first installed
+     */
+    long getInstallTime();
 
-public enum PromptViewEvent implements ITrackableEvent {
-
-    USER_GAVE_CRITICAL_FEEDBACK,
-    USER_GAVE_POSITIVE_FEEDBACK,
-    USER_DECLINED_CRITICAL_FEEDBACK,
-    USER_DECLINED_POSITIVE_FEEDBACK;
-
-    @NonNull
-    @Override
-    public String getTrackingKey() {
-        // fixme: do not use name here, it's not proguard-safe?
-        return name();
-    }
+    /**
+     * @return the time in milliseconds since the applications was last updated
+     */
+    long getLastUpdateTime();
 
 }

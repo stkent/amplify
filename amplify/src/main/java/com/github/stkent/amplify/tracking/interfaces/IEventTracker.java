@@ -26,18 +26,20 @@ import android.support.annotation.NonNull;
 public interface IEventTracker<T> {
 
     /**
-     * Register a new event/check pair for tracking.
+     * Register a new trackableEvent/check pair for tracking.
      *
-     * @param event the event to be tracked
-     * @param eventCheck the new check to be registered, based on this event
+     * @param trackableEvent the trackableEvent to be tracked
+     * @param promptRule the new check to be registered, based on this trackableEvent
      */
-    void trackEvent(@NonNull final ITrackableEvent event, @NonNull final IEventCheck<T> eventCheck);
+    void addEventPromptRule(
+            @NonNull final ITrackableEvent trackableEvent,
+            @NonNull final IPromptRule<T> promptRule);
 
     /**
-     * Call this method to notify an implementing class that an event occurred.
+     * Call this method to notify an implementing class that an trackableEvent occurred.
      *
-     * @param event the event that occurred
+     * @param trackableEvent the trackableEvent that occurred
      */
-    void notifyEventTriggered(@NonNull final ITrackableEvent event);
+    void notifyEventTriggered(@NonNull final ITrackableEvent trackableEvent);
 
 }

@@ -14,24 +14,21 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package com.github.stkent.amplify.tracking;
+package com.github.stkent.amplify.tracking.interfaces;
 
 import android.support.annotation.NonNull;
 
-import com.github.stkent.amplify.tracking.interfaces.ITrackableEvent;
+/**
+ * An abstract representation of a class that manages prompt prerequisites. These are high-level
+ * requirements that must be satisfied before any event-level rules will be evaluated.
+ */
+public interface IPrerequisitesManager extends ITopLevelRules {
 
-public enum PromptViewEvent implements ITrackableEvent {
-
-    USER_GAVE_CRITICAL_FEEDBACK,
-    USER_GAVE_POSITIVE_FEEDBACK,
-    USER_DECLINED_CRITICAL_FEEDBACK,
-    USER_DECLINED_POSITIVE_FEEDBACK;
-
-    @NonNull
-    @Override
-    public String getTrackingKey() {
-        // fixme: do not use name here, it's not proguard-safe?
-        return name();
-    }
+    /**
+     * Register a new prompt prerequisite.
+     *
+     * @param prerequisite the prompt prerequisite to be registered
+     */
+    void addPrerequisite(@NonNull final IPrerequisite prerequisite);
 
 }

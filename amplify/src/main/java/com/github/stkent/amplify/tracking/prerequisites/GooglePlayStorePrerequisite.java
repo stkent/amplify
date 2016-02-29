@@ -14,24 +14,22 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package com.github.stkent.amplify.tracking;
+package com.github.stkent.amplify.tracking.prerequisites;
 
 import android.support.annotation.NonNull;
 
-import com.github.stkent.amplify.tracking.interfaces.ITrackableEvent;
+import com.github.stkent.amplify.tracking.interfaces.IEnvironmentCapabilitiesProvider;
+import com.github.stkent.amplify.tracking.interfaces.IPrerequisite;
 
-public enum PromptViewEvent implements ITrackableEvent {
+/**
+ * An implementation of {@code IPrerequisite} that verifies whether or not
+ * the Google Play Store is installed on the current device.
+ */
+public class GooglePlayStorePrerequisite implements IPrerequisite {
 
-    USER_GAVE_CRITICAL_FEEDBACK,
-    USER_GAVE_POSITIVE_FEEDBACK,
-    USER_DECLINED_CRITICAL_FEEDBACK,
-    USER_DECLINED_POSITIVE_FEEDBACK;
-
-    @NonNull
     @Override
-    public String getTrackingKey() {
-        // fixme: do not use name here, it's not proguard-safe?
-        return name();
+    public boolean shouldAllowFeedbackPrompt(@NonNull final IEnvironmentCapabilitiesProvider environmentInfoProvider) {
+        return environmentInfoProvider.isGooglePlayStoreInstalled();
     }
 
 }

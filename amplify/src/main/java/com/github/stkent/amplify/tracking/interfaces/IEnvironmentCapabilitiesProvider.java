@@ -32,7 +32,7 @@ public interface IEnvironmentCapabilitiesProvider {
      * @return true if an application with the given package name is installed on the current
      *         device; false otherwise
      */
-    boolean isApplicationInstalled(@NonNull final String packageName);
+    boolean isAppInstalled(@NonNull final String packageName);
 
     /**
      * Call to check whether the Google Play Store is installed on this device.

@@ -22,6 +22,6 @@ package com.github.stkent.amplify.tracking.interfaces;
  *
  * @param <T> the type of the values tracked by this manager (Integer, Long or String)
  */
-public interface ITrackableEventsManager<T> extends IEventTracker<T>, ITopLevelCheck {
+public interface ITrackableEventsManager<T> extends IEventTracker<T>, ITopLevelRules {
 
 }

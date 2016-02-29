@@ -21,48 +21,42 @@ import android.support.annotation.NonNull;
 
 import com.github.stkent.amplify.ILogger;
 import com.github.stkent.amplify.Logger;
-import com.github.stkent.amplify.tracking.checks.CooldownDaysCheck;
-import com.github.stkent.amplify.tracking.checks.GooglePlayStoreIsAvailableCheck;
-import com.github.stkent.amplify.tracking.checks.MaximumCountCheck;
-import com.github.stkent.amplify.tracking.checks.VersionChangedCheck;
-import com.github.stkent.amplify.tracking.interfaces.ITrackableEventListener;
-import com.github.stkent.amplify.tracking.interfaces.IApplicationChecksManager;
-import com.github.stkent.amplify.tracking.interfaces.IApplicationEventTimeProvider;
-import com.github.stkent.amplify.tracking.interfaces.IApplicationVersionNameProvider;
+import com.github.stkent.amplify.tracking.interfaces.IAppVersionNameProvider;
+import com.github.stkent.amplify.tracking.prerequisites.GooglePlayStorePrerequisite;
+import com.github.stkent.amplify.tracking.rules.MaximumCountRule;
+import com.github.stkent.amplify.tracking.rules.VersionChangedRule;
+import com.github.stkent.amplify.tracking.interfaces.IAppLevelEventRulesManager;
+import com.github.stkent.amplify.tracking.interfaces.IAppEventTimeProvider;
 import com.github.stkent.amplify.tracking.interfaces.IEnvironmentCapabilitiesProvider;
-import com.github.stkent.amplify.tracking.interfaces.IEnvironmentCheck;
-import com.github.stkent.amplify.tracking.interfaces.IEnvironmentChecksManager;
-import com.github.stkent.amplify.tracking.interfaces.IEventCheck;
+import com.github.stkent.amplify.tracking.interfaces.IPrerequisite;
+import com.github.stkent.amplify.tracking.interfaces.IPrerequisitesManager;
+import com.github.stkent.amplify.tracking.interfaces.IPromptRule;
 import com.github.stkent.amplify.tracking.interfaces.ITrackableEvent;
-import com.github.stkent.amplify.tracking.managers.ApplicationChecksManager;
-import com.github.stkent.amplify.tracking.managers.EnvironmentChecksManager;
-import com.github.stkent.amplify.tracking.managers.FirstEventTimesManager;
-import com.github.stkent.amplify.tracking.managers.LastEventTimesManager;
-import com.github.stkent.amplify.tracking.managers.LastEventVersionsManager;
-import com.github.stkent.amplify.tracking.managers.TotalEventCountsManager;
+import com.github.stkent.amplify.tracking.interfaces.ITrackableEventListener;
+import com.github.stkent.amplify.tracking.managers.AppLevelEventRulesManager;
+import com.github.stkent.amplify.tracking.managers.PrerequisitesManager;
+import com.github.stkent.amplify.tracking.managers.FirstEventTimeRulesManager;
+import com.github.stkent.amplify.tracking.managers.LastEventTimeRulesManager;
+import com.github.stkent.amplify.tracking.managers.LastEventVersionRulesManager;
+import com.github.stkent.amplify.tracking.managers.TotalEventCountRulesManager;
 import com.github.stkent.amplify.views.PromptView;
 
 public final class Amplify implements ITrackableEventListener {
 
-    // static fields
+    private static final int DEFAULT_USER_GAVE_POSITIVE_FEEDBACK_MAXIMUM_COUNT = 1;
+    private static final int DEFAULT_LAST_UPDATE_TIME_COOLDOWN_DAYS = 7;
+    private static final int DEFAULT_LAST_CRASH_TIME_COOLDOWN_DAYS = 7;
+
     private static Amplify sharedInstance;
 
-    private static final int DEFAULT_USER_GAVE_POSITIVE_FEEDBACK_MAXIMUM_COUNT = 1;
-    private static final int DEFAULT_INSTALL_TIME_COOLDOWN_DAYS = 7;
-    private static final int DEFAULT_LAST_UPDATE_TIME_COOLDOWN_DAYS = 7;
-    private static final int DEFAULT_USER_DECLINED_CRITICAL_FEEDBACK_COOLDOWN_DAYS = 7;
-    private static final int DEFAULT_USER_DECLINED_POSITIVE_FEEDBACK_COOLDOWN_DAYS = 7;
-    private static final int DEFAULT_USER_GAVE_CRITICAL_FEEDBACK_COOLDOWN_DAYS = 7;
+    private final IAppVersionNameProvider appVersionNameProvider;
 
-    // instance fields
-    private final IApplicationVersionNameProvider applicationVersionNameProvider;
-
-    private final IApplicationChecksManager applicationChecksManager;
-    private final IEnvironmentChecksManager environmentChecksManager;
-    private final FirstEventTimesManager firstEventTimesManager;
-    private final LastEventTimesManager lastEventTimesManager;
-    private final LastEventVersionsManager lastEventVersionsManager;
-    private final TotalEventCountsManager totalEventCountsManager;
+    private final IAppLevelEventRulesManager appappLevelEventRulesManager;
+    private final IPrerequisitesManager prerequisitesManager;
+    private final FirstEventTimeRulesManager firstEventTimeRulesManager;
+    private final LastEventTimeRulesManager lastEventTimeRulesManager;
+    private final LastEventVersionRulesManager lastEventVersionRulesManager;
+    private final TotalEventCountRulesManager totalEventCountRulesManager;
 
     private final ILogger logger;
 
@@ -86,21 +80,25 @@ public final class Amplify implements ITrackableEventListener {
 
     // constructors
 
-    private Amplify(
-            @NonNull final Context context,
-            @NonNull final ILogger logger) {
-        final Context applicationContext = context.getApplicationContext();
-        final IApplicationEventTimeProvider applicationEventTimeProvider = new ApplicationEventTimeProvider(applicationContext);
-        final IEnvironmentCapabilitiesProvider environmentCapabilitiesProvider = new EnvironmentCapabilitiesProvider(applicationContext);
+    private Amplify(@NonNull final Context context, @NonNull final ILogger logger) {
+        final Context appContext = context.getApplicationContext();
+        final IAppEventTimeProvider appEventTimeProvider = new AppEventTimeProvider(appContext);
 
-        this.applicationVersionNameProvider = new ApplicationVersionNameProvider(applicationContext);
+        final IEnvironmentCapabilitiesProvider environmentCapabilitiesProvider
+                = new EnvironmentCapabilitiesProvider(appContext);
 
-        this.applicationChecksManager = new ApplicationChecksManager(applicationContext, applicationEventTimeProvider, logger);
-        this.environmentChecksManager = new EnvironmentChecksManager(environmentCapabilitiesProvider, logger);
-        this.firstEventTimesManager = new FirstEventTimesManager(applicationContext, logger);
-        this.lastEventTimesManager = new LastEventTimesManager(applicationContext, logger);
-        this.lastEventVersionsManager = new LastEventVersionsManager(applicationContext, logger);
-        this.totalEventCountsManager = new TotalEventCountsManager(applicationContext, logger);
+        this.appVersionNameProvider = new AppVersionNameProvider(appContext);
+
+        this.appappLevelEventRulesManager
+                = new AppLevelEventRulesManager(appContext, appEventTimeProvider, logger);
+
+        this.prerequisitesManager
+                = new PrerequisitesManager(environmentCapabilitiesProvider, logger);
+
+        this.firstEventTimeRulesManager = new FirstEventTimeRulesManager(appContext, logger);
+        this.lastEventTimeRulesManager = new LastEventTimeRulesManager(appContext, logger);
+        this.lastEventVersionRulesManager = new LastEventVersionRulesManager(appContext, logger);
+        this.totalEventCountRulesManager = new TotalEventCountRulesManager(appContext, logger);
 
         this.logger = logger;
     }
@@ -109,23 +107,22 @@ public final class Amplify implements ITrackableEventListener {
 
     public Amplify configureWithDefaults() {
         return this
-                .addEnvironmentCheck(new GooglePlayStoreIsAvailableCheck())
-                .setInstallTimeCooldownDays(DEFAULT_INSTALL_TIME_COOLDOWN_DAYS)
-                .setLastCrashTimeCooldownDays(DEFAULT_LAST_UPDATE_TIME_COOLDOWN_DAYS)
-                .trackTotalEventCount(PromptViewEvent.USER_GAVE_POSITIVE_FEEDBACK,
-                        new MaximumCountCheck(DEFAULT_USER_GAVE_POSITIVE_FEEDBACK_MAXIMUM_COUNT))
-                .trackLastEventTime(PromptViewEvent.USER_GAVE_CRITICAL_FEEDBACK,
-                        new CooldownDaysCheck(DEFAULT_USER_GAVE_CRITICAL_FEEDBACK_COOLDOWN_DAYS))
-                .trackLastEventTime(PromptViewEvent.USER_DECLINED_CRITICAL_FEEDBACK,
-                        new CooldownDaysCheck(DEFAULT_USER_DECLINED_CRITICAL_FEEDBACK_COOLDOWN_DAYS))
-                .trackLastEventTime(PromptViewEvent.USER_DECLINED_POSITIVE_FEEDBACK,
-                        new CooldownDaysCheck(DEFAULT_USER_DECLINED_POSITIVE_FEEDBACK_COOLDOWN_DAYS))
-                .trackLastEventVersion(PromptViewEvent.USER_DECLINED_CRITICAL_FEEDBACK,
-                        new VersionChangedCheck(applicationVersionNameProvider))
-                .trackLastEventVersion(PromptViewEvent.USER_DECLINED_POSITIVE_FEEDBACK,
-                        new VersionChangedCheck(applicationVersionNameProvider))
-                .trackLastEventVersion(PromptViewEvent.USER_GAVE_CRITICAL_FEEDBACK,
-                        new VersionChangedCheck(applicationVersionNameProvider));
+                .addPrerequisite(new GooglePlayStorePrerequisite())
+                .setLastUpdateTimeCooldownDays(DEFAULT_LAST_UPDATE_TIME_COOLDOWN_DAYS)
+                .setLastCrashTimeCooldownDays(DEFAULT_LAST_CRASH_TIME_COOLDOWN_DAYS)
+                .addTotalEventCountRule(PromptViewEvent.USER_GAVE_POSITIVE_FEEDBACK,
+                        new MaximumCountRule(DEFAULT_USER_GAVE_POSITIVE_FEEDBACK_MAXIMUM_COUNT))
+                .addLastEventVersionRule(PromptViewEvent.USER_GAVE_CRITICAL_FEEDBACK,
+                        new VersionChangedRule(appVersionNameProvider))
+                .addLastEventVersionRule(PromptViewEvent.USER_DECLINED_CRITICAL_FEEDBACK,
+                        new VersionChangedRule(appVersionNameProvider))
+                .addLastEventVersionRule(PromptViewEvent.USER_DECLINED_POSITIVE_FEEDBACK,
+                        new VersionChangedRule(appVersionNameProvider));
+    }
+
+    public Amplify addPrerequisite(@NonNull final IPrerequisite prerequisite) {
+        prerequisitesManager.addPrerequisite(prerequisite);
+        return this;
     }
 
     public Amplify setLogLevel(@NonNull final Logger.LogLevel logLevel) {
@@ -149,42 +146,49 @@ public final class Amplify implements ITrackableEventListener {
     }
 
     public Amplify setInstallTimeCooldownDays(final int cooldownPeriodDays) {
-        applicationChecksManager.setInstallTimeCooldownDays(cooldownPeriodDays);
+        appappLevelEventRulesManager.setInstallTimeCooldownDays(cooldownPeriodDays);
         return this;
     }
 
     public Amplify setLastUpdateTimeCooldownDays(final int cooldownPeriodDays) {
-        applicationChecksManager.setLastUpdateTimeCooldownDays(cooldownPeriodDays);
+        appappLevelEventRulesManager.setLastUpdateTimeCooldownDays(cooldownPeriodDays);
         return this;
     }
 
     public Amplify setLastCrashTimeCooldownDays(final int cooldownPeriodDays) {
-        applicationChecksManager.setLastCrashTimeCooldownDays(cooldownPeriodDays);
+        appappLevelEventRulesManager.setLastCrashTimeCooldownDays(cooldownPeriodDays);
         return this;
     }
 
-    public Amplify trackTotalEventCount(@NonNull final ITrackableEvent event, @NonNull final IEventCheck<Integer> eventCheck) {
-        totalEventCountsManager.trackEvent(event, eventCheck);
+    public Amplify addTotalEventCountRule(
+            @NonNull final ITrackableEvent event,
+            @NonNull final IPromptRule<Integer> promptRule) {
+
+        totalEventCountRulesManager.addEventPromptRule(event, promptRule);
         return this;
     }
 
-    public Amplify trackFirstEventTime(@NonNull final ITrackableEvent event, @NonNull final IEventCheck<Long> eventCheck) {
-        firstEventTimesManager.trackEvent(event, eventCheck);
+    public Amplify addFirstEventTimeRule(
+            @NonNull final ITrackableEvent event,
+            @NonNull final IPromptRule<Long> promptRule) {
+
+        firstEventTimeRulesManager.addEventPromptRule(event, promptRule);
         return this;
     }
 
-    public Amplify trackLastEventTime(@NonNull final ITrackableEvent event, @NonNull final IEventCheck<Long> eventCheck) {
-        lastEventTimesManager.trackEvent(event, eventCheck);
+    public Amplify addLastEventTimeRule(
+            @NonNull final ITrackableEvent event,
+            @NonNull final IPromptRule<Long> promptRule) {
+
+        lastEventTimeRulesManager.addEventPromptRule(event, promptRule);
         return this;
     }
 
-    public Amplify trackLastEventVersion(@NonNull final ITrackableEvent event, @NonNull final IEventCheck<String> eventCheck) {
-        lastEventVersionsManager.trackEvent(event, eventCheck);
-        return this;
-    }
+    public Amplify addLastEventVersionRule(
+            @NonNull final ITrackableEvent event,
+            @NonNull final IPromptRule<String> promptRule) {
 
-    public Amplify addEnvironmentCheck(@NonNull final IEnvironmentCheck environmentCheck) {
-        environmentChecksManager.addEnvironmentCheck(environmentCheck);
+        lastEventVersionRulesManager.addEventPromptRule(event, promptRule);
         return this;
     }
 
@@ -193,10 +197,10 @@ public final class Amplify implements ITrackableEventListener {
     @Override
     public void notifyEventTriggered(@NonNull final ITrackableEvent event) {
         logger.d("Triggered Event: " + event);
-        totalEventCountsManager.notifyEventTriggered(event);
-        firstEventTimesManager.notifyEventTriggered(event);
-        lastEventTimesManager.notifyEventTriggered(event);
-        lastEventVersionsManager.notifyEventTriggered(event);
+        totalEventCountRulesManager.notifyEventTriggered(event);
+        firstEventTimeRulesManager.notifyEventTriggered(event);
+        lastEventTimeRulesManager.notifyEventTriggered(event);
+        lastEventVersionRulesManager.notifyEventTriggered(event);
     }
 
     // query methods
@@ -210,12 +214,12 @@ public final class Amplify implements ITrackableEventListener {
 
     public boolean shouldAskForRating() {
         return alwaysShow | (
-                  applicationChecksManager.shouldAllowFeedbackPrompt()
-                & environmentChecksManager.shouldAllowFeedbackPrompt()
-                & totalEventCountsManager .shouldAllowFeedbackPrompt()
-                & firstEventTimesManager  .shouldAllowFeedbackPrompt()
-                & lastEventTimesManager   .shouldAllowFeedbackPrompt()
-                & lastEventVersionsManager.shouldAllowFeedbackPrompt());
+                  appappLevelEventRulesManager.shouldAllowFeedbackPrompt()
+                & prerequisitesManager.shouldAllowFeedbackPrompt()
+                & totalEventCountRulesManager.shouldAllowFeedbackPrompt()
+                & firstEventTimeRulesManager.shouldAllowFeedbackPrompt()
+                & lastEventTimeRulesManager.shouldAllowFeedbackPrompt()
+                & lastEventVersionRulesManager.shouldAllowFeedbackPrompt());
     }
 
 }
