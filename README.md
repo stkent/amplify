@@ -63,15 +63,19 @@ These components are designed to complement each other, and combining them as de
 
 # Getting Started
 
-(1) Specify Amplify as a dependency in your `build.gradle` file:
+<ol>
+  <li>Specify <em>amplify</em> as a dependency in your <code>build.gradle</code> file:</li>
+</ol>
 
 ```groovy
 dependencies {
     compile 'com.github.stkent:amplify:{latest-version}'
 }
 ```
-    
-(2) Initialize the shared `Amplify` instance in your custom `Application` subclass:
+
+<ol start="2">
+  <li>Initialize the shared <code>Amplify</code> instance in your custom <code><a href="http://developer.android.com/reference/android/app/Application.html">Application</a></code> subclass:</li>
+</ol>
 
 ```java
 public class ExampleApplication extends Application {
@@ -86,7 +90,9 @@ public class ExampleApplication extends Application {
 }
 ```
 
-(3) Add a `PromptView` instance to all xml layouts in which you may want to prompt the user for their feedback:
+<ol start="3">
+  <li>Add a <code>PromptView</code> instance to all xml layouts in which you may want to prompt the user for their feedback:</li>
+</ol>
 
 ```xml
 <com.github.stkent.amplify.views.PromptView
@@ -95,7 +101,9 @@ public class ExampleApplication extends Application {
     android:layout_height="wrap_content" />
 ```
 
-(4) Call the state tracker's `promptIfReady` method when appropriate, passing in your `PromptView` instance:
+<ol start="4">
+  <li>Call the state tracker's <code>promptIfReady</code> method when appropriate, passing in your <code>PromptView</code> instance:</li>
+</ol>
 
 ```java
 PromptView promptView = (PromptView) findViewById(R.id.prompt_view);
