@@ -9,8 +9,9 @@ Respectfully request feedback in your Android app.
 # Table Of Contents
 
 - [Introduction](#introduction)
-- [How It Works](#how-it-works)
+- [Library Structure](#library-structure)
 - [Getting Started](#getting-started)
+    - [Default Behavior](#default-behavior)
 - [Configuring](#configuring)
 - [Customizing](#customizing)
 - [License](#license)
@@ -19,29 +20,19 @@ Respectfully request feedback in your Android app.
 
 _amplify_ focuses on helping Android developers prompt their users for feedback at the right times and in the right way. Inspired by [Circa News](https://medium.com/circa/the-right-way-to-ask-users-to-review-your-app-9a32fd604fca), we built this library based on the following principles: 
 
-#### No interruptions
+- **No interruptions.** The inline prompt we provide can be inserted right into your view hierarchy and customized to complement your existing UI. Users are free to interact with the prompt as much or as little as they like. This approach shows respect for your users and preserves the app flow you have carefully crafted.
 
-The inline prompt we provide can be inserted right into your view hierarchy and customized to complement your existing UI. Users are free to interact with the prompt as much or as little as they like. This approach shows respect for your users and preserves the app flow you have carefully crafted.
+- **No nagging.** _amplify_ intelligently tracks significant events to make sure your users are only prompted for feedback at appropriate times.
 
-#### No nagging
+- **Maximum impact.** When users indicate they are willing to provide feedback, we direct them to the highest-impact outlet:
 
-_amplify_ intelligently tracks significant events to make sure your users are only prompted for feedback at appropriate times.
+    - Users with favorable feedback are asked to leave a quick rating or review in the Google Play Store, improving the rating and discoverability of your app. All of these ratings and reviews reflect genuine user experiences - _amplify_ just makes it easier for happy customers to choose to express their appreciation.
 
-#### Maximum impact
+    - Users with critical feedback are instead asked to send a more detailed email that will automatically include pertinent app and device information. This gives you an opportunity to engage these users in a more meaningful dialogue, allowing you to better understand and accommodate their feedback.
 
-When users indicate they are willing to provide feedback, we direct them to the highest-impact outlet:
+- **Easy to integrate.** Default prompt timing rules allow you to get up and running as quickly as possible.
 
-- Users with positive feedback are asked to leave a quick rating or review in the Google Play Store, improving the rating and discoverability of your app. All of these ratings and reviews reflect genuine user experiences - _amplify_ just makes it easier for happy customers to choose to express their appreciation.
-
-- Users with critical feedback are instead asked to send a more detailed email that will automatically include pertinent app and device information. This gives you an opportunity to engage these users in a more meaningful dialogue, allowing you to better understand and accommodate their feedback.
-
-#### Easy to integrate
-
-Default prompt timing rules allow you to get up and running as quickly as possible.
-
-#### Easy to customize
-
-Use both built-in and custom events to create a collection of prompt timing rules. Tweak the provided inline prompt UI via xml or in code.
+- **Easy to customize.** Use both built-in and custom events to create a collection of prompt timing rules. Tweak the provided inline prompt UI via xml or in code.
 
 # Library Structure
 
@@ -111,6 +102,26 @@ PromptView promptView = (PromptView) findViewById(R.id.prompt_view);
 Amplify.get(context).promptIfReady(promptView);
 ```
 
+That's it! The event tracking engine will evaluate the default rules each time `promptIfReady` is called, and instruct the `PromptView` to automatically update its visibility based on the result. If the user chooses to interact with the prompt, the sequence of questions asked is also automatically managed by the `PromptView`.
+
+## Default Behavior
+
+The convenience method `configureWithDefaults` initializes the event tracking engine with a collection of sensible default rules. With these rules applied, we only prompt for feedback when:
+
+- **The Google Play Store is available.** If a user's device won't allow them to provide feedback, we never ask for it. (We believe that a high enough percentage of devices are capable of sending email that a similar check for the availability of an email application is unnecessary.)
+
+- **It has been more than a week since a new version of your app was installed.** We like to give users some time to settle in and explore the changes made in the latest update before asking them their opinion... but not so much time that their valuable first impressions are forgotten!
+
+- **It has been more than a week since your app last crashed.** There are much better ways to collect detailed crash information than via user feedback. We're big fans of [Fabric/Crashlytics](https://fabric.io/kits/android/crashlytics). To save users from spending time reporting crashes that we are already aware of and fixing, we avoid asking for feedback right after a crash has occurred.
+
+- **The user has never previously provided favorable feedback.** We strive to constantly improve our apps' functionality and stability. If we do our job right, there's little to be gained by prompting satisfied users for feedback repeatedly. If we decide to significantly overhaul our app (either internally or externally), we will reset the event tracking engine to capture feedback from our entire userbase again. // TODO: link to a section that explains how to do this.
+
+- **The user has not provided critical feedback for this version of the application already.** Since it's unlikely that we'll be able to address any critical feedback received without releasing an update, we won't re-prompt a user who already provided insights into the current version of the app.
+
+- **The user has not actively declined to provide feedback for this version of the application.** If a user has already actively indicated they are not interested in providing feedback for the current version of the app, we won't ask again before the next update is shipped. (Note that 'actively indicated' here means a user deliberately declined to provide feedback. This rule does not apply to users who have seen but did not interact with the prompt in any way.)
+
+More information on how to apply your own collection of rules is available in the [Configuring](#configuring) section. Building custom rules is covered in the [Customizing](#customizing) section.
+
 # Configuring
 
 ## Event Tracking
@@ -125,7 +136,7 @@ The `GooglePlayStoreIsAvailableCheck` check will pass if the Google Play Store i
 
 These events are associated with user actions related to the feedback prompt UI.
 
-- User agreed to provide positive feedback
+- User agreed to provide favorable feedback
 - User agreed to provide critical feedback
 - User declined to provide positive feedback
 - User declined to provide critical feedback
