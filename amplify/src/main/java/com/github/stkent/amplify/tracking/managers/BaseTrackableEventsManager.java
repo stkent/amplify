@@ -58,7 +58,10 @@ public abstract class BaseTrackableEventsManager<T> implements ITrackableEventsM
     }
 
     @Override
-    public void addEventBasedRule(@NonNull final ITrackableEvent trackableEvent, @NonNull final IEventBasedRule<T> rule) {
+    public void addEventBasedRule(
+            @NonNull final ITrackableEvent trackableEvent,
+            @NonNull final IEventBasedRule<T> rule) {
+
         if (!isTrackingEvent(trackableEvent)) {
             internalMap.put(trackableEvent, new ArrayList<IEventBasedRule<T>>());
         }
