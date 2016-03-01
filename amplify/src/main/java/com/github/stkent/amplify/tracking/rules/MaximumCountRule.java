@@ -18,9 +18,9 @@ package com.github.stkent.amplify.tracking.rules;
 
 import android.support.annotation.NonNull;
 
-import com.github.stkent.amplify.tracking.interfaces.IPromptRule;
+import com.github.stkent.amplify.tracking.interfaces.IEventBasedRule;
 
-public final class MaximumCountRule implements IPromptRule<Integer> {
+public final class MaximumCountRule implements IEventBasedRule<Integer> {
 
     private final int maximumCount;
 

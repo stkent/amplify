@@ -19,9 +19,9 @@ package com.github.stkent.amplify.tracking.managers;
 import android.support.annotation.NonNull;
 
 import com.github.stkent.amplify.ILogger;
-import com.github.stkent.amplify.tracking.interfaces.ITrackableEvent;
-import com.github.stkent.amplify.tracking.interfaces.IPromptRule;
-import com.github.stkent.amplify.tracking.interfaces.ITrackableEventsManager;
+import com.github.stkent.amplify.tracking.interfaces.IEventBasedRule;
+import com.github.stkent.amplify.tracking.interfaces.IEvent;
+import com.github.stkent.amplify.tracking.interfaces.IEventsManager;
 import com.github.stkent.amplify.tracking.interfaces.ISettings;
 
 import java.util.ArrayList;
@@ -29,13 +29,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public abstract class BaseTrackableEventsManager<T> implements ITrackableEventsManager<T> {
+public abstract class BaseEventsManager<T> implements IEventsManager<T> {
 
     private static final String AMPLIFY_TRACKING_KEY_PREFIX = "AMPLIFY_";
 
     private final ILogger logger;
     private final ISettings<T> settings;
-    private final ConcurrentHashMap<ITrackableEvent, List<IPromptRule<T>>> internalMap;
+    private final ConcurrentHashMap<IEvent, List<IEventBasedRule<T>>> internalMap;
 
     /**
      * @return a key that uniquely identifies this event tracker within the embedding application
@@ -49,7 +49,7 @@ public abstract class BaseTrackableEventsManager<T> implements ITrackableEventsM
     @NonNull
     protected abstract T getUpdatedTrackingValue(@NonNull final T cachedEventValue);
 
-    protected BaseTrackableEventsManager(
+    protected BaseEventsManager(
             @NonNull final ILogger logger,
             @NonNull final ISettings<T> settings) {
         this.logger = logger;
@@ -58,48 +58,50 @@ public abstract class BaseTrackableEventsManager<T> implements ITrackableEventsM
     }
 
     @Override
-    public void addEventPromptRule(@NonNull final ITrackableEvent trackableEvent, @NonNull final IPromptRule<T> promptRule) {
-        if (!isTrackingEvent(trackableEvent)) {
-            internalMap.put(trackableEvent, new ArrayList<IPromptRule<T>>());
+    public void addEventBasedRule(
+            @NonNull final IEvent event,
+            @NonNull final IEventBasedRule<T> rule) {
+
+        if (!isTrackingEvent(event)) {
+            internalMap.put(event, new ArrayList<IEventBasedRule<T>>());
         }
 
-        internalMap.get(trackableEvent).add(promptRule);
+        internalMap.get(event).add(rule);
 
-        logger.d(internalMap.get(trackableEvent).toString());
+        logger.d(internalMap.get(event).toString());
     }
 
     @Override
-    public void notifyEventTriggered(@NonNull final ITrackableEvent trackableEvent) {
-        if (isTrackingEvent(trackableEvent)) {
+    public void notifyEventTriggered(@NonNull final IEvent event) {
+        if (isTrackingEvent(event)) {
 
-            final T cachedTrackingValue = getCachedTrackingValue(trackableEvent);
+            final T cachedTrackingValue = getCachedTrackingValue(event);
             final T updatedTrackingValue = getUpdatedTrackingValue(cachedTrackingValue);
 
             if (!updatedTrackingValue.equals(cachedTrackingValue)) {
-                logger.d(IPromptRule.class.getSimpleName()
+                logger.d(IEventBasedRule.class.getSimpleName()
                         + " updating event value from: "
                         + cachedTrackingValue
                         + " to "
                         + updatedTrackingValue);
             }
 
-            settings.writeTrackingValue(getTrackingKey(trackableEvent), updatedTrackingValue);
+            settings.writeTrackingValue(getTrackingKey(event), updatedTrackingValue);
         }
     }
 
     @Override
     public boolean shouldAllowFeedbackPrompt() {
+        for (final Map.Entry<IEvent, List<IEventBasedRule<T>>> eventBasedRules : internalMap.entrySet()) {
+            final IEvent event = eventBasedRules.getKey();
 
-        for (final Map.Entry<ITrackableEvent, List<IPromptRule<T>>> eventCheckSet : internalMap.entrySet()) {
-            final ITrackableEvent event = eventCheckSet.getKey();
-
-            for (final IPromptRule<T> eventCheck : eventCheckSet.getValue()) {
+            for (final IEventBasedRule<T> eventBasedRule : eventBasedRules.getValue()) {
                 final T cachedEventValue = getCachedTrackingValue(event);
 
-                logger.d(getTrackingKey(event) + ": " + eventCheck.getStatusString(cachedEventValue));
+                logger.d(getTrackingKey(event) + ": " + eventBasedRule.getStatusString(cachedEventValue));
 
-                if (!eventCheck.shouldAllowFeedbackPrompt(cachedEventValue)) {
-                    logger.d("Blocking feedback for event: " + event + " because of check: " + eventCheck);
+                if (!eventBasedRule.shouldAllowFeedbackPrompt(cachedEventValue)) {
+                    logger.d("Blocking feedback for event: " + event + " because of check: " + eventBasedRule);
                     return false;
                 }
             }
@@ -112,18 +114,18 @@ public abstract class BaseTrackableEventsManager<T> implements ITrackableEventsM
         return logger;
     }
 
-    private boolean isTrackingEvent(@NonNull final ITrackableEvent event) {
+    private boolean isTrackingEvent(@NonNull final IEvent event) {
         return internalMap.containsKey(event);
     }
 
-    private String getTrackingKey(@NonNull final ITrackableEvent event) {
+    private String getTrackingKey(@NonNull final IEvent event) {
         return AMPLIFY_TRACKING_KEY_PREFIX
                 + event.getTrackingKey()
                 + "_"
                 + this.getTrackingKeySuffix().toUpperCase();
     }
 
-    private T getCachedTrackingValue(@NonNull final ITrackableEvent event) {
+    private T getCachedTrackingValue(@NonNull final IEvent event) {
         T value = settings.readTrackingValue(getTrackingKey(event));
         return value != null ? value : defaultTrackingValue();
     }

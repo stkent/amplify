@@ -20,9 +20,9 @@ import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 
 import com.github.stkent.amplify.tracking.interfaces.IAppVersionNameProvider;
-import com.github.stkent.amplify.tracking.interfaces.IPromptRule;
+import com.github.stkent.amplify.tracking.interfaces.IEventBasedRule;
 
-public final class VersionChangedRule implements IPromptRule<String> {
+public final class VersionChangedRule implements IEventBasedRule<String> {
 
     @NonNull
     private final IAppVersionNameProvider appVersionNameProvider;

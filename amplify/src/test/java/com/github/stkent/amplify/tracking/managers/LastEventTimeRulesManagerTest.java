@@ -22,8 +22,8 @@ import android.support.annotation.NonNull;
 import com.github.stkent.amplify.ILogger;
 import com.github.stkent.amplify.helpers.BaseTest;
 import com.github.stkent.amplify.helpers.FakeSettings;
-import com.github.stkent.amplify.tracking.interfaces.IPromptRule;
-import com.github.stkent.amplify.tracking.interfaces.ITrackableEvent;
+import com.github.stkent.amplify.tracking.interfaces.IEventBasedRule;
+import com.github.stkent.amplify.tracking.interfaces.IEvent;
 
 import org.junit.Test;
 import org.mockito.Mock;
@@ -43,9 +43,9 @@ public class LastEventTimeRulesManagerTest extends BaseTest {
     @Mock
     private ILogger mockLogger;
     @Mock
-    private ITrackableEvent mockTrackableEvent;
+    private IEvent mockEvent;
     @Mock
-    private IPromptRule<Long> mockEventCheck;
+    private IEventBasedRule<Long> mockEventBasedRule;
 
     @Override
     public void localSetUp() {
@@ -55,18 +55,18 @@ public class LastEventTimeRulesManagerTest extends BaseTest {
                 mockLogger,
                 fakeSettings);
 
-        when(mockTrackableEvent.getTrackingKey()).thenReturn(DEFAULT_MOCK_EVENT_TRACKING_KEY);
-        lastEventTimeRulesManager.addEventPromptRule(mockTrackableEvent, mockEventCheck);
+        when(mockEvent.getTrackingKey()).thenReturn(DEFAULT_MOCK_EVENT_TRACKING_KEY);
+        lastEventTimeRulesManager.addEventBasedRule(mockEvent, mockEventBasedRule);
     }
 
     @Test
     public void testThatEventsAreSavedWithCorrectTrackingKey() {
         // Arrange
-        final String expectedTrackingKey = getExpectedTrackingKeyForEvent(mockTrackableEvent);
+        final String expectedTrackingKey = getExpectedTrackingKeyForEvent(mockEvent);
         assert fakeSettings.readTrackingValue(expectedTrackingKey) == null;
 
         // Act
-        lastEventTimeRulesManager.notifyEventTriggered(mockTrackableEvent);
+        lastEventTimeRulesManager.notifyEventTriggered(mockEvent);
 
         // Assert
         final Long trackedEventTime = fakeSettings.readTrackingValue(expectedTrackingKey);
@@ -82,10 +82,10 @@ public class LastEventTimeRulesManagerTest extends BaseTest {
         final long fakeEventTime = MARCH_18_2014_838PM_UTC;
 
         // Act
-        triggerEventAtTime(mockTrackableEvent, fakeEventTime);
+        triggerEventAtTime(mockEvent, fakeEventTime);
 
         // Assert
-        final Long trackedEventTime = fakeSettings.readTrackingValue(getExpectedTrackingKeyForEvent(mockTrackableEvent));
+        final Long trackedEventTime = fakeSettings.readTrackingValue(getExpectedTrackingKeyForEvent(mockEvent));
 
         assertEquals(
                 "The correct time should have been recorded for this event",
@@ -102,11 +102,11 @@ public class LastEventTimeRulesManagerTest extends BaseTest {
         assert fakeEventTimeEarlier < fakeEventTimeLater;
 
         // Act
-        triggerEventAtTime(mockTrackableEvent, fakeEventTimeEarlier);
-        triggerEventAtTime(mockTrackableEvent, fakeEventTimeLater);
+        triggerEventAtTime(mockEvent, fakeEventTimeEarlier);
+        triggerEventAtTime(mockEvent, fakeEventTimeLater);
 
         // Assert
-        final Long trackedEventTime = fakeSettings.readTrackingValue(getExpectedTrackingKeyForEvent(mockTrackableEvent));
+        final Long trackedEventTime = fakeSettings.readTrackingValue(getExpectedTrackingKeyForEvent(mockEvent));
 
         assertEquals(
                 "The correct (latest) time should have been recorded for this event",
@@ -114,11 +114,11 @@ public class LastEventTimeRulesManagerTest extends BaseTest {
                 trackedEventTime);
     }
 
-    private String getExpectedTrackingKeyForEvent(@NonNull final ITrackableEvent event) {
+    private String getExpectedTrackingKeyForEvent(@NonNull final IEvent event) {
         return "AMPLIFY_" + event.getTrackingKey() + "_LASTEVENTTIMESMANAGER";
     }
 
-    private void triggerEventAtTime(@NonNull final ITrackableEvent event, final long time) {
+    private void triggerEventAtTime(@NonNull final IEvent event, final long time) {
         setFakeCurrentTimeMillis(time);
         lastEventTimeRulesManager.notifyEventTriggered(event);
     }

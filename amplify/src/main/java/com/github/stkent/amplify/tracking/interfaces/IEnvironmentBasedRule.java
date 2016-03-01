@@ -19,15 +19,20 @@ package com.github.stkent.amplify.tracking.interfaces;
 import android.support.annotation.NonNull;
 
 /**
- * An abstract representation of an event whose occurrences can be tracked across launches of the
- * embedding application.
+ * An abstract representation of a prompt timing rule that depends on the environment in which the
+ * embedding application is running.
  */
-public interface ITrackableEvent {
+public interface IEnvironmentBasedRule {
 
     /**
-     * @return a key that uniquely identifies this event within the embedding application
+     * Call to determine whether this rule allows us to prompt the user for feedback at this time.
+     *
+     * @param environmentInfoProvider provides relevant information about the environment in which
+     *        the embedding application is currently running
+     * @return true if this rule is satisfied and should allow the feedback prompt to be shown;
+     *         false otherwise
      */
-    @NonNull
-    String getTrackingKey();
+    boolean shouldAllowFeedbackPrompt(
+            @NonNull final IEnvironmentCapabilitiesProvider environmentInfoProvider);
 
 }

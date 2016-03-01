@@ -17,7 +17,7 @@
 package com.github.stkent.amplify.tracking;
 
 import com.github.stkent.amplify.helpers.BaseTest;
-import com.github.stkent.amplify.tracking.interfaces.ITrackableEvent;
+import com.github.stkent.amplify.tracking.interfaces.IEvent;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -27,7 +27,7 @@ public class PromptViewEventTest extends BaseTest {
     @Test
     public void testThatUserDeclinedCriticalFeedbackEventHasCorrectTrackingKey() {
         // Arrange
-        final ITrackableEvent appCrashedEvent = PromptViewEvent.USER_DECLINED_CRITICAL_FEEDBACK;
+        final IEvent appCrashedEvent = PromptViewEvent.USER_DECLINED_CRITICAL_FEEDBACK;
 
         // Assert
         Assert.assertEquals(
@@ -39,7 +39,7 @@ public class PromptViewEventTest extends BaseTest {
     @Test
     public void testThatUserDeclinedPositiveFeedbackEventHasCorrectTrackingKey() {
         // Arrange
-        final ITrackableEvent appCrashedEvent = PromptViewEvent.USER_DECLINED_POSITIVE_FEEDBACK;
+        final IEvent appCrashedEvent = PromptViewEvent.USER_DECLINED_POSITIVE_FEEDBACK;
 
         // Assert
         Assert.assertEquals(
@@ -51,7 +51,7 @@ public class PromptViewEventTest extends BaseTest {
     @Test
     public void testThatUserGaveCriticalFeedbackEventHasCorrectTrackingKey() {
         // Arrange
-        final ITrackableEvent appCrashedEvent = PromptViewEvent.USER_GAVE_CRITICAL_FEEDBACK;
+        final IEvent appCrashedEvent = PromptViewEvent.USER_GAVE_CRITICAL_FEEDBACK;
 
         // Assert
         Assert.assertEquals(
@@ -63,7 +63,7 @@ public class PromptViewEventTest extends BaseTest {
     @Test
     public void testThatUserGavePositiveFeedbackEventHasCorrectTrackingKey() {
         // Arrange
-        final ITrackableEvent appCrashedEvent = PromptViewEvent.USER_GAVE_POSITIVE_FEEDBACK;
+        final IEvent appCrashedEvent = PromptViewEvent.USER_GAVE_POSITIVE_FEEDBACK;
 
         // Assert
         Assert.assertEquals(

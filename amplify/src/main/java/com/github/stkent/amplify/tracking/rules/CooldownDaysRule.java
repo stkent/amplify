@@ -18,12 +18,12 @@ package com.github.stkent.amplify.tracking.rules;
 
 import android.support.annotation.NonNull;
 
-import com.github.stkent.amplify.tracking.interfaces.IPromptRule;
+import com.github.stkent.amplify.tracking.interfaces.IEventBasedRule;
 import com.github.stkent.amplify.utils.time.SystemTimeUtil;
 
 import java.util.concurrent.TimeUnit;
 
-public final class CooldownDaysRule implements IPromptRule<Long> {
+public final class CooldownDaysRule implements IEventBasedRule<Long> {
 
     private final long cooldownPeriodDays;
 

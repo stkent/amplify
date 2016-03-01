@@ -28,20 +28,20 @@ import com.github.stkent.amplify.tracking.rules.VersionChangedRule;
 import com.github.stkent.amplify.tracking.interfaces.IAppLevelEventRulesManager;
 import com.github.stkent.amplify.tracking.interfaces.IAppEventTimeProvider;
 import com.github.stkent.amplify.tracking.interfaces.IEnvironmentCapabilitiesProvider;
-import com.github.stkent.amplify.tracking.interfaces.IPrerequisite;
-import com.github.stkent.amplify.tracking.interfaces.IPrerequisitesManager;
-import com.github.stkent.amplify.tracking.interfaces.IPromptRule;
-import com.github.stkent.amplify.tracking.interfaces.ITrackableEvent;
-import com.github.stkent.amplify.tracking.interfaces.ITrackableEventListener;
+import com.github.stkent.amplify.tracking.interfaces.IEnvironmentBasedRule;
+import com.github.stkent.amplify.tracking.interfaces.IEnvironmentBasedRulesManager;
+import com.github.stkent.amplify.tracking.interfaces.IEventBasedRule;
+import com.github.stkent.amplify.tracking.interfaces.IEvent;
+import com.github.stkent.amplify.tracking.interfaces.IEventListener;
 import com.github.stkent.amplify.tracking.managers.AppLevelEventRulesManager;
-import com.github.stkent.amplify.tracking.managers.PrerequisitesManager;
+import com.github.stkent.amplify.tracking.managers.EnvironmentBasedRulesManager;
 import com.github.stkent.amplify.tracking.managers.FirstEventTimeRulesManager;
 import com.github.stkent.amplify.tracking.managers.LastEventTimeRulesManager;
 import com.github.stkent.amplify.tracking.managers.LastEventVersionRulesManager;
 import com.github.stkent.amplify.tracking.managers.TotalEventCountRulesManager;
 import com.github.stkent.amplify.views.PromptView;
 
-public final class Amplify implements ITrackableEventListener {
+public final class Amplify implements IEventListener {
 
     private static final int DEFAULT_USER_GAVE_POSITIVE_FEEDBACK_MAXIMUM_COUNT = 1;
     private static final int DEFAULT_LAST_UPDATE_TIME_COOLDOWN_DAYS = 7;
@@ -51,8 +51,8 @@ public final class Amplify implements ITrackableEventListener {
 
     private final IAppVersionNameProvider appVersionNameProvider;
 
-    private final IAppLevelEventRulesManager appappLevelEventRulesManager;
-    private final IPrerequisitesManager prerequisitesManager;
+    private final IAppLevelEventRulesManager appLevelEventRulesManager;
+    private final IEnvironmentBasedRulesManager environmentBasedRulesManager;
     private final FirstEventTimeRulesManager firstEventTimeRulesManager;
     private final LastEventTimeRulesManager lastEventTimeRulesManager;
     private final LastEventVersionRulesManager lastEventVersionRulesManager;
@@ -89,11 +89,11 @@ public final class Amplify implements ITrackableEventListener {
 
         this.appVersionNameProvider = new AppVersionNameProvider(appContext);
 
-        this.appappLevelEventRulesManager
+        this.appLevelEventRulesManager
                 = new AppLevelEventRulesManager(appContext, appEventTimeProvider, logger);
 
-        this.prerequisitesManager
-                = new PrerequisitesManager(environmentCapabilitiesProvider, logger);
+        this.environmentBasedRulesManager
+                = new EnvironmentBasedRulesManager(environmentCapabilitiesProvider, logger);
 
         this.firstEventTimeRulesManager = new FirstEventTimeRulesManager(appContext, logger);
         this.lastEventTimeRulesManager = new LastEventTimeRulesManager(appContext, logger);
@@ -103,11 +103,16 @@ public final class Amplify implements ITrackableEventListener {
         this.logger = logger;
     }
 
-    // configuration methods
+    // Configuration methods
 
-    public Amplify configureWithDefaults() {
+    public Amplify setFeedbackEmailAddress(@NonNull final String feedbackEmailAddress) {
+        this.feedbackEmail = feedbackEmailAddress;
+        return this;
+    }
+
+    public Amplify configureWithDefaultBehavior() {
         return this
-                .addPrerequisite(new GooglePlayStorePrerequisite())
+                .addEnvironmentBasedRule(new GooglePlayStorePrerequisite())
                 .setLastUpdateTimeCooldownDays(DEFAULT_LAST_UPDATE_TIME_COOLDOWN_DAYS)
                 .setLastCrashTimeCooldownDays(DEFAULT_LAST_CRASH_TIME_COOLDOWN_DAYS)
                 .addTotalEventCountRule(PromptViewEvent.USER_GAVE_POSITIVE_FEEDBACK,
@@ -120,10 +125,59 @@ public final class Amplify implements ITrackableEventListener {
                         new VersionChangedRule(appVersionNameProvider));
     }
 
-    public Amplify addPrerequisite(@NonNull final IPrerequisite prerequisite) {
-        prerequisitesManager.addPrerequisite(prerequisite);
+    public Amplify addEnvironmentBasedRule(@NonNull final IEnvironmentBasedRule rule) {
+        environmentBasedRulesManager.addEnvironmentBasedRule(rule);
         return this;
     }
+
+    public Amplify setInstallTimeCooldownDays(final int cooldownPeriodDays) {
+        appLevelEventRulesManager.setInstallTimeCooldownDays(cooldownPeriodDays);
+        return this;
+    }
+
+    public Amplify setLastUpdateTimeCooldownDays(final int cooldownPeriodDays) {
+        appLevelEventRulesManager.setLastUpdateTimeCooldownDays(cooldownPeriodDays);
+        return this;
+    }
+
+    public Amplify setLastCrashTimeCooldownDays(final int cooldownPeriodDays) {
+        appLevelEventRulesManager.setLastCrashTimeCooldownDays(cooldownPeriodDays);
+        return this;
+    }
+
+    public Amplify addTotalEventCountRule(
+            @NonNull final IEvent event,
+            @NonNull final IEventBasedRule<Integer> rule) {
+
+        totalEventCountRulesManager.addEventBasedRule(event, rule);
+        return this;
+    }
+
+    public Amplify addFirstEventTimeRule(
+            @NonNull final IEvent event,
+            @NonNull final IEventBasedRule<Long> rule) {
+
+        firstEventTimeRulesManager.addEventBasedRule(event, rule);
+        return this;
+    }
+
+    public Amplify addLastEventTimeRule(
+            @NonNull final IEvent event,
+            @NonNull final IEventBasedRule<Long> rule) {
+
+        lastEventTimeRulesManager.addEventBasedRule(event, rule);
+        return this;
+    }
+
+    public Amplify addLastEventVersionRule(
+            @NonNull final IEvent event,
+            @NonNull final IEventBasedRule<String> rule) {
+
+        lastEventVersionRulesManager.addEventBasedRule(event, rule);
+        return this;
+    }
+
+    // Debug configuration methods
 
     public Amplify setLogLevel(@NonNull final Logger.LogLevel logLevel) {
         logger.setLogLevel(logLevel);
@@ -140,62 +194,10 @@ public final class Amplify implements ITrackableEventListener {
         return this;
     }
 
-    public Amplify setFeedbackEmail(String feedbackEmail) {
-        this.feedbackEmail = feedbackEmail;
-        return this;
-    }
-
-    public Amplify setInstallTimeCooldownDays(final int cooldownPeriodDays) {
-        appappLevelEventRulesManager.setInstallTimeCooldownDays(cooldownPeriodDays);
-        return this;
-    }
-
-    public Amplify setLastUpdateTimeCooldownDays(final int cooldownPeriodDays) {
-        appappLevelEventRulesManager.setLastUpdateTimeCooldownDays(cooldownPeriodDays);
-        return this;
-    }
-
-    public Amplify setLastCrashTimeCooldownDays(final int cooldownPeriodDays) {
-        appappLevelEventRulesManager.setLastCrashTimeCooldownDays(cooldownPeriodDays);
-        return this;
-    }
-
-    public Amplify addTotalEventCountRule(
-            @NonNull final ITrackableEvent event,
-            @NonNull final IPromptRule<Integer> promptRule) {
-
-        totalEventCountRulesManager.addEventPromptRule(event, promptRule);
-        return this;
-    }
-
-    public Amplify addFirstEventTimeRule(
-            @NonNull final ITrackableEvent event,
-            @NonNull final IPromptRule<Long> promptRule) {
-
-        firstEventTimeRulesManager.addEventPromptRule(event, promptRule);
-        return this;
-    }
-
-    public Amplify addLastEventTimeRule(
-            @NonNull final ITrackableEvent event,
-            @NonNull final IPromptRule<Long> promptRule) {
-
-        lastEventTimeRulesManager.addEventPromptRule(event, promptRule);
-        return this;
-    }
-
-    public Amplify addLastEventVersionRule(
-            @NonNull final ITrackableEvent event,
-            @NonNull final IPromptRule<String> promptRule) {
-
-        lastEventVersionRulesManager.addEventPromptRule(event, promptRule);
-        return this;
-    }
-
-    // update methods
+    // Update methods
 
     @Override
-    public void notifyEventTriggered(@NonNull final ITrackableEvent event) {
+    public void notifyEventTriggered(@NonNull final IEvent event) {
         logger.d("Triggered Event: " + event);
         totalEventCountRulesManager.notifyEventTriggered(event);
         firstEventTimeRulesManager.notifyEventTriggered(event);
@@ -203,19 +205,19 @@ public final class Amplify implements ITrackableEventListener {
         lastEventVersionRulesManager.notifyEventTriggered(event);
     }
 
-    // query methods
+    // Query methods
 
     public void promptIfReady(@NonNull final PromptView promptView) {
         if (shouldAskForRating()) {
-            promptView.injectDependencies(this, logger, packageName, feedbackEmail);
+            promptView.injectDependencies(this, feedbackEmail, packageName, logger);
             promptView.show();
         }
     }
 
     public boolean shouldAskForRating() {
         return alwaysShow | (
-                  appappLevelEventRulesManager.shouldAllowFeedbackPrompt()
-                & prerequisitesManager.shouldAllowFeedbackPrompt()
+                  appLevelEventRulesManager.shouldAllowFeedbackPrompt()
+                & environmentBasedRulesManager.shouldAllowFeedbackPrompt()
                 & totalEventCountRulesManager.shouldAllowFeedbackPrompt()
                 & firstEventTimeRulesManager.shouldAllowFeedbackPrompt()
                 & lastEventTimeRulesManager.shouldAllowFeedbackPrompt()

@@ -17,11 +17,11 @@
 package com.github.stkent.amplify.tracking.interfaces;
 
 /**
- * An abstract representation of a class capable of tracking a single dimension of multiple events
- * that also provides a simple interface to query the state of all tracked events simultaneously.
+ * An abstract representation of a class capable of tracking multiple events, evaluating the same
+ * prompt timing rule for each tracked event, and returning an aggregated result of this evaluation.
  *
  * @param <T> the type of the values tracked by this manager (Integer, Long or String)
  */
-public interface ITrackableEventsManager<T> extends IEventTracker<T>, ITopLevelRules {
+public interface IEventsManager<T> extends IEventTracker<T>, IRulesManager {
 
 }

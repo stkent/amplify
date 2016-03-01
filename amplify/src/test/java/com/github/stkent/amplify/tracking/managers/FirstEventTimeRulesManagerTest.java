@@ -22,8 +22,8 @@ import android.support.annotation.NonNull;
 import com.github.stkent.amplify.ILogger;
 import com.github.stkent.amplify.helpers.BaseTest;
 import com.github.stkent.amplify.helpers.FakeSettings;
-import com.github.stkent.amplify.tracking.interfaces.IPromptRule;
-import com.github.stkent.amplify.tracking.interfaces.ITrackableEvent;
+import com.github.stkent.amplify.tracking.interfaces.IEventBasedRule;
+import com.github.stkent.amplify.tracking.interfaces.IEvent;
 
 import org.junit.Test;
 import org.mockito.Mock;
@@ -43,9 +43,9 @@ public class FirstEventTimeRulesManagerTest extends BaseTest {
     @Mock
     private ILogger mockLogger;
     @Mock
-    private ITrackableEvent mockTrackableEvent;
+    private IEvent mockEvent;
     @Mock
-    private IPromptRule<Long> mockEventCheck;
+    private IEventBasedRule<Long> mockEventBasedRule;
 
     @Override
     public void localSetUp() {
@@ -55,18 +55,18 @@ public class FirstEventTimeRulesManagerTest extends BaseTest {
                 mockLogger,
                 fakeSettings);
 
-        when(mockTrackableEvent.getTrackingKey()).thenReturn(DEFAULT_MOCK_EVENT_TRACKING_KEY);
-        firstEventTimeRulesManager.addEventPromptRule(mockTrackableEvent, mockEventCheck);
+        when(mockEvent.getTrackingKey()).thenReturn(DEFAULT_MOCK_EVENT_TRACKING_KEY);
+        firstEventTimeRulesManager.addEventBasedRule(mockEvent, mockEventBasedRule);
     }
 
     @Test
     public void testThatEventsAreSavedWithCorrectTrackingKey() {
         // Arrange
-        final String expectedTrackingKey = getExpectedTrackingKeyForEvent(mockTrackableEvent);
+        final String expectedTrackingKey = getExpectedTrackingKeyForEvent(mockEvent);
         assert fakeSettings.readTrackingValue(expectedTrackingKey) == null;
 
         // Act
-        firstEventTimeRulesManager.notifyEventTriggered(mockTrackableEvent);
+        firstEventTimeRulesManager.notifyEventTriggered(mockEvent);
 
         // Assert
         final Long trackedEventTime = fakeSettings.readTrackingValue(expectedTrackingKey);
@@ -85,7 +85,7 @@ public class FirstEventTimeRulesManagerTest extends BaseTest {
         triggerEventAtTime(fakeEventTime);
 
         // Assert
-        final Long trackedEventTime = fakeSettings.readTrackingValue(getExpectedTrackingKeyForEvent(mockTrackableEvent));
+        final Long trackedEventTime = fakeSettings.readTrackingValue(getExpectedTrackingKeyForEvent(mockEvent));
 
         assertEquals(
                 "The correct time should have been recorded for this event",
@@ -106,7 +106,7 @@ public class FirstEventTimeRulesManagerTest extends BaseTest {
         triggerEventAtTime(fakeEventTimeLater);
 
         // Assert
-        final Long trackedEventTime = fakeSettings.readTrackingValue(getExpectedTrackingKeyForEvent(mockTrackableEvent));
+        final Long trackedEventTime = fakeSettings.readTrackingValue(getExpectedTrackingKeyForEvent(mockEvent));
 
         assertEquals(
                 "The correct (earliest) time should have been recorded for this event",
@@ -114,13 +114,13 @@ public class FirstEventTimeRulesManagerTest extends BaseTest {
                 trackedEventTime);
     }
 
-    private String getExpectedTrackingKeyForEvent(@NonNull final ITrackableEvent event) {
+    private String getExpectedTrackingKeyForEvent(@NonNull final IEvent event) {
         return "AMPLIFY_" + event.getTrackingKey() + "_FIRSTEVENTTIMESMANAGER";
     }
 
     private void triggerEventAtTime(final long time) {
         setFakeCurrentTimeMillis(time);
-        firstEventTimeRulesManager.notifyEventTriggered(mockTrackableEvent);
+        firstEventTimeRulesManager.notifyEventTriggered(mockEvent);
     }
 
 }

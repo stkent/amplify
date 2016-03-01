@@ -22,16 +22,16 @@ import android.support.annotation.Nullable;
 
 import com.github.stkent.amplify.ILogger;
 import com.github.stkent.amplify.tracking.AmplifyExceptionHandler;
+import com.github.stkent.amplify.tracking.interfaces.IEventBasedRule;
 import com.github.stkent.amplify.tracking.rules.CooldownDaysRule;
 import com.github.stkent.amplify.tracking.interfaces.IAppLevelEventRulesManager;
 import com.github.stkent.amplify.tracking.interfaces.IAppEventTimeProvider;
-import com.github.stkent.amplify.tracking.interfaces.IPromptRule;
-import com.github.stkent.amplify.tracking.interfaces.ITrackableEvent;
-import com.github.stkent.amplify.tracking.interfaces.ITrackableEventsManager;
+import com.github.stkent.amplify.tracking.interfaces.IEvent;
+import com.github.stkent.amplify.tracking.interfaces.IEventsManager;
 
 public class AppLevelEventRulesManager implements IAppLevelEventRulesManager {
 
-    private static final ITrackableEvent APP_CRASHED = new ITrackableEvent() {
+    private static final IEvent APP_CRASHED = new IEvent() {
         @NonNull
         @Override
         public String getTrackingKey() {
@@ -49,13 +49,13 @@ public class AppLevelEventRulesManager implements IAppLevelEventRulesManager {
     private final IAppEventTimeProvider appEventTimeProvider;
 
     @Nullable
-    private IPromptRule<Long> installTimeRule;
+    private IEventBasedRule<Long> installTimeRule;
 
     @Nullable
-    private IPromptRule<Long> lastUpdateTimeRule;
+    private IEventBasedRule<Long> lastUpdateTimeRule;
 
     @Nullable
-    private ITrackableEventsManager<Long> lastEventTimeRulesManager;
+    private IEventsManager<Long> lastEventTimeRulesManager;
 
     public AppLevelEventRulesManager(
             @NonNull final Context appContext,
@@ -123,9 +123,11 @@ public class AppLevelEventRulesManager implements IAppLevelEventRulesManager {
     @Override
     public void setLastCrashTimeCooldownDays(final int cooldownPeriodDays) {
         lastEventTimeRulesManager = new LastEventTimeRulesManager(appContext, logger);
-        lastEventTimeRulesManager.addEventPromptRule(APP_CRASHED, new CooldownDaysRule(cooldownPeriodDays));
+        lastEventTimeRulesManager.addEventBasedRule(
+                APP_CRASHED, new CooldownDaysRule(cooldownPeriodDays));
 
-        final Thread.UncaughtExceptionHandler defaultUncaughtExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
+        final Thread.UncaughtExceptionHandler defaultUncaughtExceptionHandler
+                = Thread.getDefaultUncaughtExceptionHandler();
 
         if (!(defaultUncaughtExceptionHandler instanceof AmplifyExceptionHandler)) {
             Thread.setDefaultUncaughtExceptionHandler(
@@ -137,9 +139,6 @@ public class AppLevelEventRulesManager implements IAppLevelEventRulesManager {
     public void notifyOfCrash() {
         if (lastEventTimeRulesManager != null) {
             lastEventTimeRulesManager.notifyEventTriggered(APP_CRASHED);
-        } else {
-            throw new IllegalStateException(
-                    "The last crash time manager must be initialized before any app crashes can be reported.");
         }
     }
 

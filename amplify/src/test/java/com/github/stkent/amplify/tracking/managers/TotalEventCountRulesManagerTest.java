@@ -22,8 +22,8 @@ import android.support.annotation.NonNull;
 import com.github.stkent.amplify.ILogger;
 import com.github.stkent.amplify.helpers.BaseTest;
 import com.github.stkent.amplify.helpers.FakeSettings;
-import com.github.stkent.amplify.tracking.interfaces.IPromptRule;
-import com.github.stkent.amplify.tracking.interfaces.ITrackableEvent;
+import com.github.stkent.amplify.tracking.interfaces.IEventBasedRule;
+import com.github.stkent.amplify.tracking.interfaces.IEvent;
 
 import org.junit.Test;
 import org.mockito.Mock;
@@ -41,9 +41,9 @@ public class TotalEventCountRulesManagerTest extends BaseTest {
     @Mock
     private ILogger mockLogger;
     @Mock
-    private ITrackableEvent mockTrackableEvent;
+    private IEvent mockEvent;
     @Mock
-    private IPromptRule<Integer> mockEventCheck;
+    private IEventBasedRule<Integer> mockRule;
 
     @Override
     public void localSetUp() {
@@ -53,18 +53,18 @@ public class TotalEventCountRulesManagerTest extends BaseTest {
                 mockLogger,
                 fakeSettings);
 
-        when(mockTrackableEvent.getTrackingKey()).thenReturn(DEFAULT_MOCK_EVENT_TRACKING_KEY);
-        totalEventCountRulesManager.addEventPromptRule(mockTrackableEvent, mockEventCheck);
+        when(mockEvent.getTrackingKey()).thenReturn(DEFAULT_MOCK_EVENT_TRACKING_KEY);
+        totalEventCountRulesManager.addEventBasedRule(mockEvent, mockRule);
     }
 
     @Test
     public void testThatEventsAreSavedWithCorrectTrackingKey() {
         // Arrange
-        final String expectedTrackingKey = getExpectedTrackingKeyForEvent(mockTrackableEvent);
+        final String expectedTrackingKey = getExpectedTrackingKeyForEvent(mockEvent);
         assert fakeSettings.readTrackingValue(expectedTrackingKey) == null;
 
         // Act
-        totalEventCountRulesManager.notifyEventTriggered(mockTrackableEvent);
+        totalEventCountRulesManager.notifyEventTriggered(mockEvent);
 
         // Assert
         final Integer trackedTotalEventCount = fakeSettings.readTrackingValue(expectedTrackingKey);
@@ -78,18 +78,18 @@ public class TotalEventCountRulesManagerTest extends BaseTest {
     @Test
     public void testThatCorrectNumberOfEventsIsRecorded() {
         // Arrange
-        totalEventCountRulesManager.addEventPromptRule(mockTrackableEvent, mockEventCheck);
+        totalEventCountRulesManager.addEventBasedRule(mockEvent, mockRule);
 
         final Integer expectedEventCount = 7;
         assert expectedEventCount > 0;
 
         // Act
         for (int i = 0; i < expectedEventCount; i++) {
-            totalEventCountRulesManager.notifyEventTriggered(mockTrackableEvent);
+            totalEventCountRulesManager.notifyEventTriggered(mockEvent);
         }
 
         // Assert
-        final Integer actualEventCount = fakeSettings.readTrackingValue(getExpectedTrackingKeyForEvent(mockTrackableEvent));
+        final Integer actualEventCount = fakeSettings.readTrackingValue(getExpectedTrackingKeyForEvent(mockEvent));
 
         assertEquals(
                 "The correct number of events should have been recorded",
@@ -97,7 +97,7 @@ public class TotalEventCountRulesManagerTest extends BaseTest {
                 actualEventCount);
     }
 
-    private String getExpectedTrackingKeyForEvent(@NonNull final ITrackableEvent event) {
+    private String getExpectedTrackingKeyForEvent(@NonNull final IEvent event) {
         return "AMPLIFY_" + event.getTrackingKey() + "_TOTALEVENTCOUNTSMANAGER";
     }
 

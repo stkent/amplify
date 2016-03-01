@@ -19,13 +19,13 @@ package com.github.stkent.amplify.tracking.prerequisites;
 import android.support.annotation.NonNull;
 
 import com.github.stkent.amplify.tracking.interfaces.IEnvironmentCapabilitiesProvider;
-import com.github.stkent.amplify.tracking.interfaces.IPrerequisite;
+import com.github.stkent.amplify.tracking.interfaces.IEnvironmentBasedRule;
 
 /**
- * An implementation of {@code IPrerequisite} that verifies whether or not
+ * An implementation of {@code IEnvironmentBasedRule} that verifies whether or not
  * the Google Play Store is installed on the current device.
  */
-public class GooglePlayStorePrerequisite implements IPrerequisite {
+public class GooglePlayStorePrerequisite implements IEnvironmentBasedRule {
 
     @Override
     public boolean shouldAllowFeedbackPrompt(@NonNull final IEnvironmentCapabilitiesProvider environmentInfoProvider) {
