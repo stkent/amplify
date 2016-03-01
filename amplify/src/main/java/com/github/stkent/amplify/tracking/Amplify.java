@@ -105,7 +105,7 @@ public final class Amplify implements ITrackableEventListener {
 
     // configuration methods
 
-    public Amplify configureWithDefaults() {
+    public Amplify configureWithDefaultBehavior() {
         return this
                 .addPrerequisite(new GooglePlayStorePrerequisite())
                 .setLastUpdateTimeCooldownDays(DEFAULT_LAST_UPDATE_TIME_COOLDOWN_DAYS)

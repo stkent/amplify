@@ -14,7 +14,7 @@ public class ExampleApplication extends Application {
         super.onCreate();
 
         Amplify.get(this)
-                .configureWithDefaults()
+                .configureWithDefaultBehavior()
                 .setLogLevel(DEBUG ? Logger.LogLevel.DEBUG : Logger.LogLevel.NONE);
     }
 
