@@ -22,7 +22,7 @@ import android.support.annotation.NonNull;
 import com.github.stkent.amplify.ILogger;
 import com.github.stkent.amplify.Logger;
 import com.github.stkent.amplify.tracking.interfaces.IAppVersionNameProvider;
-import com.github.stkent.amplify.tracking.prerequisites.GooglePlayStorePrerequisite;
+import com.github.stkent.amplify.tracking.prerequisites.GooglePlayStoreRule;
 import com.github.stkent.amplify.tracking.rules.MaximumCountRule;
 import com.github.stkent.amplify.tracking.rules.VersionChangedRule;
 import com.github.stkent.amplify.tracking.interfaces.IAppLevelEventRulesManager;
@@ -110,9 +110,9 @@ public final class Amplify implements IEventListener {
         return this;
     }
 
-    public Amplify configureWithDefaultBehavior() {
+    public Amplify applyAllDefaultRules() {
         return this
-                .addEnvironmentBasedRule(new GooglePlayStorePrerequisite())
+                .addEnvironmentBasedRule(new GooglePlayStoreRule())
                 .setLastUpdateTimeCooldownDays(DEFAULT_LAST_UPDATE_TIME_COOLDOWN_DAYS)
                 .setLastCrashTimeCooldownDays(DEFAULT_LAST_CRASH_TIME_COOLDOWN_DAYS)
                 .addTotalEventCountRule(PromptViewEvent.USER_GAVE_POSITIVE_FEEDBACK,

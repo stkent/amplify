@@ -18,7 +18,7 @@ package com.github.stkent.amplify.tracking.rules;
 
 import com.github.stkent.amplify.helpers.BaseTest;
 import com.github.stkent.amplify.tracking.interfaces.IEnvironmentCapabilitiesProvider;
-import com.github.stkent.amplify.tracking.prerequisites.GooglePlayStorePrerequisite;
+import com.github.stkent.amplify.tracking.prerequisites.GooglePlayStoreRule;
 
 import org.junit.Test;
 import org.mockito.Mock;
@@ -27,16 +27,16 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
-public class GooglePlayStorePrerequisiteTest extends BaseTest {
+public class GooglePlayStoreRuleTest extends BaseTest {
 
-    private GooglePlayStorePrerequisite googlePlayStorePrerequisite;
+    private GooglePlayStoreRule googlePlayStoreRule;
 
     @Mock
     private IEnvironmentCapabilitiesProvider mockEnvironmentInfoProvider;
 
     @Override
     public void localSetUp() {
-        googlePlayStorePrerequisite = new GooglePlayStorePrerequisite();
+        googlePlayStoreRule = new GooglePlayStoreRule();
     }
 
     @Test
@@ -46,7 +46,7 @@ public class GooglePlayStorePrerequisiteTest extends BaseTest {
 
         // Act
         final boolean isEnvironmentCheckMet =
-                googlePlayStorePrerequisite.shouldAllowFeedbackPrompt(mockEnvironmentInfoProvider);
+                googlePlayStoreRule.shouldAllowFeedbackPrompt(mockEnvironmentInfoProvider);
 
         // Assert
         assertTrue(
@@ -61,7 +61,7 @@ public class GooglePlayStorePrerequisiteTest extends BaseTest {
 
         // Act
         final boolean isEnvironmentCheckMet =
-                googlePlayStorePrerequisite.shouldAllowFeedbackPrompt(mockEnvironmentInfoProvider);
+                googlePlayStoreRule.shouldAllowFeedbackPrompt(mockEnvironmentInfoProvider);
 
         // Assert
         assertFalse(

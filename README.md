@@ -79,7 +79,9 @@ public class ExampleApplication extends Application {
     public void onCreate() {
         super.onCreate();
         
-        Amplify.get(this).configureWithDefaults();
+        Amplify.get(this)
+               .setFeedbackEmailAddress("someone@example.com")
+               .applyAllDefaultRules();
     }
     
 }
@@ -110,7 +112,7 @@ That's it! The prompt timing calculator will evaluate the default rules each tim
 
 ## Default Behavior
 
-The convenience method `configureWithDefaults` initializes the prompt timing calculator with a collection of sensible default rules. With these rules applied, we only prompt for feedback when:
+The convenience method `applyAllDefaultRules` initializes the prompt timing calculator with a collection of sensible default rules. With these rules applied, we only prompt for feedback when:
 
 - **The Google Play Store is available.** If a user's device won't allow them to provide feedback, we never ask for it. (We believe that a high enough percentage of devices are capable of sending email that a similar check for the availability of an email application is unnecessary.)
 
@@ -155,7 +157,7 @@ These (pseudo-)events are associated with application-level actions.
 
 ### Default Event Checks
 
-When calling `configureWithDefaults` on the `Amplify` instance, the following checks are registered by default:
+When calling `applyAllDefaultRules` on the `Amplify` instance, the following checks are registered by default:
 
 - the `GooglePlayStoreIsAvailableCheck`, which will block all prompts if the Google Play Store is not available.
 
