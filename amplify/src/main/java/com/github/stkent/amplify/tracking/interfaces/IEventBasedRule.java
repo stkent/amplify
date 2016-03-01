@@ -28,7 +28,7 @@ public interface IEventBasedRule<T> {
     /**
      * Call to determine whether this rule allows us to prompt the user for feedback at this time.
      *
-     * @param cachedEventValue the current value associated with the tracked event this check is
+     * @param cachedEventValue the current value associated with the tracked event this rule is
      *        associated with
      * @return true if this rule is satisfied and should allow the feedback prompt to be shown;
      *         false otherwise
@@ -36,9 +36,9 @@ public interface IEventBasedRule<T> {
     boolean shouldAllowFeedbackPrompt(@NonNull final T cachedEventValue);
 
     /**
-     * @param cachedEventValue the current value associated with the tracked event this check is
-     *        applied to
-     * @return a string representation of the current check status; primarily used for debugging
+     * @param cachedEventValue the current value associated with the tracked event this rule is
+     *        associated with
+     * @return a string representation of the current rule status; primarily used for debugging
      */
     @NonNull
     String getStatusString(@NonNull final T cachedEventValue);

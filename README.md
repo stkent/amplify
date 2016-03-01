@@ -182,7 +182,7 @@ You will also need to provide an event check when calling any of these methods. 
 
 ### Custom Event Checks
 
-A new custom event check can be created by implementing the `IEventCheck<T>` interface. The generic type `T` must be one of: `Integer`, `Long`, or `String`. The type you select will depend on which tracked event aspect (time, count, etc.) you wish to apply this check to.
+A new custom event check can be created by implementing the `IEventBasedRule<T>` interface. The generic type `T` must be one of: `Integer`, `Long`, or `String`. The type you select will depend on which tracked event aspect (time, count, etc.) you wish to apply this check to.
 
 ## Prompt UI
 

@@ -47,7 +47,7 @@ public class LastEventVersionRulesManagerTest extends BaseTest {
     @Mock
     private IEvent mockEvent;
     @Mock
-    private IEventBasedRule<String> mockEventCheck;
+    private IEventBasedRule<String> mockEventBasedRule;
 
     @Override
     public void localSetUp() {
@@ -59,7 +59,7 @@ public class LastEventVersionRulesManagerTest extends BaseTest {
                 mockAppVersionNameProvider);
 
         when(mockEvent.getTrackingKey()).thenReturn(DEFAULT_MOCK_EVENT_TRACKING_KEY);
-        lastEventVersionRulesManager.addEventBasedRule(mockEvent, mockEventCheck);
+        lastEventVersionRulesManager.addEventBasedRule(mockEvent, mockEventBasedRule);
     }
 
     @Test

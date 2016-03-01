@@ -92,16 +92,16 @@ public abstract class BaseEventsManager<T> implements IEventsManager<T> {
 
     @Override
     public boolean shouldAllowFeedbackPrompt() {
-        for (final Map.Entry<IEvent, List<IEventBasedRule<T>>> eventCheckSet : internalMap.entrySet()) {
-            final IEvent event = eventCheckSet.getKey();
+        for (final Map.Entry<IEvent, List<IEventBasedRule<T>>> eventBasedRules : internalMap.entrySet()) {
+            final IEvent event = eventBasedRules.getKey();
 
-            for (final IEventBasedRule<T> eventCheck : eventCheckSet.getValue()) {
+            for (final IEventBasedRule<T> eventBasedRule : eventBasedRules.getValue()) {
                 final T cachedEventValue = getCachedTrackingValue(event);
 
-                logger.d(getTrackingKey(event) + ": " + eventCheck.getStatusString(cachedEventValue));
+                logger.d(getTrackingKey(event) + ": " + eventBasedRule.getStatusString(cachedEventValue));
 
-                if (!eventCheck.shouldAllowFeedbackPrompt(cachedEventValue)) {
-                    logger.d("Blocking feedback for event: " + event + " because of check: " + eventCheck);
+                if (!eventBasedRule.shouldAllowFeedbackPrompt(cachedEventValue)) {
+                    logger.d("Blocking feedback for event: " + event + " because of check: " + eventBasedRule);
                     return false;
                 }
             }

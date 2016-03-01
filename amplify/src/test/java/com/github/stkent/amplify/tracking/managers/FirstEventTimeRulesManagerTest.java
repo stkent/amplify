@@ -45,7 +45,7 @@ public class FirstEventTimeRulesManagerTest extends BaseTest {
     @Mock
     private IEvent mockEvent;
     @Mock
-    private IEventBasedRule<Long> mockEventCheck;
+    private IEventBasedRule<Long> mockEventBasedRule;
 
     @Override
     public void localSetUp() {
@@ -56,7 +56,7 @@ public class FirstEventTimeRulesManagerTest extends BaseTest {
                 fakeSettings);
 
         when(mockEvent.getTrackingKey()).thenReturn(DEFAULT_MOCK_EVENT_TRACKING_KEY);
-        firstEventTimeRulesManager.addEventBasedRule(mockEvent, mockEventCheck);
+        firstEventTimeRulesManager.addEventBasedRule(mockEvent, mockEventBasedRule);
     }
 
     @Test
