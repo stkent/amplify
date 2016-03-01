@@ -29,11 +29,11 @@ public interface IEventTracker<T> {
      * Register a new trackableEvent/check pair for tracking.
      *
      * @param trackableEvent the trackableEvent to be tracked
-     * @param promptRule the new check to be registered, based on this trackableEvent
+     * @param rule the new rule to be registered, based on the corresponding ITrackableEvent
      */
-    void addEventPromptRule(
+    void addEventBasedRule(
             @NonNull final ITrackableEvent trackableEvent,
-            @NonNull final IPromptRule<T> promptRule);
+            @NonNull final IEventBasedRule<T> rule);
 
     /**
      * Call this method to notify an implementing class that an trackableEvent occurred.

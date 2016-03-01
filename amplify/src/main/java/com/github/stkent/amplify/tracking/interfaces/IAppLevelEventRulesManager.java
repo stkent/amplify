@@ -19,7 +19,7 @@ package com.github.stkent.amplify.tracking.interfaces;
 /**
  * An abstract representation of a class that manages application-level rules.
  */
-public interface IAppLevelEventRulesManager extends ITopLevelRules {
+public interface IAppLevelEventRulesManager extends ITopLevelRule {
 
     /**
      * Set a new cooldown duration for application install.

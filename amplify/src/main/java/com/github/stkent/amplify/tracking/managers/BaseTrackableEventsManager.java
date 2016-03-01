@@ -19,8 +19,8 @@ package com.github.stkent.amplify.tracking.managers;
 import android.support.annotation.NonNull;
 
 import com.github.stkent.amplify.ILogger;
+import com.github.stkent.amplify.tracking.interfaces.IEventBasedRule;
 import com.github.stkent.amplify.tracking.interfaces.ITrackableEvent;
-import com.github.stkent.amplify.tracking.interfaces.IPromptRule;
 import com.github.stkent.amplify.tracking.interfaces.ITrackableEventsManager;
 import com.github.stkent.amplify.tracking.interfaces.ISettings;
 
@@ -35,7 +35,7 @@ public abstract class BaseTrackableEventsManager<T> implements ITrackableEventsM
 
     private final ILogger logger;
     private final ISettings<T> settings;
-    private final ConcurrentHashMap<ITrackableEvent, List<IPromptRule<T>>> internalMap;
+    private final ConcurrentHashMap<ITrackableEvent, List<IEventBasedRule<T>>> internalMap;
 
     /**
      * @return a key that uniquely identifies this event tracker within the embedding application
@@ -58,12 +58,12 @@ public abstract class BaseTrackableEventsManager<T> implements ITrackableEventsM
     }
 
     @Override
-    public void addEventPromptRule(@NonNull final ITrackableEvent trackableEvent, @NonNull final IPromptRule<T> promptRule) {
+    public void addEventBasedRule(@NonNull final ITrackableEvent trackableEvent, @NonNull final IEventBasedRule<T> rule) {
         if (!isTrackingEvent(trackableEvent)) {
-            internalMap.put(trackableEvent, new ArrayList<IPromptRule<T>>());
+            internalMap.put(trackableEvent, new ArrayList<IEventBasedRule<T>>());
         }
 
-        internalMap.get(trackableEvent).add(promptRule);
+        internalMap.get(trackableEvent).add(rule);
 
         logger.d(internalMap.get(trackableEvent).toString());
     }
@@ -76,7 +76,7 @@ public abstract class BaseTrackableEventsManager<T> implements ITrackableEventsM
             final T updatedTrackingValue = getUpdatedTrackingValue(cachedTrackingValue);
 
             if (!updatedTrackingValue.equals(cachedTrackingValue)) {
-                logger.d(IPromptRule.class.getSimpleName()
+                logger.d(IEventBasedRule.class.getSimpleName()
                         + " updating event value from: "
                         + cachedTrackingValue
                         + " to "
@@ -90,10 +90,10 @@ public abstract class BaseTrackableEventsManager<T> implements ITrackableEventsM
     @Override
     public boolean shouldAllowFeedbackPrompt() {
 
-        for (final Map.Entry<ITrackableEvent, List<IPromptRule<T>>> eventCheckSet : internalMap.entrySet()) {
+        for (final Map.Entry<ITrackableEvent, List<IEventBasedRule<T>>> eventCheckSet : internalMap.entrySet()) {
             final ITrackableEvent event = eventCheckSet.getKey();
 
-            for (final IPromptRule<T> eventCheck : eventCheckSet.getValue()) {
+            for (final IEventBasedRule<T> eventCheck : eventCheckSet.getValue()) {
                 final T cachedEventValue = getCachedTrackingValue(event);
 
                 logger.d(getTrackingKey(event) + ": " + eventCheck.getStatusString(cachedEventValue));

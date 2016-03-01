@@ -24,7 +24,7 @@ import com.github.stkent.amplify.ILogger;
 import com.github.stkent.amplify.helpers.BaseTest;
 import com.github.stkent.amplify.helpers.FakeSettings;
 import com.github.stkent.amplify.tracking.interfaces.IAppVersionNameProvider;
-import com.github.stkent.amplify.tracking.interfaces.IPromptRule;
+import com.github.stkent.amplify.tracking.interfaces.IEventBasedRule;
 import com.github.stkent.amplify.tracking.interfaces.ITrackableEvent;
 
 import org.junit.Test;
@@ -47,7 +47,7 @@ public class LastEventVersionRulesManagerTest extends BaseTest {
     @Mock
     private ITrackableEvent mockTrackableEvent;
     @Mock
-    private IPromptRule<String> mockEventCheck;
+    private IEventBasedRule<String> mockEventCheck;
 
     @Override
     public void localSetUp() {
@@ -59,7 +59,7 @@ public class LastEventVersionRulesManagerTest extends BaseTest {
                 mockAppVersionNameProvider);
 
         when(mockTrackableEvent.getTrackingKey()).thenReturn(DEFAULT_MOCK_EVENT_TRACKING_KEY);
-        lastEventVersionRulesManager.addEventPromptRule(mockTrackableEvent, mockEventCheck);
+        lastEventVersionRulesManager.addEventBasedRule(mockTrackableEvent, mockEventCheck);
     }
 
     @Test

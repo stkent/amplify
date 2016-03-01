@@ -22,7 +22,7 @@ package com.github.stkent.amplify.tracking.interfaces;
  *
  * Typically used to wrap and aggregate the states of several other rules.
  */
-public interface ITopLevelRules {
+public interface ITopLevelRule {
 
     /**
      * @return true if this rule is satisfied and should allow the feedback prompt to be shown;

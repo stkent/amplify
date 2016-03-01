@@ -22,7 +22,7 @@ import android.support.annotation.NonNull;
 import com.github.stkent.amplify.ILogger;
 import com.github.stkent.amplify.helpers.BaseTest;
 import com.github.stkent.amplify.helpers.FakeSettings;
-import com.github.stkent.amplify.tracking.interfaces.IPromptRule;
+import com.github.stkent.amplify.tracking.interfaces.IEventBasedRule;
 import com.github.stkent.amplify.tracking.interfaces.ITrackableEvent;
 
 import org.junit.Test;
@@ -43,7 +43,7 @@ public class TotalEventCountRulesManagerTest extends BaseTest {
     @Mock
     private ITrackableEvent mockTrackableEvent;
     @Mock
-    private IPromptRule<Integer> mockEventCheck;
+    private IEventBasedRule<Integer> mockRule;
 
     @Override
     public void localSetUp() {
@@ -54,7 +54,7 @@ public class TotalEventCountRulesManagerTest extends BaseTest {
                 fakeSettings);
 
         when(mockTrackableEvent.getTrackingKey()).thenReturn(DEFAULT_MOCK_EVENT_TRACKING_KEY);
-        totalEventCountRulesManager.addEventPromptRule(mockTrackableEvent, mockEventCheck);
+        totalEventCountRulesManager.addEventBasedRule(mockTrackableEvent, mockRule);
     }
 
     @Test
@@ -78,7 +78,7 @@ public class TotalEventCountRulesManagerTest extends BaseTest {
     @Test
     public void testThatCorrectNumberOfEventsIsRecorded() {
         // Arrange
-        totalEventCountRulesManager.addEventPromptRule(mockTrackableEvent, mockEventCheck);
+        totalEventCountRulesManager.addEventBasedRule(mockTrackableEvent, mockRule);
 
         final Integer expectedEventCount = 7;
         assert expectedEventCount > 0;

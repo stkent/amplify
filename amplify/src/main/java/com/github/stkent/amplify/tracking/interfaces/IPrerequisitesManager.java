@@ -22,7 +22,7 @@ import android.support.annotation.NonNull;
  * An abstract representation of a class that manages prompt prerequisites. These are high-level
  * requirements that must be satisfied before any event-level rules will be evaluated.
  */
-public interface IPrerequisitesManager extends ITopLevelRules {
+public interface IPrerequisitesManager extends ITopLevelRule {
 
     /**
      * Register a new prompt prerequisite.

@@ -30,7 +30,7 @@ import com.github.stkent.amplify.tracking.interfaces.IAppEventTimeProvider;
 import com.github.stkent.amplify.tracking.interfaces.IEnvironmentCapabilitiesProvider;
 import com.github.stkent.amplify.tracking.interfaces.IPrerequisite;
 import com.github.stkent.amplify.tracking.interfaces.IPrerequisitesManager;
-import com.github.stkent.amplify.tracking.interfaces.IPromptRule;
+import com.github.stkent.amplify.tracking.interfaces.IEventBasedRule;
 import com.github.stkent.amplify.tracking.interfaces.ITrackableEvent;
 import com.github.stkent.amplify.tracking.interfaces.ITrackableEventListener;
 import com.github.stkent.amplify.tracking.managers.AppLevelEventRulesManager;
@@ -162,33 +162,33 @@ public final class Amplify implements ITrackableEventListener {
 
     public Amplify addTotalEventCountRule(
             @NonNull final ITrackableEvent event,
-            @NonNull final IPromptRule<Integer> promptRule) {
+            @NonNull final IEventBasedRule<Integer> eventBasedRule) {
 
-        totalEventCountRulesManager.addEventPromptRule(event, promptRule);
+        totalEventCountRulesManager.addEventBasedRule(event, eventBasedRule);
         return this;
     }
 
     public Amplify addFirstEventTimeRule(
             @NonNull final ITrackableEvent event,
-            @NonNull final IPromptRule<Long> promptRule) {
+            @NonNull final IEventBasedRule<Long> eventBasedRule) {
 
-        firstEventTimeRulesManager.addEventPromptRule(event, promptRule);
+        firstEventTimeRulesManager.addEventBasedRule(event, eventBasedRule);
         return this;
     }
 
     public Amplify addLastEventTimeRule(
             @NonNull final ITrackableEvent event,
-            @NonNull final IPromptRule<Long> promptRule) {
+            @NonNull final IEventBasedRule<Long> eventBasedRule) {
 
-        lastEventTimeRulesManager.addEventPromptRule(event, promptRule);
+        lastEventTimeRulesManager.addEventBasedRule(event, eventBasedRule);
         return this;
     }
 
     public Amplify addLastEventVersionRule(
             @NonNull final ITrackableEvent event,
-            @NonNull final IPromptRule<String> promptRule) {
+            @NonNull final IEventBasedRule<String> eventBasedRule) {
 
-        lastEventVersionRulesManager.addEventPromptRule(event, promptRule);
+        lastEventVersionRulesManager.addEventBasedRule(event, eventBasedRule);
         return this;
     }
 

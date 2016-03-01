@@ -24,7 +24,7 @@ import android.support.annotation.NonNull;
  *
  * @param <T> the type of the value tracked by this event (Integer, Long or String)
  */
-public interface IPromptRule<T> {
+public interface IEventBasedRule<T> {
 
     /**
      * Call this method to determine whether or not to prompt the user for feedback at this time.
