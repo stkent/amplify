@@ -56,9 +56,8 @@ public final class EnvironmentCapabilitiesProvider implements IEnvironmentCapabi
 
     @Override
     public boolean isGooglePlayStoreInstalled() {
-        // Note that we do not need to worry about differentiating between
-        // Android Market and the Google Play Store because the Android Market
-        // is only available on phones running 3.0-3.2.
+        // Note that we do not need to worry about differentiating between Android Market and the
+        // Google Play Store because the Android Market is only available on phones running 3.0-3.2.
         return isAppInstalled(GOOGLE_PLAY_STORE_PACKAGE_NAME);
     }
 
