@@ -19,18 +19,18 @@ package com.github.stkent.amplify.tracking.interfaces;
 import android.support.annotation.NonNull;
 
 /**
- * An abstract representation of an event-dependent check that must be satisfied whenever we prompt
- * the user for feedback.
+ * An abstract representation of a prompt timing rule that depends on a tracked event.
  *
  * @param <T> the type of the value tracked by this event (Integer, Long or String)
  */
 public interface IEventBasedRule<T> {
 
     /**
-     * Call this method to determine whether or not to prompt the user for feedback at this time.
+     * Call to determine whether this rule allows us to prompt the user for feedback at this time.
+     *
      * @param cachedEventValue the current value associated with the tracked event this check is
      *        associated with
-     * @return true if this check is satisfied and should allow the feedback prompt to be shown;
+     * @return true if this rule is satisfied and should allow the feedback prompt to be shown;
      *         false otherwise
      */
     boolean shouldAllowFeedbackPrompt(@NonNull final T cachedEventValue);

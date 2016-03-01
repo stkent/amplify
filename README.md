@@ -26,7 +26,7 @@ _amplify_ focuses on helping Android developers prompt their users for feedback 
 
 - **Maximum impact.** When users indicate they are willing to provide feedback, we direct them to the highest-impact outlet:
 
-    - Users with favorable feedback are asked to leave a quick rating or review in the Google Play Store, improving the rating and discoverability of your app. All of these ratings and reviews reflect genuine user experiences - _amplify_ just makes it easier for happy customers to choose to share their appreciation.
+    - Users with positive feedback are asked to leave a quick rating or review in the Google Play Store, improving the rating and discoverability of your app. All of these ratings and reviews reflect genuine user experiences - _amplify_ just makes it easier for happy customers to choose to share their appreciation.
 
     - Users with critical feedback are instead asked to send a more detailed email that will automatically include pertinent app and device information. This gives you an opportunity to engage these users in a more meaningful dialogue, allowing you to better understand and accommodate their feedback.
 
@@ -38,7 +38,7 @@ _amplify_ focuses on helping Android developers prompt their users for feedback 
 
 _amplify_ consists of two main components:
 
-- A **feedback timing calculator**, represented by the `Amplify` class, responsible for:
+- A **prompt timing calculator**, represented by the `Amplify` class, responsible for:
 
     - verifying that the current device provides the required feedback channels (the Google Play Store + at least one email application);
 
@@ -54,7 +54,7 @@ _amplify_ consists of two main components:
 
 <br />
 
-These components are designed to complement each other, and combining them as described in the [Getting Started](#getting-started) section below is the easiest way to integrate _amplify_ into your application. However, it is perfectly possible to couple the feedback timing calculator with your own prompt flow and UI if desired. (This could be useful if you have highly-customized requirements for the prompt flow.) If you pursue this route, we would encourage you to ensure your prompting mechanism still reflects the principles outlined in the [Introduction](#introduction).
+These components are designed to complement each other, and combining them as described in the [Getting Started](#getting-started) section below is the easiest way to integrate _amplify_ into your application. However, it is perfectly possible to couple the prompt timing calculator with your own prompt flow and UI if desired. (This could be useful if you have highly-customized requirements for the prompt flow.) If you pursue this route, we would encourage you to ensure your prompting mechanism still reflects the principles outlined in the [Introduction](#introduction).
 
 # Getting Started
 
@@ -106,11 +106,11 @@ PromptView promptView = (PromptView) findViewById(R.id.prompt_view);
 Amplify.get(context).promptIfReady(promptView);
 ```
 
-That's it! The feedback timing calculator will evaluate the default rules each time `promptIfReady` is called, and instruct the `PromptView` to automatically update its visibility based on the result. If the user chooses to interact with the prompt, the sequence of questions asked is also automatically managed by the `PromptView`.
+That's it! The prompt timing calculator will evaluate the default rules each time `promptIfReady` is called, and instruct the `PromptView` to automatically update its visibility based on the result. If the user chooses to interact with the prompt, the sequence of questions asked is also automatically managed by the `PromptView`.
 
 ## Default Behavior
 
-The convenience method `configureWithDefaults` initializes the feedback timing calculator with a collection of sensible default rules. With these rules applied, we only prompt for feedback when:
+The convenience method `configureWithDefaults` initializes the prompt timing calculator with a collection of sensible default rules. With these rules applied, we only prompt for feedback when:
 
 - **The Google Play Store is available.** If a user's device won't allow them to provide feedback, we never ask for it. (We believe that a high enough percentage of devices are capable of sending email that a similar check for the availability of an email application is unnecessary.)
 
@@ -118,7 +118,7 @@ The convenience method `configureWithDefaults` initializes the feedback timing c
 
 - **It has been more than a week since your app last crashed.** There are much better ways to collect detailed crash information than via user feedback. We're big fans of [Fabric/Crashlytics](https://fabric.io/kits/android/crashlytics). To save users from spending time reporting crashes that we are already aware of and fixing, we avoid asking for feedback right after a crash has occurred.
 
-- **The user has never previously provided favorable feedback.** We strive to constantly improve our apps' functionality and stability. If we do our job right, there's little to be gained by prompting satisfied users for feedback repeatedly. If we decide to significantly overhaul our app (either internally or externally), we will reset the feedback timing calculator to capture feedback from our entire userbase again. // TODO: link to a section that explains how to do this.
+- **The user has never previously provided positive feedback.** We strive to constantly improve our apps' functionality and stability. If we do our job right, there's little to be gained by prompting satisfied users for feedback repeatedly. If we decide to significantly overhaul our app (either internally or externally), we will reset the prompt timing calculator to capture feedback from our entire userbase again. // TODO: link to a section that explains how to do this.
 
 - **The user has not provided critical feedback for this version of the application already.** Since it's unlikely that we'll be able to address any critical feedback received without releasing an update, we won't re-prompt a user who already provided insights into the current version of the app.
 
@@ -140,7 +140,7 @@ The `GooglePlayStoreIsAvailableCheck` check will pass if the Google Play Store i
 
 These events are associated with user actions related to the feedback prompt UI.
 
-- User agreed to provide favorable feedback
+- User agreed to provide positive feedback
 - User agreed to provide critical feedback
 - User declined to provide positive feedback
 - User declined to provide critical feedback

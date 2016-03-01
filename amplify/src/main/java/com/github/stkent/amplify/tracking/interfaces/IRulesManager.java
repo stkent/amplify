@@ -17,13 +17,13 @@
 package com.github.stkent.amplify.tracking.interfaces;
 
 /**
- * An abstract representation of a class used to aggregate the states of several other rules.
+ * An abstract representation of a class used to aggregate the states of several other prompt timing
+ * rules.
  */
 public interface IRulesManager {
 
     /**
-     * @return true if this rule is satisfied and should allow the feedback prompt to be shown;
-     *         false otherwise
+     * @return true if all managed prompt timing rules are satisfied; false otherwise
      */
     boolean shouldAllowFeedbackPrompt();
 

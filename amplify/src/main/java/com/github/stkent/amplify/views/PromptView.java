@@ -33,7 +33,7 @@ import com.github.stkent.amplify.R;
 import com.github.stkent.amplify.tracking.AppFeedbackDataProvider;
 import com.github.stkent.amplify.tracking.PromptViewEvent;
 import com.github.stkent.amplify.tracking.EnvironmentCapabilitiesProvider;
-import com.github.stkent.amplify.tracking.interfaces.ITrackableEventListener;
+import com.github.stkent.amplify.tracking.interfaces.IEventListener;
 import com.github.stkent.amplify.utils.FeedbackUtil;
 import com.github.stkent.amplify.utils.PlayStoreUtil;
 import com.github.stkent.amplify.utils.StringUtils;
@@ -57,7 +57,7 @@ public class PromptView extends FrameLayout {
             = new LayoutParams(MATCH_PARENT, MATCH_PARENT);
 
     @Nullable
-    private ITrackableEventListener trackableEventListener;
+    private IEventListener trackableEventListener;
 
     @Nullable
     private ILogger logger;
@@ -71,8 +71,8 @@ public class PromptView extends FrameLayout {
     private String positiveFeedbackTitle;
     private String criticalFeedbackQuestion;
     private String criticalFeedbackTitle;
-    private String packageName;
     private String feedbackEmail;
+    private String packageName;
 
     @LayoutRes
     private int questionLayoutResId;
@@ -99,11 +99,13 @@ public class PromptView extends FrameLayout {
         init(context, attrs);
     }
 
-    public void injectDependencies(@NonNull final ITrackableEventListener trackableEventListener,
-                                   @NonNull final ILogger logger,
-                                   @NonNull final String packageName,
-                                   @NonNull final String feedbackEmail) {
-        this.trackableEventListener = trackableEventListener;
+    public void injectDependencies(
+            @NonNull final IEventListener eventListener,
+            @NonNull final String feedbackEmail,
+            @NonNull final String packageName,
+            @NonNull final ILogger logger) {
+
+        this.trackableEventListener = eventListener;
         this.logger = logger;
         this.packageName = packageName;
         this.feedbackEmail = feedbackEmail;

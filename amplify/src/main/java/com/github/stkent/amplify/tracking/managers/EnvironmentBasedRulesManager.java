@@ -19,39 +19,41 @@ package com.github.stkent.amplify.tracking.managers;
 import android.support.annotation.NonNull;
 
 import com.github.stkent.amplify.ILogger;
+import com.github.stkent.amplify.tracking.interfaces.IEnvironmentBasedRule;
 import com.github.stkent.amplify.tracking.interfaces.IEnvironmentCapabilitiesProvider;
-import com.github.stkent.amplify.tracking.interfaces.IPrerequisite;
-import com.github.stkent.amplify.tracking.interfaces.IPrerequisitesManager;
+import com.github.stkent.amplify.tracking.interfaces.IEnvironmentBasedRulesManager;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class PrerequisitesManager implements IPrerequisitesManager {
+public class EnvironmentBasedRulesManager implements IEnvironmentBasedRulesManager {
+
+    @NonNull
+    private final IEnvironmentCapabilitiesProvider environmentCapabilitiesProvider;
 
     @NonNull
     private final ILogger logger;
 
     @NonNull
-    private final IEnvironmentCapabilitiesProvider environmentInfoProvider;
+    private final List<IEnvironmentBasedRule> environmentChecks = new ArrayList<>();
 
-    @NonNull
-    private final List<IPrerequisite> environmentChecks = new ArrayList<>();
+    public EnvironmentBasedRulesManager(
+            @NonNull final IEnvironmentCapabilitiesProvider environmentCapabilitiesProvider,
+            @NonNull final ILogger logger) {
 
-    public PrerequisitesManager(@NonNull final IEnvironmentCapabilitiesProvider environmentInfoProvider,
-                                      @NonNull final ILogger logger) {
-        this.environmentInfoProvider = environmentInfoProvider;
+        this.environmentCapabilitiesProvider = environmentCapabilitiesProvider;
         this.logger = logger;
     }
 
     @Override
-    public void addPrerequisite(@NonNull final IPrerequisite prerequisite) {
-        environmentChecks.add(prerequisite);
+    public void addEnvironmentBasedRule(@NonNull final IEnvironmentBasedRule rule) {
+        environmentChecks.add(rule);
     }
 
     @Override
     public boolean shouldAllowFeedbackPrompt() {
-        for (final IPrerequisite environmentCheck : environmentChecks) {
-            if (!environmentCheck.shouldAllowFeedbackPrompt(environmentInfoProvider)) {
+        for (final IEnvironmentBasedRule environmentCheck : environmentChecks) {
+            if (!environmentCheck.shouldAllowFeedbackPrompt(environmentCapabilitiesProvider)) {
                 logger.d("Blocking feedback because of environment check: " + environmentCheck);
                 return false;
             }

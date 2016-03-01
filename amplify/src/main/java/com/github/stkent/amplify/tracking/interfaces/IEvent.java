@@ -19,20 +19,15 @@ package com.github.stkent.amplify.tracking.interfaces;
 import android.support.annotation.NonNull;
 
 /**
- * An abstract representation of an event-independent check that must be satisfied whenever we
- * prompt the user for feedback.
+ * An abstract representation of an event whose occurrences can be tracked across launches of the
+ * embedding application.
  */
-public interface IPrerequisite {
+public interface IEvent {
 
     /**
-     * Call this method to determine whether or not to prompt the user for feedback at this time.
-     *
-     * @param environmentInfoProvider provides relevant information about the environment in which
-     *        the embedding application is currently running
-     * @return true if this check is satisfied and should allow the feedback prompt to be shown;
-     *         false otherwise
+     * @return a key that uniquely identifies this event within the embedding application
      */
-    boolean shouldAllowFeedbackPrompt(
-            @NonNull final IEnvironmentCapabilitiesProvider environmentInfoProvider);
+    @NonNull
+    String getTrackingKey();
 
 }

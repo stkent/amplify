@@ -16,19 +16,12 @@
  */
 package com.github.stkent.amplify.tracking.interfaces;
 
-import android.support.annotation.NonNull;
-
 /**
- * An abstract representation of a class that manages prompt prerequisites. These are high-level
- * requirements that must be satisfied before any event-level rules will be evaluated.
+ * An abstract representation of a class capable of tracking multiple events, evaluating the same
+ * prompt timing rule for each tracked event, and returning an aggregated result of this evaluation.
+ *
+ * @param <T> the type of the values tracked by this manager (Integer, Long or String)
  */
-public interface IPrerequisitesManager extends IRulesManager {
-
-    /**
-     * Register a new prompt prerequisite.
-     *
-     * @param prerequisite the prompt prerequisite to be registered
-     */
-    void addPrerequisite(@NonNull final IPrerequisite prerequisite);
+public interface IEventsManager<T> extends IEventTracker<T>, IRulesManager {
 
 }

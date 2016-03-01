@@ -19,17 +19,16 @@ package com.github.stkent.amplify.tracking.interfaces;
 import android.support.annotation.NonNull;
 
 /**
- * An abstract representation of a consuming class that is interested in receiving notifications
- * when trackable events occur.
+ * An abstract representation of a class that manages multiple environment based prompt timing
+ * rules.
  */
-public interface ITrackableEventListener {
+public interface IEnvironmentBasedRulesManager extends IRulesManager {
 
     /**
-     * Call this method to notify an implementing class that a trackable event occurred.
+     * Add a new environment-based prompt timing rule to this manager.
      *
-     * @param event the event that occurred
+     * @param rule the prompt timing rule to be added
      */
-    // TODO: handle event not being registered with the tracker
-    void notifyEventTriggered(@NonNull final ITrackableEvent event);
+    void addEnvironmentBasedRule(@NonNull final IEnvironmentBasedRule rule);
 
 }
