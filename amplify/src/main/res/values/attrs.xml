@@ -19,27 +19,32 @@
 -->
 <resources>
 
-    <declare-styleable name="PromptView">
-        <!-- layouts -->
-        <attr name="amplify_question_layout" format="reference" />
-        <attr name="amplify_confirmation_layout" format="reference" />
-
-        <!-- questions -->
-        <attr name="amplify_user_opinion_question" format="string" />
-        <attr name="amplify_positive_feedback_question" format="string" />
-        <attr name="amplify_critical_feedback_question" format="string" />
-
-        <attr name="amplify_user_opinion_title" format="string" />
-        <attr name="amplify_positive_feedback_title" format="string" />
-        <attr name="amplify_critical_feedback_title" format="string" />
-
+    <declare-styleable name="BasePromptView">
+        <attr format="string" name="default_prompt_view_user_opinion_question_title" />
+        <attr format="string" name="default_prompt_view_user_opinion_question_subtitle" />
+        <attr format="string" name="default_prompt_view_user_opinion_question_positive_button_label" />
+        <attr format="string" name="default_prompt_view_user_opinion_question_negative_button_label" />
+        <attr format="string" name="default_prompt_view_positive_feedback_question_title" />
+        <attr format="string" name="default_prompt_view_positive_feedback_question_subtitle" />
+        <attr format="string" name="default_prompt_view_positive_feedback_question_positive_button_label" />
+        <attr format="string" name="default_prompt_view_positive_feedback_question_negative_button_label" />
+        <attr format="string" name="default_prompt_view_critical_feedback_question_title" />
+        <attr format="string" name="default_prompt_view_critical_feedback_question_subtitle" />
+        <attr format="string" name="default_prompt_view_critical_feedback_question_positive_button_label" />
+        <attr format="string" name="default_prompt_view_critical_feedback_question_negative_button_label" />
     </declare-styleable>
 
-    <!--<attr name="amp_view_background_color" format="color" />-->
-    <!--<attr name="amp_view_button_background_color" format="color" />-->
-    <!--<attr name="amp_view_button_background_color_pressed" format="color" />-->
-    <!--<attr name="amp_view_title_text_color" format="color" />-->
-    <!--<attr name="amp_view_button_text_color" format="color" />-->
-    <!--<attr name="amp_view_button_text_color_pressed" format="color" />-->
+    <declare-styleable name="DefaultLayoutPromptView">
+        <attr format="color"  name="default_prompt_view_foreground_color" />
+        <attr format="color"  name="default_prompt_view_background_color" />
+        <attr format="color"  name="default_prompt_view_title_text_color" />
+        <attr format="color"  name="default_prompt_view_subtitle_text_color" />
+        <attr format="color"  name="default_prompt_view_positive_button_text_color" />
+        <attr format="color"  name="default_prompt_view_positive_button_background_color" />
+        <attr format="color"  name="default_prompt_view_positive_button_border_color" />
+        <attr format="color"  name="default_prompt_view_negative_button_text_color" />
+        <attr format="color"  name="default_prompt_view_negative_button_background_color" />
+        <attr format="color"  name="default_prompt_view_negative_button_border_color" />
+    </declare-styleable>
 
 </resources>

@@ -18,20 +18,21 @@ package com.github.stkent.amplify.tracking;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.github.stkent.amplify.ILogger;
 import com.github.stkent.amplify.Logger;
-import com.github.stkent.amplify.tracking.interfaces.IAppVersionNameProvider;
-import com.github.stkent.amplify.tracking.prerequisites.GooglePlayStoreRule;
-import com.github.stkent.amplify.tracking.rules.MaximumCountRule;
-import com.github.stkent.amplify.tracking.rules.VersionChangedRule;
-import com.github.stkent.amplify.tracking.interfaces.IAppLevelEventRulesManager;
+import com.github.stkent.amplify.prompt.PromptPresenter;
+import com.github.stkent.amplify.prompt.interfaces.IPromptPresenter;
+import com.github.stkent.amplify.prompt.interfaces.IPromptView;
 import com.github.stkent.amplify.tracking.interfaces.IAppEventTimeProvider;
-import com.github.stkent.amplify.tracking.interfaces.IEnvironmentCapabilitiesProvider;
+import com.github.stkent.amplify.tracking.interfaces.IAppLevelEventRulesManager;
+import com.github.stkent.amplify.tracking.interfaces.IAppVersionNameProvider;
 import com.github.stkent.amplify.tracking.interfaces.IEnvironmentBasedRule;
 import com.github.stkent.amplify.tracking.interfaces.IEnvironmentBasedRulesManager;
-import com.github.stkent.amplify.tracking.interfaces.IEventBasedRule;
+import com.github.stkent.amplify.tracking.interfaces.IEnvironmentCapabilitiesProvider;
 import com.github.stkent.amplify.tracking.interfaces.IEvent;
+import com.github.stkent.amplify.tracking.interfaces.IEventBasedRule;
 import com.github.stkent.amplify.tracking.interfaces.IEventListener;
 import com.github.stkent.amplify.tracking.managers.AppLevelEventRulesManager;
 import com.github.stkent.amplify.tracking.managers.EnvironmentBasedRulesManager;
@@ -39,7 +40,9 @@ import com.github.stkent.amplify.tracking.managers.FirstEventTimeRulesManager;
 import com.github.stkent.amplify.tracking.managers.LastEventTimeRulesManager;
 import com.github.stkent.amplify.tracking.managers.LastEventVersionRulesManager;
 import com.github.stkent.amplify.tracking.managers.TotalEventCountRulesManager;
-import com.github.stkent.amplify.views.PromptView;
+import com.github.stkent.amplify.tracking.prerequisites.GooglePlayStoreRule;
+import com.github.stkent.amplify.tracking.rules.MaximumCountRule;
+import com.github.stkent.amplify.tracking.rules.VersionChangedRule;
 
 public final class Amplify implements IEventListener {
 
@@ -207,10 +210,32 @@ public final class Amplify implements IEventListener {
 
     // Query methods
 
-    public void promptIfReady(@NonNull final PromptView promptView) {
+    public void promptIfReady(@NonNull final IPromptView promptView) {
+        promptIfReady(promptView, null);
+    }
+
+    public void promptIfReady(
+            @NonNull final IPromptView promptView,
+            @Nullable final IEventListener<PromptViewEvent> promptViewEventListener) {
+
+        final IEventListener<PromptViewEvent> combinedEventListener
+                = new IEventListener<PromptViewEvent>() {
+
+            @Override
+            public void notifyEventTriggered(@NonNull final PromptViewEvent event) {
+                Amplify.this.notifyEventTriggered(event);
+
+                if (promptViewEventListener != null) {
+                    promptViewEventListener.notifyEventTriggered(event);
+                }
+            }
+        };
+
         if (shouldAskForRating()) {
-            promptView.injectDependencies(this, feedbackEmail, packageName, logger);
-            promptView.show();
+            final IPromptPresenter promptPresenter
+                    = new PromptPresenter(combinedEventListener, promptView);
+
+            promptPresenter.start();
         }
     }
 
