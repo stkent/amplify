@@ -86,8 +86,8 @@ abstract class BasePromptView extends FrameLayout implements IPromptView {
         this(context, null);
     }
 
-    public BasePromptView(final Context context, @Nullable final AttributeSet attrs) {
-        this(context, attrs, 0);
+    public BasePromptView(final Context context, @Nullable final AttributeSet attributeSet) {
+        this(context, attributeSet, 0);
     }
 
     public BasePromptView(

@@ -36,17 +36,20 @@ public final class DefaultLayoutPromptView extends BasePromptView implements IPr
         this(context, null);
     }
 
-    public DefaultLayoutPromptView(final Context context, final @Nullable AttributeSet attrs) {
-        this(context, attrs, 0);
+    public DefaultLayoutPromptView(
+            final Context context,
+            final @Nullable AttributeSet attributeSet) {
+
+        this(context, attributeSet, 0);
     }
 
     public DefaultLayoutPromptView(
             final Context context,
-            @Nullable final AttributeSet attrs,
+            @Nullable final AttributeSet attributeSet,
             final int defStyleAttr) {
 
-        super(context, attrs, defStyleAttr);
-        initializeDefaultLayoutConfig(attrs);
+        super(context, attributeSet, defStyleAttr);
+        initializeDefaultLayoutConfig(attributeSet);
     }
 
     public void applyConfig(

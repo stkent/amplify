@@ -32,16 +32,19 @@ public class CustomLayoutPromptView extends BasePromptView implements IPromptVie
         this(context, null);
     }
 
-    public CustomLayoutPromptView(final Context context, @Nullable final AttributeSet attrs) {
-        this(context, attrs, 0);
+    public CustomLayoutPromptView(
+            final Context context,
+            @Nullable final AttributeSet attributeSet) {
+
+        this(context, attributeSet, 0);
     }
 
     public CustomLayoutPromptView(
             final Context context,
-            @Nullable final AttributeSet attrs,
+            @Nullable final AttributeSet attributeSet,
             final int defStyleAttr) {
 
-        super(context, attrs, defStyleAttr);
+        super(context, attributeSet, defStyleAttr);
     }
 
     @NonNull
