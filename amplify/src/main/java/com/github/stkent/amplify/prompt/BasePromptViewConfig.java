@@ -20,6 +20,7 @@ import android.content.res.TypedArray;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.github.stkent.amplify.R;
 import com.github.stkent.amplify.prompt.interfaces.IQuestion;
 import com.github.stkent.amplify.prompt.interfaces.IThanks;
 
@@ -51,7 +52,47 @@ public final class BasePromptViewConfig {
     @Nullable private final String thanksSubtitle;
 
     public BasePromptViewConfig(@NonNull final TypedArray typedArray) {
-        // TODO: fill this in, and document non-recycling well!
+        userOpinionQuestionTitle = typedArray.getString(
+                R.styleable.BasePromptView_prompt_view_user_opinion_question_title);
+
+        userOpinionQuestionPositiveButtonLabel = typedArray.getString(
+                R.styleable.BasePromptView_prompt_view_user_opinion_question_title);
+
+        userOpinionQuestionNegativeButtonLabel = typedArray.getString(
+                R.styleable.BasePromptView_prompt_view_user_opinion_question_title);
+
+        positiveFeedbackQuestionTitle = typedArray.getString(
+                R.styleable.BasePromptView_prompt_view_user_opinion_question_title);
+
+        positiveFeedbackQuestionPositiveButtonLabel = typedArray.getString(
+                R.styleable.BasePromptView_prompt_view_user_opinion_question_title);
+
+        positiveFeedbackQuestionNegativeButtonLabel = typedArray.getString(
+                R.styleable.BasePromptView_prompt_view_user_opinion_question_title);
+
+        criticalFeedbackQuestionTitle = typedArray.getString(
+                R.styleable.BasePromptView_prompt_view_user_opinion_question_title);
+
+        criticalFeedbackQuestionPositiveButtonLabel = typedArray.getString(
+                R.styleable.BasePromptView_prompt_view_user_opinion_question_title);
+
+        criticalFeedbackQuestionNegativeButtonLabel = typedArray.getString(
+                R.styleable.BasePromptView_prompt_view_user_opinion_question_title);
+
+        thanksTitle = typedArray.getString(
+                R.styleable.BasePromptView_prompt_view_user_opinion_question_title);
+
+        userOpinionQuestionSubtitle = typedArray.getString(
+                R.styleable.BasePromptView_prompt_view_user_opinion_question_title);
+
+        positiveFeedbackQuestionSubtitle = typedArray.getString(
+                R.styleable.BasePromptView_prompt_view_user_opinion_question_title);
+
+        criticalFeedbackQuestionSubtitle = typedArray.getString(
+                R.styleable.BasePromptView_prompt_view_user_opinion_question_title);
+
+        thanksSubtitle = typedArray.getString(
+                R.styleable.BasePromptView_prompt_view_user_opinion_question_title);
     }
 
     private BasePromptViewConfig(
