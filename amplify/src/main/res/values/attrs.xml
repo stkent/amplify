@@ -20,31 +20,31 @@
 <resources>
 
     <declare-styleable name="BasePromptView">
-        <attr format="string" name="default_prompt_view_user_opinion_question_title" />
-        <attr format="string" name="default_prompt_view_user_opinion_question_subtitle" />
-        <attr format="string" name="default_prompt_view_user_opinion_question_positive_button_label" />
-        <attr format="string" name="default_prompt_view_user_opinion_question_negative_button_label" />
-        <attr format="string" name="default_prompt_view_positive_feedback_question_title" />
-        <attr format="string" name="default_prompt_view_positive_feedback_question_subtitle" />
-        <attr format="string" name="default_prompt_view_positive_feedback_question_positive_button_label" />
-        <attr format="string" name="default_prompt_view_positive_feedback_question_negative_button_label" />
-        <attr format="string" name="default_prompt_view_critical_feedback_question_title" />
-        <attr format="string" name="default_prompt_view_critical_feedback_question_subtitle" />
-        <attr format="string" name="default_prompt_view_critical_feedback_question_positive_button_label" />
-        <attr format="string" name="default_prompt_view_critical_feedback_question_negative_button_label" />
+        <attr format="string" name="prompt_view_user_opinion_question_title" />
+        <attr format="string" name="prompt_view_user_opinion_question_subtitle" />
+        <attr format="string" name="prompt_view_user_opinion_question_positive_button_label" />
+        <attr format="string" name="prompt_view_user_opinion_question_negative_button_label" />
+        <attr format="string" name="prompt_view_positive_feedback_question_title" />
+        <attr format="string" name="prompt_view_positive_feedback_question_subtitle" />
+        <attr format="string" name="prompt_view_positive_feedback_question_positive_button_label" />
+        <attr format="string" name="prompt_view_positive_feedback_question_negative_button_label" />
+        <attr format="string" name="prompt_view_critical_feedback_question_title" />
+        <attr format="string" name="prompt_view_critical_feedback_question_subtitle" />
+        <attr format="string" name="prompt_view_critical_feedback_question_positive_button_label" />
+        <attr format="string" name="prompt_view_critical_feedback_question_negative_button_label" />
     </declare-styleable>
 
     <declare-styleable name="DefaultLayoutPromptView">
-        <attr format="color" name="default_prompt_view_foreground_color" />
-        <attr format="color" name="default_prompt_view_background_color" />
-        <attr format="color" name="default_prompt_view_title_text_color" />
-        <attr format="color" name="default_prompt_view_subtitle_text_color" />
-        <attr format="color" name="default_prompt_view_positive_button_text_color" />
-        <attr format="color" name="default_prompt_view_positive_button_background_color" />
-        <attr format="color" name="default_prompt_view_positive_button_border_color" />
-        <attr format="color" name="default_prompt_view_negative_button_text_color" />
-        <attr format="color" name="default_prompt_view_negative_button_background_color" />
-        <attr format="color" name="default_prompt_view_negative_button_border_color" />
+        <attr format="color" name="prompt_view_foreground_color" />
+        <attr format="color" name="prompt_view_background_color" />
+        <attr format="color" name="prompt_view_title_text_color" />
+        <attr format="color" name="prompt_view_subtitle_text_color" />
+        <attr format="color" name="prompt_view_positive_button_text_color" />
+        <attr format="color" name="prompt_view_positive_button_background_color" />
+        <attr format="color" name="prompt_view_positive_button_border_color" />
+        <attr format="color" name="prompt_view_negative_button_text_color" />
+        <attr format="color" name="prompt_view_negative_button_background_color" />
+        <attr format="color" name="prompt_view_negative_button_border_color" />
     </declare-styleable>
 
 </resources>
