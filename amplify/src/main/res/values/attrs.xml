@@ -35,16 +35,16 @@
     </declare-styleable>
 
     <declare-styleable name="DefaultLayoutPromptView">
-        <attr format="color"  name="default_prompt_view_foreground_color" />
-        <attr format="color"  name="default_prompt_view_background_color" />
-        <attr format="color"  name="default_prompt_view_title_text_color" />
-        <attr format="color"  name="default_prompt_view_subtitle_text_color" />
-        <attr format="color"  name="default_prompt_view_positive_button_text_color" />
-        <attr format="color"  name="default_prompt_view_positive_button_background_color" />
-        <attr format="color"  name="default_prompt_view_positive_button_border_color" />
-        <attr format="color"  name="default_prompt_view_negative_button_text_color" />
-        <attr format="color"  name="default_prompt_view_negative_button_background_color" />
-        <attr format="color"  name="default_prompt_view_negative_button_border_color" />
+        <attr format="color" name="default_prompt_view_foreground_color" />
+        <attr format="color" name="default_prompt_view_background_color" />
+        <attr format="color" name="default_prompt_view_title_text_color" />
+        <attr format="color" name="default_prompt_view_subtitle_text_color" />
+        <attr format="color" name="default_prompt_view_positive_button_text_color" />
+        <attr format="color" name="default_prompt_view_positive_button_background_color" />
+        <attr format="color" name="default_prompt_view_positive_button_border_color" />
+        <attr format="color" name="default_prompt_view_negative_button_text_color" />
+        <attr format="color" name="default_prompt_view_negative_button_background_color" />
+        <attr format="color" name="default_prompt_view_negative_button_border_color" />
     </declare-styleable>
 
 </resources>
