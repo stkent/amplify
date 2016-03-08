@@ -23,8 +23,8 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 
+import com.github.stkent.amplify.R;
 import com.github.stkent.amplify.prompt.interfaces.IPromptView;
-import com.github.stkent.amplify.prompt.interfaces.IQuestion;
 import com.github.stkent.amplify.prompt.interfaces.IQuestionView;
 import com.github.stkent.amplify.prompt.interfaces.IThanksView;
 
@@ -86,7 +86,7 @@ public final class DefaultLayoutPromptView extends BasePromptView implements IPr
 
     private void loadConfigFromAttributeSet(final AttributeSet attrs) {
         final TypedArray typedArray = getContext().getTheme()
-                .obtainStyledAttributes(attrs, R.styleable.DefaultPromptView, 0, 0);
+                .obtainStyledAttributes(attrs, R.styleable.DefaultLayoutPromptView, 0, 0);
 
         defaultLayoutPromptViewConfig = new DefaultLayoutPromptViewConfig(typedArray);
 
