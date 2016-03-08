@@ -98,12 +98,7 @@ abstract class BasePromptView extends FrameLayout implements IPromptView {
         super(context, attributeSet, defStyleAttr);
         setLayoutParams(new ViewGroup.LayoutParams(MATCH_PARENT, WRAP_CONTENT));
 
-        final TypedArray typedArray = getContext().getTheme()
-                .obtainStyledAttributes(attributeSet, R.styleable.BasePromptView, 0, 0);
-
-        loadConfigFromTypedArray(typedArray);
-
-        typedArray.recycle();
+        initializeBaseConfig(attributeSet);
     }
 
     @Override
@@ -156,8 +151,17 @@ abstract class BasePromptView extends FrameLayout implements IPromptView {
         promptPresenter = null;
     }
 
-    private void loadConfigFromTypedArray(final TypedArray typedArray) {
+    /**
+     * Note: <code>Theme.obtainStyledAttributes</code> accepts a null <code>AttributeSet</code>; see
+     * documentation of that method for confirmation.
+     */
+    private void initializeBaseConfig(@Nullable final AttributeSet attributeSet) {
+        final TypedArray typedArray = getContext().getTheme()
+                .obtainStyledAttributes(attributeSet, R.styleable.BasePromptView, 0, 0);
+
         basePromptViewConfig = new BasePromptViewConfig(typedArray);
+
+        typedArray.recycle();
     }
 
     private void setContentView(@NonNull final View view) {

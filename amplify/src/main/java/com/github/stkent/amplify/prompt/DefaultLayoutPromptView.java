@@ -46,7 +46,7 @@ public final class DefaultLayoutPromptView extends BasePromptView implements IPr
             final int defStyleAttr) {
 
         super(context, attrs, defStyleAttr);
-        loadConfigFromAttributeSet(attrs);
+        initializeDefaultLayoutConfig(attrs);
     }
 
     public void applyConfig(
@@ -84,10 +84,15 @@ public final class DefaultLayoutPromptView extends BasePromptView implements IPr
         return null;
     }
 
-    private void loadConfigFromAttributeSet(final AttributeSet attrs) {
+    /**
+     * Note: <code>Theme.obtainStyledAttributes</code> accepts a null <code>AttributeSet</code>; see
+     * documentation of that method for confirmation.
+     */
+    private void initializeDefaultLayoutConfig(@Nullable final AttributeSet attributeSet) {
         final TypedArray typedArray = getContext().getTheme()
-                .obtainStyledAttributes(attrs, R.styleable.DefaultLayoutPromptView, 0, 0);
+                .obtainStyledAttributes(attributeSet, R.styleable.DefaultLayoutPromptView, 0, 0);
 
+        // todo: does obtainStyledAttributes ever return null? if not, can update this constructor.
         defaultLayoutPromptViewConfig = new DefaultLayoutPromptViewConfig(typedArray);
 
         typedArray.recycle();

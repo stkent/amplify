@@ -18,8 +18,10 @@ package com.github.stkent.amplify.prompt;
 
 import android.content.res.TypedArray;
 import android.support.annotation.ColorInt;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.StyleableRes;
+
+import com.github.stkent.amplify.R;
 
 // @formatter:off
 public final class DefaultLayoutPromptViewConfig {
@@ -30,6 +32,8 @@ public final class DefaultLayoutPromptViewConfig {
     @ColorInt
     private static final int DEFAULT_BACKGROUND_COLOR = 0xFFFFFFFF;
 
+    private static final int DEFAULT_GET_COLOR_VALUE_IF_UNDEFINED = Integer.MAX_VALUE;
+
     /**
      * @return <code>primaryColor</code> if it is non-null; <code>defaultColor</code> otherwise
      */
@@ -39,6 +43,21 @@ public final class DefaultLayoutPromptViewConfig {
             @ColorInt final int defaultColor) {
 
         return primaryColor != null ? primaryColor : defaultColor;
+    }
+
+    /**
+     * @return the color value for the attribute at <code>index</code>, if defined; null otherwise
+     */
+    private static Integer suppliedColorOrNull(
+            @Nullable final TypedArray typedArray,
+            @StyleableRes final int index) {
+
+        if (typedArray != null) {
+            final int color = typedArray.getColor(index, DEFAULT_GET_COLOR_VALUE_IF_UNDEFINED);
+            return color != DEFAULT_GET_COLOR_VALUE_IF_UNDEFINED ? color : null;
+        }
+
+        return null;
     }
 
     @Nullable private final Integer foregroundColor;
@@ -52,8 +71,46 @@ public final class DefaultLayoutPromptViewConfig {
     @Nullable private final Integer negativeButtonBackgroundColor;
     @Nullable private final Integer negativeButtonBorderColor;
 
-    public DefaultLayoutPromptViewConfig(@NonNull final TypedArray typedArray) {
-        // TODO: fill this in, and document non-recycling well!
+    public DefaultLayoutPromptViewConfig(@Nullable final TypedArray typedArray) {
+        foregroundColor = suppliedColorOrNull(
+                typedArray,
+                R.styleable.DefaultLayoutPromptView_prompt_view_foreground_color);
+
+        backgroundColor = suppliedColorOrNull(
+                typedArray,
+                R.styleable.DefaultLayoutPromptView_prompt_view_background_color);
+
+        titleTextColor = suppliedColorOrNull(
+                typedArray,
+                R.styleable.DefaultLayoutPromptView_prompt_view_title_text_color);
+
+        subtitleTextColor = suppliedColorOrNull(
+                typedArray,
+                R.styleable.DefaultLayoutPromptView_prompt_view_subtitle_text_color);
+
+        positiveButtonTextColor = suppliedColorOrNull(
+                typedArray,
+                R.styleable.DefaultLayoutPromptView_prompt_view_positive_button_text_color);
+
+        positiveButtonBackgroundColor = suppliedColorOrNull(
+                typedArray,
+                R.styleable.DefaultLayoutPromptView_prompt_view_positive_button_background_color);
+
+        positiveButtonBorderColor = suppliedColorOrNull(
+                typedArray,
+                R.styleable.DefaultLayoutPromptView_prompt_view_positive_button_border_color);
+
+        negativeButtonTextColor = suppliedColorOrNull(
+                typedArray,
+                R.styleable.DefaultLayoutPromptView_prompt_view_negative_button_background_color);
+
+        negativeButtonBackgroundColor = suppliedColorOrNull(
+                typedArray,
+                R.styleable.DefaultLayoutPromptView_prompt_view_negative_button_background_color);
+
+        negativeButtonBorderColor = suppliedColorOrNull(
+                typedArray,
+                R.styleable.DefaultLayoutPromptView_prompt_view_negative_button_border_color);
     }
 
     private DefaultLayoutPromptViewConfig(
