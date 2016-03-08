@@ -24,11 +24,9 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.TextView;
 
 import com.github.stkent.amplify.prompt.interfaces.IPromptPresenter;
 import com.github.stkent.amplify.prompt.interfaces.IPromptView;
-import com.github.stkent.amplify.prompt.interfaces.IQuestion;
 import com.github.stkent.amplify.prompt.interfaces.IQuestionPresenter;
 import com.github.stkent.amplify.prompt.interfaces.IQuestionView;
 import com.github.stkent.amplify.prompt.interfaces.IThanksView;
