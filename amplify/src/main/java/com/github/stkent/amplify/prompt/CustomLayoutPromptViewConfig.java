@@ -84,7 +84,7 @@ public final class CustomLayoutPromptViewConfig {
 
         final Integer criticalFeedbackQuestionLayout = suppliedLayoutOrNull(
                 typedArray,
-                R.styleable.BasePromptView_prompt_view_critical_feedback_question_negative_button_label);
+                R.styleable.CustomLayoutPromptView_prompt_view_critical_feedback_question_layout);
 
         final Integer thanksLayout = suppliedLayoutOrNull(
                 typedArray,
