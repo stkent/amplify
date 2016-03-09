@@ -36,6 +36,8 @@ public final class CustomLayoutPromptViewConfig {
             @Nullable final Integer primaryLayout,
             @Nullable final Integer defaultLayout) {
 
+        // todo: add documentation to this method to explain that we must call validate before
+        // using it to guarantee that one of either primaryLayout or defaultLayout is non-null
         return primaryLayout != null ? primaryLayout : defaultLayout;
     }
 
