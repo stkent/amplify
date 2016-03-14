@@ -18,9 +18,9 @@
 -->
 <resources>
 
-    <item name="amp_title_text_view" type="id" />
-    <item name="amp_question_text_view" type="id" />
-    <item name="amp_positive_button" type="id" />
-    <item name="amp_negative_button" type="id" />
+    <item name="amplify_title_text_view" type="id" />
+    <item name="amplify_subtitle_text_view" type="id" />
+    <item name="amplify_positive_button" type="id" />
+    <item name="amplify_negative_button" type="id" />
 
 </resources>

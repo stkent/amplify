@@ -30,7 +30,7 @@ import com.github.stkent.amplify.prompt.interfaces.IThanksView;
 
 public final class DefaultLayoutPromptView extends BasePromptView implements IPromptView {
 
-    private DefaultLayoutPromptViewConfig defaultLayoutPromptViewConfig;
+    private DefaultLayoutPromptViewConfig config;
 
     public DefaultLayoutPromptView(final Context context) {
         this(context, null);
@@ -52,33 +52,19 @@ public final class DefaultLayoutPromptView extends BasePromptView implements IPr
         initializeDefaultLayoutConfig(attributeSet);
     }
 
-    public void applyConfig(
-            @NonNull final DefaultLayoutPromptViewConfig defaultLayoutPromptViewConfig) {
-
+    public void applyConfig(@NonNull final DefaultLayoutPromptViewConfig config) {
         if (isDisplayed) {
             throw new IllegalStateException(
                     "Configuration cannot be changed after the prompt is first displayed.");
         }
 
-        this.defaultLayoutPromptViewConfig = defaultLayoutPromptViewConfig;
+        this.config = config;
     }
 
     @NonNull
     @Override
-    protected <T extends View & IQuestionView> T getUserOpinionQuestionView() {
-        return null;
-    }
-
-    @NonNull
-    @Override
-    protected <T extends View & IQuestionView> T getPositiveFeedbackQuestionView() {
-        return null;
-    }
-
-    @NonNull
-    @Override
-    protected <T extends View & IQuestionView> T getCriticalFeedbackQuestionView() {
-        return null;
+    protected <T extends View & IQuestionView> T getQuestionView() {
+        return new DefaultQuestionView(getContext(), config);
     }
 
     @NonNull
@@ -96,7 +82,7 @@ public final class DefaultLayoutPromptView extends BasePromptView implements IPr
                 .obtainStyledAttributes(attributeSet, R.styleable.DefaultLayoutPromptView, 0, 0);
 
         // todo: does obtainStyledAttributes ever return null? if not, can update this constructor.
-        defaultLayoutPromptViewConfig = new DefaultLayoutPromptViewConfig(typedArray);
+        config = new DefaultLayoutPromptViewConfig(typedArray);
 
         typedArray.recycle();
     }

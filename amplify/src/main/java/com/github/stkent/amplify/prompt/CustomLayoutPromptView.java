@@ -49,19 +49,7 @@ public class CustomLayoutPromptView extends BasePromptView implements IPromptVie
 
     @NonNull
     @Override
-    protected <T extends View & IQuestionView> T getUserOpinionQuestionView() {
-        return null;
-    }
-
-    @NonNull
-    @Override
-    protected <T extends View & IQuestionView> T getPositiveFeedbackQuestionView() {
-        return null;
-    }
-
-    @NonNull
-    @Override
-    protected <T extends View & IQuestionView> T getCriticalFeedbackQuestionView() {
+    protected <T extends View & IQuestionView> T getQuestionView() {
         return null;
     }
 

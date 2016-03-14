@@ -138,6 +138,51 @@ public final class DefaultLayoutPromptViewConfig {
     }
 
     @ColorInt
+    public int getFillColor() {
+        return getBackgroundColor();
+    }
+
+    @ColorInt
+    public int getTitleTextColor() {
+        return defaultIfNull(titleTextColor, getForegroundColor());
+    }
+
+    @ColorInt
+    public int getSubtitleTextColor() {
+        return defaultIfNull(subtitleTextColor, getForegroundColor());
+    }
+
+    @ColorInt
+    public int getPositiveButtonTextColor() {
+        return defaultIfNull(positiveButtonTextColor, getBackgroundColor());
+    }
+
+    @ColorInt
+    public int getPositiveButtonBackgroundColor() {
+        return defaultIfNull(positiveButtonBackgroundColor, getForegroundColor());
+    }
+
+    @ColorInt
+    public int getPositiveButtonBorderColor() {
+        return defaultIfNull(positiveButtonBorderColor, getForegroundColor());
+    }
+
+    @ColorInt
+    public int getNegativeButtonTextColor() {
+        return defaultIfNull(negativeButtonTextColor, getForegroundColor());
+    }
+
+    @ColorInt
+    public int getNegativeButtonBackgroundColor() {
+        return defaultIfNull(negativeButtonBackgroundColor, getBackgroundColor());
+    }
+
+    @ColorInt
+    public int getNegativeButtonBorderColor() {
+        return defaultIfNull(negativeButtonBorderColor, getForegroundColor());
+    }
+
+    @ColorInt
     private int getForegroundColor() {
         return defaultIfNull(foregroundColor, DEFAULT_FOREGROUND_COLOR);
     }
@@ -145,46 +190,6 @@ public final class DefaultLayoutPromptViewConfig {
     @ColorInt
     private int getBackgroundColor() {
         return defaultIfNull(backgroundColor, DEFAULT_BACKGROUND_COLOR);
-    }
-
-    @ColorInt
-    private int getTitleTextColor() {
-        return defaultIfNull(titleTextColor, getForegroundColor());
-    }
-
-    @ColorInt
-    private int getSubtitleTextColor() {
-        return defaultIfNull(subtitleTextColor, getForegroundColor());
-    }
-
-    @ColorInt
-    private int getPositiveButtonTextColor() {
-        return defaultIfNull(positiveButtonTextColor, getBackgroundColor());
-    }
-
-    @ColorInt
-    private int getPositiveButtonBackgroundColor() {
-        return defaultIfNull(positiveButtonBackgroundColor, getForegroundColor());
-    }
-
-    @ColorInt
-    private int getPositiveButtonBorderColor() {
-        return defaultIfNull(positiveButtonBorderColor, getForegroundColor());
-    }
-
-    @ColorInt
-    private int getNegativeButtonTextColor() {
-        return defaultIfNull(negativeButtonTextColor, getForegroundColor());
-    }
-
-    @ColorInt
-    private int getNegativeButtonBackgroundColor() {
-        return defaultIfNull(negativeButtonBackgroundColor, getBackgroundColor());
-    }
-
-    @ColorInt
-    private int getNegativeButtonBorderColor() {
-        return defaultIfNull(negativeButtonBorderColor, getForegroundColor());
     }
 
     public static final class Builder {
