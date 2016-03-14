@@ -1,1 +1,1 @@
-include ':amplify', ':example'
+include ':amplify'

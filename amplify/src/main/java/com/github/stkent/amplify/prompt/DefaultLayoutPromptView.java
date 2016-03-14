@@ -25,7 +25,6 @@ import android.view.View;
 
 import com.github.stkent.amplify.R;
 import com.github.stkent.amplify.prompt.interfaces.IPromptView;
-import com.github.stkent.amplify.prompt.interfaces.IQuestionView;
 import com.github.stkent.amplify.prompt.interfaces.IThanksView;
 
 public final class DefaultLayoutPromptView extends BasePromptView implements IPromptView {
@@ -63,7 +62,7 @@ public final class DefaultLayoutPromptView extends BasePromptView implements IPr
 
     @NonNull
     @Override
-    protected <T extends View & IQuestionView> T getQuestionView() {
+    protected DefaultQuestionView getQuestionView() {
         return new DefaultQuestionView(getContext(), config);
     }
 
