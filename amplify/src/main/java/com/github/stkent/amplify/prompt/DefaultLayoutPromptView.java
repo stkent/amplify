@@ -51,7 +51,7 @@ public final class DefaultLayoutPromptView
     }
 
     public void applyConfig(@NonNull final DefaultLayoutPromptViewConfig config) {
-        if (isDisplayed) {
+        if (isDisplayed()) {
             throw new IllegalStateException(
                     "Configuration cannot be changed after the prompt is first displayed.");
         }

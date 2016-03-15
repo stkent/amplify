@@ -48,7 +48,7 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
 
     private T displayedQuestionView;
 
-    protected boolean isDisplayed;
+    private boolean displayed;
 
     private final IQuestionPresenter userOpinionQuestionPresenter =
             new IQuestionPresenter() {
@@ -113,7 +113,7 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
 
         displayedQuestionView = userOpinionQuestionView;
 
-        isDisplayed = true;
+        displayed = true;
     }
 
     @Override
@@ -145,6 +145,10 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
     public final void dismiss() {
         setVisibility(GONE);
         promptPresenter = null;
+    }
+
+    protected boolean isDisplayed() {
+        return displayed;
     }
 
     /**
