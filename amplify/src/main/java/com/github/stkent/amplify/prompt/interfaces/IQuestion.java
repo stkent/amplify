@@ -14,21 +14,23 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package com.github.stkent.amplify.tracking.interfaces;
+package com.github.stkent.amplify.prompt.interfaces;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
-/**
- * An abstract representation of a consuming class that is interested in receiving notifications
- * when trackable events occur.
- */
-public interface IEventListener<T extends IEvent> {
+public interface IQuestion {
 
-    /**
-     * Call this method to notify an implementing class that a trackable event occurred.
-     *
-     * @param event the event that occurred
-     */
-    void notifyEventTriggered(@NonNull final T event);
+    @NonNull
+    String getTitle();
+
+    @Nullable
+    String getSubTitle();
+
+    @NonNull
+    String getPositiveButtonLabel();
+
+    @NonNull
+    String getNegativeButtonLabel();
 
 }

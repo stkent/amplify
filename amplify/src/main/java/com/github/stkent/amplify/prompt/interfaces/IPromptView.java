@@ -14,21 +14,24 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package com.github.stkent.amplify.tracking.interfaces;
+package com.github.stkent.amplify.prompt.interfaces;
 
 import android.support.annotation.NonNull;
 
-/**
- * An abstract representation of a consuming class that is interested in receiving notifications
- * when trackable events occur.
- */
-public interface IEventListener<T extends IEvent> {
+public interface IPromptView {
+
+    void setPresenter(@NonNull final IPromptPresenter promptPresenter);
+    void queryUserOpinion();
+    void requestPositiveFeedback();
+    void requestCriticalFeedback();
+    void dismiss();
+
+    boolean providesThanksView();
 
     /**
-     * Call this method to notify an implementing class that a trackable event occurred.
-     *
-     * @param event the event that occurred
+     * <code>IPromptPresenter</code> instances should only call this method if
+     * <code>providesThanksView</code> returns <code>true</code>.
      */
-    void notifyEventTriggered(@NonNull final T event);
+    void thankUser();
 
 }

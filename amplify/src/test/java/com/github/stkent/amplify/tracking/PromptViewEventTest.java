@@ -25,27 +25,53 @@ import org.junit.Test;
 public class PromptViewEventTest extends BaseTest {
 
     @Test
-    public void testThatUserDeclinedCriticalFeedbackEventHasCorrectTrackingKey() {
+    public void testThatPromptShownEventHasCorrectTrackingKey() {
         // Arrange
-        final IEvent appCrashedEvent = PromptViewEvent.USER_DECLINED_CRITICAL_FEEDBACK;
+        final IEvent promptShownEvent = PromptViewEvent.PROMPT_SHOWN;
 
         // Assert
         Assert.assertEquals(
-                "User declined critical feedback event should have correct tracking key",
-                appCrashedEvent.getTrackingKey(),
-                "USER_DECLINED_CRITICAL_FEEDBACK");
+                "Prompt shown event should have correct tracking key",
+                promptShownEvent.getTrackingKey(),
+                "PROMPT_SHOWN");
     }
 
     @Test
-    public void testThatUserDeclinedPositiveFeedbackEventHasCorrectTrackingKey() {
+    public void testThatUserIndicatedPositiveOpinionEventHasCorrectTrackingKey() {
         // Arrange
-        final IEvent appCrashedEvent = PromptViewEvent.USER_DECLINED_POSITIVE_FEEDBACK;
+        final IEvent userIndicatedPositiveOpinionEvent
+                = PromptViewEvent.USER_INDICATED_POSITIVE_OPINION;
 
         // Assert
         Assert.assertEquals(
-                "User declined positive feedback event should have correct tracking key",
+                "User indicated positive opinion event should have correct tracking key",
+                userIndicatedPositiveOpinionEvent.getTrackingKey(),
+                "USER_INDICATED_POSITIVE_OPINION");
+    }
+
+    @Test
+    public void testThatUserIndicatedCriticalOpinionEventHasCorrectTrackingKey() {
+        // Arrange
+        final IEvent userIndicatedCriticalOpinionEvent
+                = PromptViewEvent.USER_INDICATED_CRITICAL_OPINION;
+
+        // Assert
+        Assert.assertEquals(
+                "User indicated critical opinion event should have correct tracking key",
+                userIndicatedCriticalOpinionEvent.getTrackingKey(),
+                "USER_INDICATED_CRITICAL_OPINION");
+    }
+
+    @Test
+    public void testThatUserGavePositiveFeedbackEventHasCorrectTrackingKey() {
+        // Arrange
+        final IEvent appCrashedEvent = PromptViewEvent.USER_GAVE_POSITIVE_FEEDBACK;
+
+        // Assert
+        Assert.assertEquals(
+                "User gave positive feedback event should have correct tracking key",
                 appCrashedEvent.getTrackingKey(),
-                "USER_DECLINED_POSITIVE_FEEDBACK");
+                "USER_GAVE_POSITIVE_FEEDBACK");
     }
 
     @Test
@@ -61,15 +87,75 @@ public class PromptViewEventTest extends BaseTest {
     }
 
     @Test
-    public void testThatUserGavePositiveFeedbackEventHasCorrectTrackingKey() {
+    public void testThatUserDeclinedPositiveFeedbackEventHasCorrectTrackingKey() {
         // Arrange
-        final IEvent appCrashedEvent = PromptViewEvent.USER_GAVE_POSITIVE_FEEDBACK;
+        final IEvent appCrashedEvent = PromptViewEvent.USER_DECLINED_POSITIVE_FEEDBACK;
 
         // Assert
         Assert.assertEquals(
-                "User gave positive feedback event should have correct tracking key",
+                "User declined positive feedback event should have correct tracking key",
                 appCrashedEvent.getTrackingKey(),
-                "USER_GAVE_POSITIVE_FEEDBACK");
+                "USER_DECLINED_POSITIVE_FEEDBACK");
+    }
+
+    @Test
+    public void testThatUserDeclinedCriticalFeedbackEventHasCorrectTrackingKey() {
+        // Arrange
+        final IEvent appCrashedEvent = PromptViewEvent.USER_DECLINED_CRITICAL_FEEDBACK;
+
+        // Assert
+        Assert.assertEquals(
+                "User declined critical feedback event should have correct tracking key",
+                appCrashedEvent.getTrackingKey(),
+                "USER_DECLINED_CRITICAL_FEEDBACK");
+    }
+
+    @Test
+    public void testThatUserGaveFeedbackEventHasCorrectTrackingKey() {
+        // Arrange
+        final IEvent userGaveFeedbackEvent = PromptViewEvent.USER_GAVE_FEEDBACK;
+
+        // Assert
+        Assert.assertEquals(
+                "User gave feedback event should have correct tracking key",
+                userGaveFeedbackEvent.getTrackingKey(),
+                "USER_GAVE_FEEDBACK");
+    }
+
+    @Test
+    public void testThatUserDeclinedFeedbackEventHasCorrectTrackingKey() {
+        // Arrange
+        final IEvent userDeclinedFeedbackEvent = PromptViewEvent.USER_DECLINED_FEEDBACK;
+
+        // Assert
+        Assert.assertEquals(
+                "User declined feedback event should have correct tracking key",
+                userDeclinedFeedbackEvent.getTrackingKey(),
+                "USER_DECLINED_FEEDBACK");
+    }
+
+    @Test
+    public void testThatThanksShownEventHasCorrectTrackingKey() {
+        // Arrange
+        final IEvent thanksShownEvent = PromptViewEvent.THANKS_SHOWN;
+
+        // Assert
+        Assert.assertEquals(
+                "Thanks shown event should have correct tracking key",
+                thanksShownEvent.getTrackingKey(),
+                "THANKS_SHOWN");
+    }
+
+    @Test
+    public void testThatPromptDismissedEventHasCorrectTrackingKey() {
+        // Arrange
+        final IEvent promptDismissedEvent = PromptViewEvent.PROMPT_DISMISSED;
+
+        // Assert
+        Assert.assertEquals(
+                "Prompt dismissed event should have correct tracking key",
+                promptDismissedEvent.getTrackingKey(),
+                "PROMPT_DISMISSED");
     }
 
 }

@@ -26,21 +26,7 @@ public final class StringUtils {
     }
 
     /**
-     * Returns either the passed in CharSequence, or if the CharSequence is
-     * whitespace, empty ("") or null, the value of defaultString.
-     *
-     * @param <T> the specific kind of CharSequence
-     * @param primaryString the CharSequence to check, may be null
-     * @param defaultString the default CharSequence to return
-     * @return the passed in CharSequence, or the default
-     */
-    @NonNull
-    public static <T extends CharSequence> T defaultIfBlank(@Nullable final T primaryString, @NonNull final T defaultString) {
-        return isBlank(primaryString) ? defaultString : primaryString;
-    }
-
-    /**
-     * Capitalizes a String changing the first letter to title case
+     * Capitalizes a String changing the first letter to title case.
      *
      * @param string the String to capitalize, may be null
      * @return the String with the first letter capitalized or null
@@ -68,10 +54,7 @@ public final class StringUtils {
 
 
     /**
-     * Checks if a CharSequence is whitespace, empty ("") or null.
-     *
-     * @param charSequence the CharSequence to check, may be null
-     * @return true if the CharSequence is null, empty or whitespace
+     * @return true if <code>charSequence</code> is null, empty, or whitespace; false otherwise
      */
     public static boolean isBlank(@Nullable final CharSequence charSequence) {
         if (charSequence == null) {
@@ -91,6 +74,26 @@ public final class StringUtils {
         }
 
         return true;
+    }
+
+    /**
+     * @return true if <code>charSequence</code> is non-null, non-empty, and not pure whitespace;
+     *         false otherwise
+     */
+    public static boolean isNotBlank(@Nullable final CharSequence charSequence) {
+        return !isBlank(charSequence);
+    }
+
+    /**
+     * @return <code>primaryString</code> if it is not blank (i.e. non-null, non-empty, and not pure
+     *         whitespace); <code>defaultString</code> otherwise
+     */
+    @NonNull
+    public static String defaultIfBlank(
+            @Nullable final String primaryString,
+            @NonNull final String defaultString) {
+
+        return StringUtils.isNotBlank(primaryString) ? primaryString : defaultString;
     }
 
 }

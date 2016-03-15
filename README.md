@@ -2,8 +2,6 @@
 
 Respectfully request feedback in your Android app.
 
-<!-- TODO: add example image or gif here -->
-
 <a href="https://travis-ci.org/stkent/amplify"><img src="https://travis-ci.org/stkent/amplify.svg" /></a> <a href="https://bintray.com/stkent/android-libraries/amplify/"><img src="https://img.shields.io/bintray/v/stkent/android-libraries/amplify.svg" /></a> <a href="http://www.detroitlabs.com/"><img src="https://img.shields.io/badge/Sponsor-Detroit%20Labs-000000.svg" /></a>
 
 # Table Of Contents
@@ -14,6 +12,7 @@ Respectfully request feedback in your Android app.
     - [Default Behavior](#default-behavior)
 - [Configuring](#configuring)
 - [Customizing](#customizing)
+- [Case Studies](#case-studies)
 - [License](#license)
 
 # Introduction
@@ -88,27 +87,26 @@ public class ExampleApplication extends Application {
 ```
 
 <ol start="3">
-  <li>Add a <code>PromptView</code> instance to all xml layouts in which you may want to prompt the user for their feedback:</li>
+  <li>Add a <code>DefaultLayoutPromptView</code> instance to all xml layouts in which you may want to prompt the user for their feedback:</li>
 </ol>
 
 ```xml
-<com.github.stkent.amplify.views.PromptView
+<com.github.stkent.amplify.prompt.DefaultLayoutPromptView
     android:id="@+id/prompt_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content" />
 ```
 
 <ol start="4">
-  <li>Call the state tracker's <code>promptIfReady</code> method when appropriate, passing in your <code>PromptView</code> instance:</li>
+  <li>Call the state tracker's <code>promptIfReady</code> method when appropriate, passing in the current <code>Activity</code> and your <code>DefaultLayoutPromptView</code> instance:</li>
 </ol>
 
 ```java
-PromptView promptView = (PromptView) findViewById(R.id.prompt_view);
-
-Amplify.get(context).promptIfReady(promptView);
+DefaultLayoutPromptView promptView = (DefaultLayoutPromptView) findViewById(R.id.prompt_view);
+Amplify.get(context).promptIfReady(activity, promptView);
 ```
 
-That's it! The prompt timing calculator will evaluate the default rules each time `promptIfReady` is called, and instruct the `PromptView` to automatically update its visibility based on the result. If the user chooses to interact with the prompt, the sequence of questions asked is also automatically managed by the `PromptView`.
+That's it! The prompt timing calculator will evaluate the default rules each time `promptIfReady` is called, and instruct the `PromptView` to automatically update its visibility based on the result. If the user chooses to interact with the prompt, the sequence of questions asked is also automatically managed by the `PromptView`. If the user decides to give feedback, _amplify_ will automatically handle opening the appropriate Google Play Store page or email client with prepopulated details.
 
 ## Default Behavior
 
@@ -130,63 +128,347 @@ More information on how to apply your own collection of rules is available in th
 
 # Configuring
 
-## Event Tracking
+## Rules
 
-### Default Environment Checks
+_amplify_ calculates prompt timing based on two types of rule.
 
-The `GooglePlayStoreIsAvailableCheck` check will pass if the Google Play Store is available on a user's device, and will fail otherwise.
+### Environment-based Rules
 
-### Default Events
+These rules are based on the environment/device in which the embedding application is currently running. For example, they may query whether or not the current device is capable of handling a specific [`Intent`](http://developer.android.com/reference/android/content/Intent.html).
 
-#### Feedback Prompt Events
+_amplify_ is packaged with the following environment-based rules:
 
-These events are associated with user actions related to the feedback prompt UI.
+- `GooglePlayStoreRule`: verifies whether or not the Google Play Store is installed on the current device.
 
-- User agreed to provide positive feedback
-- User agreed to provide critical feedback
-- User declined to provide positive feedback
-- User declined to provide critical feedback
+Environment-based rules can be applied by calling the `addEnvironmentBasedRule` method when configuring your `Amplify` instance. For example:
 
-#### Application-level Events
+```java
+public class ExampleApplication extends Application {
+    
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        
+        Amplify.get(this)
+               .setFeedbackEmailAddress("someone@example.com")
+               .addEnvironmentBasedRule(new GooglePlayStoreRule()); // Prompt never shown if Google Play Store not installed.
+    }
+    
+}
+```
 
-- Application installed
-- Application updated
-- Application crashed
+### Event-based Rules
 
-These (pseudo-)events are associated with application-level actions.
+These rules are based on tracked events that occur within the embedding application. Different dimensions of these events can be tracked (time of first/most recent occurrence, total number of occurrences, etc.)
 
-### Default Event Checks
+The **times** of the following special events are automatically tracked whenever _amplify_ is enabled:
 
-When calling `applyAllDefaultRules` on the `Amplify` instance, the following checks are registered by default:
+- original app install (note: this can pre-date the time at which _amplify_ was added to your application!);
+- last app update time;
+- last app crash time;
 
-- the `GooglePlayStoreIsAvailableCheck`, which will block all prompts if the Google Play Store is not available.
+Rules related to each of these events can be configured using the dedicated configuration methods `setInstallTimeCooldownDays`, `setLastUpdateTimeCooldownDays`, and `setLastCrashTimeCooldownDays`. For example:
+
+```java
+public class ExampleApplication extends Application {
+    
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        
+        Amplify.get(this)
+               .setFeedbackEmailAddress("someone@example.com")
+               .setInstallTimeCooldownDays(14) // Prompt not shown within two weeks of initial install.
+               .setLastUpdateTimeCooldownDays(7) // Prompt not shown within one week of most recent update.
+               .setLastCrashTimeCooldownDays(7); // Prompt not shown within one week of most recent crash.
+    }
+    
+}
+```
+
+The following events are also automatically reported to the shared `Amplify` instance whenever you use one of the `promptIfReady` methods to show your prompt:
+
+- prompt was shown;
+- user indicated a positive opinion of the app;
+- user indicated a critical opinion of the app;
+- user agreed to give feedback (either positive or critical);
+- user declined to give feedback (either positive or critical);
+- user agreed to give positive feedback;
+- user agreed to give critical feedback;
+- user declined to give positive feedback;
+- user declined to give critical feedback;
+- thanks view was shown;
+- prompt was auto-dismissed.
+
+To apply rules based on these events, use the configuration methods `addTotalEventCountRule`, `addFirstEventTimeRule`, `addLastEventTimeRule`, `addLastEventVersionRule`. The method you select will determine which dimension of the event is tracked using `SharedPreferences`. Each method accepts two parameters:
+
+- the event to be tracked; in this case, one of the events defined in the `PromptViewEvent` enum;
+- the event-based rule to be applied to that tracked dimension.
+
+_amplify_ is packaged with the following event-based rules:
+
+- `CooldownDaysRule`: checks whether enough time has elapsed since the last occurrence of this event.
+- `MaximumCountRule`: checks whether this event has occurred enough times.
+- `VersionChangedRule`: checks whether this event has occurred for the current version of the embedding application.
+- `WarmupDaysRule`: checks whether enough time has elapsed since the first occurrence of this event.
+
+An example configuration that leverage these rules is below:
+
+TODO: add a few more example rules to this snippet!
+
+```java
+public class ExampleApplication extends Application {
+    
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        
+        Amplify.get(this)
+               .setFeedbackEmailAddress("someone@example.com")
+               .addTotalEventCountRule(PromptViewEvent.USER_GAVE_POSITIVE_FEEDBACK,
+                        new MaximumCountRule(1)) // Never ask the user for feedback again if they already responded positively.
+    }
+    
+}
+```                
 
 ## Prompt UI
+
+_amplify_ provides two configurable prompt UIs.
+
+### Default Layout
+
+**Use this if you are happy with the basic layout of the prompt shown above, but need to customize colors or wording!**
+
+Provided by the `DefaultLayoutPromptView` class. The basic layouts of the questions and thanks presented to users of the embedding application are fixed, but the most important elements of those layouts (colors and text) are fully customizable. The full set of available xml configuration hooks is shown below (remember to use the `app` xml namespace when setting these properties!):
+
+    <com.github.stkent.amplify.prompt.DefaultLayoutPromptView
+        android:id="@+id/prompt_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:prompt_view_user_opinion_question_title="Custom Title String"
+        app:prompt_view_user_opinion_question_subtitle="Custom Subtitle String"
+        app:prompt_view_user_opinion_question_positive_button_label="Custom Button Title String"
+        app:prompt_view_user_opinion_question_negative_button_label="Custom Button Title String"
+        app:prompt_view_positive_feedback_question_title="Custom Title String"
+        app:prompt_view_positive_feedback_question_subtitle="Custom Subtitle String"
+        app:prompt_view_positive_feedback_question_positive_button_label="Custom Button Title String"
+        app:prompt_view_positive_feedback_question_negative_button_label="Custom Button Title String"
+        app:prompt_view_critical_feedback_question_title="Custom Title String"
+        app:prompt_view_critical_feedback_question_subtitle="Custom Subtitle String".
+        app:prompt_view_critical_feedback_question_positive_button_label="Custom Button Title String"
+        app:prompt_view_critical_feedback_question_negative_button_label="Custom Button Title String"
+        app:prompt_view_thanks_title="Custom Title String"
+        app:prompt_view_thanks_subtitle="Custom Subtitle String"
+        app:prompt_view_foreground_color="@color/custom_foreground_color"
+        app:prompt_view_background_color="@color/custom_background_color"
+        app:prompt_view_title_text_color="@color/custom_title_text_color"
+        app:prompt_view_subtitle_text_color="@color/custom_subtitle_text_color"
+        app:prompt_view_positive_button_text_color="@color/custom_positive_button_text_color"
+        app:prompt_view_positive_button_background_color="@color/custom_positive_button_background_color"
+        app:prompt_view_positive_button_border_color="@color/custom_positive_button_border_color"
+        app:prompt_view_negative_button_text_color="@color/custom_negative_button_text_color"
+        app:prompt_view_negative_button_background_color="@color/custom_negative_button_background_color"
+        app:prompt_view_negative_button_border_color="@color/custom_negative_button_border_color" />
+
+All attributes are optional.
+
+TODO: show some screenshots of examples created using this method?
+
+### Custom Layout
+
+**Use this if you need to provide a structurally different prompt layout, require custom fonts, etc.**
+
+Provided by the `CustomLayoutPromptView` class. You provide the basic layouts to use, and any customization of the default strings you require. The full set of available xml configuration hooks is shown below (remember to use the `app` xml namespace when setting these properties!):
+
+    <com.github.stkent.amplify.prompt.DefaultLayoutPromptView
+        android:id="@+id/prompt_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:prompt_view_question_layout="@layout/include_amplify_question_layout"
+        app:prompt_view_thanks_layout="@layout/include_amplify_question_layout"
+        app:prompt_view_user_opinion_question_title="Custom Title String"
+        app:prompt_view_user_opinion_question_subtitle="Custom Subtitle String"
+        app:prompt_view_user_opinion_question_positive_button_label="Custom Button Title String"
+        app:prompt_view_user_opinion_question_negative_button_label="Custom Button Title String"
+        app:prompt_view_positive_feedback_question_title="Custom Title String"
+        app:prompt_view_positive_feedback_question_subtitle="Custom Subtitle String"
+        app:prompt_view_positive_feedback_question_positive_button_label="Custom Button Title String"
+        app:prompt_view_positive_feedback_question_negative_button_label="Custom Button Title String"
+        app:prompt_view_critical_feedback_question_title="Custom Title String"
+        app:prompt_view_critical_feedback_question_subtitle="Custom Subtitle String"
+        app:prompt_view_critical_feedback_question_positive_button_label="Custom Button Title String"
+        app:prompt_view_critical_feedback_question_negative_button_label="Custom Button Title String"
+        app:prompt_view_thanks_title="Custom Title String"
+        app:prompt_view_thanks_subtitle="Custom Subtitle String" />
+
+The `prompt_view_question_layout` attribute is **required** and subject to some additional requirements (listed below). All other attributes are optional. If `prompt_view_thanks_layout` is not provided, the prompt will automatically dismiss at the end of every flow. If it is provided, the user will see the thanks view whenever they agree to give feedback.
+
+#### Included Question Layout Requirements
+
+The layout referenced by `prompt_view_question_layout` _must_ include:
+
+- A `TextView` subclass with id `amplify_title_text_view`;
+- A `TextView` subclass with id `amplify_positive_button`;
+- A `TextView` subclass with id `amplify_negative_button`.
+
+If a view is found with an appropriate button id but it is _not_ a `TextView` subclasses, the library will gracefully no-op when trying to set the button text.
+
+The layout referenced by `prompt_view_question_layout` _may_ include:
+
+   - A `TextView` subclass with id `amplify_subtitle_text_view`;
+ 
+#### Included Thanks Layout Requirements 
+
+The layout referenced by `prompt_view_thanks_layout ` _must_ include:
+
+- A `TextView` subclass with id `amplify_title_text_view`.
+
+The layout referenced by `prompt_view_thanks_layout ` _may_ include:
+
+- A `TextView` subclass with id `amplify_subtitle_text_view`.
+
+TODO: show some screenshots of examples created using this method?
+
+### Listening For `IPromptView` Events
+
+It may sometimes be useful to know when the state of the `IPromptView` subclass you are using changes. For example, you may want to:
+
+- track user interactions with the prompt view using your preferred analytics suite;
+- adjust other UI elements when the prompt view is shown/hidden.
+
+To allow this, the `promptIfReady` method optionally accepts an `IEventListener<PromptViewEvent>` parameter that will receive notifications of all tracked `PromptViewEvents`. An example implementation demonstrating these use-cases is given below:
+
+    Amplify.get(this).promptIfReady(this, promptView, new IEventListener<PromptViewEvent>() {
+        @Override
+        public void notifyEventTriggered(@NonNull final PromptViewEvent event) {
+            AnalyticsTracker.notifyOfEvent(event);
+        
+            if (event == PROMPT_SHOWN) {
+                relatedView.setVisibility(VISIBLE);
+            } else if (event == PROMPT_DISMISSED) {
+                relatedView.setVisibility(GONE);
+            }
+        }
+    });
+
+## Debug Settings
+
+The delayed nature of _amplify_ prompts can make it hard to test effectively when integrated. We provide the following debug configuration methods to help with this:
+
+- `setLogLevel(@NonNull final Logger.LogLevel logLevel)`: set verbosity of library logging. Options are: `NONE`, `ERROR`, and `DEBUG`. We recommend disabling logging in production builds using the `BuildConfig` class generated by the embedding application. For example:
+
+```java
+public class ExampleApplication extends Application {
+    
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        
+        Amplify.get(this)
+               .setFeedbackEmailAddress("someone@example.com")
+               .setLogLevel(BuildConfig.DEBUG ? Logger.LogLevel.DEBUG : Logger.LogLevel.NONE);
+    }
+    
+}
+```
+
+- `setAlwaysShow(final boolean alwaysShow)`: if `alwaysShow` is true, this forces the prompt to show every time. This is useful while tweaking prompt UI. Example usage in debug builds only:
+
+```java
+public class ExampleApplication extends Application {
+    
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        
+        Amplify.get(this)
+               .setFeedbackEmailAddress("someone@example.com")
+               .setAlwaysShow(BuildConfig.DEBUG);
+    }
+    
+}
+```
+
+- `setPackageName(@NonNull final String packageName)`: if your debug and release build types do not share a package name (perhaps to allow for both build types to be installed simultaneously), the library will fail to load the appropriate Google Play Store page in debug builds. To counter this, pass your release build package name to this method during configuration. For example:
+
+```java
+public class ExampleApplication extends Application {
+    
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        
+        Amplify.get(this)
+               .setFeedbackEmailAddress("someone@example.com")
+               .setPackageName("my.release.package.name");
+    }
+    
+}
+```
 
 # Customizing
 
-## Event Tracking
+## Rules
 
-### Custom Environment Checks
+### Applying Custom Environment-based Rules
 
-A new custom environment check can be added by implementing the `IEnvironmentCheck` interface and passing an instance of the implementation to the `Amplify` instance method `addEnvironmentCheck()`.
+A new custom environment-based rule can be added by implementing the `IEnvironmentBasedRule` interface and passing an instance of this implementation to the `Amplify` instance method `addEnvironmentBasedRule`:
 
-### Custom Events
+```java
+public class ExampleApplication extends Application {
+    
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        
+        Amplify.get(this)
+               .setFeedbackEmailAddress("someone@example.com")
+               .addEnvironmentBasedRule(new MyCustomEnvironmentBasedRule());
+    }
+    
+}
+```
 
-A new custom event can be tracked by implementing the `ITrackableEvent` interface and passing an instance of the implementation to one of the following `Amplify` instance methods:
+### Tracking Custom Events
 
-- `trackTotalEventCount()`
-- `trackFirstEventTime()`
-- `trackLastEventTime()`
-- `trackLastEventVersion()`
+A new custom event can be tracked by implementing the `IEvent` interface, registering this event with a corresponding (default or custom) `IEventBasedRule` using one of the following methods:
 
-You will also need to provide an event check when calling any of these methods. The data passed to this paired event check is linked to the particular tracking method called. For example, if you register an event using the `trackTotalEventCount()` method, the corresponding event check will be called with integer values that represent the number of event occurrences to date.
+- `addTotalEventCountRule`;
+- `addFirstEventTimeRule`;
+- `addLastEventTimeRule`;
+- `addLastEventVersionRule`,
 
-### Custom Event Checks
+and then notifying the `Amplify` instance of occurrences of this event using the `notifyEventTriggered` method:
 
-A new custom event check can be created by implementing the `IEventBasedRule<T>` interface. The generic type `T` must be one of: `Integer`, `Long`, or `String`. The type you select will depend on which tracked event aspect (time, count, etc.) you wish to apply this check to.
+    Amplify.get(this).notifyEventTriggered(new MyCustomEvent());
+    
+As before, the dimension of the event that will be tracked is dictated by which registration method is called.
+
+### Applying Custom Event-based Rules
+
+A new custom event can be tracked by implementing the `IEventBasedRule<T>` interface, and registering a (default or custom) `IEvent` with this custom `IEventBasedRule` using one of the following methods:
+
+- `addTotalEventCountRule`;
+- `addFirstEventTimeRule`;
+- `addLastEventTimeRule`;
+- `addLastEventVersionRule`.
+
+The generic type `T` must be one of: `Integer`, `Long`, or `String`. The type you select will depend on which tracked event aspect (time, count, etc.) you wish to apply this check to.
 
 ## Prompt UI
+
+To provide fully-custom views for each phase of the typical prompt flow, implement the `IPromptView` interface and pass an instance of this implementation to one of the `promptIfReady` methods. You should save the presenter injected into your custom class via the `setPresenter` method, and communicate user-driven events to the presenter within your custom view. See the `BasePromptView` for a sample implementation in which all questions are assumed to share a common view structure.
+
+To provide a totally custom experience in which _amplify_ does not manage the prompt/rating/feedback UI flows at all, replace any calls to `promptIfReady` with calls to `shouldPrompt`. This method will evaluate all rules and provide a boolean that indicates whether every provided rule is currently satisfied. You may then use this hook to begin your own feedback request flow.
+
+# Case Studies
+
+Early versions of _amplify_ are integrated in apps with state-wide and nation-wide audiences, with over 200,000 installs combined. After integrating _amplify_, our data indicates that the number of Play Store reviews received increases by a factor of **5x-10x**, and the number of feedback emails received **doubles**. We present screenshots showing example implementations below:
+
+| Styled default layout | Custom layout         |
+|-----------------------|-----------------------|
+| ![](assets/dte.png)   | ![](assets/jjgs.png)  |
 
 # License
 

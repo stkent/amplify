@@ -14,22 +14,27 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package com.github.stkent.amplify.tracking.prerequisites;
+package com.github.stkent.amplify.utils;
 
+import android.content.Context;
+import android.content.res.Resources;
 import android.support.annotation.NonNull;
+import android.util.DisplayMetrics;
 
-import com.github.stkent.amplify.tracking.interfaces.IEnvironmentBasedRule;
-import com.github.stkent.amplify.tracking.interfaces.IEnvironmentCapabilitiesProvider;
+public final class DisplayUtils {
 
-/**
- * An implementation of {@code IEnvironmentBasedRule} that verifies whether or not
- * the Google Play Store is installed on the current device.
- */
-public class GooglePlayStoreRule implements IEnvironmentBasedRule {
+    // From http://stackoverflow.com/a/9563438/2911458 with modifications
+    public static float dpToPx(
+            @NonNull final Context context,
+            final float dp) {
 
-    @Override
-    public boolean shouldAllowFeedbackPrompt(@NonNull final IEnvironmentCapabilitiesProvider environmentInfoProvider) {
-        return environmentInfoProvider.isGooglePlayStoreInstalled();
+        final Resources resources = context.getResources();
+        final DisplayMetrics displayMetrics = resources.getDisplayMetrics();
+        return dp * ((float) displayMetrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
+    }
+
+    private DisplayUtils() {
+
     }
 
 }

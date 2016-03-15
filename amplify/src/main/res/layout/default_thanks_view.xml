@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?><!--
+<?xml version="1.0" encoding="utf-8"?>
+<!--
 
     Copyright 2015 Stuart Kent
 
@@ -16,11 +17,9 @@
     under the License.
 
 -->
-<resources>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <item name="amplify_title_text_view" type="id" />
-    <item name="amplify_subtitle_text_view" type="id" />
-    <item name="amplify_positive_button" type="id" />
-    <item name="amplify_negative_button" type="id" />
-
-</resources>
+</LinearLayout>

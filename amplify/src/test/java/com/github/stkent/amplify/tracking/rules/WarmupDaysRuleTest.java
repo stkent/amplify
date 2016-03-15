@@ -39,7 +39,7 @@ public class WarmupDaysRuleTest extends BaseTest {
 
         final WarmupDaysRule warmupDaysRule = new WarmupDaysRule(warmUpTimeDays);
 
-        // fixme: refactor to avoid this nasty dependency on a magic number
+        // todo: refactor to avoid this nasty dependency on a magic number
         final long lastEventTime = Long.MAX_VALUE;
 
         // Act

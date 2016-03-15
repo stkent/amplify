@@ -27,6 +27,7 @@ public final class VersionChangedRule implements IEventBasedRule<String> {
     @NonNull
     private final IAppVersionNameProvider appVersionNameProvider;
 
+    // todo: refactor this so it can be used outside the library
     public VersionChangedRule(@NonNull final IAppVersionNameProvider appVersionNameProvider) {
         this.appVersionNameProvider = appVersionNameProvider;
     }
