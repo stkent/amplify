@@ -24,7 +24,14 @@ public interface IPromptView {
     void queryUserOpinion();
     void requestPositiveFeedback();
     void requestCriticalFeedback();
-    void thankUser();
     void dismiss();
+
+    boolean providesThanksView();
+
+    /**
+     * <code>IPromptPresenter</code> instances should only call this method if
+     * <code>providesThanksView</code> returns <code>true</code>.
+     */
+    void thankUser();
 
 }

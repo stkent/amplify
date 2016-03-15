@@ -66,10 +66,14 @@ public final class CustomLayoutPromptView
         return new CustomLayoutQuestionView(getContext(), config.getQuestionLayout());
     }
 
-    @NonNull
+    @Nullable
     @Override
     protected CustomLayoutThanksView getThanksView() {
-        return new CustomLayoutThanksView(getContext(), config.getThanksLayout());
+        if (config.getThanksLayout() != null) {
+            return new CustomLayoutThanksView(getContext(), config.getThanksLayout());
+        }
+
+        return null;
     }
 
     /**

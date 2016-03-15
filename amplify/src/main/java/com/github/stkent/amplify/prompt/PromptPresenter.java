@@ -92,8 +92,13 @@ public final class PromptPresenter implements IPromptPresenter {
                 throw new IllegalStateException(EXHAUSTIVE_SWITCH_EXCEPTION_MESSAGE);
         }
 
-        promptView.thankUser();
-        eventListener.notifyEventTriggered(PromptViewEvent.THANKS_SHOWN);
+        if (promptView.providesThanksView()) {
+            promptView.thankUser();
+            eventListener.notifyEventTriggered(PromptViewEvent.THANKS_SHOWN);
+        } else {
+            promptView.dismiss();
+            eventListener.notifyEventTriggered(PromptViewEvent.PROMPT_DISMISSED);
+        }
     }
 
     @Override

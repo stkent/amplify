@@ -23,6 +23,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StyleableRes;
 
 import com.github.stkent.amplify.R;
+import com.github.stkent.amplify.utils.Constants;
 
 public final class CustomLayoutPromptViewConfig {
 
@@ -48,29 +49,29 @@ public final class CustomLayoutPromptViewConfig {
     @LayoutRes
     private final int questionLayout;
 
+    @Nullable
     @LayoutRes
-    private final int thanksLayout;
+    private final Integer thanksLayout;
 
     public CustomLayoutPromptViewConfig(@NonNull final TypedArray typedArray) {
         final Integer questionLayout = suppliedLayoutOrNull(
                 typedArray,
                 R.styleable.CustomLayoutPromptView_prompt_view_question_layout);
 
-        final Integer thanksLayout = suppliedLayoutOrNull(
-                typedArray,
-                R.styleable.CustomLayoutPromptView_prompt_view_thanks_layout);
-
-        validateLayoutResourceIds(questionLayout, thanksLayout);
+        if (questionLayout == null) {
+            throw new IllegalStateException(Constants.MISSING_LAYOUT_IDS_EXCEPTION_MESSAGE);
+        }
 
         this.questionLayout = questionLayout;
-        this.thanksLayout = thanksLayout;
+
+        this.thanksLayout = suppliedLayoutOrNull(
+                typedArray,
+                R.styleable.CustomLayoutPromptView_prompt_view_thanks_layout);
     }
 
     public CustomLayoutPromptViewConfig(
             @LayoutRes final int questionLayout,
-            @LayoutRes final int thanksLayout) {
-
-        validateLayoutResourceIds(questionLayout, thanksLayout);
+            @Nullable @LayoutRes final Integer thanksLayout) {
 
         this.questionLayout = questionLayout;
         this.thanksLayout = thanksLayout;
@@ -81,19 +82,9 @@ public final class CustomLayoutPromptViewConfig {
         return questionLayout;
     }
 
-    @LayoutRes
-    public int getThanksLayout() {
+    @Nullable @LayoutRes
+    public Integer getThanksLayout() {
         return thanksLayout;
-    }
-
-    private void validateLayoutResourceIds(
-            @Nullable final Integer questionLayout,
-            @Nullable final Integer thanksLayout) {
-
-        if (questionLayout == null || thanksLayout == null) {
-            throw new IllegalStateException(
-                    "Must provide layout resource ids for question and thanks views.");
-        }
     }
 
 }

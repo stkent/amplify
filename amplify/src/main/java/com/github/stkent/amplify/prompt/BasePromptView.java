@@ -43,7 +43,7 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
     @NonNull
     protected abstract T getQuestionView();
 
-    @NonNull
+    @Nullable
     protected abstract U getThanksView();
 
     private T displayedQuestionView;
@@ -131,6 +131,7 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
         setContentView(criticalFeedbackQuestionView);
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Override
     public final void thankUser() {
         final U thanksView = getThanksView();
@@ -145,6 +146,11 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
     public final void dismiss() {
         setVisibility(GONE);
         promptPresenter = null;
+    }
+
+    @Override
+    public boolean providesThanksView() {
+        return getThanksView() != null;
     }
 
     protected boolean isDisplayed() {
