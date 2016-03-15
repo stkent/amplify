@@ -20,6 +20,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -33,9 +34,19 @@ import com.github.stkent.amplify.prompt.interfaces.IQuestionView;
 @SuppressLint("ViewConstructor")
 class CustomLayoutQuestionView extends FrameLayout implements IQuestionView {
 
+    private static final String QUESTION_PRESENTER_MUST_BE_SET_EXCEPTION_MESSAGE
+            = "Question presenter must be set before buttons can be clicked.";
+
+    @NonNull
     private final TextView titleTextView;
+
+    @Nullable
     private final TextView subtitleTextView;
+
+    @NonNull
     private final View positiveButton;
+
+    @NonNull
     private final View negativeButton;
 
     private IQuestionPresenter questionPresenter;
@@ -47,14 +58,29 @@ class CustomLayoutQuestionView extends FrameLayout implements IQuestionView {
         super(context);
         LayoutInflater.from(context).inflate(layoutRes, this, true);
 
-        titleTextView = (TextView) findViewById(R.id.amplify_title_text_view);
-        subtitleTextView = (TextView) findViewById(R.id.amplify_subtitle_text_view);
-        positiveButton = findViewById(R.id.amplify_positive_button);
-        negativeButton = findViewById(R.id.amplify_negative_button);
+        final TextView titleTextView = (TextView) findViewById(R.id.amplify_title_text_view);
+        final TextView subtitleTextView = (TextView) findViewById(R.id.amplify_subtitle_text_view);
+        final View positiveButton = findViewById(R.id.amplify_positive_button);
+        final View negativeButton = findViewById(R.id.amplify_negative_button);
+
+        if (titleTextView == null || positiveButton == null || negativeButton == null) {
+            throw new IllegalStateException(
+                    "Provided layout does not include views with required ids.");
+        }
+
+        this.titleTextView = titleTextView;
+        this.subtitleTextView = subtitleTextView;
+        this.positiveButton = positiveButton;
+        this.negativeButton = negativeButton;
 
         positiveButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(final View v) {
+                if (questionPresenter == null) {
+                    throw new IllegalStateException(
+                            QUESTION_PRESENTER_MUST_BE_SET_EXCEPTION_MESSAGE);
+                }
+
                 questionPresenter.userRespondedPositively();
             }
         });
@@ -62,12 +88,14 @@ class CustomLayoutQuestionView extends FrameLayout implements IQuestionView {
         negativeButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(final View v) {
+                if (questionPresenter == null) {
+                    throw new IllegalStateException(
+                            QUESTION_PRESENTER_MUST_BE_SET_EXCEPTION_MESSAGE);
+                }
+
                 questionPresenter.userRespondedNegatively();
             }
         });
-
-        // todo: validate early
-        // todo: build appropriate drawables for button fill/border, with pressed states
     }
 
     @Override
@@ -89,26 +117,32 @@ class CustomLayoutQuestionView extends FrameLayout implements IQuestionView {
 
         final String subtitle = question.getSubTitle();
 
-        if (subtitle != null) {
-            subtitleTextView.setText(subtitle);
-            subtitleTextView.setVisibility(VISIBLE);
-        } else {
-            subtitleTextView.setVisibility(GONE);
+        if (subtitleTextView != null) {
+            if (subtitle != null) {
+                subtitleTextView.setText(subtitle);
+                subtitleTextView.setVisibility(VISIBLE);
+            } else {
+                subtitleTextView.setVisibility(GONE);
+            }
         }
     }
 
+    @NonNull
     protected TextView getTitleTextView() {
         return titleTextView;
     }
 
+    @Nullable
     protected TextView getSubtitleTextView() {
         return subtitleTextView;
     }
 
+    @NonNull
     protected View getPositiveButton() {
         return positiveButton;
     }
 
+    @NonNull
     protected View getNegativeButton() {
         return negativeButton;
     }

@@ -61,7 +61,7 @@ public class Settings<T> implements ISettings<T> {
             throw new IllegalArgumentException("Event value must be one of String, Boolean, Long, Integer or Float");
         }
 
-        //TODO is it alright that this is asynchronous?
+        // todo: is it alright that this is asynchronous?
         editor.apply();
     }
 

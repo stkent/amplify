@@ -35,7 +35,10 @@ final class DefaultLayoutQuestionView extends CustomLayoutQuestionView {
         setBackgroundColor(config.getFillColor());
 
         getTitleTextView().setTextColor(config.getTitleTextColor());
-        getSubtitleTextView().setTextColor(config.getSubtitleTextColor());
+
+        if (getSubtitleTextView() != null) {
+            getSubtitleTextView().setTextColor(config.getSubtitleTextColor());
+        }
 
         if (getPositiveButton() instanceof TextView) {
             ((TextView) getPositiveButton()).setTextColor(config.getPositiveButtonTextColor());
@@ -44,6 +47,8 @@ final class DefaultLayoutQuestionView extends CustomLayoutQuestionView {
         if (getNegativeButton() instanceof TextView) {
             ((TextView) getNegativeButton()).setTextColor(config.getNegativeButtonTextColor());
         }
+
+        // todo: instead, build appropriate drawables for button fill/border, with pressed states
 
         getPositiveButton().setBackgroundColor(config.getPositiveButtonBackgroundColor());
         getNegativeButton().setBackgroundColor(config.getNegativeButtonBackgroundColor());
