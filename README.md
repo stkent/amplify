@@ -302,22 +302,30 @@ Provided by the `CustomLayoutPromptView` class. You provide the basic layouts to
         app:prompt_view_thanks_title="Custom Title String"
         app:prompt_view_thanks_subtitle="Custom Subtitle String" />
 
-The `prompt_view_question_layout` and `prompt_view_thanks_layout` attributes are **required** and subject to some additional requirements (listed below). All other attributes are optional.
+The `prompt_view_question_layout` attribute is **required** and subject to some additional requirements (listed below). All other attributes are optional. If `prompt_view_thanks_layout` is not provided, the prompt will automatically dismiss at the end of every flow. If it is provided, the user will see the thanks view whenever they agree to give feedback.
 
-#### Included View Requirements
+#### Included Question Layout Requirements
 
-TODO: indicate where these rules may safely be broken!
-
-The layout referenced by `prompt_view_question_layout` must include:
+The layout referenced by `prompt_view_question_layout` _must_ include:
 
 - A `TextView` subclass with id `amplify_title_text_view`;
-- A `TextView` subclass with id `amplify_subtitle_text_view`;
 - A `TextView` subclass with id `amplify_positive_button`;
 - A `TextView` subclass with id `amplify_negative_button`.
 
-The layout referenced by `prompt_view_thanks_layout ` must include:
+If a view is found with an appropriate button id but it is _not_ a `TextView` subclasses, the library will gracefully no-op when trying to set the button text.
 
-- A `TextView` subclass with id `amplify_title_text_view`;
+The layout referenced by `prompt_view_question_layout` _may_ include:
+
+   - A `TextView` subclass with id `amplify_subtitle_text_view`;
+ 
+#### Included Thanks Layout Requirements 
+
+The layout referenced by `prompt_view_thanks_layout ` _must_ include:
+
+- A `TextView` subclass with id `amplify_title_text_view`.
+
+The layout referenced by `prompt_view_thanks_layout ` _may_ include:
+
 - A `TextView` subclass with id `amplify_subtitle_text_view`.
 
 TODO: show some screenshots of examples created using this method?
