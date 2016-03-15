@@ -234,28 +234,140 @@ public class ExampleApplication extends Application {
 
 ## Prompt UI
 
+_amplify_ provides two configurable prompt UIs.
+
+### Default Layout
+
+**Use this if you are happy with the basic layout of the prompt shown above, but need to customize colors or wording!**
+
+Provided by the `DefaultLayoutPromptView` class. The basic layouts of the questions and thanks presented to users of the embedding application are fixed, but the most important elements of those layouts (colors and text) are fully customizable. The full set of available xml configuration hooks is shown below (remember to use the `app` xml namespace when setting these properties!):
+
+    <com.github.stkent.amplify.prompt.DefaultLayoutPromptView
+        android:id="@+id/prompt_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:prompt_view_user_opinion_question_title="Custom Title String"
+        app:prompt_view_user_opinion_question_subtitle="Custom Subtitle String"
+        app:prompt_view_user_opinion_question_positive_button_label="Custom Button Title String"
+        app:prompt_view_user_opinion_question_negative_button_label="Custom Button Title String"
+        app:prompt_view_positive_feedback_question_title="Custom Title String"
+        app:prompt_view_positive_feedback_question_subtitle="Custom Subtitle String"
+        app:prompt_view_positive_feedback_question_positive_button_label="Custom Button Title String"
+        app:prompt_view_positive_feedback_question_negative_button_label="Custom Button Title String"
+        app:prompt_view_critical_feedback_question_title="Custom Title String"
+        app:prompt_view_critical_feedback_question_subtitle="Custom Subtitle String".
+        app:prompt_view_critical_feedback_question_positive_button_label="Custom Button Title String"
+        app:prompt_view_critical_feedback_question_negative_button_label="Custom Button Title String"
+        app:prompt_view_thanks_title="Custom Title String"
+        app:prompt_view_thanks_subtitle="Custom Subtitle String"
+        app:prompt_view_foreground_color="@color/custom_foreground_color"
+        app:prompt_view_background_color="@color/custom_background_color"
+        app:prompt_view_title_text_color="@color/custom_title_text_color"
+        app:prompt_view_subtitle_text_color="@color/custom_subtitle_text_color"
+        app:prompt_view_positive_button_text_color="@color/custom_positive_button_text_color"
+        app:prompt_view_positive_button_background_color="@color/custom_positive_button_background_color"
+        app:prompt_view_negative_button_text_color="@color/custom_negative_button_text_color"
+        app:prompt_view_negative_button_background_color="@color/custom_negative_button_background_color" />
+
+All attributes are optional.
+
+TODO: show some screenshots of examples created using this method?
+
+### Custom Layout
+
+**Use this if you need to provide a structurally different prompt layout, require custom fonts, etc.**
+
+Provided by the `CustomLayoutPromptView` class. You provide the basic layouts to use, and any customization of the default strings you require. The full set of available xml configuration hooks is shown below (remember to use the `app` xml namespace when setting these properties!):
+
+    <com.github.stkent.amplify.prompt.DefaultLayoutPromptView
+        android:id="@+id/prompt_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:prompt_view_question_layout="@layout/include_amplify_question_layout"
+        app:prompt_view_thanks_layout="@layout/include_amplify_question_layout"
+        app:prompt_view_user_opinion_question_title="Custom Title String"
+        app:prompt_view_user_opinion_question_subtitle="Custom Subtitle String"
+        app:prompt_view_user_opinion_question_positive_button_label="Custom Button Title String"
+        app:prompt_view_user_opinion_question_negative_button_label="Custom Button Title String"
+        app:prompt_view_positive_feedback_question_title="Custom Title String"
+        app:prompt_view_positive_feedback_question_subtitle="Custom Subtitle String"
+        app:prompt_view_positive_feedback_question_positive_button_label="Custom Button Title String"
+        app:prompt_view_positive_feedback_question_negative_button_label="Custom Button Title String"
+        app:prompt_view_critical_feedback_question_title="Custom Title String"
+        app:prompt_view_critical_feedback_question_subtitle="Custom Subtitle String"
+        app:prompt_view_critical_feedback_question_positive_button_label="Custom Button Title String"
+        app:prompt_view_critical_feedback_question_negative_button_label="Custom Button Title String"
+        app:prompt_view_thanks_title="Custom Title String"
+        app:prompt_view_thanks_subtitle="Custom Subtitle String" />
+
+The `prompt_view_question_layout` and `prompt_view_thanks_layout` attributes are **required** and subject to some additional requirements (listed below). All other attributes are optional.
+
+#### Included View Requirements
+
+TODO: indicate where these rules may safely be broken!
+
+The layout referenced by `prompt_view_question_layout` must include:
+
+- A `TextView` subclass with id `amplify_title_text_view`;
+- A `TextView` subclass with id `amplify_subtitle_text_view`;
+- A `TextView` subclass with id `amplify_positive_button`;
+- A `TextView` subclass with id `amplify_negative_button`.
+
+The layout referenced by `prompt_view_thanks_layout ` must include:
+
+- A `TextView` subclass with id `amplify_title_text_view`;
+- A `TextView` subclass with id `amplify_subtitle_text_view`.
+
+TODO: show some screenshots of examples created using this method?
+
 # Customizing
 
-## Event Tracking
+## Rules
 
-### Custom Environment Checks
+### Applying Custom Environment-based Rules
 
-A new custom environment check can be added by implementing the `IEnvironmentCheck` interface and passing an instance of the implementation to the `Amplify` instance method `addEnvironmentCheck()`.
+A new custom environment-based rule can be added by implementing the `IEnvironmentBasedRule` interface and passing an instance of this implementation to the `Amplify` instance method `addEnvironmentBasedRule`:
 
-### Custom Events
+```java
+public class ExampleApplication extends Application {
+    
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        
+        Amplify.get(this)
+               .setFeedbackEmailAddress("someone@example.com")
+               .addEnvironmentBasedRule(new MyCustomEnvironmentBasedRule());
+    }
+    
+}
+```
 
-A new custom event can be tracked by implementing the `ITrackableEvent` interface and passing an instance of the implementation to one of the following `Amplify` instance methods:
+### Tracking Custom Events
 
-- `trackTotalEventCount()`
-- `trackFirstEventTime()`
-- `trackLastEventTime()`
-- `trackLastEventVersion()`
+A new custom event can be tracked by implementing the `IEvent` interface, registering this event with a corresponding (default or custom) `IEventBasedRule` using one of the following methods:
 
-You will also need to provide an event check when calling any of these methods. The data passed to this paired event check is linked to the particular tracking method called. For example, if you register an event using the `trackTotalEventCount()` method, the corresponding event check will be called with integer values that represent the number of event occurrences to date.
+- `addTotalEventCountRule`;
+- `addFirstEventTimeRule`;
+- `addLastEventTimeRule`;
+- `addLastEventVersionRule`,
 
-### Custom Event Checks
+and then notifying the `Amplify` instance of occurrences of this event using the `notifyEventTriggered` method:
 
-A new custom event check can be created by implementing the `IEventBasedRule<T>` interface. The generic type `T` must be one of: `Integer`, `Long`, or `String`. The type you select will depend on which tracked event aspect (time, count, etc.) you wish to apply this check to.
+    Amplify.get(this).notifyEventTriggered(new MyCustomEvent());
+    
+As before, the dimension of the event that will be tracked is dictated by which registration method is called.
+
+### Applying Custom Event-based Rules
+
+A new custom event can be tracked by implementing the `IEventBasedRule<T>` interface, and registering a (default or custom) `IEvent` with this custom `IEventBasedRule` using one of the following methods:
+
+- `addTotalEventCountRule`;
+- `addFirstEventTimeRule`;
+- `addLastEventTimeRule`;
+- `addLastEventVersionRule`.
+
+The generic type `T` must be one of: `Integer`, `Long`, or `String`. The type you select will depend on which tracked event aspect (time, count, etc.) you wish to apply this check to.
 
 ## Prompt UI
 

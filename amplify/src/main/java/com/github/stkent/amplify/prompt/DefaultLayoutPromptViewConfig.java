@@ -103,7 +103,7 @@ public final class DefaultLayoutPromptViewConfig {
 
         negativeButtonTextColor = suppliedColorOrNull(
                 typedArray,
-                R.styleable.DefaultLayoutPromptView_prompt_view_negative_button_background_color);
+                R.styleable.DefaultLayoutPromptView_prompt_view_negative_button_text_color);
 
         negativeButtonBackgroundColor = suppliedColorOrNull(
                 typedArray,
