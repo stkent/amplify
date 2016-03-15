@@ -33,10 +33,10 @@ import com.github.stkent.amplify.prompt.interfaces.IQuestionView;
 @SuppressLint("ViewConstructor")
 class CustomLayoutQuestionView extends FrameLayout implements IQuestionView {
 
-    protected final TextView titleTextView;
-    protected final TextView subtitleTextView;
-    protected final View positiveButton;
-    protected final View negativeButton;
+    private final TextView titleTextView;
+    private final TextView subtitleTextView;
+    private final View positiveButton;
+    private final View negativeButton;
 
     private IQuestionPresenter questionPresenter;
 
@@ -66,6 +66,7 @@ class CustomLayoutQuestionView extends FrameLayout implements IQuestionView {
             }
         });
 
+        // todo: validate early
         // todo: build appropriate drawables for button fill/border, with pressed states
     }
 
@@ -96,4 +97,19 @@ class CustomLayoutQuestionView extends FrameLayout implements IQuestionView {
         }
     }
 
+    protected TextView getTitleTextView() {
+        return titleTextView;
+    }
+
+    protected TextView getSubtitleTextView() {
+        return subtitleTextView;
+    }
+
+    protected View getPositiveButton() {
+        return positiveButton;
+    }
+
+    protected View getNegativeButton() {
+        return negativeButton;
+    }
 }

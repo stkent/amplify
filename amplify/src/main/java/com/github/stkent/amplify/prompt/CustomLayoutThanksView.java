@@ -29,10 +29,10 @@ import com.github.stkent.amplify.prompt.interfaces.IThanks;
 import com.github.stkent.amplify.prompt.interfaces.IThanksView;
 
 @SuppressLint("ViewConstructor")
-public class CustomLayoutThanksView extends FrameLayout implements IThanksView {
+class CustomLayoutThanksView extends FrameLayout implements IThanksView {
 
-    protected final TextView titleTextView;
-    protected final TextView subtitleTextView;
+    private final TextView titleTextView;
+    private final TextView subtitleTextView;
 
     public CustomLayoutThanksView(
             final Context context,
@@ -58,4 +58,13 @@ public class CustomLayoutThanksView extends FrameLayout implements IThanksView {
             subtitleTextView.setVisibility(GONE);
         }
     }
+
+    protected TextView getTitleTextView() {
+        return titleTextView;
+    }
+
+    protected TextView getSubtitleTextView() {
+        return subtitleTextView;
+    }
+
 }

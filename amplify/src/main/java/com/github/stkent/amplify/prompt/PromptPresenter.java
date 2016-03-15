@@ -24,17 +24,6 @@ import com.github.stkent.amplify.prompt.interfaces.IPromptView;
 import com.github.stkent.amplify.tracking.PromptViewEvent;
 import com.github.stkent.amplify.tracking.interfaces.IEventListener;
 
-import static com.github.stkent.amplify.tracking.PromptViewEvent.PROMPT_DISMISSED;
-import static com.github.stkent.amplify.tracking.PromptViewEvent.PROMPT_SHOWN;
-import static com.github.stkent.amplify.tracking.PromptViewEvent.THANKS_SHOWN;
-import static com.github.stkent.amplify.tracking.PromptViewEvent.USER_DECLINED_CRITICAL_FEEDBACK;
-import static com.github.stkent.amplify.tracking.PromptViewEvent.USER_DECLINED_FEEDBACK;
-import static com.github.stkent.amplify.tracking.PromptViewEvent.USER_DECLINED_POSITIVE_FEEDBACK;
-import static com.github.stkent.amplify.tracking.PromptViewEvent.USER_GAVE_CRITICAL_FEEDBACK;
-import static com.github.stkent.amplify.tracking.PromptViewEvent.USER_GAVE_FEEDBACK;
-import static com.github.stkent.amplify.tracking.PromptViewEvent.USER_GAVE_POSITIVE_FEEDBACK;
-import static com.github.stkent.amplify.tracking.PromptViewEvent.USER_INDICATED_CRITICAL_OPINION;
-import static com.github.stkent.amplify.tracking.PromptViewEvent.USER_INDICATED_POSITIVE_OPINION;
 import static com.github.stkent.amplify.utils.Constants.EXHAUSTIVE_SWITCH_EXCEPTION_MESSAGE;
 
 public final class PromptPresenter implements IPromptPresenter {
@@ -63,7 +52,7 @@ public final class PromptPresenter implements IPromptPresenter {
 
     public void start() {
         promptView.queryUserOpinion();
-        eventListener.notifyEventTriggered(PROMPT_SHOWN);
+        eventListener.notifyEventTriggered(PromptViewEvent.PROMPT_SHOWN);
     }
 
     @Override
@@ -73,11 +62,11 @@ public final class PromptPresenter implements IPromptPresenter {
         switch (userOpinion) {
             case POSITIVE:
                 promptView.requestPositiveFeedback();
-                eventListener.notifyEventTriggered(USER_INDICATED_POSITIVE_OPINION);
+                eventListener.notifyEventTriggered(PromptViewEvent.USER_INDICATED_POSITIVE_OPINION);
                 break;
             case NEGATIVE:
                 promptView.requestCriticalFeedback();
-                eventListener.notifyEventTriggered(USER_INDICATED_CRITICAL_OPINION);
+                eventListener.notifyEventTriggered(PromptViewEvent.USER_INDICATED_CRITICAL_OPINION);
                 break;
             default:
                 throw new IllegalStateException(EXHAUSTIVE_SWITCH_EXCEPTION_MESSAGE);
@@ -92,19 +81,19 @@ public final class PromptPresenter implements IPromptPresenter {
 
         switch (userOpinion) {
             case POSITIVE:
-                eventListener.notifyEventTriggered(USER_GAVE_POSITIVE_FEEDBACK);
-                eventListener.notifyEventTriggered(USER_GAVE_FEEDBACK);
+                eventListener.notifyEventTriggered(PromptViewEvent.USER_GAVE_POSITIVE_FEEDBACK);
+                eventListener.notifyEventTriggered(PromptViewEvent.USER_GAVE_FEEDBACK);
                 break;
             case NEGATIVE:
-                eventListener.notifyEventTriggered(USER_GAVE_CRITICAL_FEEDBACK);
-                eventListener.notifyEventTriggered(USER_GAVE_FEEDBACK);
+                eventListener.notifyEventTriggered(PromptViewEvent.USER_GAVE_CRITICAL_FEEDBACK);
+                eventListener.notifyEventTriggered(PromptViewEvent.USER_GAVE_FEEDBACK);
                 break;
             default:
                 throw new IllegalStateException(EXHAUSTIVE_SWITCH_EXCEPTION_MESSAGE);
         }
 
         promptView.thankUser();
-        eventListener.notifyEventTriggered(THANKS_SHOWN);
+        eventListener.notifyEventTriggered(PromptViewEvent.THANKS_SHOWN);
     }
 
     @Override
@@ -115,19 +104,19 @@ public final class PromptPresenter implements IPromptPresenter {
 
         switch (userOpinion) {
             case POSITIVE:
-                eventListener.notifyEventTriggered(USER_DECLINED_POSITIVE_FEEDBACK);
-                eventListener.notifyEventTriggered(USER_DECLINED_FEEDBACK);
+                eventListener.notifyEventTriggered(PromptViewEvent.USER_DECLINED_POSITIVE_FEEDBACK);
+                eventListener.notifyEventTriggered(PromptViewEvent.USER_DECLINED_FEEDBACK);
                 break;
             case NEGATIVE:
-                eventListener.notifyEventTriggered(USER_DECLINED_CRITICAL_FEEDBACK);
-                eventListener.notifyEventTriggered(USER_DECLINED_FEEDBACK);
+                eventListener.notifyEventTriggered(PromptViewEvent.USER_DECLINED_CRITICAL_FEEDBACK);
+                eventListener.notifyEventTriggered(PromptViewEvent.USER_DECLINED_FEEDBACK);
                 break;
             default:
                 throw new IllegalStateException(EXHAUSTIVE_SWITCH_EXCEPTION_MESSAGE);
         }
 
         promptView.dismiss();
-        eventListener.notifyEventTriggered(PROMPT_DISMISSED);
+        eventListener.notifyEventTriggered(PromptViewEvent.PROMPT_DISMISSED);
     }
 
 }

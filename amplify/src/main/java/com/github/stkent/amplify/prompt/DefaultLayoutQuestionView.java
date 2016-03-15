@@ -34,19 +34,19 @@ final class DefaultLayoutQuestionView extends CustomLayoutQuestionView {
 
         setBackgroundColor(config.getFillColor());
 
-        titleTextView.setTextColor(config.getTitleTextColor());
-        subtitleTextView.setTextColor(config.getSubtitleTextColor());
+        getTitleTextView().setTextColor(config.getTitleTextColor());
+        getSubtitleTextView().setTextColor(config.getSubtitleTextColor());
 
-        if (positiveButton instanceof TextView) {
-            ((TextView) positiveButton).setTextColor(config.getPositiveButtonTextColor());
+        if (getPositiveButton() instanceof TextView) {
+            ((TextView) getPositiveButton()).setTextColor(config.getPositiveButtonTextColor());
         }
 
-        if (negativeButton instanceof TextView) {
-            ((TextView) negativeButton).setTextColor(config.getNegativeButtonTextColor());
+        if (getNegativeButton() instanceof TextView) {
+            ((TextView) getNegativeButton()).setTextColor(config.getNegativeButtonTextColor());
         }
 
-        positiveButton.setBackgroundColor(config.getPositiveButtonBackgroundColor());
-        negativeButton.setBackgroundColor(config.getNegativeButtonBackgroundColor());
+        getPositiveButton().setBackgroundColor(config.getPositiveButtonBackgroundColor());
+        getNegativeButton().setBackgroundColor(config.getNegativeButtonBackgroundColor());
     }
 
 }
