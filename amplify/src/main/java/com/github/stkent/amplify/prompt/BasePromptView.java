@@ -48,7 +48,7 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
 
     private T displayedQuestionView;
 
-    protected boolean isDisplayed = false;
+    protected boolean isDisplayed;
 
     private final IQuestionPresenter userOpinionQuestionPresenter =
             new IQuestionPresenter() {
