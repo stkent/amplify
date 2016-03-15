@@ -302,6 +302,28 @@ Provided by the `CustomLayoutPromptView` class. You provide the basic layouts to
 
 The `prompt_view_question_layout` and `prompt_view_thanks_layout` attributes are **required** and subject to some additional requirements (listed below). All other attributes are optional.
 
+### Listening For `IPromptView` Events
+
+It may sometimes be useful to know when the state of the `IPromptView` subclass you are using changes. For example, you may want to:
+
+- track user interactions with the prompt view using your preferred analytics suite;
+- adjust other UI elements when the prompt view is shown/hidden.
+
+To allow this, the `promptIfReady` method optionally accepts an `IEventListener<PromptViewEvent>` parameter that will receive notifications of all tracked `PromptViewEvents`. An example implementation demonstrating these use-cases is given below:
+
+    Amplify.get(this).promptIfReady(this, promptView, new IEventListener<PromptViewEvent>() {
+        @Override
+        public void notifyEventTriggered(@NonNull final PromptViewEvent event) {
+            AnalyticsTracker.notifyOfEvent(event);
+        
+            if (event == PROMPT_SHOWN) {
+                relatedView.setVisibility(VISIBLE);
+            } else if (event == PROMPT_DISMISSED) {
+                relatedView.setVisibility(GONE);
+            }
+        }
+    });
+
 #### Included View Requirements
 
 TODO: indicate where these rules may safely be broken!
@@ -370,6 +392,10 @@ A new custom event can be tracked by implementing the `IEventBasedRule<T>` inter
 The generic type `T` must be one of: `Integer`, `Long`, or `String`. The type you select will depend on which tracked event aspect (time, count, etc.) you wish to apply this check to.
 
 ## Prompt UI
+
+To provide fully-custom views for each phase of the typical prompt flow, implement the `IPromptView` interface and pass an instance of this implementation to one of the `promptIfReady` methods. You should save the presenter injected into your custom class via the `setPresenter` method, and communicate user-driven events to the presenter within your custom view. See the `BasePromptView` for a sample implementation in which all questions are assumed to share a common view structure.
+
+To provide a totally custom experience in which _amplify_ does not manage the prompt/rating/feedback UI flows at all, replace any calls to `promptIfReady` with calls to `shouldPrompt`. This method will evaluate all rules and provide a boolean that indicates whether every provided rule is currently satisfied. You may then use this hook to begin your own feedback request flow.
 
 # Case Studies
 

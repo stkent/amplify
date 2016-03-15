@@ -255,7 +255,7 @@ public final class Amplify implements IEventListener {
             }
         };
 
-        if (shouldAskForRating()) {
+        if (shouldPrompt()) {
             final IPromptPresenter promptPresenter
                     = new PromptPresenter(combinedEventListener, promptView);
 
@@ -263,7 +263,7 @@ public final class Amplify implements IEventListener {
         }
     }
 
-    public boolean shouldAskForRating() {
+    public boolean shouldPrompt() {
         return alwaysShow | (
                   appLevelEventRulesManager.shouldAllowFeedbackPrompt()
                 & environmentBasedRulesManager.shouldAllowFeedbackPrompt()
