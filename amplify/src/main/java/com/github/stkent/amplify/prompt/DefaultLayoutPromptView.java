@@ -36,7 +36,7 @@ public final class DefaultLayoutPromptView
 
     public DefaultLayoutPromptView(
             final Context context,
-            final @Nullable AttributeSet attributeSet) {
+            @Nullable final AttributeSet attributeSet) {
 
         this(context, attributeSet, 0);
     }
