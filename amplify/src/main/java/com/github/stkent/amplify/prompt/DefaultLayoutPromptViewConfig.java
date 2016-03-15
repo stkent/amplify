@@ -205,10 +205,6 @@ public final class DefaultLayoutPromptViewConfig {
         @Nullable private Integer negativeButtonBackgroundColor;
         @Nullable private Integer negativeButtonBorderColor;
 
-        public Builder() {
-            // This constructor intentionally left blank.
-        }
-
         public Builder setForegroundColor(@ColorInt final int foregroundColor) {
             this.foregroundColor = foregroundColor;
             return this;
