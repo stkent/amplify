@@ -22,6 +22,10 @@ You can run these checks locally by executing the following Gradle command:
 
 Travis CI runs the same checks for each pull request and marks the build as failing if any check does not pass. Detailed information about every detected violation will be automatically posted to the conversation for that pull request. Violation detection and reporting is handled by the [Gnag](https://github.com/btkelly/gnag) Gradle plugin.
 
+## Class Order
+
+TODO: add text to indicate that abstract methods should be listed before any other instance members.
+
 # Running Tests
 
 Run the library unit test suite by executing the Gradle command:

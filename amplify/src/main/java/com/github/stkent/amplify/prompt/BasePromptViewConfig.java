@@ -26,7 +26,8 @@ import com.github.stkent.amplify.prompt.interfaces.IThanks;
 
 import static com.github.stkent.amplify.utils.StringUtils.defaultIfBlank;
 
-// @formatter:off
+//@formatter:off
+@SuppressWarnings({"PMD.ExcessiveParameterList", "checkstyle:parameternumber"})
 public final class BasePromptViewConfig {
 
     private static final String DEFAULT_USER_OPINION_QUESTION_TITLE                 = "Enjoying the app?";
@@ -96,7 +97,7 @@ public final class BasePromptViewConfig {
                 R.styleable.BasePromptView_prompt_view_thanks_subtitle);
     }
 
-    private BasePromptViewConfig(
+    protected BasePromptViewConfig(
             @Nullable final String userOpinionQuestionTitle,
             @Nullable final String userOpinionQuestionPositiveButtonLabel,
             @Nullable final String userOpinionQuestionNegativeButtonLabel,
@@ -364,4 +365,4 @@ public final class BasePromptViewConfig {
     }
 
 }
-// @formatter:on
+//@formatter:on

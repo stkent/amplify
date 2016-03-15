@@ -23,7 +23,8 @@ import android.support.annotation.StyleableRes;
 
 import com.github.stkent.amplify.R;
 
-// @formatter:off
+//@formatter:off
+@SuppressWarnings({"PMD.ExcessiveParameterList", "checkstyle:parameternumber"})
 public final class DefaultLayoutPromptViewConfig {
 
     @ColorInt
@@ -113,7 +114,7 @@ public final class DefaultLayoutPromptViewConfig {
                 R.styleable.DefaultLayoutPromptView_prompt_view_negative_button_border_color);
     }
 
-    private DefaultLayoutPromptViewConfig(
+    protected DefaultLayoutPromptViewConfig(
             @Nullable final Integer foregroundColor,
             @Nullable final Integer backgroundColor,
             @Nullable final Integer titleTextColor,
@@ -276,4 +277,5 @@ public final class DefaultLayoutPromptViewConfig {
     }
 
 }
-// @formatter:on
+//CHECKSTYLE.ON: ParameterNumberCheck
+//@formatter:on

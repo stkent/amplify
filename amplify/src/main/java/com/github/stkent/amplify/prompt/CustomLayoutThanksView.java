@@ -34,7 +34,7 @@ class CustomLayoutThanksView extends FrameLayout implements IThanksView {
     private final TextView titleTextView;
     private final TextView subtitleTextView;
 
-    public CustomLayoutThanksView(
+    CustomLayoutThanksView(
             final Context context,
             @LayoutRes final int layoutRes) {
 

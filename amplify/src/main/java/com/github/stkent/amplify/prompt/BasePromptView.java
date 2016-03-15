@@ -79,15 +79,15 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
     private IPromptPresenter promptPresenter;
     private BasePromptViewConfig basePromptViewConfig;
 
-    public BasePromptView(final Context context) {
+    BasePromptView(final Context context) {
         this(context, null);
     }
 
-    public BasePromptView(final Context context, @Nullable final AttributeSet attributeSet) {
+    BasePromptView(final Context context, @Nullable final AttributeSet attributeSet) {
         this(context, attributeSet, 0);
     }
 
-    public BasePromptView(
+    BasePromptView(
             final Context context,
             @Nullable final AttributeSet attributeSet,
             final int defStyleAttr) {

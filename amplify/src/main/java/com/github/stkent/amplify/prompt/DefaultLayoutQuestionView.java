@@ -26,7 +26,7 @@ import com.github.stkent.amplify.R;
 @SuppressLint("ViewConstructor")
 final class DefaultLayoutQuestionView extends CustomLayoutQuestionView {
 
-    public DefaultLayoutQuestionView(
+    DefaultLayoutQuestionView(
             final Context context,
             @NonNull final DefaultLayoutPromptViewConfig config) {
 
