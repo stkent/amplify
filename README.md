@@ -87,27 +87,26 @@ public class ExampleApplication extends Application {
 ```
 
 <ol start="3">
-  <li>Add a <code>PromptView</code> instance to all xml layouts in which you may want to prompt the user for their feedback:</li>
+  <li>Add a <code>DefaultLayoutPromptView</code> instance to all xml layouts in which you may want to prompt the user for their feedback:</li>
 </ol>
 
 ```xml
-<com.github.stkent.amplify.views.PromptView
+<com.github.stkent.amplify.prompt.DefaultLayoutPromptView
     android:id="@+id/prompt_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content" />
 ```
 
 <ol start="4">
-  <li>Call the state tracker's <code>promptIfReady</code> method when appropriate, passing in your <code>PromptView</code> instance:</li>
+  <li>Call the state tracker's <code>promptIfReady</code> method when appropriate, passing in the current <code>Activity</code> and your <code>DefaultLayoutPromptView</code> instance:</li>
 </ol>
 
 ```java
-PromptView promptView = (PromptView) findViewById(R.id.prompt_view);
-
-Amplify.get(context).promptIfReady(promptView);
+DefaultLayoutPromptView promptView = (DefaultLayoutPromptView) findViewById(R.id.prompt_view);
+Amplify.get(context).promptIfReady(activity, promptView);
 ```
 
-That's it! The prompt timing calculator will evaluate the default rules each time `promptIfReady` is called, and instruct the `PromptView` to automatically update its visibility based on the result. If the user chooses to interact with the prompt, the sequence of questions asked is also automatically managed by the `PromptView`.
+That's it! The prompt timing calculator will evaluate the default rules each time `promptIfReady` is called, and instruct the `PromptView` to automatically update its visibility based on the result. If the user chooses to interact with the prompt, the sequence of questions asked is also automatically managed by the `PromptView`. If the user decides to give feedback, _amplify_ will automatically handle opening the appropriate Google Play Store page or email client with prepopulated details.
 
 ## Default Behavior
 
@@ -129,36 +128,109 @@ More information on how to apply your own collection of rules is available in th
 
 # Configuring
 
-## Event Tracking
+## Rules
 
-### Default Environment Checks
+_amplify_ calculates prompt timing based on two types of rule.
 
-The `GooglePlayStoreIsAvailableCheck` check will pass if the Google Play Store is available on a user's device, and will fail otherwise.
+### Environment-based Rules
 
-### Default Events
+These rules are based on the environment/device in which the embedding application is currently running. For example, they may query whether or not the current device is capable of handling a specific [`Intent`](http://developer.android.com/reference/android/content/Intent.html).
 
-#### Feedback Prompt Events
+_amplify_ is packaged with the following environment-based rules:
 
-These events are associated with user actions related to the feedback prompt UI.
+- `GooglePlayStoreRule`: verifies whether or not the Google Play Store is installed on the current device.
 
-- User agreed to provide positive feedback
-- User agreed to provide critical feedback
-- User declined to provide positive feedback
-- User declined to provide critical feedback
+Environment-based rules can be applied by calling the `addEnvironmentBasedRule` method when configuring your `Amplify` instance. For example:
 
-#### Application-level Events
+```java
+public class ExampleApplication extends Application {
+    
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        
+        Amplify.get(this)
+               .setFeedbackEmailAddress("someone@example.com")
+               .addEnvironmentBasedRule(new GooglePlayStoreRule()); // Prompt never shown if Google Play Store not installed.
+    }
+    
+}
+```
 
-- Application installed
-- Application updated
-- Application crashed
+### Event-based Rules
 
-These (pseudo-)events are associated with application-level actions.
+These rules are based on tracked events that occur within the embedding application. Different dimensions of these events can be tracked (time of first/most recent occurrence, total number of occurrences, etc.)
 
-### Default Event Checks
+The **times** of the following special events are automatically tracked whenever _amplify_ is enabled:
 
-When calling `applyAllDefaultRules` on the `Amplify` instance, the following checks are registered by default:
+- original app install (note: this can pre-date the time at which _amplify_ was added to your application!);
+- last app update time;
+- last app crash time;
 
-- the `GooglePlayStoreIsAvailableCheck`, which will block all prompts if the Google Play Store is not available.
+Rules related to each of these events can be configured using the dedicated configuration methods `setInstallTimeCooldownDays`, `setLastUpdateTimeCooldownDays`, and `setLastCrashTimeCooldownDays`. For example:
+
+```java
+public class ExampleApplication extends Application {
+    
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        
+        Amplify.get(this)
+               .setFeedbackEmailAddress("someone@example.com")
+               .setInstallTimeCooldownDays(14) // Prompt not shown within two weeks of initial install.
+               .setLastUpdateTimeCooldownDays(7) // Prompt not shown within one week of most recent update.
+               .setLastCrashTimeCooldownDays(7); // Prompt not shown within one week of most recent crash.
+    }
+    
+}
+```
+
+The following events are also automatically reported to the shared `Amplify` instance whenever you use one of the `promptIfReady` methods to show your prompt:
+
+- prompt was shown;
+- user indicated a positive opinion of the app;
+- user indicated a critical opinion of the app;
+- user agreed to give feedback (either positive or critical);
+- user declined to give feedback (either positive or critical);
+- user agreed to give positive feedback;
+- user agreed to give critical feedback;
+- user declined to give positive feedback;
+- user declined to give critical feedback;
+- thanks view was shown;
+- prompt was auto-dismissed.
+
+To apply rules based on these events, use the configuration methods `addTotalEventCountRule`, `addFirstEventTimeRule`, `addLastEventTimeRule`, `addLastEventVersionRule`. The method you select will determine which dimension of the event is tracked using `SharedPreferences`. Each method accepts two parameters:
+
+- the event to be tracked; in this case, one of the events defined in the `PromptViewEvent` enum;
+- the event-based rule to be applied to that tracked dimension.
+
+_amplify_ is packaged with the following event-based rules:
+
+- `CooldownDaysRule`: checks whether enough time has elapsed since the last occurrence of this event.
+- `MaximumCountRule`: checks whether this event has occurred enough times.
+- `VersionChangedRule`: checks whether this event has occurred for the current version of the embedding application.
+- `WarmupDaysRule`: checks whether enough time has elapsed since the first occurrence of this event.
+
+An example configuration that leverage these rules is below:
+
+TODO: add a few more example rules to this snippet!
+
+```java
+public class ExampleApplication extends Application {
+    
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        
+        Amplify.get(this)
+               .setFeedbackEmailAddress("someone@example.com")
+               .addTotalEventCountRule(PromptViewEvent.USER_GAVE_POSITIVE_FEEDBACK,
+                        new MaximumCountRule(1)) // Never ask the user for feedback again if they already responded positively.
+    }
+    
+}
+```                
 
 ## Prompt UI
 
@@ -189,7 +261,7 @@ A new custom event check can be created by implementing the `IEventBasedRule<T>`
 
 # Case Studies
 
-Early versions of _amplify_ are integrated in apps with state-wide and nation-wide audiences, with over 200,000 installs combined. After integrating _amplify_, our data indicates that the number of Play Store reviews received increases by a factor of 5x-10x, and the number of feedback emails received doubles. We present screenshots showing example implementations below:
+Early versions of _amplify_ are integrated in apps with state-wide and nation-wide audiences, with over 200,000 installs combined. After integrating _amplify_, our data indicates that the number of Play Store reviews received increases by a factor of **5x-10x**, and the number of feedback emails received **doubles**. We present screenshots showing example implementations below:
 
 | Styled default layout | Custom layout         |
 |-----------------------|-----------------------|
