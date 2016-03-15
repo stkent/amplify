@@ -34,7 +34,10 @@ public final class DefaultLayoutThanksView extends CustomLayoutThanksView {
         setBackgroundColor(config.getFillColor());
 
         getTitleTextView().setTextColor(config.getTitleTextColor());
-        getSubtitleTextView().setTextColor(config.getSubtitleTextColor());
+
+        if (getSubtitleTextView() != null) {
+            getSubtitleTextView().setTextColor(config.getSubtitleTextColor());
+        }
     }
 
 }

@@ -20,6 +20,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -27,11 +28,15 @@ import android.widget.TextView;
 import com.github.stkent.amplify.R;
 import com.github.stkent.amplify.prompt.interfaces.IThanks;
 import com.github.stkent.amplify.prompt.interfaces.IThanksView;
+import com.github.stkent.amplify.utils.Constants;
 
 @SuppressLint("ViewConstructor")
 class CustomLayoutThanksView extends FrameLayout implements IThanksView {
 
+    @NonNull
     private final TextView titleTextView;
+
+    @Nullable
     private final TextView subtitleTextView;
 
     CustomLayoutThanksView(
@@ -41,7 +46,13 @@ class CustomLayoutThanksView extends FrameLayout implements IThanksView {
         super(context);
         LayoutInflater.from(context).inflate(layoutRes, this, true);
 
-        titleTextView = (TextView) findViewById(R.id.amplify_title_text_view);
+        final TextView titleTextView = (TextView) findViewById(R.id.amplify_title_text_view);
+
+        if (titleTextView == null) {
+            throw new IllegalStateException(Constants.MISSING_LAYOUT_IDS_EXCEPTION_MESSAGE);
+        }
+
+        this.titleTextView = titleTextView;
         subtitleTextView = (TextView) findViewById(R.id.amplify_subtitle_text_view);
     }
 
@@ -51,18 +62,22 @@ class CustomLayoutThanksView extends FrameLayout implements IThanksView {
 
         final String subtitle = thanks.getSubTitle();
 
-        if (subtitle != null) {
-            subtitleTextView.setText(subtitle);
-            subtitleTextView.setVisibility(VISIBLE);
-        } else {
-            subtitleTextView.setVisibility(GONE);
+        if (subtitleTextView != null) {
+            if (subtitle != null) {
+                subtitleTextView.setText(subtitle);
+                subtitleTextView.setVisibility(VISIBLE);
+            } else {
+                subtitleTextView.setVisibility(GONE);
+            }
         }
     }
 
+    @NonNull
     protected TextView getTitleTextView() {
         return titleTextView;
     }
 
+    @Nullable
     protected TextView getSubtitleTextView() {
         return subtitleTextView;
     }

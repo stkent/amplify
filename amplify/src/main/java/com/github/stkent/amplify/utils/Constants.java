@@ -21,6 +21,9 @@ public final class Constants {
     public static final String EXHAUSTIVE_SWITCH_EXCEPTION_MESSAGE
             = "This switch statement should be exhaustive.";
 
+    public static final String MISSING_LAYOUT_IDS_EXCEPTION_MESSAGE
+            = "Provided layout does not include views with required ids.";
+
     private Constants() {
         // This constructor intentionally left blank.
     }

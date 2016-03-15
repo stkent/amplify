@@ -30,6 +30,7 @@ import com.github.stkent.amplify.R;
 import com.github.stkent.amplify.prompt.interfaces.IQuestion;
 import com.github.stkent.amplify.prompt.interfaces.IQuestionPresenter;
 import com.github.stkent.amplify.prompt.interfaces.IQuestionView;
+import com.github.stkent.amplify.utils.Constants;
 
 @SuppressLint("ViewConstructor")
 class CustomLayoutQuestionView extends FrameLayout implements IQuestionView {
@@ -63,8 +64,7 @@ class CustomLayoutQuestionView extends FrameLayout implements IQuestionView {
         final View negativeButton = findViewById(R.id.amplify_negative_button);
 
         if (titleTextView == null || positiveButton == null || negativeButton == null) {
-            throw new IllegalStateException(
-                    "Provided layout does not include views with required ids.");
+            throw new IllegalStateException(Constants.MISSING_LAYOUT_IDS_EXCEPTION_MESSAGE);
         }
 
         this.titleTextView = titleTextView;
