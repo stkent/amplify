@@ -18,8 +18,8 @@ package com.github.stkent.amplify.tracking.prerequisites;
 
 import android.support.annotation.NonNull;
 
-import com.github.stkent.amplify.tracking.interfaces.IEnvironmentCapabilitiesProvider;
 import com.github.stkent.amplify.tracking.interfaces.IEnvironmentBasedRule;
+import com.github.stkent.amplify.tracking.interfaces.IEnvironmentCapabilitiesProvider;
 
 /**
  * An implementation of {@code IEnvironmentBasedRule} that verifies whether or not

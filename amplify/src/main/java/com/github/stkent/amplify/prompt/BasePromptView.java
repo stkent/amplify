@@ -37,13 +37,16 @@ import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import static com.github.stkent.amplify.prompt.interfaces.IPromptPresenter.UserOpinion.NEGATIVE;
 import static com.github.stkent.amplify.prompt.interfaces.IPromptPresenter.UserOpinion.POSITIVE;
 
-abstract class BasePromptView extends FrameLayout implements IPromptView {
+abstract class BasePromptView<T extends View & IQuestionView, U extends View & IThanksView>
+        extends FrameLayout implements IPromptView {
 
     @NonNull
-    protected abstract <T extends View & IQuestionView> T getQuestionView();
+    protected abstract T getQuestionView();
 
     @NonNull
-    protected abstract <T extends View & IThanksView> T getThanksView();
+    protected abstract U getThanksView();
+
+    private T displayedQuestionView;
 
     protected boolean isDisplayed = false;
 
@@ -102,39 +105,38 @@ abstract class BasePromptView extends FrameLayout implements IPromptView {
 
     @Override
     public final void queryUserOpinion() {
-        final IQuestionView userOpinionQuestionView = getQuestionView();
+        final T userOpinionQuestionView = getQuestionView();
         userOpinionQuestionView.setPresenter(userOpinionQuestionPresenter);
         userOpinionQuestionView.bind(basePromptViewConfig.getUserOpinionQuestion());
 
-        setContentView((View) userOpinionQuestionView);
+        setContentView(userOpinionQuestionView);
+
+        displayedQuestionView = userOpinionQuestionView;
 
         isDisplayed = true;
     }
 
     @Override
     public final void requestPositiveFeedback() {
-        final IQuestionView positiveFeedbackQuestionView = getQuestionView();
-        positiveFeedbackQuestionView.setPresenter(feedbackQuestionPresenter);
-        positiveFeedbackQuestionView.bind(basePromptViewConfig.getPositiveFeedbackQuestion());
-
-        setContentView((View) positiveFeedbackQuestionView);
+        displayedQuestionView.setPresenter(feedbackQuestionPresenter);
+        displayedQuestionView.bind(basePromptViewConfig.getPositiveFeedbackQuestion());
     }
 
     @Override
     public final void requestCriticalFeedback() {
-        final IQuestionView criticalFeedbackQuestionView = getQuestionView();
+        final T criticalFeedbackQuestionView = getQuestionView();
         criticalFeedbackQuestionView.setPresenter(feedbackQuestionPresenter);
         criticalFeedbackQuestionView.bind(basePromptViewConfig.getCriticalFeedbackQuestion());
 
-        setContentView((View) criticalFeedbackQuestionView);
+        setContentView(criticalFeedbackQuestionView);
     }
 
     @Override
     public final void thankUser() {
-        final IThanksView thanksView = getThanksView();
+        final U thanksView = getThanksView();
         thanksView.bind(basePromptViewConfig.getThanks());
 
-        setContentView((View) thanksView);
+        setContentView(thanksView);
 
         promptPresenter = null;
     }

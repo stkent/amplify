@@ -16,6 +16,7 @@
  */
 package com.github.stkent.amplify.tracking;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -43,6 +44,9 @@ import com.github.stkent.amplify.tracking.managers.TotalEventCountRulesManager;
 import com.github.stkent.amplify.tracking.prerequisites.GooglePlayStoreRule;
 import com.github.stkent.amplify.tracking.rules.MaximumCountRule;
 import com.github.stkent.amplify.tracking.rules.VersionChangedRule;
+import com.github.stkent.amplify.utils.ActivityStateUtil;
+import com.github.stkent.amplify.utils.FeedbackUtil;
+import com.github.stkent.amplify.utils.PlayStoreUtil;
 
 public final class Amplify implements IEventListener {
 
@@ -192,7 +196,7 @@ public final class Amplify implements IEventListener {
         return this;
     }
 
-    public Amplify setPackageName(String packageName) {
+    public Amplify setPackageName(@NonNull final String packageName) {
         this.packageName = packageName;
         return this;
     }
@@ -210,11 +214,17 @@ public final class Amplify implements IEventListener {
 
     // Query methods
 
-    public void promptIfReady(@NonNull final IPromptView promptView) {
-        promptIfReady(promptView, null);
+    // todo: track activity using application hooks so we don't need to receive it here
+    public void promptIfReady(
+            @NonNull final Activity activity,
+            @NonNull final IPromptView promptView) {
+
+        promptIfReady(activity, promptView, null);
     }
 
+    // todo: track activity using application hooks so we don't need to receive it here
     public void promptIfReady(
+            @NonNull final Activity activity,
             @NonNull final IPromptView promptView,
             @Nullable final IEventListener<PromptViewEvent> promptViewEventListener) {
 
@@ -227,6 +237,20 @@ public final class Amplify implements IEventListener {
 
                 if (promptViewEventListener != null) {
                     promptViewEventListener.notifyEventTriggered(event);
+                }
+
+                if (ActivityStateUtil.isActivityValid(activity)) {
+                    if (event == PromptViewEvent.USER_GAVE_POSITIVE_FEEDBACK) {
+                        PlayStoreUtil.openPlayStoreToRate(activity, packageName);
+                    } else if (event == PromptViewEvent.USER_GAVE_CRITICAL_FEEDBACK) {
+                        final FeedbackUtil feedbackUtil = new FeedbackUtil(
+                                new AppFeedbackDataProvider(activity.getApplicationContext()),
+                                new EnvironmentCapabilitiesProvider(activity.getApplicationContext()),
+                                feedbackEmail,
+                                logger);
+
+                        feedbackUtil.showFeedbackEmailChooser(activity);
+                    }
                 }
             }
         };

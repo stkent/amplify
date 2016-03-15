@@ -22,12 +22,12 @@ import android.support.annotation.Nullable;
 
 import com.github.stkent.amplify.ILogger;
 import com.github.stkent.amplify.tracking.AmplifyExceptionHandler;
-import com.github.stkent.amplify.tracking.interfaces.IEventBasedRule;
-import com.github.stkent.amplify.tracking.rules.CooldownDaysRule;
-import com.github.stkent.amplify.tracking.interfaces.IAppLevelEventRulesManager;
 import com.github.stkent.amplify.tracking.interfaces.IAppEventTimeProvider;
+import com.github.stkent.amplify.tracking.interfaces.IAppLevelEventRulesManager;
 import com.github.stkent.amplify.tracking.interfaces.IEvent;
+import com.github.stkent.amplify.tracking.interfaces.IEventBasedRule;
 import com.github.stkent.amplify.tracking.interfaces.IEventsManager;
+import com.github.stkent.amplify.tracking.rules.CooldownDaysRule;
 
 public class AppLevelEventRulesManager implements IAppLevelEventRulesManager {
 

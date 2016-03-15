@@ -2,8 +2,10 @@ package com.github.stkent.amplify.prompt;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
-import android.widget.Button;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
@@ -13,34 +15,40 @@ import com.github.stkent.amplify.prompt.interfaces.IQuestionPresenter;
 import com.github.stkent.amplify.prompt.interfaces.IQuestionView;
 
 @SuppressLint("ViewConstructor")
-class DefaultQuestionView extends FrameLayout implements IQuestionView {
+class CustomLayoutQuestionView extends FrameLayout implements IQuestionView {
 
-    private final TextView titleTextView;
-    private final TextView subtitleTextView;
-    private final Button positiveButton;
-    private final Button negativeButton;
+    protected final TextView titleTextView;
+    protected final TextView subtitleTextView;
+    protected final View positiveButton;
+    protected final View negativeButton;
 
     private IQuestionPresenter questionPresenter;
-    private DefaultLayoutPromptViewConfig config;
 
-    public DefaultQuestionView(
+    public CustomLayoutQuestionView(
             final Context context,
-            @NonNull final DefaultLayoutPromptViewConfig config) {
+            @LayoutRes final int layoutRes) {
 
         super(context);
+        LayoutInflater.from(context).inflate(layoutRes, this, true);
 
-        // inflate default xml and apply configuration here
         titleTextView = (TextView) findViewById(R.id.amplify_title_text_view);
         subtitleTextView = (TextView) findViewById(R.id.amplify_subtitle_text_view);
-        positiveButton = (Button) findViewById(R.id.amplify_positive_button);
-        negativeButton = (Button) findViewById(R.id.amplify_negative_button);
+        positiveButton = findViewById(R.id.amplify_positive_button);
+        negativeButton = findViewById(R.id.amplify_negative_button);
 
-        setBackgroundColor(config.getFillColor());
+        positiveButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+                questionPresenter.userRespondedPositively();
+            }
+        });
 
-        titleTextView.setTextColor(config.getTitleTextColor());
-        subtitleTextView.setTextColor(config.getSubtitleTextColor());
-        positiveButton.setTextColor(config.getPositiveButtonTextColor());
-        negativeButton.setTextColor(config.getNegativeButtonBackgroundColor());
+        negativeButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+                questionPresenter.userRespondedNegatively();
+            }
+        });
 
         // todo: build appropriate drawables for button fill/border, with pressed states
     }
@@ -53,8 +61,14 @@ class DefaultQuestionView extends FrameLayout implements IQuestionView {
     @Override
     public void bind(@NonNull final IQuestion question) {
         titleTextView.setText(question.getTitle());
-        positiveButton.setText(question.getPositiveButtonLabel());
-        negativeButton.setText(question.getNegativeButtonLabel());
+
+        if (positiveButton instanceof TextView) {
+            ((TextView) positiveButton).setText(question.getPositiveButtonLabel());
+        }
+
+        if (negativeButton instanceof TextView) {
+            ((TextView) negativeButton).setText(question.getNegativeButtonLabel());
+        }
 
         final String subtitle = question.getSubTitle();
 

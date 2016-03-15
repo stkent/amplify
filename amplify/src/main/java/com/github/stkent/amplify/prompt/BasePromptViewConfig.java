@@ -29,70 +29,71 @@ import static com.github.stkent.amplify.utils.StringUtils.defaultIfBlank;
 // @formatter:off
 public final class BasePromptViewConfig {
 
-    private static final String DEFAULT_USER_OPINION_QUESTION_TITLE      = "Enjoying the app?";
-    private static final String DEFAULT_POSITIVE_FEEDBACK_QUESTION_TITLE = "Awesome! We'd love a Play Store review...";
-    private static final String DEFAULT_CRITICAL_FEEDBACK_QUESTION_TITLE = "Bummer. Would you like to send feedback?";
-    private static final String DEFAULT_POSITIVE_BUTTON_LABEL            = "Sure thing!";
-    private static final String DEFAULT_NEGATIVE_BUTTON_LABEL            = "Not right now";
-    private static final String DEFAULT_THANKS_TITLE                     = "Thanks for your feedback!";
+    private static final String DEFAULT_USER_OPINION_QUESTION_TITLE                 = "Enjoying the app?";
+    private static final String DEFAULT_POSITIVE_FEEDBACK_QUESTION_TITLE            = "Awesome! We'd love a Play Store review...";
+    private static final String DEFAULT_CRITICAL_FEEDBACK_QUESTION_TITLE            = "Bummer. Would you like to send feedback?";
+    private static final String DEFAULT_USER_OPINION_QUESTION_POSITIVE_BUTTON_LABEL = "Yes!";
+    private static final String DEFAULT_USER_OPINION_QUESTION_NEGATIVE_BUTTON_LABEL = "No";
+    private static final String DEFAULT_FEEDBACK_QUESTION_POSITIVE_BUTTON_LABEL     = "Sure thing!";
+    private static final String DEFAULT_FEEDBACK_QUESTION_NEGATIVE_BUTTON_LABEL     = "Not right now";
+    private static final String DEFAULT_THANKS_TITLE                                = "Thanks for your feedback!";
 
     @Nullable private final String userOpinionQuestionTitle;
+    @Nullable private final String userOpinionQuestionSubtitle;
     @Nullable private final String userOpinionQuestionPositiveButtonLabel;
     @Nullable private final String userOpinionQuestionNegativeButtonLabel;
     @Nullable private final String positiveFeedbackQuestionTitle;
+    @Nullable private final String positiveFeedbackQuestionSubtitle;
     @Nullable private final String positiveFeedbackQuestionPositiveButtonLabel;
     @Nullable private final String positiveFeedbackQuestionNegativeButtonLabel;
     @Nullable private final String criticalFeedbackQuestionTitle;
+    @Nullable private final String criticalFeedbackQuestionSubtitle;
     @Nullable private final String criticalFeedbackQuestionPositiveButtonLabel;
     @Nullable private final String criticalFeedbackQuestionNegativeButtonLabel;
     @Nullable private final String thanksTitle;
-    @Nullable private final String userOpinionQuestionSubtitle;
-    @Nullable private final String positiveFeedbackQuestionSubtitle;
-    @Nullable private final String criticalFeedbackQuestionSubtitle;
     @Nullable private final String thanksSubtitle;
 
     public BasePromptViewConfig(@NonNull final TypedArray typedArray) {
         userOpinionQuestionTitle = typedArray.getString(
                 R.styleable.BasePromptView_prompt_view_user_opinion_question_title);
 
+        userOpinionQuestionSubtitle = typedArray.getString(
+                R.styleable.BasePromptView_prompt_view_user_opinion_question_subtitle);
+
         userOpinionQuestionPositiveButtonLabel = typedArray.getString(
-                R.styleable.BasePromptView_prompt_view_user_opinion_question_title);
+                R.styleable.BasePromptView_prompt_view_user_opinion_question_positive_button_label);
 
         userOpinionQuestionNegativeButtonLabel = typedArray.getString(
-                R.styleable.BasePromptView_prompt_view_user_opinion_question_title);
+                R.styleable.BasePromptView_prompt_view_user_opinion_question_negative_button_label);
 
         positiveFeedbackQuestionTitle = typedArray.getString(
-                R.styleable.BasePromptView_prompt_view_user_opinion_question_title);
-
-        positiveFeedbackQuestionPositiveButtonLabel = typedArray.getString(
-                R.styleable.BasePromptView_prompt_view_user_opinion_question_title);
-
-        positiveFeedbackQuestionNegativeButtonLabel = typedArray.getString(
-                R.styleable.BasePromptView_prompt_view_user_opinion_question_title);
-
-        criticalFeedbackQuestionTitle = typedArray.getString(
-                R.styleable.BasePromptView_prompt_view_user_opinion_question_title);
-
-        criticalFeedbackQuestionPositiveButtonLabel = typedArray.getString(
-                R.styleable.BasePromptView_prompt_view_user_opinion_question_title);
-
-        criticalFeedbackQuestionNegativeButtonLabel = typedArray.getString(
-                R.styleable.BasePromptView_prompt_view_user_opinion_question_title);
-
-        thanksTitle = typedArray.getString(
-                R.styleable.BasePromptView_prompt_view_user_opinion_question_title);
-
-        userOpinionQuestionSubtitle = typedArray.getString(
-                R.styleable.BasePromptView_prompt_view_user_opinion_question_title);
+                R.styleable.BasePromptView_prompt_view_positive_feedback_question_title);
 
         positiveFeedbackQuestionSubtitle = typedArray.getString(
-                R.styleable.BasePromptView_prompt_view_user_opinion_question_title);
+                R.styleable.BasePromptView_prompt_view_positive_feedback_question_subtitle);
+
+        positiveFeedbackQuestionPositiveButtonLabel = typedArray.getString(
+                R.styleable.BasePromptView_prompt_view_positive_feedback_question_positive_button_label);
+
+        positiveFeedbackQuestionNegativeButtonLabel = typedArray.getString(
+                R.styleable.BasePromptView_prompt_view_positive_feedback_question_negative_button_label);
+
+        criticalFeedbackQuestionTitle = typedArray.getString(
+                R.styleable.BasePromptView_prompt_view_critical_feedback_question_title);
 
         criticalFeedbackQuestionSubtitle = typedArray.getString(
-                R.styleable.BasePromptView_prompt_view_user_opinion_question_title);
+                R.styleable.BasePromptView_prompt_view_critical_feedback_question_subtitle);
+
+        criticalFeedbackQuestionPositiveButtonLabel = typedArray.getString(
+                R.styleable.BasePromptView_prompt_view_critical_feedback_question_positive_button_label);
+
+        criticalFeedbackQuestionNegativeButtonLabel = typedArray.getString(
+                R.styleable.BasePromptView_prompt_view_critical_feedback_question_negative_button_label);
+
+        thanksTitle = typedArray.getString(R.styleable.BasePromptView_prompt_view_thanks_title);
 
         thanksSubtitle = typedArray.getString(
-                R.styleable.BasePromptView_prompt_view_user_opinion_question_title);
+                R.styleable.BasePromptView_prompt_view_thanks_subtitle);
     }
 
     private BasePromptViewConfig(
@@ -131,7 +132,7 @@ public final class BasePromptViewConfig {
     public IQuestion getUserOpinionQuestion() {
         return new Question(
                 getUserOpinionQuestionTitle(),
-                getUserOpinionQuestionSubtitle(),
+                userOpinionQuestionSubtitle,
                 getUserOpinionQuestionPositiveButtonLabel(),
                 getUserOpinionQuestionNegativeButtonLabel());
     }
@@ -140,7 +141,7 @@ public final class BasePromptViewConfig {
     public IQuestion getPositiveFeedbackQuestion() {
         return new Question(
                 getPositiveFeedbackQuestionTitle(),
-                getPositiveFeedbackQuestionSubtitle(),
+                positiveFeedbackQuestionSubtitle,
                 getPositiveFeedbackQuestionPositiveButtonLabel(),
                 getPositiveFeedbackQuestionNegativeButtonLabel());
     }
@@ -149,14 +150,14 @@ public final class BasePromptViewConfig {
     public IQuestion getCriticalFeedbackQuestion() {
         return new Question(
                 getCriticalFeedbackQuestionTitle(),
-                getCriticalFeedbackQuestionSubtitle(),
+                criticalFeedbackQuestionSubtitle,
                 getCriticalFeedbackQuestionPositiveButtonLabel(),
                 getCriticalFeedbackQuestionNegativeButtonLabel());
     }
 
     @NonNull
     public IThanks getThanks() {
-        return new Thanks(getThanksTitle(), getThanksSubtitle());
+        return new Thanks(getThanksTitle(), thanksSubtitle);
     }
 
     @NonNull
@@ -165,21 +166,18 @@ public final class BasePromptViewConfig {
                 userOpinionQuestionTitle, DEFAULT_USER_OPINION_QUESTION_TITLE);
     }
 
-    @Nullable
-    private String getUserOpinionQuestionSubtitle() {
-        return userOpinionQuestionSubtitle;
-    }
-
     @NonNull
     private String getUserOpinionQuestionPositiveButtonLabel() {
         return defaultIfBlank(
-                userOpinionQuestionPositiveButtonLabel, DEFAULT_POSITIVE_BUTTON_LABEL);
+                userOpinionQuestionPositiveButtonLabel,
+                DEFAULT_USER_OPINION_QUESTION_POSITIVE_BUTTON_LABEL);
     }
 
     @NonNull
     private String getUserOpinionQuestionNegativeButtonLabel() {
         return defaultIfBlank(
-                userOpinionQuestionNegativeButtonLabel, DEFAULT_NEGATIVE_BUTTON_LABEL);
+                userOpinionQuestionNegativeButtonLabel,
+                DEFAULT_USER_OPINION_QUESTION_NEGATIVE_BUTTON_LABEL);
     }
 
     @NonNull
@@ -188,21 +186,18 @@ public final class BasePromptViewConfig {
                 positiveFeedbackQuestionTitle, DEFAULT_POSITIVE_FEEDBACK_QUESTION_TITLE);
     }
 
-    @Nullable
-    private String getPositiveFeedbackQuestionSubtitle() {
-        return positiveFeedbackQuestionSubtitle;
-    }
-
     @NonNull
     private String getPositiveFeedbackQuestionPositiveButtonLabel() {
         return defaultIfBlank(
-                positiveFeedbackQuestionPositiveButtonLabel, DEFAULT_POSITIVE_BUTTON_LABEL);
+                positiveFeedbackQuestionPositiveButtonLabel,
+                DEFAULT_FEEDBACK_QUESTION_POSITIVE_BUTTON_LABEL);
     }
 
     @NonNull
     private String getPositiveFeedbackQuestionNegativeButtonLabel() {
         return defaultIfBlank(
-                positiveFeedbackQuestionNegativeButtonLabel, DEFAULT_NEGATIVE_BUTTON_LABEL);
+                positiveFeedbackQuestionNegativeButtonLabel,
+                DEFAULT_FEEDBACK_QUESTION_NEGATIVE_BUTTON_LABEL);
     }
 
     @NonNull
@@ -211,31 +206,23 @@ public final class BasePromptViewConfig {
                 criticalFeedbackQuestionTitle, DEFAULT_CRITICAL_FEEDBACK_QUESTION_TITLE);
     }
 
-    @Nullable
-    private String getCriticalFeedbackQuestionSubtitle() {
-        return criticalFeedbackQuestionSubtitle;
-    }
-
     @NonNull
     private String getCriticalFeedbackQuestionPositiveButtonLabel() {
         return defaultIfBlank(
-                criticalFeedbackQuestionPositiveButtonLabel, DEFAULT_POSITIVE_BUTTON_LABEL);
+                criticalFeedbackQuestionPositiveButtonLabel,
+                DEFAULT_FEEDBACK_QUESTION_POSITIVE_BUTTON_LABEL);
     }
 
     @NonNull
     private String getCriticalFeedbackQuestionNegativeButtonLabel() {
         return defaultIfBlank(
-                criticalFeedbackQuestionNegativeButtonLabel, DEFAULT_NEGATIVE_BUTTON_LABEL);
+                criticalFeedbackQuestionNegativeButtonLabel,
+                DEFAULT_FEEDBACK_QUESTION_NEGATIVE_BUTTON_LABEL);
     }
 
     @NonNull
     private String getThanksTitle() {
         return defaultIfBlank(thanksTitle, DEFAULT_THANKS_TITLE);
-    }
-
-    @Nullable
-    private String getThanksSubtitle() {
-        return thanksSubtitle;
     }
 
     public static final class Builder {

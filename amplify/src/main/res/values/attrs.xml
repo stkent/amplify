@@ -32,6 +32,8 @@
         <attr format="string" name="prompt_view_critical_feedback_question_subtitle" />
         <attr format="string" name="prompt_view_critical_feedback_question_positive_button_label" />
         <attr format="string" name="prompt_view_critical_feedback_question_negative_button_label" />
+        <attr format="string" name="prompt_view_thanks_title" />
+        <attr format="string" name="prompt_view_thanks_subtitle" />
     </declare-styleable>
 
     <declare-styleable name="DefaultLayoutPromptView">
@@ -48,10 +50,7 @@
     </declare-styleable>
 
     <declare-styleable name="CustomLayoutPromptView">
-        <attr format="reference" name="prompt_view_base_question_layout" />
-        <attr format="reference" name="prompt_view_user_opinion_question_layout" />
-        <attr format="reference" name="prompt_view_positive_feedback_question_layout" />
-        <attr format="reference" name="prompt_view_critical_feedback_question_layout" />
+        <attr format="reference" name="prompt_view_question_layout" />
         <attr format="reference" name="prompt_view_thanks_layout" />
     </declare-styleable>
 

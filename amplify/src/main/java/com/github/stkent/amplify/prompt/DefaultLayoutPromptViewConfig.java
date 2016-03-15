@@ -30,7 +30,7 @@ public final class DefaultLayoutPromptViewConfig {
     private static final int DEFAULT_FOREGROUND_COLOR = 0xFFFFFFFF;
 
     @ColorInt
-    private static final int DEFAULT_BACKGROUND_COLOR = 0xFFFFFFFF;
+    private static final int DEFAULT_BACKGROUND_COLOR = 0xFF3C5A96;
 
     private static final int DEFAULT_GET_COLOR_VALUE_IF_UNDEFINED = Integer.MAX_VALUE;
 

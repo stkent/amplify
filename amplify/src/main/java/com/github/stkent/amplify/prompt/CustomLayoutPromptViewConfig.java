@@ -26,20 +26,7 @@ import com.github.stkent.amplify.R;
 
 public final class CustomLayoutPromptViewConfig {
 
-    private static final int DEFAULT_GET_LAYOUT_VALUE_IF_UNDEFINED = Integer.MAX_VALUE;
-
-    /**
-     * @return <code>primaryColor</code> if it is non-null; <code>defaultColor</code> otherwise
-     */
-    @LayoutRes
-    private static int defaultIfNull(
-            @Nullable final Integer primaryLayout,
-            @Nullable final Integer defaultLayout) {
-
-        // todo: add documentation to this method to explain that we must call validate before
-        // using it to guarantee that one of either primaryLayout or defaultLayout is non-null
-        return primaryLayout != null ? primaryLayout : defaultLayout;
-    }
+    private static final int DEFAULT_LAYOUT_RES_ID_IF_UNDEFINED = Integer.MAX_VALUE;
 
     /**
      * @return the color value for the attribute at <code>index</code>, if defined; null otherwise
@@ -49,133 +36,63 @@ public final class CustomLayoutPromptViewConfig {
             @StyleableRes final int index) {
 
         if (typedArray != null) {
-            final int color = typedArray.getColor(index, DEFAULT_GET_LAYOUT_VALUE_IF_UNDEFINED);
-            return color != DEFAULT_GET_LAYOUT_VALUE_IF_UNDEFINED ? color : null;
+            final int layoutResourceId
+                    = typedArray.getResourceId(index, DEFAULT_LAYOUT_RES_ID_IF_UNDEFINED);
+
+            return layoutResourceId != DEFAULT_LAYOUT_RES_ID_IF_UNDEFINED ? layoutResourceId : null;
         }
 
         return null;
     }
 
-    @Nullable
-    private final Integer baseQuestionLayout;
-
-    @Nullable
-    private final Integer userOpinionQuestionLayout;
-
-    @Nullable
-    private final Integer positiveFeedbackQuestionLayout;
-
-    @Nullable
-    private final Integer criticalFeedbackQuestionLayout;
+    @LayoutRes
+    private final int questionLayout;
 
     @LayoutRes
     private final int thanksLayout;
 
     public CustomLayoutPromptViewConfig(@NonNull final TypedArray typedArray) {
-        final Integer baseQuestionLayout = suppliedLayoutOrNull(
+        final Integer questionLayout = suppliedLayoutOrNull(
                 typedArray,
-                R.styleable.CustomLayoutPromptView_prompt_view_base_question_layout);
-
-        final Integer userOpinionQuestionLayout = suppliedLayoutOrNull(
-                typedArray,
-                R.styleable.CustomLayoutPromptView_prompt_view_user_opinion_question_layout);
-
-        final Integer positiveFeedbackQuestionLayout = suppliedLayoutOrNull(
-                typedArray,
-                R.styleable.CustomLayoutPromptView_prompt_view_positive_feedback_question_layout);
-
-        final Integer criticalFeedbackQuestionLayout = suppliedLayoutOrNull(
-                typedArray,
-                R.styleable.CustomLayoutPromptView_prompt_view_critical_feedback_question_layout);
+                R.styleable.CustomLayoutPromptView_prompt_view_question_layout);
 
         final Integer thanksLayout = suppliedLayoutOrNull(
                 typedArray,
                 R.styleable.CustomLayoutPromptView_prompt_view_thanks_layout);
 
-        validateAllLayoutResourceIds(
-                baseQuestionLayout,
-                userOpinionQuestionLayout,
-                positiveFeedbackQuestionLayout,
-                criticalFeedbackQuestionLayout,
-                thanksLayout);
+        validateLayoutResourceIds(questionLayout, thanksLayout);
 
-        this.baseQuestionLayout = baseQuestionLayout;
-        this.userOpinionQuestionLayout = userOpinionQuestionLayout;
-        this.positiveFeedbackQuestionLayout = positiveFeedbackQuestionLayout;
-        this.criticalFeedbackQuestionLayout = criticalFeedbackQuestionLayout;
+        this.questionLayout = questionLayout;
         this.thanksLayout = thanksLayout;
     }
 
     public CustomLayoutPromptViewConfig(
-            @Nullable final Integer baseQuestionLayout,
-            @Nullable final Integer userOpinionQuestionLayout,
-            @Nullable final Integer positiveFeedbackQuestionLayout,
-            @Nullable final Integer criticalFeedbackQuestionLayout,
+            @LayoutRes final int questionLayout,
             @LayoutRes final int thanksLayout) {
 
-        validateQuestionLayoutResourceIds(
-                baseQuestionLayout,
-                userOpinionQuestionLayout,
-                positiveFeedbackQuestionLayout,
-                criticalFeedbackQuestionLayout);
+        validateLayoutResourceIds(questionLayout, thanksLayout);
 
-        this.baseQuestionLayout = baseQuestionLayout;
-        this.userOpinionQuestionLayout = userOpinionQuestionLayout;
-        this.positiveFeedbackQuestionLayout = positiveFeedbackQuestionLayout;
-        this.criticalFeedbackQuestionLayout = criticalFeedbackQuestionLayout;
+        this.questionLayout = questionLayout;
         this.thanksLayout = thanksLayout;
     }
 
     @LayoutRes
-    private int getUserOpinionQuestionLayout() {
-        return defaultIfNull(userOpinionQuestionLayout, baseQuestionLayout);
+    public int getQuestionLayout() {
+        return questionLayout;
     }
 
     @LayoutRes
-    private int getPositiveFeedbackQuestionLayout() {
-        return defaultIfNull(positiveFeedbackQuestionLayout, baseQuestionLayout);
-    }
-
-    @LayoutRes
-    private int getCriticalFeedbackQuestionLayout() {
-        return defaultIfNull(criticalFeedbackQuestionLayout, baseQuestionLayout);
-    }
-
-    @LayoutRes
-    private int getThanksLayout() {
+    public int getThanksLayout() {
         return thanksLayout;
     }
 
-    private void validateAllLayoutResourceIds(
-            @Nullable final Integer baseQuestionLayout,
-            @Nullable final Integer userOpinionQuestionLayout,
-            @Nullable final Integer positiveFeedbackQuestionLayout,
-            @Nullable final Integer criticalFeedbackQuestionLayout,
+    private void validateLayoutResourceIds(
+            @Nullable final Integer questionLayout,
             @Nullable final Integer thanksLayout) {
 
-        if (thanksLayout == null) {
-            throw new IllegalStateException("Must provide a thanks layout resource id.");
-        }
-
-        validateQuestionLayoutResourceIds(
-                baseQuestionLayout,
-                userOpinionQuestionLayout,
-                positiveFeedbackQuestionLayout,
-                criticalFeedbackQuestionLayout);
-    }
-
-    private void validateQuestionLayoutResourceIds(
-            @Nullable final Integer baseQuestionLayout,
-            @Nullable final Integer userOpinionQuestionLayout,
-            @Nullable final Integer positiveFeedbackQuestionLayout,
-            @Nullable final Integer criticalFeedbackQuestionLayout) {
-
-        if (baseQuestionLayout == null &&
-                (userOpinionQuestionLayout == null
-                        || positiveFeedbackQuestionLayout == null
-                        || criticalFeedbackQuestionLayout == null)) {
-
-            throw new IllegalStateException("Must provide layout resource ids for all questions.");
+        if (questionLayout == null || thanksLayout == null) {
+            throw new IllegalStateException(
+                    "Must provide layout resource ids for question and thanks views.");
         }
     }
 

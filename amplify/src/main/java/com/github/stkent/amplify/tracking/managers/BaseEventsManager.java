@@ -19,8 +19,8 @@ package com.github.stkent.amplify.tracking.managers;
 import android.support.annotation.NonNull;
 
 import com.github.stkent.amplify.ILogger;
-import com.github.stkent.amplify.tracking.interfaces.IEventBasedRule;
 import com.github.stkent.amplify.tracking.interfaces.IEvent;
+import com.github.stkent.amplify.tracking.interfaces.IEventBasedRule;
 import com.github.stkent.amplify.tracking.interfaces.IEventsManager;
 import com.github.stkent.amplify.tracking.interfaces.ISettings;
 

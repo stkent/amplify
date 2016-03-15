@@ -17,16 +17,19 @@
 package com.github.stkent.amplify.prompt;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.view.View;
 
+import com.github.stkent.amplify.R;
 import com.github.stkent.amplify.prompt.interfaces.IPromptView;
-import com.github.stkent.amplify.prompt.interfaces.IQuestionView;
-import com.github.stkent.amplify.prompt.interfaces.IThanksView;
 
-public class CustomLayoutPromptView extends BasePromptView implements IPromptView {
+public final class CustomLayoutPromptView
+        extends BasePromptView<CustomLayoutQuestionView, CustomLayoutThanksView>
+        implements IPromptView {
+
+    private CustomLayoutPromptViewConfig config;
 
     public CustomLayoutPromptView(final Context context) {
         this(context, null);
@@ -45,18 +48,42 @@ public class CustomLayoutPromptView extends BasePromptView implements IPromptVie
             final int defStyleAttr) {
 
         super(context, attributeSet, defStyleAttr);
+        init(attributeSet);
+    }
+
+    public void applyConfig(@NonNull final CustomLayoutPromptViewConfig config) {
+        if (isDisplayed) {
+            throw new IllegalStateException(
+                    "Configuration cannot be changed after the prompt is first displayed.");
+        }
+
+        this.config = config;
     }
 
     @NonNull
     @Override
-    protected <T extends View & IQuestionView> T getQuestionView() {
-        return null;
+    protected CustomLayoutQuestionView getQuestionView() {
+        return new CustomLayoutQuestionView(getContext(), config.getQuestionLayout());
     }
 
     @NonNull
     @Override
-    protected <T extends View & IThanksView> T getThanksView() {
-        return null;
+    protected CustomLayoutThanksView getThanksView() {
+        return new CustomLayoutThanksView(getContext(), config.getThanksLayout());
+    }
+
+    /**
+     * Note: <code>Theme.obtainStyledAttributes</code> accepts a null <code>AttributeSet</code>; see
+     * documentation of that method for confirmation.
+     */
+    private void init(@Nullable final AttributeSet attributeSet) {
+        final TypedArray typedArray = getContext().getTheme()
+                .obtainStyledAttributes(attributeSet, R.styleable.CustomLayoutPromptView, 0, 0);
+
+        // todo: does obtainStyledAttributes ever return null? if not, can update this constructor.
+        config = new CustomLayoutPromptViewConfig(typedArray);
+
+        typedArray.recycle();
     }
 
 }

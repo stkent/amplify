@@ -34,8 +34,14 @@ public final class PlayStoreUtil {
 
     }
 
-    public static void openPlayStoreToRate(@Nullable final Activity activity, @Nullable final String packageName) {
+    public static void openPlayStoreToRate(
+            @Nullable final Activity activity,
+            @Nullable String packageName) {
+
         if (ActivityStateUtil.isActivityValid(activity)) {
+            if (packageName == null) {
+                packageName = activity.getPackageName();
+            }
 
             try {
                 activity.startActivity(
@@ -44,7 +50,7 @@ public final class PlayStoreUtil {
                                 getAndroidMarketUriForPackageName(packageName)
                         )
                 );
-            } catch (ActivityNotFoundException e) {
+            } catch (final ActivityNotFoundException e) {
                 activity.startActivity(
                         new Intent(
                                 ACTION_VIEW,

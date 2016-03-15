@@ -21,13 +21,12 @@ import android.content.res.TypedArray;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.view.View;
 
 import com.github.stkent.amplify.R;
 import com.github.stkent.amplify.prompt.interfaces.IPromptView;
-import com.github.stkent.amplify.prompt.interfaces.IThanksView;
 
-public final class DefaultLayoutPromptView extends BasePromptView implements IPromptView {
+public final class DefaultLayoutPromptView
+        extends BasePromptView<DefaultLayoutQuestionView, DefaultLayoutThanksView> implements IPromptView {
 
     private DefaultLayoutPromptViewConfig config;
 
@@ -48,7 +47,7 @@ public final class DefaultLayoutPromptView extends BasePromptView implements IPr
             final int defStyleAttr) {
 
         super(context, attributeSet, defStyleAttr);
-        initializeDefaultLayoutConfig(attributeSet);
+        init(attributeSet);
     }
 
     public void applyConfig(@NonNull final DefaultLayoutPromptViewConfig config) {
@@ -62,21 +61,21 @@ public final class DefaultLayoutPromptView extends BasePromptView implements IPr
 
     @NonNull
     @Override
-    protected DefaultQuestionView getQuestionView() {
-        return new DefaultQuestionView(getContext(), config);
+    protected DefaultLayoutQuestionView getQuestionView() {
+        return new DefaultLayoutQuestionView(getContext(), config);
     }
 
     @NonNull
     @Override
-    protected <T extends View & IThanksView> T getThanksView() {
-        return null;
+    protected DefaultLayoutThanksView getThanksView() {
+        return new DefaultLayoutThanksView(getContext(), config);
     }
 
     /**
      * Note: <code>Theme.obtainStyledAttributes</code> accepts a null <code>AttributeSet</code>; see
      * documentation of that method for confirmation.
      */
-    private void initializeDefaultLayoutConfig(@Nullable final AttributeSet attributeSet) {
+    private void init(@Nullable final AttributeSet attributeSet) {
         final TypedArray typedArray = getContext().getTheme()
                 .obtainStyledAttributes(attributeSet, R.styleable.DefaultLayoutPromptView, 0, 0);
 
