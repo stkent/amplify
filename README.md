@@ -266,8 +266,10 @@ Provided by the `DefaultLayoutPromptView` class. The basic layouts of the questi
         app:prompt_view_subtitle_text_color="@color/custom_subtitle_text_color"
         app:prompt_view_positive_button_text_color="@color/custom_positive_button_text_color"
         app:prompt_view_positive_button_background_color="@color/custom_positive_button_background_color"
+        app:prompt_view_positive_button_border_color="@color/custom_positive_button_border_color"
         app:prompt_view_negative_button_text_color="@color/custom_negative_button_text_color"
-        app:prompt_view_negative_button_background_color="@color/custom_negative_button_background_color" />
+        app:prompt_view_negative_button_background_color="@color/custom_negative_button_background_color"
+        app:prompt_view_negative_button_border_color="@color/custom_negative_button_border_color" />
 
 All attributes are optional.
 

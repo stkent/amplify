@@ -59,7 +59,6 @@ class CustomLayoutQuestionView extends FrameLayout implements IQuestionView {
         LayoutInflater.from(context).inflate(layoutRes, this, true);
 
         final TextView titleTextView = (TextView) findViewById(R.id.amplify_title_text_view);
-        final TextView subtitleTextView = (TextView) findViewById(R.id.amplify_subtitle_text_view);
         final View positiveButton = findViewById(R.id.amplify_positive_button);
         final View negativeButton = findViewById(R.id.amplify_negative_button);
 
@@ -69,7 +68,7 @@ class CustomLayoutQuestionView extends FrameLayout implements IQuestionView {
         }
 
         this.titleTextView = titleTextView;
-        this.subtitleTextView = subtitleTextView;
+        this.subtitleTextView = (TextView) findViewById(R.id.amplify_subtitle_text_view);
         this.positiveButton = positiveButton;
         this.negativeButton = negativeButton;
 

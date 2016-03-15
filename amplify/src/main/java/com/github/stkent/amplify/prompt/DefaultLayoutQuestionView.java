@@ -18,12 +18,23 @@ package com.github.stkent.amplify.prompt;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.StateListDrawable;
+import android.graphics.drawable.shapes.RectShape;
 import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.TextView;
 
 import com.github.stkent.amplify.R;
+import com.github.stkent.amplify.utils.DisplayUtils;
+
+import static java.lang.Math.floor;
+import static java.lang.Math.max;
+import static java.lang.Math.min;
 
 @SuppressLint("ViewConstructor")
 final class DefaultLayoutQuestionView extends CustomLayoutQuestionView {
@@ -42,14 +53,18 @@ final class DefaultLayoutQuestionView extends CustomLayoutQuestionView {
             getSubtitleTextView().setTextColor(config.getSubtitleTextColor());
         }
 
+        setButtonViewBackground(
+                getPositiveButton(),
+                config.getPositiveButtonBackgroundColor(),
+                config.getPositiveButtonBorderColor());
+
+        setButtonViewBackground(
+                getNegativeButton(),
+                config.getNegativeButtonBackgroundColor(),
+                config.getNegativeButtonBorderColor());
 
         setQuoteButtonUnquoteTextColor(getPositiveButton(), config.getPositiveButtonTextColor());
         setQuoteButtonUnquoteTextColor(getNegativeButton(), config.getNegativeButtonTextColor());
-
-        // todo: instead, build appropriate drawables for button fill/border, with pressed states
-
-        getPositiveButton().setBackgroundColor(config.getPositiveButtonBackgroundColor());
-        getNegativeButton().setBackgroundColor(config.getNegativeButtonBackgroundColor());
     }
 
     /**
@@ -67,6 +82,63 @@ final class DefaultLayoutQuestionView extends CustomLayoutQuestionView {
         if (quoteButtonUnquote instanceof TextView) {
             ((TextView) quoteButtonUnquote).setTextColor(color);
         }
+    }
+
+    private void setButtonViewBackground(
+            @NonNull final View button,
+            @ColorInt final int fillColor,
+            @ColorInt final int borderColor) {
+
+        button.setBackground(getButtonBackgroundDrawable(fillColor, borderColor));
+    }
+
+    @NonNull
+    private Drawable getButtonBackgroundDrawable(
+            @ColorInt final int fillColor,
+            @ColorInt final int borderColor) {
+
+        final Drawable defaultDrawable = getStaticButtonBackgroundDrawable(
+                fillColor, borderColor);
+
+        float[] defaultFillColorHSVValues = new float[3];
+        Color.colorToHSV(fillColor, defaultFillColorHSVValues);
+        final int pressedFillColor = Color.HSVToColor(
+                Color.alpha(fillColor),
+                new float[]{
+                        defaultFillColorHSVValues[0],
+                        defaultFillColorHSVValues[1],
+                        max(defaultFillColorHSVValues[2] - 0.1f, 0f)
+                });
+
+        final Drawable pressedDrawable = getStaticButtonBackgroundDrawable(
+                pressedFillColor, borderColor);
+
+        final StateListDrawable result = new StateListDrawable();
+        result.addState(new int[] {android.R.attr.state_pressed}, pressedDrawable);
+        result.addState(new int[] {android.R.attr.state_enabled}, defaultDrawable);
+
+        return result;
+    }
+
+    @NonNull
+    private Drawable getStaticButtonBackgroundDrawable(
+            @ColorInt final int fillColor,
+            @ColorInt final int borderColor) {
+
+        final ShapeDrawable borderDrawable = new ShapeDrawable(new RectShape());
+        borderDrawable.getPaint().setColor(borderColor);
+
+        final ShapeDrawable fillDrawable = new ShapeDrawable(new RectShape());
+        fillDrawable.getPaint().setColor(fillColor);
+
+        final LayerDrawable result
+                = new LayerDrawable(new Drawable[] {borderDrawable, fillDrawable});
+
+        // todo: make this width configurable
+        final int borderWidthPx = (int) floor(DisplayUtils.dpToPx(getContext(), 2));
+        result.setLayerInset(1, borderWidthPx, borderWidthPx, borderWidthPx, borderWidthPx);
+
+        return result;
     }
 
 }
