@@ -69,7 +69,7 @@ public final class Amplify implements IEventListener {
 
     private boolean alwaysShow;
     private String packageName;
-    private String feedbackEmail;
+    private String feedbackEmailAddress;
 
     public static Amplify get(@NonNull final Context context) {
         return get(context, new Logger());
@@ -113,7 +113,7 @@ public final class Amplify implements IEventListener {
     // Configuration methods
 
     public Amplify setFeedbackEmailAddress(@NonNull final String feedbackEmailAddress) {
-        this.feedbackEmail = feedbackEmailAddress;
+        this.feedbackEmailAddress = feedbackEmailAddress;
         return this;
     }
 
@@ -246,7 +246,7 @@ public final class Amplify implements IEventListener {
                         final FeedbackUtil feedbackUtil = new FeedbackUtil(
                                 new AppFeedbackDataProvider(activity.getApplicationContext()),
                                 new EnvironmentCapabilitiesProvider(activity.getApplicationContext()),
-                                feedbackEmail,
+                                feedbackEmailAddress,
                                 logger);
 
                         feedbackUtil.showFeedbackEmailChooser(activity);
