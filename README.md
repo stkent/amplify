@@ -466,9 +466,9 @@ To provide a totally custom experience in which _amplify_ does not manage the pr
 
 Early versions of _amplify_ are integrated in apps with state-wide and nation-wide audiences, with over 200,000 installs combined. After integrating _amplify_, our data indicates that the number of Play Store reviews received increases by a factor of **5x-10x**, and the number of feedback emails received **doubles**. We present screenshots showing example implementations below:
 
-| Styled default layout |<!-- Custom layout         |-->
-|-----------------------|<!-------------------------|-->
-| ![](assets/dte.png)   |<!-- ![](assets/jjgs.png)  |-->
+| Styled default layout |
+|-----------------------|
+| ![](assets/dte.png)   |
 
 # License
 
