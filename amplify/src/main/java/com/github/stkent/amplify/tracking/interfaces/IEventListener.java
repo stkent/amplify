@@ -29,7 +29,6 @@ public interface IEventListener<T extends IEvent> {
      *
      * @param event the event that occurred
      */
-    // TODO: handle event not being registered with the tracker
     void notifyEventTriggered(@NonNull final T event);
 
 }
