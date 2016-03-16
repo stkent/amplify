@@ -28,6 +28,7 @@ import com.github.stkent.amplify.prompt.interfaces.IPromptView;
 public final class DefaultLayoutPromptView
         extends BasePromptView<DefaultLayoutQuestionView, DefaultLayoutThanksView> implements IPromptView {
 
+    // NonNull
     private DefaultLayoutPromptViewConfig config;
 
     public DefaultLayoutPromptView(final Context context) {
@@ -57,6 +58,12 @@ public final class DefaultLayoutPromptView
         }
 
         this.config = config;
+    }
+
+    @Override
+    protected boolean isConfigured() {
+        // All non-null DefaultLayoutPromptViewConfigs are valid.
+        return true;
     }
 
     @NonNull

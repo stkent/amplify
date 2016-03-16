@@ -243,35 +243,35 @@ public final class BasePromptViewConfig {
         @Nullable private String criticalFeedbackQuestionSubtitle;
         @Nullable private String thanksSubtitle;
 
-        private Builder setUserOpinionQuestionTitle(
+        public Builder setUserOpinionQuestionTitle(
                 @NonNull final String userOpinionQuestionTitle) {
 
             this.userOpinionQuestionTitle = userOpinionQuestionTitle;
             return this;
         }
 
-        private Builder setUserOpinionQuestionPositiveButtonLabel(
+        public Builder setUserOpinionQuestionPositiveButtonLabel(
                 @NonNull final String userOpinionQuestionPositiveButtonLabel) {
 
             this.userOpinionQuestionPositiveButtonLabel = userOpinionQuestionPositiveButtonLabel;
             return this;
         }
 
-        private Builder setUserOpinionQuestionNegativeButtonLabel(
+        public Builder setUserOpinionQuestionNegativeButtonLabel(
                 @NonNull final String userOpinionQuestionNegativeButtonLabel) {
 
             this.userOpinionQuestionNegativeButtonLabel = userOpinionQuestionNegativeButtonLabel;
             return this;
         }
 
-        private Builder setPositiveFeedbackQuestionTitle(
+        public Builder setPositiveFeedbackQuestionTitle(
                 @NonNull final String positiveFeedbackQuestionTitle) {
 
             this.positiveFeedbackQuestionTitle = positiveFeedbackQuestionTitle;
             return this;
         }
 
-        private Builder setPositiveFeedbackQuestionPositiveButtonLabel(
+        public Builder setPositiveFeedbackQuestionPositiveButtonLabel(
                 @NonNull final String positiveFeedbackQuestionPositiveButtonLabel) {
 
             this.positiveFeedbackQuestionPositiveButtonLabel
@@ -280,7 +280,7 @@ public final class BasePromptViewConfig {
             return this;
         }
 
-        private Builder setPositiveFeedbackQuestionNegativeButtonLabel(
+        public Builder setPositiveFeedbackQuestionNegativeButtonLabel(
                 @NonNull final String positiveFeedbackQuestionNegativeButtonLabel) {
 
             this.positiveFeedbackQuestionNegativeButtonLabel
@@ -289,14 +289,14 @@ public final class BasePromptViewConfig {
             return this;
         }
 
-        private Builder setCriticalFeedbackQuestionTitle(
+        public Builder setCriticalFeedbackQuestionTitle(
                 @NonNull final String criticalFeedbackQuestionTitle) {
 
             this.criticalFeedbackQuestionTitle = criticalFeedbackQuestionTitle;
             return this;
         }
 
-        private Builder setCriticalFeedbackQuestionPositiveButtonLabel(
+        public Builder setCriticalFeedbackQuestionPositiveButtonLabel(
                 @NonNull final String criticalFeedbackQuestionPositiveButtonLabel) {
 
             this.criticalFeedbackQuestionPositiveButtonLabel
@@ -305,7 +305,7 @@ public final class BasePromptViewConfig {
             return this;
         }
 
-        private Builder setCriticalFeedbackQuestionNegativeButtonLabel(
+        public Builder setCriticalFeedbackQuestionNegativeButtonLabel(
                 @NonNull final String criticalFeedbackQuestionNegativeButtonLabel) {
 
             this.criticalFeedbackQuestionNegativeButtonLabel
@@ -314,38 +314,38 @@ public final class BasePromptViewConfig {
             return this;
         }
 
-        private Builder setThanksTitle(@NonNull final String thanksTitle) {
+        public Builder setThanksTitle(@NonNull final String thanksTitle) {
             this.thanksTitle = thanksTitle;
             return this;
         }
 
-        private Builder setUserOpinionQuestionSubtitle(
+        public Builder setUserOpinionQuestionSubtitle(
                 @NonNull final String userOpinionQuestionSubtitle) {
 
             this.userOpinionQuestionSubtitle = userOpinionQuestionSubtitle;
             return this;
         }
 
-        private Builder setPositiveFeedbackQuestionSubtitle(
+        public Builder setPositiveFeedbackQuestionSubtitle(
                 @NonNull final String positiveFeedbackQuestionSubtitle) {
 
             this.positiveFeedbackQuestionSubtitle = positiveFeedbackQuestionSubtitle;
             return this;
         }
 
-        private Builder setCriticalFeedbackQuestionSubtitle(
+        public Builder setCriticalFeedbackQuestionSubtitle(
                 @NonNull final String criticalFeedbackQuestionSubtitle) {
 
             this.criticalFeedbackQuestionSubtitle = criticalFeedbackQuestionSubtitle;
             return this;
         }
 
-        private Builder setThanksSubtitle(@NonNull final String thanksSubtitle) {
+        public Builder setThanksSubtitle(@NonNull final String thanksSubtitle) {
             this.thanksSubtitle = thanksSubtitle;
             return this;
         }
 
-        private BasePromptViewConfig build() {
+        public BasePromptViewConfig build() {
             return new BasePromptViewConfig(
                 userOpinionQuestionTitle,
                 userOpinionQuestionPositiveButtonLabel,

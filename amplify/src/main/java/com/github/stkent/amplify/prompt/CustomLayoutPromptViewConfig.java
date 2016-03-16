@@ -46,23 +46,16 @@ public final class CustomLayoutPromptViewConfig {
         return null;
     }
 
-    @LayoutRes
-    private final int questionLayout;
+    @Nullable
+    private final Integer questionLayout;
 
     @Nullable
-    @LayoutRes
     private final Integer thanksLayout;
 
     public CustomLayoutPromptViewConfig(@NonNull final TypedArray typedArray) {
-        final Integer questionLayout = suppliedLayoutOrNull(
+        this.questionLayout = suppliedLayoutOrNull(
                 typedArray,
                 R.styleable.CustomLayoutPromptView_prompt_view_question_layout);
-
-        if (questionLayout == null) {
-            throw new IllegalStateException(Constants.MISSING_LAYOUT_IDS_EXCEPTION_MESSAGE);
-        }
-
-        this.questionLayout = questionLayout;
 
         this.thanksLayout = suppliedLayoutOrNull(
                 typedArray,
@@ -77,8 +70,16 @@ public final class CustomLayoutPromptViewConfig {
         this.thanksLayout = thanksLayout;
     }
 
+    public boolean isValid() {
+        return questionLayout != null;
+    }
+
     @LayoutRes
     public int getQuestionLayout() {
+        if (questionLayout == null) {
+            throw new IllegalStateException(Constants.MISSING_LAYOUT_IDS_EXCEPTION_MESSAGE);
+        }
+
         return questionLayout;
     }
 

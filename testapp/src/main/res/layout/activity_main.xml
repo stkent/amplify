@@ -1,63 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <com.github.stkent.amplify.prompt.DefaultLayoutPromptView
-        android:id="@+id/default_layout_prompt_view"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:prompt_view_user_opinion_question_title="1. User Opinion Title"
-        app:prompt_view_user_opinion_question_subtitle="2. Subtitle"
-        app:prompt_view_user_opinion_question_positive_button_label="3. Yes"
-        app:prompt_view_user_opinion_question_negative_button_label="4. No"
-        app:prompt_view_positive_feedback_question_title="5. Positive Feedback Title"
-        app:prompt_view_positive_feedback_question_subtitle="6. Positive Feedback Subtitle"
-        app:prompt_view_positive_feedback_question_positive_button_label="7. Yes"
-        app:prompt_view_positive_feedback_question_negative_button_label="8. No"
-        app:prompt_view_critical_feedback_question_title="9. Critical Feedback Title9"
-        app:prompt_view_critical_feedback_question_subtitle="10. Critical Feedback Subtitle"
-        app:prompt_view_critical_feedback_question_positive_button_label="11. Yes"
-        app:prompt_view_critical_feedback_question_negative_button_label="12. No"
-        app:prompt_view_thanks_title="13. Thanks Title"
-        app:prompt_view_thanks_subtitle="14. Thanks Subtitle"
-        app:prompt_view_foreground_color="#ff0000"
-        app:prompt_view_background_color="#ff9900"
-        app:prompt_view_title_text_color="#33ff00"
-        app:prompt_view_subtitle_text_color="#00ffff"
-        app:prompt_view_positive_button_text_color="#0066ff"
-        app:prompt_view_positive_button_background_color="#3300ff"
-        app:prompt_view_positive_button_border_color="#cc00ff"
-        app:prompt_view_negative_button_text_color="#ff0099"
-        app:prompt_view_negative_button_background_color="#FFFF00"
-        app:prompt_view_negative_button_border_color="#999999" />
+        android:orientation="vertical">
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="16dp" />
+        <com.github.stkent.amplify.prompt.DefaultLayoutPromptView
+            android:id="@+id/default_layout_prompt_view_xml_config"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:prompt_view_background_color="#F90"
+            app:prompt_view_critical_feedback_question_negative_button_label="12. No"
+            app:prompt_view_critical_feedback_question_positive_button_label="11. Yes"
+            app:prompt_view_critical_feedback_question_subtitle="10. Critical Feedback Subtitle"
+            app:prompt_view_critical_feedback_question_title="9. Critical Feedback Title9"
+            app:prompt_view_foreground_color="#F09"
+            app:prompt_view_negative_button_background_color="#F00"
+            app:prompt_view_negative_button_border_color="#999"
+            app:prompt_view_negative_button_text_color="#FF0"
+            app:prompt_view_positive_button_background_color="#30F"
+            app:prompt_view_positive_button_border_color="#06F"
+            app:prompt_view_positive_button_text_color="#C0F"
+            app:prompt_view_positive_feedback_question_negative_button_label="8. No"
+            app:prompt_view_positive_feedback_question_positive_button_label="7. Yes"
+            app:prompt_view_positive_feedback_question_subtitle="6. Positive Feedback Subtitle"
+            app:prompt_view_positive_feedback_question_title="5. Positive Feedback Title"
+            app:prompt_view_subtitle_text_color="#0FF"
+            app:prompt_view_thanks_subtitle="14. Thanks Subtitle"
+            app:prompt_view_thanks_title="13. Thanks Title"
+            app:prompt_view_title_text_color="#3F0"
+            app:prompt_view_user_opinion_question_negative_button_label="4. No"
+            app:prompt_view_user_opinion_question_positive_button_label="3. Yes"
+            app:prompt_view_user_opinion_question_subtitle="2. User Opinion Subtitle"
+            app:prompt_view_user_opinion_question_title="1. User Opinion Title" />
 
-    <com.github.stkent.amplify.prompt.CustomLayoutPromptView
-        android:id="@+id/custom_layout_prompt_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:prompt_view_question_layout="@layout/custom_question_view"
-        app:prompt_view_thanks_layout="@layout/custom_thanks_view"
-        app:prompt_view_user_opinion_question_title="a. User Opinion Title"
-        app:prompt_view_user_opinion_question_subtitle="b. Subtitle"
-        app:prompt_view_user_opinion_question_positive_button_label="c. Yes"
-        app:prompt_view_user_opinion_question_negative_button_label="d. No"
-        app:prompt_view_positive_feedback_question_title="e. Positive Feedback Title"
-        app:prompt_view_positive_feedback_question_subtitle="f. Positive Feedback Subtitle"
-        app:prompt_view_positive_feedback_question_positive_button_label="g. Yes"
-        app:prompt_view_positive_feedback_question_negative_button_label="h. No"
-        app:prompt_view_critical_feedback_question_title="i. Critical Feedback Title9"
-        app:prompt_view_critical_feedback_question_subtitle="j. Critical Feedback Subtitle"
-        app:prompt_view_critical_feedback_question_positive_button_label="k. Yes"
-        app:prompt_view_critical_feedback_question_negative_button_label="l. No"
-        app:prompt_view_thanks_title="m. Thanks Title"
-        app:prompt_view_thanks_subtitle="n. Thanks Subtitle" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="16dp" />
 
-</LinearLayout>
+        <com.github.stkent.amplify.prompt.DefaultLayoutPromptView
+            android:id="@+id/default_layout_prompt_view_code_config"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="16dp" />
+
+        <com.github.stkent.amplify.prompt.CustomLayoutPromptView
+            android:id="@+id/custom_layout_prompt_view_xml_config"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:prompt_view_critical_feedback_question_negative_button_label="l. No"
+            app:prompt_view_critical_feedback_question_positive_button_label="k. Yes"
+            app:prompt_view_critical_feedback_question_subtitle="j. Critical Feedback Subtitle"
+            app:prompt_view_critical_feedback_question_title="i. Critical Feedback Title9"
+            app:prompt_view_positive_feedback_question_negative_button_label="h. No"
+            app:prompt_view_positive_feedback_question_positive_button_label="g. Yes"
+            app:prompt_view_positive_feedback_question_subtitle="f. Positive Feedback Subtitle"
+            app:prompt_view_positive_feedback_question_title="e. Positive Feedback Title"
+            app:prompt_view_question_layout="@layout/custom_question_view"
+            app:prompt_view_thanks_layout="@layout/custom_thanks_view"
+            app:prompt_view_thanks_subtitle="n. Thanks Subtitle"
+            app:prompt_view_thanks_title="m. Thanks Title"
+            app:prompt_view_user_opinion_question_negative_button_label="d. No"
+            app:prompt_view_user_opinion_question_positive_button_label="c. Yes"
+            app:prompt_view_user_opinion_question_subtitle="b. Subtitle"
+            app:prompt_view_user_opinion_question_title="a. User Opinion Title" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="16dp" />
+
+        <com.github.stkent.amplify.prompt.CustomLayoutPromptView
+            android:id="@+id/custom_layout_prompt_view_code_config"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+</ScrollView>

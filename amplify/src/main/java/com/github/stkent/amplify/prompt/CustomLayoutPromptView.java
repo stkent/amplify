@@ -29,6 +29,7 @@ public final class CustomLayoutPromptView
         extends BasePromptView<CustomLayoutQuestionView, CustomLayoutThanksView>
         implements IPromptView {
 
+    // NonNull
     private CustomLayoutPromptViewConfig config;
 
     public CustomLayoutPromptView(final Context context) {
@@ -58,6 +59,11 @@ public final class CustomLayoutPromptView
         }
 
         this.config = config;
+    }
+
+    @Override
+    protected boolean isConfigured() {
+        return config.isValid();
     }
 
     @NonNull

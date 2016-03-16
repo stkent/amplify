@@ -234,7 +234,11 @@ public class ExampleApplication extends Application {
 
 ## Prompt UI
 
-_amplify_ provides two configurable prompt UIs. You can see examples of each in the test application associated with this project. In this app, distinct colors and strings are set on every attribute to allow you to easily see the effects.
+_amplify_ provides two configurable prompt UIs. You can see examples of each in the test application associated with this project. In this app, distinct colors and strings are set on every attribute to allow you to easily see the effects:
+
+| Test app UI, use me for testing! |
+|----------------------------------|
+| ![](assets/testapp.png)          |
 
 ### Default Layout
 
@@ -247,20 +251,20 @@ Provided by the `DefaultLayoutPromptView` class. The basic layouts of the questi
     android:id="@+id/prompt_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:prompt_view_user_opinion_question_title="Custom Title String"
-    app:prompt_view_user_opinion_question_subtitle="Custom Subtitle String"
-    app:prompt_view_user_opinion_question_positive_button_label="Custom Button Title String"
-    app:prompt_view_user_opinion_question_negative_button_label="Custom Button Title String"
-    app:prompt_view_positive_feedback_question_title="Custom Title String"
-    app:prompt_view_positive_feedback_question_subtitle="Custom Subtitle String"
-    app:prompt_view_positive_feedback_question_positive_button_label="Custom Button Title String"
-    app:prompt_view_positive_feedback_question_negative_button_label="Custom Button Title String"
-    app:prompt_view_critical_feedback_question_title="Custom Title String"
-    app:prompt_view_critical_feedback_question_subtitle="Custom Subtitle String"
-    app:prompt_view_critical_feedback_question_positive_button_label="Custom Button Title String"
-    app:prompt_view_critical_feedback_question_negative_button_label="Custom Button Title String"
-    app:prompt_view_thanks_title="Custom Title String"
-    app:prompt_view_thanks_subtitle="Custom Subtitle String"
+    app:prompt_view_user_opinion_question_title="Custom Title"
+    app:prompt_view_user_opinion_question_subtitle="Custom Subtitle"
+    app:prompt_view_user_opinion_question_positive_button_label="Custom Button Label"
+    app:prompt_view_user_opinion_question_negative_button_label="Custom Button Label"
+    app:prompt_view_positive_feedback_question_title="Custom Title"
+    app:prompt_view_positive_feedback_question_subtitle="Custom Subtitle"
+    app:prompt_view_positive_feedback_question_positive_button_label="Custom Button Label"
+    app:prompt_view_positive_feedback_question_negative_button_label="Custom Button Label"
+    app:prompt_view_critical_feedback_question_title="Custom Title"
+    app:prompt_view_critical_feedback_question_subtitle="Custom Subtitle"
+    app:prompt_view_critical_feedback_question_positive_button_label="Custom Button Label"
+    app:prompt_view_critical_feedback_question_negative_button_label="Custom Button Label"
+    app:prompt_view_thanks_title="Custom Title"
+    app:prompt_view_thanks_subtitle="Custom Subtitle"
     app:prompt_view_foreground_color="@color/custom_foreground_color"
     app:prompt_view_background_color="@color/custom_background_color"
     app:prompt_view_title_text_color="@color/custom_title_text_color"
@@ -275,6 +279,45 @@ Provided by the `DefaultLayoutPromptView` class. The basic layouts of the questi
 
 All attributes are optional.
 
+It is also possible to configure this layout in code. To do so, users apply a `BasePromptViewConfig` and/or a `DefaultLayoutPromptViewConfig` to the view. Each configuration type can be constructed using a builder, which allows only the desired attributes to be overridden. Below shows an example in which every possible attribute is configured this way:
+
+```java
+DefaultLayoutPromptView promptView = (DefaultLayoutPromptView) findViewById(R.id.prompt_view);
+
+final BasePromptViewConfig basePromptViewConfig
+        = new BasePromptViewConfig.Builder()
+                .setUserOpinionQuestionTitle("Custom Title")
+                .setUserOpinionQuestionSubtitle("Custom Subtitle")
+                .setUserOpinionQuestionPositiveButtonLabel("Custom Button Label")
+                .setUserOpinionQuestionNegativeButtonLabel("Custom Button Label")
+                .setPositiveFeedbackQuestionTitle("Custom Title")
+                .setPositiveFeedbackQuestionSubtitle("Custom Subtitle")
+                .setPositiveFeedbackQuestionPositiveButtonLabel("Custom Button Label")
+                .setPositiveFeedbackQuestionNegativeButtonLabel("Custom Button Label")
+                .setCriticalFeedbackQuestionTitle("Custom Title")
+                .setCriticalFeedbackQuestionSubtitle("Custom Subtitle")
+                .setCriticalFeedbackQuestionPositiveButtonLabel("Custom Button Label")
+                .setCriticalFeedbackQuestionNegativeButtonLabel("Custom Button Label")
+                .build();
+
+final DefaultLayoutPromptViewConfig defaultLayoutPromptViewConfig
+        = new DefaultLayoutPromptViewConfig.Builder()
+                .setForegroundColor(Color.parseColor("#FF0000"))
+                .setBackgroundColor(Color.parseColor("#FF9900"))
+                .setTitleTextColor(Color.parseColor("#33FF00"))
+                .setSubtitleTextColor(Color.parseColor("#00FFFF"))
+                .setPositiveButtonTextColor(Color.parseColor("#CC00FF"))
+                .setPositiveButtonBackgroundColor(Color.parseColor("#3300FF"))
+                .setPositiveButtonBorderColor(Color.parseColor("#0066FF"))
+                .setNegativeButtonTextColor(Color.parseColor("#FFFF00"))
+                .setNegativeButtonBackgroundColor(Color.parseColor("#FF0000"))
+                .setNegativeButtonBorderColor(Color.parseColor("#999999"))
+                .build();
+
+promptView.applyBaseConfig(basePromptViewConfig);
+promptView.applyConfig(defaultLayoutPromptViewConfig);
+```
+
 ### Custom Layout
 
 **Use this if you need to provide a structurally different prompt layout, require custom fonts, etc.**
@@ -288,20 +331,20 @@ Provided by the `CustomLayoutPromptView` class. You provide the basic layouts to
     android:layout_height="wrap_content"
     app:prompt_view_question_layout="@layout/include_amplify_question_layout"
     app:prompt_view_thanks_layout="@layout/include_amplify_question_layout"
-    app:prompt_view_user_opinion_question_title="Custom Title String"
-    app:prompt_view_user_opinion_question_subtitle="Custom Subtitle String"
-    app:prompt_view_user_opinion_question_positive_button_label="Custom Button Title String"
-    app:prompt_view_user_opinion_question_negative_button_label="Custom Button Title String"
-    app:prompt_view_positive_feedback_question_title="Custom Title String"
-    app:prompt_view_positive_feedback_question_subtitle="Custom Subtitle String"
-    app:prompt_view_positive_feedback_question_positive_button_label="Custom Button Title String"
-    app:prompt_view_positive_feedback_question_negative_button_label="Custom Button Title String"
-    app:prompt_view_critical_feedback_question_title="Custom Title String"
-    app:prompt_view_critical_feedback_question_subtitle="Custom Subtitle String"
-    app:prompt_view_critical_feedback_question_positive_button_label="Custom Button Title String"
-    app:prompt_view_critical_feedback_question_negative_button_label="Custom Button Title String"
-    app:prompt_view_thanks_title="Custom Title String"
-    app:prompt_view_thanks_subtitle="Custom Subtitle String" />
+    app:prompt_view_user_opinion_question_title="Custom Title"
+    app:prompt_view_user_opinion_question_subtitle="Custom Subtitle"
+    app:prompt_view_user_opinion_question_positive_button_label="Custom Button Label"
+    app:prompt_view_user_opinion_question_negative_button_label="Custom Button Label"
+    app:prompt_view_positive_feedback_question_title="Custom Title"
+    app:prompt_view_positive_feedback_question_subtitle="Custom Subtitle"
+    app:prompt_view_positive_feedback_question_positive_button_label="Custom Button Label"
+    app:prompt_view_positive_feedback_question_negative_button_label="Custom Button Label"
+    app:prompt_view_critical_feedback_question_title="Custom Title"
+    app:prompt_view_critical_feedback_question_subtitle="Custom Subtitle"
+    app:prompt_view_critical_feedback_question_positive_button_label="Custom Button Label"
+    app:prompt_view_critical_feedback_question_negative_button_label="Custom Button Label"
+    app:prompt_view_thanks_title="Custom Title"
+    app:prompt_view_thanks_subtitle="Custom Subtitle" />
 ```
 
 The `prompt_view_question_layout` attribute is **required** and subject to some additional requirements (listed below). All other attributes are optional. If `prompt_view_thanks_layout` is not provided, the prompt will automatically dismiss at the end of every flow. If it is provided, the user will see the thanks view whenever they agree to give feedback.
@@ -329,6 +372,35 @@ The layout referenced by `prompt_view_thanks_layout ` _must_ include:
 The layout referenced by `prompt_view_thanks_layout ` _may_ include:
 
 - A `TextView` subclass with id `amplify_subtitle_text_view`.
+
+As before, it is also possible to configure the `CustomLayoutPromptView` in code. To do so, users apply a `BasePromptViewConfig` and/or a `CustomLayoutPromptViewConfig` to the view. Below shows an example in which every possible attribute is configured this way:
+
+```java
+CustomLayoutPromptView promptView = (CustomLayoutPromptView) findViewById(R.id.prompt_view);
+
+final BasePromptViewConfig basePromptViewConfig
+        = new BasePromptViewConfig.Builder()
+                .setUserOpinionQuestionTitle("Custom Title")
+                .setUserOpinionQuestionSubtitle("Custom Subtitle")
+                .setUserOpinionQuestionPositiveButtonLabel("Custom Button Label")
+                .setUserOpinionQuestionNegativeButtonLabel("Custom Button Label")
+                .setPositiveFeedbackQuestionTitle("Custom Title")
+                .setPositiveFeedbackQuestionSubtitle("Custom Subtitle")
+                .setPositiveFeedbackQuestionPositiveButtonLabel("Custom Button Label")
+                .setPositiveFeedbackQuestionNegativeButtonLabel("Custom Button Label")
+                .setCriticalFeedbackQuestionTitle("Custom Title")
+                .setCriticalFeedbackQuestionSubtitle("Custom Subtitle")
+                .setCriticalFeedbackQuestionPositiveButtonLabel("Custom Button Label")
+                .setCriticalFeedbackQuestionNegativeButtonLabel("Custom Button Label")
+                .build();
+
+final CustomLayoutPromptViewConfig customLayoutPromptViewConfig
+        = new CustomLayoutPromptViewConfig(
+                R.layout.custom_question_view, R.layout.custom_thanks_view);
+
+promptView.applyBaseConfig(basePromptViewConfig);
+promptView.applyConfig(customLayoutPromptViewConfig);
+```
 
 ### Listening For `IPromptView` Events
 
