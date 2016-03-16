@@ -144,7 +144,7 @@ final class DefaultLayoutQuestionView extends CustomLayoutQuestionView {
                 = new LayerDrawable(new Drawable[] {borderDrawable, fillDrawable});
 
         // todo: make this width configurable
-        final int borderWidthPx = (int) floor(DisplayUtils.dpToPx(getContext(), 2));
+        final int borderWidthPx = (int) floor(DisplayUtils.dpToPx(getContext(), 1));
         result.setLayerInset(1, borderWidthPx, borderWidthPx, borderWidthPx, borderWidthPx);
 
         return result;
