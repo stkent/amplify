@@ -23,8 +23,7 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 
 import com.github.stkent.amplify.tracking.interfaces.IAppFeedbackDataProvider;
-import com.github.stkent.amplify.tracking.interfaces.IAppVersionNameProvider;
-import com.github.stkent.amplify.utils.AppUtils;
+import com.github.stkent.amplify.utils.AppInfoProvider;
 import com.github.stkent.amplify.utils.StringUtils;
 
 public class AppFeedbackDataProvider implements IAppFeedbackDataProvider {
@@ -32,12 +31,8 @@ public class AppFeedbackDataProvider implements IAppFeedbackDataProvider {
     @NonNull
     private final Context appContext;
 
-    @NonNull
-    private final IAppVersionNameProvider appVersionNameProvider;
-
     public AppFeedbackDataProvider(@NonNull final Context appContext) {
         this.appContext = appContext;
-        this.appVersionNameProvider = new AppVersionNameProvider(appContext);
     }
 
     @NonNull
@@ -60,7 +55,7 @@ public class AppFeedbackDataProvider implements IAppFeedbackDataProvider {
     @NonNull
     public String getVersionDisplayString() {
         try {
-            final PackageInfo packageInfo = AppUtils.getPackageInfo(appContext);
+            final PackageInfo packageInfo = AppInfoProvider.getSharedInstance().getPackageInfo();
 
             final String applicationVersionName = packageInfo.versionName;
             final int applicationVersionCode = packageInfo.versionCode;

@@ -23,7 +23,7 @@ import android.content.pm.ResolveInfo;
 import android.support.annotation.NonNull;
 
 import com.github.stkent.amplify.tracking.interfaces.IEnvironmentCapabilitiesProvider;
-import com.github.stkent.amplify.utils.AppUtils;
+import com.github.stkent.amplify.utils.AppInfoProvider;
 
 import java.util.List;
 
@@ -47,7 +47,7 @@ public final class EnvironmentCapabilitiesProvider implements IEnvironmentCapabi
     @Override
     public boolean isAppInstalled(@NonNull final String packageName) {
         try {
-            AppUtils.getPackageInfo(appContext, packageName, GET_ACTIVITIES);
+            AppInfoProvider.getSharedInstance().getPackageInfo(packageName, GET_ACTIVITIES);
             return true;
         } catch (final PackageManager.NameNotFoundException e) {
             return false;
