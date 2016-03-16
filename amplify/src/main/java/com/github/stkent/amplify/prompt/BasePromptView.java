@@ -40,6 +40,8 @@ import static com.github.stkent.amplify.prompt.interfaces.IPromptPresenter.UserO
 abstract class BasePromptView<T extends View & IQuestionView, U extends View & IThanksView>
         extends FrameLayout implements IPromptView {
 
+    protected abstract boolean isConfigured();
+
     @NonNull
     protected abstract T getQuestionView();
 
@@ -105,6 +107,10 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
 
     @Override
     public final void queryUserOpinion() {
+        if (!isConfigured()) {
+            throw new IllegalStateException("PromptView is not fully configured.");
+        }
+
         final T userOpinionQuestionView = getQuestionView();
         userOpinionQuestionView.setPresenter(userOpinionQuestionPresenter);
         userOpinionQuestionView.bind(basePromptViewConfig.getUserOpinionQuestion());
@@ -151,6 +157,10 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
     @Override
     public boolean providesThanksView() {
         return getThanksView() != null;
+    }
+
+    public void applyBaseConfig(@NonNull final BasePromptViewConfig basePromptViewConfig) {
+        this.basePromptViewConfig = basePromptViewConfig;
     }
 
     protected boolean isDisplayed() {
