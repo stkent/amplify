@@ -234,7 +234,7 @@ public class ExampleApplication extends Application {
 
 ## Prompt UI
 
-_amplify_ provides two configurable prompt UIs.
+_amplify_ provides two configurable prompt UIs. You can see examples of each in the test application associated with this project. In this app, distinct colors and strings are set on every attribute to allow you to easily see the effects.
 
 ### Default Layout
 
@@ -242,34 +242,36 @@ _amplify_ provides two configurable prompt UIs.
 
 Provided by the `DefaultLayoutPromptView` class. The basic layouts of the questions and thanks presented to users of the embedding application are fixed, but the most important elements of those layouts (colors and text) are fully customizable. The full set of available xml configuration hooks is shown below (remember to use the `app` xml namespace when setting these properties!):
 
-    <com.github.stkent.amplify.prompt.DefaultLayoutPromptView
-        android:id="@+id/prompt_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:prompt_view_user_opinion_question_title="Custom Title String"
-        app:prompt_view_user_opinion_question_subtitle="Custom Subtitle String"
-        app:prompt_view_user_opinion_question_positive_button_label="Custom Button Title String"
-        app:prompt_view_user_opinion_question_negative_button_label="Custom Button Title String"
-        app:prompt_view_positive_feedback_question_title="Custom Title String"
-        app:prompt_view_positive_feedback_question_subtitle="Custom Subtitle String"
-        app:prompt_view_positive_feedback_question_positive_button_label="Custom Button Title String"
-        app:prompt_view_positive_feedback_question_negative_button_label="Custom Button Title String"
-        app:prompt_view_critical_feedback_question_title="Custom Title String"
-        app:prompt_view_critical_feedback_question_subtitle="Custom Subtitle String".
-        app:prompt_view_critical_feedback_question_positive_button_label="Custom Button Title String"
-        app:prompt_view_critical_feedback_question_negative_button_label="Custom Button Title String"
-        app:prompt_view_thanks_title="Custom Title String"
-        app:prompt_view_thanks_subtitle="Custom Subtitle String"
-        app:prompt_view_foreground_color="@color/custom_foreground_color"
-        app:prompt_view_background_color="@color/custom_background_color"
-        app:prompt_view_title_text_color="@color/custom_title_text_color"
-        app:prompt_view_subtitle_text_color="@color/custom_subtitle_text_color"
-        app:prompt_view_positive_button_text_color="@color/custom_positive_button_text_color"
-        app:prompt_view_positive_button_background_color="@color/custom_positive_button_background_color"
-        app:prompt_view_positive_button_border_color="@color/custom_positive_button_border_color"
-        app:prompt_view_negative_button_text_color="@color/custom_negative_button_text_color"
-        app:prompt_view_negative_button_background_color="@color/custom_negative_button_background_color"
-        app:prompt_view_negative_button_border_color="@color/custom_negative_button_border_color" />
+```xml
+<com.github.stkent.amplify.prompt.DefaultLayoutPromptView
+    android:id="@+id/prompt_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:prompt_view_user_opinion_question_title="Custom Title String"
+    app:prompt_view_user_opinion_question_subtitle="Custom Subtitle String"
+    app:prompt_view_user_opinion_question_positive_button_label="Custom Button Title String"
+    app:prompt_view_user_opinion_question_negative_button_label="Custom Button Title String"
+    app:prompt_view_positive_feedback_question_title="Custom Title String"
+    app:prompt_view_positive_feedback_question_subtitle="Custom Subtitle String"
+    app:prompt_view_positive_feedback_question_positive_button_label="Custom Button Title String"
+    app:prompt_view_positive_feedback_question_negative_button_label="Custom Button Title String"
+    app:prompt_view_critical_feedback_question_title="Custom Title String"
+    app:prompt_view_critical_feedback_question_subtitle="Custom Subtitle String"
+    app:prompt_view_critical_feedback_question_positive_button_label="Custom Button Title String"
+    app:prompt_view_critical_feedback_question_negative_button_label="Custom Button Title String"
+    app:prompt_view_thanks_title="Custom Title String"
+    app:prompt_view_thanks_subtitle="Custom Subtitle String"
+    app:prompt_view_foreground_color="@color/custom_foreground_color"
+    app:prompt_view_background_color="@color/custom_background_color"
+    app:prompt_view_title_text_color="@color/custom_title_text_color"
+    app:prompt_view_subtitle_text_color="@color/custom_subtitle_text_color"
+    app:prompt_view_positive_button_text_color="@color/custom_positive_button_text_color"
+    app:prompt_view_positive_button_background_color="@color/custom_positive_button_background_color"
+    app:prompt_view_positive_button_border_color="@color/custom_positive_button_border_color"
+    app:prompt_view_negative_button_text_color="@color/custom_negative_button_text_color"
+    app:prompt_view_negative_button_background_color="@color/custom_negative_button_background_color"
+    app:prompt_view_negative_button_border_color="@color/custom_negative_button_border_color" />
+```
 
 All attributes are optional.
 
@@ -281,26 +283,28 @@ TODO: show some screenshots of examples created using this method?
 
 Provided by the `CustomLayoutPromptView` class. You provide the basic layouts to use, and any customization of the default strings you require. The full set of available xml configuration hooks is shown below (remember to use the `app` xml namespace when setting these properties!):
 
-    <com.github.stkent.amplify.prompt.DefaultLayoutPromptView
-        android:id="@+id/prompt_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:prompt_view_question_layout="@layout/include_amplify_question_layout"
-        app:prompt_view_thanks_layout="@layout/include_amplify_question_layout"
-        app:prompt_view_user_opinion_question_title="Custom Title String"
-        app:prompt_view_user_opinion_question_subtitle="Custom Subtitle String"
-        app:prompt_view_user_opinion_question_positive_button_label="Custom Button Title String"
-        app:prompt_view_user_opinion_question_negative_button_label="Custom Button Title String"
-        app:prompt_view_positive_feedback_question_title="Custom Title String"
-        app:prompt_view_positive_feedback_question_subtitle="Custom Subtitle String"
-        app:prompt_view_positive_feedback_question_positive_button_label="Custom Button Title String"
-        app:prompt_view_positive_feedback_question_negative_button_label="Custom Button Title String"
-        app:prompt_view_critical_feedback_question_title="Custom Title String"
-        app:prompt_view_critical_feedback_question_subtitle="Custom Subtitle String"
-        app:prompt_view_critical_feedback_question_positive_button_label="Custom Button Title String"
-        app:prompt_view_critical_feedback_question_negative_button_label="Custom Button Title String"
-        app:prompt_view_thanks_title="Custom Title String"
-        app:prompt_view_thanks_subtitle="Custom Subtitle String" />
+```xml
+<com.github.stkent.amplify.prompt.DefaultLayoutPromptView
+    android:id="@+id/prompt_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:prompt_view_question_layout="@layout/include_amplify_question_layout"
+    app:prompt_view_thanks_layout="@layout/include_amplify_question_layout"
+    app:prompt_view_user_opinion_question_title="Custom Title String"
+    app:prompt_view_user_opinion_question_subtitle="Custom Subtitle String"
+    app:prompt_view_user_opinion_question_positive_button_label="Custom Button Title String"
+    app:prompt_view_user_opinion_question_negative_button_label="Custom Button Title String"
+    app:prompt_view_positive_feedback_question_title="Custom Title String"
+    app:prompt_view_positive_feedback_question_subtitle="Custom Subtitle String"
+    app:prompt_view_positive_feedback_question_positive_button_label="Custom Button Title String"
+    app:prompt_view_positive_feedback_question_negative_button_label="Custom Button Title String"
+    app:prompt_view_critical_feedback_question_title="Custom Title String"
+    app:prompt_view_critical_feedback_question_subtitle="Custom Subtitle String"
+    app:prompt_view_critical_feedback_question_positive_button_label="Custom Button Title String"
+    app:prompt_view_critical_feedback_question_negative_button_label="Custom Button Title String"
+    app:prompt_view_thanks_title="Custom Title String"
+    app:prompt_view_thanks_subtitle="Custom Subtitle String" />
+```
 
 The `prompt_view_question_layout` attribute is **required** and subject to some additional requirements (listed below). All other attributes are optional. If `prompt_view_thanks_layout` is not provided, the prompt will automatically dismiss at the end of every flow. If it is provided, the user will see the thanks view whenever they agree to give feedback.
 
@@ -339,18 +343,20 @@ It may sometimes be useful to know when the state of the `IPromptView` subclass 
 
 To allow this, the `promptIfReady` method optionally accepts an `IEventListener<PromptViewEvent>` parameter that will receive notifications of all tracked `PromptViewEvents`. An example implementation demonstrating these use-cases is given below:
 
-    Amplify.get(this).promptIfReady(this, promptView, new IEventListener<PromptViewEvent>() {
-        @Override
-        public void notifyEventTriggered(@NonNull final PromptViewEvent event) {
-            AnalyticsTracker.notifyOfEvent(event);
-        
-            if (event == PROMPT_SHOWN) {
-                relatedView.setVisibility(VISIBLE);
-            } else if (event == PROMPT_DISMISSED) {
-                relatedView.setVisibility(GONE);
-            }
+```java
+Amplify.get(this).promptIfReady(this, promptView, new IEventListener<PromptViewEvent>() {
+    @Override
+    public void notifyEventTriggered(@NonNull final PromptViewEvent event) {
+        AnalyticsTracker.notifyOfEvent(event);
+    
+        if (event == PROMPT_SHOWN) {
+            relatedView.setVisibility(VISIBLE);
+        } else if (event == PROMPT_DISMISSED) {
+            relatedView.setVisibility(GONE);
         }
-    });
+    }
+});
+```
 
 ## Debug Settings
 
@@ -441,7 +447,9 @@ A new custom event can be tracked by implementing the `IEvent` interface, regist
 
 and then notifying the `Amplify` instance of occurrences of this event using the `notifyEventTriggered` method:
 
-    Amplify.get(this).notifyEventTriggered(new MyCustomEvent());
+```java
+Amplify.get(this).notifyEventTriggered(new MyCustomEvent());
+```
     
 As before, the dimension of the event that will be tracked is dictated by which registration method is called.
 
