@@ -255,7 +255,7 @@ Provided by the `DefaultLayoutPromptView` class. The basic layouts of the questi
         app:prompt_view_positive_feedback_question_positive_button_label="Custom Button Title String"
         app:prompt_view_positive_feedback_question_negative_button_label="Custom Button Title String"
         app:prompt_view_critical_feedback_question_title="Custom Title String"
-        app:prompt_view_critical_feedback_question_subtitle="Custom Subtitle String".
+        app:prompt_view_critical_feedback_question_subtitle="Custom Subtitle String"
         app:prompt_view_critical_feedback_question_positive_button_label="Custom Button Title String"
         app:prompt_view_critical_feedback_question_negative_button_label="Custom Button Title String"
         app:prompt_view_thanks_title="Custom Title String"
