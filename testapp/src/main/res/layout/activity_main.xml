@@ -13,21 +13,19 @@
         <com.github.stkent.amplify.prompt.DefaultLayoutPromptView
             android:id="@+id/default_layout_prompt_view_no_customization"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="16dp" />
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp" />
 
         <com.github.stkent.amplify.prompt.DefaultLayoutPromptView
             android:id="@+id/default_layout_prompt_view_xml_config"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
             app:prompt_view_background_color="#F90"
             app:prompt_view_critical_feedback_question_negative_button_label="12. No"
             app:prompt_view_critical_feedback_question_positive_button_label="11. Yes"
             app:prompt_view_critical_feedback_question_subtitle="10. Critical Feedback Subtitle"
-            app:prompt_view_critical_feedback_question_title="9. Critical Feedback Title9"
+            app:prompt_view_critical_feedback_question_title="9. Critical Feedback Title"
             app:prompt_view_foreground_color="#F09"
             app:prompt_view_negative_button_background_color="#F00"
             app:prompt_view_negative_button_border_color="#999"
@@ -48,27 +46,21 @@
             app:prompt_view_user_opinion_question_subtitle="2. User Opinion Subtitle"
             app:prompt_view_user_opinion_question_title="1. User Opinion Title" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="16dp" />
-
         <com.github.stkent.amplify.prompt.DefaultLayoutPromptView
             android:id="@+id/default_layout_prompt_view_code_config"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="16dp" />
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp" />
 
         <com.github.stkent.amplify.prompt.CustomLayoutPromptView
             android:id="@+id/custom_layout_prompt_view_xml_config"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
             app:prompt_view_critical_feedback_question_negative_button_label="l. No"
             app:prompt_view_critical_feedback_question_positive_button_label="k. Yes"
             app:prompt_view_critical_feedback_question_subtitle="j. Critical Feedback Subtitle"
-            app:prompt_view_critical_feedback_question_title="i. Critical Feedback Title9"
+            app:prompt_view_critical_feedback_question_title="i. Critical Feedback Title"
             app:prompt_view_positive_feedback_question_negative_button_label="h. No"
             app:prompt_view_positive_feedback_question_positive_button_label="g. Yes"
             app:prompt_view_positive_feedback_question_subtitle="f. Positive Feedback Subtitle"
@@ -81,10 +73,6 @@
             app:prompt_view_user_opinion_question_positive_button_label="c. Yes"
             app:prompt_view_user_opinion_question_subtitle="b. Subtitle"
             app:prompt_view_user_opinion_question_title="a. User Opinion Title" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="16dp" />
 
         <com.github.stkent.amplify.prompt.CustomLayoutPromptView
             android:id="@+id/custom_layout_prompt_view_code_config"

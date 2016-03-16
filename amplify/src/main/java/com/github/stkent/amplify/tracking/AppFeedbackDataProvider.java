@@ -16,23 +16,21 @@
  */
 package com.github.stkent.amplify.tracking;
 
-import android.content.Context;
 import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.annotation.NonNull;
 
 import com.github.stkent.amplify.tracking.interfaces.IAppFeedbackDataProvider;
-import com.github.stkent.amplify.utils.AppInfoProvider;
+import com.github.stkent.amplify.tracking.interfaces.IAppInfoProvider;
 import com.github.stkent.amplify.utils.StringUtils;
 
 public class AppFeedbackDataProvider implements IAppFeedbackDataProvider {
 
     @NonNull
-    private final Context appContext;
+    private final IAppInfoProvider appInfoProvider;
 
-    public AppFeedbackDataProvider(@NonNull final Context appContext) {
-        this.appContext = appContext;
+    public AppFeedbackDataProvider(@NonNull final IAppInfoProvider appInfoProvider) {
+        this.appInfoProvider = appInfoProvider;
     }
 
     @NonNull
@@ -54,22 +52,18 @@ public class AppFeedbackDataProvider implements IAppFeedbackDataProvider {
 
     @NonNull
     public String getVersionDisplayString() {
-        try {
-            final PackageInfo packageInfo = AppInfoProvider.getSharedInstance().getPackageInfo();
+        final PackageInfo packageInfo = appInfoProvider.getPackageInfo();
 
-            final String applicationVersionName = packageInfo.versionName;
-            final int applicationVersionCode = packageInfo.versionCode;
+        final String applicationVersionName = packageInfo.versionName;
+        final int applicationVersionCode = packageInfo.versionCode;
 
-            return String.format("%s (%s)", applicationVersionName, applicationVersionCode);
-        } catch (final PackageManager.NameNotFoundException e) {
-            return "Unknown Version";
-        }
+        return String.format("%s (%s)", applicationVersionName, applicationVersionCode);
     }
 
     @NonNull
     @Override
     public CharSequence getAppNameString() {
-        return appContext.getApplicationInfo().loadLabel(appContext.getPackageManager());
+        return appInfoProvider.getApplicationInfo().loadLabel(appInfoProvider.getPackageManager());
     }
 
 }

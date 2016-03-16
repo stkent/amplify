@@ -16,14 +16,13 @@
  */
 package com.github.stkent.amplify.tracking;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.support.annotation.NonNull;
 
+import com.github.stkent.amplify.tracking.interfaces.IAppInfoProvider;
 import com.github.stkent.amplify.tracking.interfaces.IEnvironmentCapabilitiesProvider;
-import com.github.stkent.amplify.utils.AppInfoProvider;
 
 import java.util.List;
 
@@ -38,20 +37,15 @@ public final class EnvironmentCapabilitiesProvider implements IEnvironmentCapabi
     private static final String GOOGLE_PLAY_STORE_PACKAGE_NAME = "com.android.vending";
 
     @NonNull
-    private final Context appContext;
+    private final IAppInfoProvider appInfoProvider;
 
-    public EnvironmentCapabilitiesProvider(@NonNull final Context appContext) {
-        this.appContext = appContext;
+    public EnvironmentCapabilitiesProvider(@NonNull final IAppInfoProvider appInfoProvider) {
+        this.appInfoProvider = appInfoProvider;
     }
 
     @Override
     public boolean isAppInstalled(@NonNull final String packageName) {
-        try {
-            AppInfoProvider.getSharedInstance().getPackageInfo(packageName, GET_ACTIVITIES);
-            return true;
-        } catch (final PackageManager.NameNotFoundException e) {
-            return false;
-        }
+        return appInfoProvider.getPackageInfo(packageName, GET_ACTIVITIES) != null;
     }
 
     @Override
@@ -63,7 +57,7 @@ public final class EnvironmentCapabilitiesProvider implements IEnvironmentCapabi
 
     @Override
     public boolean canHandleIntent(@NonNull final Intent intent) {
-        final List<ResolveInfo> resolveInfoList = appContext.getPackageManager()
+        final List<ResolveInfo> resolveInfoList = appInfoProvider.getPackageManager()
                 .queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
 
         return !resolveInfoList.isEmpty();
