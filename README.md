@@ -234,7 +234,11 @@ public class ExampleApplication extends Application {
 
 ## Prompt UI
 
-_amplify_ provides two configurable prompt UIs. You can see examples of each in the test application associated with this project. In this app, distinct colors and strings are set on every attribute to allow you to easily see the effects.
+_amplify_ provides two configurable prompt UIs. You can see examples of each in the test application associated with this project. In this app, distinct colors and strings are set on every attribute to allow you to easily see the effects:
+
+| Test app UI, use me for testing! |
+|----------------------------------|
+| ![](assets/testapp.png)          |
 
 ### Default Layout
 
