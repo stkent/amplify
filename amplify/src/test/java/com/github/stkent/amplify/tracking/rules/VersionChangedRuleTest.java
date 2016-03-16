@@ -17,10 +17,11 @@
 package com.github.stkent.amplify.tracking.rules;
 
 import android.annotation.SuppressLint;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 
 import com.github.stkent.amplify.helpers.BaseTest;
-import com.github.stkent.amplify.tracking.interfaces.IAppVersionNameProvider;
+import com.github.stkent.amplify.utils.AppInfoProvider;
 
 import org.junit.Test;
 import org.mockito.Mock;
@@ -33,12 +34,16 @@ public class VersionChangedRuleTest extends BaseTest {
 
     private VersionChangedRule versionChangedRule;
 
+    private PackageInfo fakePackageInfo;
+
     @Mock
-    private IAppVersionNameProvider mockAppVersionNameProvider;
+    private AppInfoProvider mockAppInfoProvider;
 
     @Override
     public void localSetUp() {
-        versionChangedRule = new VersionChangedRule(mockAppVersionNameProvider);
+        AppInfoProvider.setSharedInstance(mockAppInfoProvider);
+        versionChangedRule = new VersionChangedRule();
+        fakePackageInfo = new PackageInfo();
     }
 
     @Test
@@ -46,7 +51,8 @@ public class VersionChangedRuleTest extends BaseTest {
         // Arrange
         final String fakeVersionName = "any string";
 
-        when(mockAppVersionNameProvider.getVersionName()).thenReturn(fakeVersionName);
+        when(mockAppInfoProvider.getPackageInfo()).thenReturn(fakePackageInfo);
+        fakePackageInfo.versionName = fakeVersionName;
 
         // Act
         final boolean ruleShouldAllowFeedbackPrompt =
@@ -67,7 +73,8 @@ public class VersionChangedRuleTest extends BaseTest {
         final String fakeCurrentVersionName = "any other string";
         assert !fakeCachedVersionName.equals(fakeCurrentVersionName);
 
-        when(mockAppVersionNameProvider.getVersionName()).thenReturn(fakeCurrentVersionName);
+        when(mockAppInfoProvider.getPackageInfo()).thenReturn(fakePackageInfo);
+        fakePackageInfo.versionName = fakeCurrentVersionName;
 
         // Act
         final boolean ruleShouldAllowFeedbackPrompt =

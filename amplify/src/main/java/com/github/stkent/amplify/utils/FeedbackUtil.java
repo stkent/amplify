@@ -18,7 +18,6 @@ package com.github.stkent.amplify.utils;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -27,27 +26,30 @@ import android.support.annotation.Nullable;
 import com.github.stkent.amplify.ILogger;
 import com.github.stkent.amplify.tracking.interfaces.IAppFeedbackDataProvider;
 import com.github.stkent.amplify.tracking.interfaces.IEnvironmentCapabilitiesProvider;
-import com.github.stkent.amplify.utils.time.SystemTimeUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 
 public final class FeedbackUtil {
+
+    private static final String DEFAULT_EMAIL_SUBJECT_LINE_SUFFIX = " Android App Feedback";
 
     private final IAppFeedbackDataProvider appFeedbackDataProvider;
     private final IEnvironmentCapabilitiesProvider environmentCapabilitiesProvider;
     private final ILogger logger;
-    private final String feedbackEmail;
+    private final String feedbackEmailAddress;
 
     public FeedbackUtil(
             @NonNull final IAppFeedbackDataProvider appFeedbackDataProvider,
             @NonNull final IEnvironmentCapabilitiesProvider environmentCapabilitiesProvider,
-            @NonNull final String feedbackEmail,
+            @NonNull final String feedbackEmailAddress,
             @NonNull final ILogger logger) {
+
         this.appFeedbackDataProvider = appFeedbackDataProvider;
         this.environmentCapabilitiesProvider = environmentCapabilitiesProvider;
-        this.feedbackEmail = feedbackEmail;
+        this.feedbackEmailAddress = feedbackEmailAddress;
         this.logger = logger;
     }
 
@@ -56,79 +58,59 @@ public final class FeedbackUtil {
 
         if (!environmentCapabilitiesProvider.canHandleIntent(feedbackEmailIntent)) {
             logger.e("Unable to present email client chooser.");
-
             return;
         }
 
         if (ActivityStateUtil.isActivityValid(activity)) {
-            activity.startActivity(Intent.createChooser(getFeedbackEmailIntent(), "Choose an email provider:"));
+            activity.startActivity(Intent.createChooser(
+                    feedbackEmailIntent, "Choose an email provider:"));
+
             activity.overridePendingTransition(0, 0);
         }
     }
 
     @NonNull
     private Intent getFeedbackEmailIntent() {
-        final CharSequence appName = appFeedbackDataProvider.getAppNameString();
+        final Intent result = new Intent(Intent.ACTION_SENDTO);
+        result.setData(Uri.parse("mailto:"));
+        result.putExtra(Intent.EXTRA_EMAIL, new String[]{feedbackEmailAddress});
+        result.putExtra(Intent.EXTRA_SUBJECT, getEmailSubjectLine());
+        result.putExtra(Intent.EXTRA_TEXT, getAppInfoString());
+        return result;
+    }
 
-        final String feedbackEmailSubject =
-                appName
-                + " Android App Feedback"
-                + " " + getDateString();
-
-        final String encodedFeedbackEmailSubject = Uri.encode(feedbackEmailSubject, "UTF-8");
-        final String appInfo = getAppInfoString();
-
-        // Uri.Builder is not useful here; see http://stackoverflow.com/a/12035226/2911458
-        final StringBuilder uriStringBuilder = new StringBuilder("mailto:");
-
-        try {
-            uriStringBuilder.append(this.feedbackEmail);
-        } catch (final IllegalStateException e) {
-            logger.e("Feedback email address was not defined");
-        }
-
-        uriStringBuilder.append("?subject=")
-                .append(encodedFeedbackEmailSubject)
-                .append("&body=")
-                .append(Uri.encode(appInfo));
-
-        final Uri uri = Uri.parse(uriStringBuilder.toString());
-
-        return new Intent(Intent.ACTION_SENDTO, uri);
+    @NonNull
+    private String getEmailSubjectLine() {
+        return appFeedbackDataProvider.getAppNameString() + DEFAULT_EMAIL_SUBJECT_LINE_SUFFIX;
     }
 
     @NonNull
     private String getAppInfoString() {
-        String appVersionDisplayString;
-
-        try {
-            appVersionDisplayString = appFeedbackDataProvider.getVersionDisplayString();
-        } catch (PackageManager.NameNotFoundException e) {
-            logger.e("Unable to determine application version information.");
-
-            appVersionDisplayString = "Unknown";
-        }
-
-        return    "\n\n\n"
+        return    "My Device: " + appFeedbackDataProvider.getDeviceName()
+                + "\n"
+                + "App Version: " + appFeedbackDataProvider.getVersionDisplayString()
+                + "\n"
+                + "Android Version: " + getAndroidOsVersionDisplayString()
+                + "\n"
+                + "Time Stamp: " + getCurrentUtcTimeStringForDate(new Date())
+                + "\n"
                 + "---------------------"
-                + "\n"
-                + "Device: " + appFeedbackDataProvider.getDeviceName()
-                + "\n"
-                + "App Version: " + appVersionDisplayString
-                + "\n"
-                + "Android OS Version: " + getAndroidOsVersionDisplayString()
-                + "\n"
-                + "Date: " + getDateString();
+                + "\n\n";
     }
 
-    private String getDateString() {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy kk:mm:ss", Locale.getDefault());
-        Date date = new Date(SystemTimeUtil.currentTimeMillis());
-        return simpleDateFormat.format(date);
-    }
-
+    @NonNull
     private String getAndroidOsVersionDisplayString() {
-        return Build.VERSION.RELEASE + " - " + Build.VERSION.SDK_INT;
+        return String.format("%s (%s)", Build.VERSION.RELEASE, Build.VERSION.SDK_INT);
+    }
+
+    @NonNull
+    private String getCurrentUtcTimeStringForDate(final Date date) {
+        final SimpleDateFormat simpleDateFormat
+                = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss z", Locale.getDefault());
+
+        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+
+        return simpleDateFormat.format(date);
     }
 
 }

@@ -17,13 +17,13 @@
 package com.github.stkent.amplify.tracking;
 
 import android.content.Context;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.annotation.NonNull;
 
 import com.github.stkent.amplify.tracking.interfaces.IAppFeedbackDataProvider;
-import com.github.stkent.amplify.tracking.interfaces.IAppVersionNameProvider;
-import com.github.stkent.amplify.utils.AppUtils;
+import com.github.stkent.amplify.utils.AppInfoProvider;
 import com.github.stkent.amplify.utils.StringUtils;
 
 public class AppFeedbackDataProvider implements IAppFeedbackDataProvider {
@@ -31,12 +31,8 @@ public class AppFeedbackDataProvider implements IAppFeedbackDataProvider {
     @NonNull
     private final Context appContext;
 
-    @NonNull
-    private final IAppVersionNameProvider appVersionNameProvider;
-
     public AppFeedbackDataProvider(@NonNull final Context appContext) {
         this.appContext = appContext;
-        this.appVersionNameProvider = new AppVersionNameProvider(appContext);
     }
 
     @NonNull
@@ -48,20 +44,26 @@ public class AppFeedbackDataProvider implements IAppFeedbackDataProvider {
         String deviceName;
 
         if (model.startsWith(manufacturer)) {
-            deviceName = StringUtils.capitalize(model);
+            deviceName = model;
         } else {
-            deviceName = StringUtils.capitalize(manufacturer) + " " + model;
+            deviceName = manufacturer + " " + model;
         }
 
-        return deviceName == null ? "Unknown Device" : deviceName;
+        return StringUtils.capitalizeFully(deviceName);
     }
 
     @NonNull
-    @Override
-    public String getVersionDisplayString() throws PackageManager.NameNotFoundException {
-        final int appVersionCode = AppUtils.getPackageInfo(appContext).versionCode;
+    public String getVersionDisplayString() {
+        try {
+            final PackageInfo packageInfo = AppInfoProvider.getSharedInstance().getPackageInfo();
 
-        return String.format("%s (%s)", appVersionNameProvider.getVersionName(), appVersionCode);
+            final String applicationVersionName = packageInfo.versionName;
+            final int applicationVersionCode = packageInfo.versionCode;
+
+            return String.format("%s (%s)", applicationVersionName, applicationVersionCode);
+        } catch (final PackageManager.NameNotFoundException e) {
+            return "Unknown Version";
+        }
     }
 
     @NonNull

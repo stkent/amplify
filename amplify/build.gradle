@@ -60,14 +60,14 @@ android {
     buildToolsVersion "23.0.2"
 
     defaultConfig {
-        minSdkVersion 16
+        minSdkVersion 14
         targetSdkVersion 23
         versionCode 1
         versionName amplifyVersion
     }
 
     lintOptions {
-        abortOnError true
+        abortOnError false
     }
 
     testOptions.unitTests {

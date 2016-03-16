@@ -17,15 +17,16 @@
 package com.github.stkent.amplify.tracking.managers;
 
 import android.annotation.SuppressLint;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 
 import com.github.stkent.amplify.ILogger;
 import com.github.stkent.amplify.helpers.BaseTest;
 import com.github.stkent.amplify.helpers.FakeSettings;
-import com.github.stkent.amplify.tracking.interfaces.IAppVersionNameProvider;
-import com.github.stkent.amplify.tracking.interfaces.IEventBasedRule;
 import com.github.stkent.amplify.tracking.interfaces.IEvent;
+import com.github.stkent.amplify.tracking.interfaces.IEventBasedRule;
+import com.github.stkent.amplify.utils.AppInfoProvider;
 
 import org.junit.Test;
 import org.mockito.Mock;
@@ -43,20 +44,22 @@ public class LastEventVersionRulesManagerTest extends BaseTest {
     @Mock
     private ILogger mockLogger;
     @Mock
-    private IAppVersionNameProvider mockAppVersionNameProvider;
+    private AppInfoProvider mockAppInfoProvider;
     @Mock
     private IEvent mockEvent;
     @Mock
     private IEventBasedRule<String> mockEventBasedRule;
 
+
     @Override
     public void localSetUp() {
+        AppInfoProvider.setSharedInstance(mockAppInfoProvider);
+
         fakeSettings = new FakeSettings<>();
 
         lastEventVersionRulesManager = new LastEventVersionRulesManager(
                 mockLogger,
-                fakeSettings,
-                mockAppVersionNameProvider);
+                fakeSettings);
 
         when(mockEvent.getTrackingKey()).thenReturn(DEFAULT_MOCK_EVENT_TRACKING_KEY);
         lastEventVersionRulesManager.addEventBasedRule(mockEvent, mockEventBasedRule);
@@ -125,7 +128,9 @@ public class LastEventVersionRulesManagerTest extends BaseTest {
     }
 
     private void triggerEventForAppVersion(@NonNull final String appVersionName) throws PackageManager.NameNotFoundException {
-        when(mockAppVersionNameProvider.getVersionName()).thenReturn(appVersionName);
+        final PackageInfo fakePackageInfo = new PackageInfo();
+        fakePackageInfo.versionName = appVersionName;
+        when(mockAppInfoProvider.getPackageInfo()).thenReturn(fakePackageInfo);
         lastEventVersionRulesManager.notifyEventTriggered(mockEvent);
     }
 

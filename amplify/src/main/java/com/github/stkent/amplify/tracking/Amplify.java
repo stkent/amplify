@@ -28,7 +28,6 @@ import com.github.stkent.amplify.prompt.interfaces.IPromptPresenter;
 import com.github.stkent.amplify.prompt.interfaces.IPromptView;
 import com.github.stkent.amplify.tracking.interfaces.IAppEventTimeProvider;
 import com.github.stkent.amplify.tracking.interfaces.IAppLevelEventRulesManager;
-import com.github.stkent.amplify.tracking.interfaces.IAppVersionNameProvider;
 import com.github.stkent.amplify.tracking.interfaces.IEnvironmentBasedRule;
 import com.github.stkent.amplify.tracking.interfaces.IEnvironmentBasedRulesManager;
 import com.github.stkent.amplify.tracking.interfaces.IEnvironmentCapabilitiesProvider;
@@ -45,6 +44,7 @@ import com.github.stkent.amplify.tracking.prerequisites.GooglePlayStoreRule;
 import com.github.stkent.amplify.tracking.rules.MaximumCountRule;
 import com.github.stkent.amplify.tracking.rules.VersionChangedRule;
 import com.github.stkent.amplify.utils.ActivityStateUtil;
+import com.github.stkent.amplify.utils.AppInfoProvider;
 import com.github.stkent.amplify.utils.FeedbackUtil;
 import com.github.stkent.amplify.utils.PlayStoreUtil;
 
@@ -55,8 +55,6 @@ public final class Amplify implements IEventListener {
     private static final int DEFAULT_LAST_CRASH_TIME_COOLDOWN_DAYS = 7;
 
     private static Amplify sharedInstance;
-
-    private final IAppVersionNameProvider appVersionNameProvider;
 
     private final IAppLevelEventRulesManager appLevelEventRulesManager;
     private final IEnvironmentBasedRulesManager environmentBasedRulesManager;
@@ -88,13 +86,13 @@ public final class Amplify implements IEventListener {
     // constructors
 
     private Amplify(@NonNull final Context context, @NonNull final ILogger logger) {
+        AppInfoProvider.initialize(context);
+
         final Context appContext = context.getApplicationContext();
-        final IAppEventTimeProvider appEventTimeProvider = new AppEventTimeProvider(appContext);
+        final IAppEventTimeProvider appEventTimeProvider = new AppEventTimeProvider();
 
         final IEnvironmentCapabilitiesProvider environmentCapabilitiesProvider
                 = new EnvironmentCapabilitiesProvider(appContext);
-
-        this.appVersionNameProvider = new AppVersionNameProvider(appContext);
 
         this.appLevelEventRulesManager
                 = new AppLevelEventRulesManager(appContext, appEventTimeProvider, logger);
@@ -125,11 +123,11 @@ public final class Amplify implements IEventListener {
                 .addTotalEventCountRule(PromptViewEvent.USER_GAVE_POSITIVE_FEEDBACK,
                         new MaximumCountRule(DEFAULT_USER_GAVE_POSITIVE_FEEDBACK_MAXIMUM_COUNT))
                 .addLastEventVersionRule(PromptViewEvent.USER_GAVE_CRITICAL_FEEDBACK,
-                        new VersionChangedRule(appVersionNameProvider))
+                        new VersionChangedRule())
                 .addLastEventVersionRule(PromptViewEvent.USER_DECLINED_CRITICAL_FEEDBACK,
-                        new VersionChangedRule(appVersionNameProvider))
+                        new VersionChangedRule())
                 .addLastEventVersionRule(PromptViewEvent.USER_DECLINED_POSITIVE_FEEDBACK,
-                        new VersionChangedRule(appVersionNameProvider));
+                        new VersionChangedRule());
     }
 
     public Amplify addEnvironmentBasedRule(@NonNull final IEnvironmentBasedRule rule) {
@@ -227,6 +225,11 @@ public final class Amplify implements IEventListener {
             @NonNull final Activity activity,
             @NonNull final IPromptView promptView,
             @Nullable final IEventListener<PromptViewEvent> promptViewEventListener) {
+
+        if (feedbackEmailAddress == null) {
+            throw new IllegalStateException(
+                    "Must provide email address before attempting to prompt.");
+        }
 
         final IEventListener<PromptViewEvent> combinedEventListener
                 = new IEventListener<PromptViewEvent>() {

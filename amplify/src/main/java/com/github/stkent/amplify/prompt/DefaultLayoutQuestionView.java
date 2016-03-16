@@ -24,6 +24,7 @@ import android.graphics.drawable.LayerDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.StateListDrawable;
 import android.graphics.drawable.shapes.RectShape;
+import android.os.Build;
 import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.view.View;
@@ -34,10 +35,11 @@ import com.github.stkent.amplify.utils.DisplayUtils;
 
 import static java.lang.Math.floor;
 import static java.lang.Math.max;
-import static java.lang.Math.min;
 
 @SuppressLint("ViewConstructor")
 final class DefaultLayoutQuestionView extends CustomLayoutQuestionView {
+
+    private static final int NUMBER_OF_COLOR_DIMENSIONS = 3;
 
     DefaultLayoutQuestionView(
             final Context context,
@@ -89,7 +91,14 @@ final class DefaultLayoutQuestionView extends CustomLayoutQuestionView {
             @ColorInt final int fillColor,
             @ColorInt final int borderColor) {
 
-        button.setBackground(getButtonBackgroundDrawable(fillColor, borderColor));
+        final Drawable buttonBackgroundDrawable
+                = getButtonBackgroundDrawable(fillColor, borderColor);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            button.setBackground(buttonBackgroundDrawable);
+        } else {
+            button.setBackgroundDrawable(buttonBackgroundDrawable);
+        }
     }
 
     @NonNull
@@ -100,7 +109,7 @@ final class DefaultLayoutQuestionView extends CustomLayoutQuestionView {
         final Drawable defaultDrawable = getStaticButtonBackgroundDrawable(
                 fillColor, borderColor);
 
-        float[] defaultFillColorHSVValues = new float[3];
+        float[] defaultFillColorHSVValues = new float[NUMBER_OF_COLOR_DIMENSIONS];
         Color.colorToHSV(fillColor, defaultFillColorHSVValues);
         final int pressedFillColor = Color.HSVToColor(
                 Color.alpha(fillColor),

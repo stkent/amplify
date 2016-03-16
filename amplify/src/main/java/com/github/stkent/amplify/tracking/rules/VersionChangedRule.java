@@ -19,23 +19,17 @@ package com.github.stkent.amplify.tracking.rules;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 
-import com.github.stkent.amplify.tracking.interfaces.IAppVersionNameProvider;
 import com.github.stkent.amplify.tracking.interfaces.IEventBasedRule;
+import com.github.stkent.amplify.utils.AppInfoProvider;
 
 public final class VersionChangedRule implements IEventBasedRule<String> {
-
-    @NonNull
-    private final IAppVersionNameProvider appVersionNameProvider;
-
-    // todo: refactor this so it can be used outside the library
-    public VersionChangedRule(@NonNull final IAppVersionNameProvider appVersionNameProvider) {
-        this.appVersionNameProvider = appVersionNameProvider;
-    }
 
     @Override
     public boolean shouldAllowFeedbackPrompt(@NonNull final String cachedEventValue) {
         try {
-            final String currentAppVersion = appVersionNameProvider.getVersionName();
+            final String currentAppVersion
+                    = AppInfoProvider.getSharedInstance().getPackageInfo().versionName;
+
             return !cachedEventValue.equals(currentAppVersion);
         } catch (final PackageManager.NameNotFoundException e) {
             return false;
@@ -48,7 +42,9 @@ public final class VersionChangedRule implements IEventBasedRule<String> {
         String statusStringSuffix;
 
         try {
-            statusStringSuffix = "Current app version: " + appVersionNameProvider.getVersionName();
+            statusStringSuffix = "Current app version: "
+                    + AppInfoProvider.getSharedInstance().getPackageInfo().versionName;
+
         } catch (final PackageManager.NameNotFoundException e) {
             statusStringSuffix = "Current app version cannot be determined.";
         }
