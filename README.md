@@ -275,8 +275,6 @@ Provided by the `DefaultLayoutPromptView` class. The basic layouts of the questi
 
 All attributes are optional.
 
-TODO: show some screenshots of examples created using this method?
-
 ### Custom Layout
 
 **Use this if you need to provide a structurally different prompt layout, require custom fonts, etc.**
@@ -331,8 +329,6 @@ The layout referenced by `prompt_view_thanks_layout ` _must_ include:
 The layout referenced by `prompt_view_thanks_layout ` _may_ include:
 
 - A `TextView` subclass with id `amplify_subtitle_text_view`.
-
-TODO: show some screenshots of examples created using this method?
 
 ### Listening For `IPromptView` Events
 
