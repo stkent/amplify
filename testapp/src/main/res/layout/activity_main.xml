@@ -11,6 +11,15 @@
         android:orientation="vertical">
 
         <com.github.stkent.amplify.prompt.DefaultLayoutPromptView
+            android:id="@+id/default_layout_prompt_view_no_customization"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="16dp" />
+
+        <com.github.stkent.amplify.prompt.DefaultLayoutPromptView
             android:id="@+id/default_layout_prompt_view_xml_config"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

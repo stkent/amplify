@@ -51,6 +51,10 @@ _amplify_ consists of two main components:
 	<img src="https://raw.githubusercontent.com/stkent/amplify/master/assets/flow.png" width="60%" />
 </p>
 
+| Positive feedback flow            | Critical feedback flow            |
+|-----------------------------------|-----------------------------------|
+| ![](assets/positive-feedback.gif) | ![](assets/critical-feedback.gif) |
+
 <br />
 
 These components are designed to complement each other, and combining them as described in the [Getting Started](#getting-started) section below is the easiest way to integrate _amplify_ into your application. However, it is perfectly possible to couple the prompt timing calculator with your own prompt flow and UI if desired. (This could be useful if you have highly-customized requirements for the prompt flow.) If you pursue this route, we would encourage you to ensure your prompting mechanism still reflects the principles outlined in the [Introduction](#introduction).
@@ -234,9 +238,13 @@ public class ExampleApplication extends Application {
 
 ## Prompt UI
 
-_amplify_ provides two configurable prompt UIs. You can see examples of each in the test application associated with this project. In this app, distinct colors and strings are set on every attribute to allow you to easily see the effects:
+_amplify_ provides two configurable prompt UIs. The test app associated with this project includes examples of these prompts with:
 
-| Test app UI, use me for testing! |
+- no custom configuration applied;
+- distinct colors and strings set on every attribute in xml;
+- distinct colors and strings set on every attribute in code;
+
+| Test app UI; use me to explore!  |
 |----------------------------------|
 | ![](assets/testapp.png)          |
 
