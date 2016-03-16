@@ -16,7 +16,6 @@
  */
 package com.github.stkent.amplify.tracking.interfaces;
 
-import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 
 /**
@@ -32,11 +31,11 @@ public interface IAppFeedbackDataProvider {
     String getDeviceName();
 
     /**
-     * @return the current version string of the application in which this library is embedded
-     * @throws PackageManager.NameNotFoundException
+     * @return the current version string of the application in which this library is embedded,
+     *         or a sensible default if this cannot be determined
      */
     @NonNull
-    String getVersionDisplayString() throws PackageManager.NameNotFoundException;
+    String getVersionDisplayString();
 
     /**
      * @return the name of the application in which this library is embedded

@@ -19,10 +19,20 @@ package com.github.stkent.amplify.utils;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import java.util.Locale;
+
 public final class StringUtils {
 
     private StringUtils() {
 
+    }
+
+    public static String capitalizeFully(@Nullable final String string) {
+        if (isBlank(string)) {
+            return string;
+        }
+
+        return capitalize(string.toLowerCase(Locale.getDefault()));
     }
 
     /**

@@ -17,6 +17,7 @@
 package com.github.stkent.amplify.tracking;
 
 import android.content.Context;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -48,20 +49,26 @@ public class AppFeedbackDataProvider implements IAppFeedbackDataProvider {
         String deviceName;
 
         if (model.startsWith(manufacturer)) {
-            deviceName = StringUtils.capitalize(model);
+            deviceName = model;
         } else {
-            deviceName = StringUtils.capitalize(manufacturer) + " " + model;
+            deviceName = manufacturer + " " + model;
         }
 
-        return deviceName == null ? "Unknown Device" : deviceName;
+        return StringUtils.capitalizeFully(deviceName);
     }
 
     @NonNull
-    @Override
-    public String getVersionDisplayString() throws PackageManager.NameNotFoundException {
-        final int appVersionCode = AppUtils.getPackageInfo(appContext).versionCode;
+    public String getVersionDisplayString() {
+        try {
+            final PackageInfo packageInfo = AppUtils.getPackageInfo(appContext);
 
-        return String.format("%s (%s)", appVersionNameProvider.getVersionName(), appVersionCode);
+            final String applicationVersionName = packageInfo.versionName;
+            final int applicationVersionCode = packageInfo.versionCode;
+
+            return String.format("%s (%s)", applicationVersionName, applicationVersionCode);
+        } catch (final PackageManager.NameNotFoundException e) {
+            return "Unknown Version";
+        }
     }
 
     @NonNull
