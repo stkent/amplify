@@ -228,6 +228,11 @@ public final class Amplify implements IEventListener {
             @NonNull final IPromptView promptView,
             @Nullable final IEventListener<PromptViewEvent> promptViewEventListener) {
 
+        if (feedbackEmailAddress == null) {
+            throw new IllegalStateException(
+                    "Must provide email address before attempting to prompt.");
+        }
+
         final IEventListener<PromptViewEvent> combinedEventListener
                 = new IEventListener<PromptViewEvent>() {
 

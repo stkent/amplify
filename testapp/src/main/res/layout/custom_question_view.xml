@@ -21,7 +21,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="#CC3333">
 
     <TextView
         android:id="@+id/amplify_title_text_view"
@@ -29,16 +30,43 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:gravity="center"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        android:textColor="@android:color/white" />
 
-    <TextView
-        android:id="@+id/amplify_subtitle_text_view"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginBottom="16dp"
-        android:gravity="center"
-        android:textSize="18sp" />
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/amplify_negative_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:minHeight="48dp"
+            android:gravity="center"
+            android:textSize="18sp"
+            android:background="@android:color/white"
+            android:textColor="#CC3333" />
+
+        <View
+            android:layout_width="16dp"
+            android:layout_height="match_parent" />
+
+        <Button
+            android:id="@+id/amplify_positive_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:minHeight="48dp"
+            android:gravity="center"
+            android:textSize="18sp"
+            android:background="@android:color/white"
+            android:textColor="#CC3333" />
+
+    </LinearLayout>
 
 </LinearLayout>
