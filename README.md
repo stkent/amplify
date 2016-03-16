@@ -312,7 +312,7 @@ The layout referenced by `prompt_view_question_layout` _must_ include:
 - A `TextView` subclass with id `amplify_positive_button`;
 - A `TextView` subclass with id `amplify_negative_button`.
 
-If a view is found with an appropriate button id but it is _not_ a `TextView` subclasses, the library will gracefully no-op when trying to set the button text.
+If a view is found with an appropriate button id but it is _not_ a `TextView` subclass, the library will gracefully no-op when trying to set the button text.
 
 The layout referenced by `prompt_view_question_layout` _may_ include:
 
