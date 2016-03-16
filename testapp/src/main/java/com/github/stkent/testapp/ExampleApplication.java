@@ -4,7 +4,7 @@ import android.app.Application;
 
 import com.github.stkent.amplify.tracking.Amplify;
 
-public class CustomApplication extends Application {
+public class ExampleApplication extends Application {
 
     @Override
     public void onCreate() {
