@@ -24,9 +24,9 @@ import android.support.annotation.NonNull;
 import com.github.stkent.amplify.ILogger;
 import com.github.stkent.amplify.helpers.BaseTest;
 import com.github.stkent.amplify.helpers.FakeSettings;
+import com.github.stkent.amplify.tracking.interfaces.IAppInfoProvider;
 import com.github.stkent.amplify.tracking.interfaces.IEvent;
 import com.github.stkent.amplify.tracking.interfaces.IEventBasedRule;
-import com.github.stkent.amplify.utils.AppInfoProvider;
 
 import org.junit.Test;
 import org.mockito.Mock;
@@ -44,7 +44,7 @@ public class LastEventVersionRulesManagerTest extends BaseTest {
     @Mock
     private ILogger mockLogger;
     @Mock
-    private AppInfoProvider mockAppInfoProvider;
+    private IAppInfoProvider mockAppInfoProvider;
     @Mock
     private IEvent mockEvent;
     @Mock
@@ -53,12 +53,11 @@ public class LastEventVersionRulesManagerTest extends BaseTest {
 
     @Override
     public void localSetUp() {
-        AppInfoProvider.setSharedInstance(mockAppInfoProvider);
-
         fakeSettings = new FakeSettings<>();
 
         lastEventVersionRulesManager = new LastEventVersionRulesManager(
                 mockLogger,
+                mockAppInfoProvider,
                 fakeSettings);
 
         when(mockEvent.getTrackingKey()).thenReturn(DEFAULT_MOCK_EVENT_TRACKING_KEY);

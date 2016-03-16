@@ -27,6 +27,7 @@ import com.github.stkent.amplify.prompt.PromptPresenter;
 import com.github.stkent.amplify.prompt.interfaces.IPromptPresenter;
 import com.github.stkent.amplify.prompt.interfaces.IPromptView;
 import com.github.stkent.amplify.tracking.interfaces.IAppEventTimeProvider;
+import com.github.stkent.amplify.tracking.interfaces.IAppInfoProvider;
 import com.github.stkent.amplify.tracking.interfaces.IAppLevelEventRulesManager;
 import com.github.stkent.amplify.tracking.interfaces.IEnvironmentBasedRule;
 import com.github.stkent.amplify.tracking.interfaces.IEnvironmentBasedRulesManager;
@@ -87,12 +88,14 @@ public final class Amplify implements IEventListener {
 
     private Amplify(@NonNull final Context context, @NonNull final ILogger logger) {
         AppInfoProvider.initialize(context);
+        final IAppInfoProvider appInfoProvider = AppInfoProvider.getSharedInstance();
 
         final Context appContext = context.getApplicationContext();
-        final IAppEventTimeProvider appEventTimeProvider = new AppEventTimeProvider();
+        final IAppEventTimeProvider appEventTimeProvider
+                = new AppEventTimeProvider(appInfoProvider);
 
         final IEnvironmentCapabilitiesProvider environmentCapabilitiesProvider
-                = new EnvironmentCapabilitiesProvider(appContext);
+                = new EnvironmentCapabilitiesProvider(appInfoProvider);
 
         this.appLevelEventRulesManager
                 = new AppLevelEventRulesManager(appContext, appEventTimeProvider, logger);
@@ -102,7 +105,9 @@ public final class Amplify implements IEventListener {
 
         this.firstEventTimeRulesManager = new FirstEventTimeRulesManager(appContext, logger);
         this.lastEventTimeRulesManager = new LastEventTimeRulesManager(appContext, logger);
-        this.lastEventVersionRulesManager = new LastEventVersionRulesManager(appContext, logger);
+        this.lastEventVersionRulesManager
+                = new LastEventVersionRulesManager(appContext, appInfoProvider, logger);
+
         this.totalEventCountRulesManager = new TotalEventCountRulesManager(appContext, logger);
 
         this.logger = logger;
@@ -246,9 +251,12 @@ public final class Amplify implements IEventListener {
                     if (event == PromptViewEvent.USER_GAVE_POSITIVE_FEEDBACK) {
                         PlayStoreUtil.openPlayStoreToRate(activity, packageName);
                     } else if (event == PromptViewEvent.USER_GAVE_CRITICAL_FEEDBACK) {
+                        final IAppInfoProvider appInfoProvider
+                                = AppInfoProvider.getSharedInstance();
+
                         final FeedbackUtil feedbackUtil = new FeedbackUtil(
-                                new AppFeedbackDataProvider(activity.getApplicationContext()),
-                                new EnvironmentCapabilitiesProvider(activity.getApplicationContext()),
+                                new AppFeedbackDataProvider(appInfoProvider),
+                                new EnvironmentCapabilitiesProvider(appInfoProvider),
                                 feedbackEmailAddress,
                                 logger);
 

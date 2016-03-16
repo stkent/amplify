@@ -17,13 +17,16 @@
 package com.github.stkent.amplify.utils;
 
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 
+import com.github.stkent.amplify.tracking.interfaces.IAppInfoProvider;
+
 @SuppressWarnings({"PMD.ClassWithOnlyPrivateConstructorsShouldBeFinal", "checkstyle:finalclass"})
-public class AppInfoProvider {
+public class AppInfoProvider implements IAppInfoProvider {
 
     private static final Object SYNC_LOCK = new Object();
     private static AppInfoProvider sharedInstance;
@@ -40,7 +43,7 @@ public class AppInfoProvider {
     public static AppInfoProvider getSharedInstance() {
         if (sharedInstance == null) {
             throw new IllegalStateException(
-                    "Must initialize AppInfoProvider with a context before calling getSharedInstance.");
+                    "Must initialize AppInfoProvider before calling getSharedInstance.");
         }
 
         return sharedInstance;
@@ -57,22 +60,33 @@ public class AppInfoProvider {
         this.appContext = appContext;
     }
 
-    public PackageInfo getPackageInfo() throws PackageManager.NameNotFoundException {
-        return getPackageInfo(appContext.getPackageName());
+    @NonNull
+    public PackageInfo getPackageInfo() {
+        // This should never return null for the given package:
+        return getPackageInfo(appContext.getPackageName(), 0);
     }
 
-    public PackageInfo getPackageInfo(
-            @NonNull final String packageName) throws PackageManager.NameNotFoundException {
-
-        return getPackageInfo(packageName, 0);
-    }
-
-    public PackageInfo getPackageInfo(
-            @NonNull final String packageName,
-            final int flags) throws PackageManager.NameNotFoundException {
-
+    // Nullable
+    public PackageInfo getPackageInfo(@NonNull final String packageName, final int flags) {
         final PackageManager packageManager = appContext.getPackageManager();
-        return packageManager.getPackageInfo(packageName, flags);
+
+        try {
+            return packageManager.getPackageInfo(packageName, flags);
+        } catch (final PackageManager.NameNotFoundException e) {
+            return null;
+        }
+    }
+
+    @NonNull
+    @Override
+    public PackageManager getPackageManager() {
+        return appContext.getPackageManager();
+    }
+
+    @NonNull
+    @Override
+    public ApplicationInfo getApplicationInfo() {
+        return appContext.getApplicationInfo();
     }
 
 }

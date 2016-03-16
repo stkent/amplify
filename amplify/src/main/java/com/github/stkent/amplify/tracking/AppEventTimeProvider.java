@@ -16,31 +16,28 @@
  */
 package com.github.stkent.amplify.tracking;
 
-import android.content.pm.PackageManager;
+import android.support.annotation.NonNull;
 
 import com.github.stkent.amplify.tracking.interfaces.IAppEventTimeProvider;
-import com.github.stkent.amplify.utils.AppInfoProvider;
+import com.github.stkent.amplify.tracking.interfaces.IAppInfoProvider;
 
 public class AppEventTimeProvider implements IAppEventTimeProvider {
 
-    private static final long DEFAULT_EVENT_TIME_MS = 0;
+    @NonNull
+    private final IAppInfoProvider appInfoProvider;
+
+    public AppEventTimeProvider(@NonNull final IAppInfoProvider appInfoProvider) {
+        this.appInfoProvider = appInfoProvider;
+    }
 
     @Override
     public long getInstallTime() {
-        try {
-            return AppInfoProvider.getSharedInstance().getPackageInfo().firstInstallTime;
-        } catch (PackageManager.NameNotFoundException e) {
-            return DEFAULT_EVENT_TIME_MS;
-        }
+        return appInfoProvider.getPackageInfo().firstInstallTime;
     }
 
     @Override
     public long getLastUpdateTime() {
-        try {
-            return AppInfoProvider.getSharedInstance().getPackageInfo().lastUpdateTime;
-        } catch (PackageManager.NameNotFoundException e) {
-            return DEFAULT_EVENT_TIME_MS;
-        }
+        return appInfoProvider.getPackageInfo().lastUpdateTime;
     }
 
 }

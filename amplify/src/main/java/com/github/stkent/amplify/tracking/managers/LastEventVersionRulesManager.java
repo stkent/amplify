@@ -17,30 +17,35 @@
 package com.github.stkent.amplify.tracking.managers;
 
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 
 import com.github.stkent.amplify.ILogger;
 import com.github.stkent.amplify.tracking.Settings;
+import com.github.stkent.amplify.tracking.interfaces.IAppInfoProvider;
 import com.github.stkent.amplify.tracking.interfaces.ISettings;
-import com.github.stkent.amplify.utils.AppInfoProvider;
 
 public class LastEventVersionRulesManager extends BaseEventsManager<String> {
 
+    @NonNull
+    private final IAppInfoProvider appInfoProvider;
+
     public LastEventVersionRulesManager(
             @NonNull final Context appContext,
+            @NonNull final IAppInfoProvider appInfoProvider,
             @NonNull final ILogger logger) {
 
-        this(logger, new Settings<String>(appContext, logger));
+        this(logger, appInfoProvider, new Settings<String>(appContext, logger));
     }
 
     @VisibleForTesting
     protected LastEventVersionRulesManager(
             @NonNull final ILogger logger,
+            @NonNull final IAppInfoProvider appInfoProvider,
             @NonNull final ISettings<String> settings) {
 
         super(logger, settings);
+        this.appInfoProvider = appInfoProvider;
     }
 
     @NonNull
@@ -58,12 +63,7 @@ public class LastEventVersionRulesManager extends BaseEventsManager<String> {
     @NonNull
     @Override
     public String getUpdatedTrackingValue(@NonNull final String cachedTrackingValue) {
-        try {
-            return AppInfoProvider.getSharedInstance().getPackageInfo().versionName;
-        } catch (final PackageManager.NameNotFoundException e) {
-            getLogger().d("Could not read current app version name.");
-            return cachedTrackingValue;
-        }
+        return appInfoProvider.getPackageInfo().versionName;
     }
 
 }
