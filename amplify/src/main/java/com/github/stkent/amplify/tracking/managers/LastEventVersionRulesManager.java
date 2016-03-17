@@ -18,6 +18,7 @@ package com.github.stkent.amplify.tracking.managers;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 
 import com.github.stkent.amplify.ILogger;
@@ -56,13 +57,7 @@ public class LastEventVersionRulesManager extends BaseEventsManager<String> {
 
     @NonNull
     @Override
-    public String defaultTrackingValue() {
-        return "";
-    }
-
-    @NonNull
-    @Override
-    public String getUpdatedTrackingValue(@NonNull final String cachedTrackingValue) {
+    public String getUpdatedTrackingValue(@Nullable final String cachedTrackingValue) {
         return appInfoProvider.getPackageInfo().versionName;
     }
 
