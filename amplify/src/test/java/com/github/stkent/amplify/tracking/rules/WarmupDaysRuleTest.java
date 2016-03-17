@@ -33,7 +33,7 @@ public class WarmupDaysRuleTest extends BaseTest {
     @SuppressLint("Assert")
     @SuppressWarnings("ConstantConditions")
     @Test
-    public void testThatRuleAllowsPromptIfEventHasNeverOccurred() {
+    public void testThatRuleBlocksPromptIfEventHasNeverOccurred() {
         // Arrange
         final int anyPositiveInteger = 1;
         assert anyPositiveInteger > 0;
