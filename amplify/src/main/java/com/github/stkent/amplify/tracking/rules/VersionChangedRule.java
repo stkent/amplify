@@ -49,4 +49,10 @@ public final class VersionChangedRule implements IEventBasedRule<String> {
         return "Event last triggered for app version " + cachedEventValue + ". " + suffix;
     }
 
+    @NonNull
+    @Override
+    public String getDescription() {
+        return "VersionChangedRule";
+    }
+
 }

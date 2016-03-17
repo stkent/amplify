@@ -44,4 +44,10 @@ public final class MaximumCountRule implements IEventBasedRule<Integer> {
         return "Maximum allowed event count: " + maximumCount + ". Current event count: " + cachedEventValue + ".";
     }
 
+    @NonNull
+    @Override
+    public String getDescription() {
+        return "MaximumCountRule with maximum allowed count of " + maximumCount;
+    }
+
 }

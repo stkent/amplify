@@ -71,7 +71,7 @@ public abstract class BaseEventsManager<T> implements IEventsManager<T> {
 
         internalMap.get(event).add(rule);
 
-        logger.d(internalMap.get(event).toString());
+        logger.d("Registered " + rule.getDescription() + " for event " + event.getTrackingKey());
     }
 
     @Override

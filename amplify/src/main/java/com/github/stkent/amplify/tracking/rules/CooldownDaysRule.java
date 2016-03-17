@@ -49,4 +49,11 @@ public final class CooldownDaysRule implements IEventBasedRule<Long> {
         return "Cooldown period: " + cooldownPeriodDays + " days. Days since last event: " + daysSinceLastEvent + ".";
     }
 
+    @NonNull
+    @Override
+    public String getDescription() {
+        return "CooldownDaysRule with a cooldown period of " +
+                cooldownPeriodDays + " day" + (cooldownPeriodDays > 1 ? "s" : "");
+    }
+
 }

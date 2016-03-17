@@ -113,11 +113,19 @@ public class AppLevelEventRulesManager implements IAppLevelEventRulesManager {
     @Override
     public void setInstallTimeCooldownDays(final int cooldownPeriodDays) {
         installTimeRule = new CooldownDaysRule(cooldownPeriodDays);
+
+        // This log message is morally correct, but technically misleading (we do not explicitly
+        // track an IEvent implementation called APP_INSTALLED).
+        logger.d("Registered " + installTimeRule.getDescription() + " for event APP_INSTALLED");
     }
 
     @Override
     public void setLastUpdateTimeCooldownDays(final int cooldownPeriodDays) {
         lastUpdateTimeRule = new CooldownDaysRule(cooldownPeriodDays);
+
+        // This log message is morally correct, but technically misleading (we do not explicitly
+        // track an IEvent implementation called APP_UPDATED).
+        logger.d("Registered " + lastUpdateTimeRule.getDescription() + " for event APP_UPDATED");
     }
 
     @Override

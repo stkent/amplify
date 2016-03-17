@@ -22,7 +22,7 @@ import android.support.annotation.NonNull;
  * An abstract representation of a prompt timing rule that depends on the environment in which the
  * embedding application is running.
  */
-public interface IEnvironmentBasedRule {
+public interface IEnvironmentBasedRule extends IRule {
 
     /**
      * Call to determine whether this rule allows us to prompt the user for feedback at this time.

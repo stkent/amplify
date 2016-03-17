@@ -23,7 +23,7 @@ import android.support.annotation.NonNull;
  *
  * @param <T> the type of the value tracked by this event (Integer, Long or String)
  */
-public interface IEventBasedRule<T> {
+public interface IEventBasedRule<T> extends IRule {
 
     /**
      * This method should only be called if the associated event has never occurred before.
