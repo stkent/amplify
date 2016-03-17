@@ -35,7 +35,7 @@ public class EnvironmentBasedRulesManager implements IEnvironmentBasedRulesManag
     private final ILogger logger;
 
     @NonNull
-    private final List<IEnvironmentBasedRule> environmentChecks = new ArrayList<>();
+    private final List<IEnvironmentBasedRule> environmentBasedRules = new ArrayList<>();
 
     public EnvironmentBasedRulesManager(
             @NonNull final IEnvironmentCapabilitiesProvider environmentCapabilitiesProvider,
@@ -47,14 +47,14 @@ public class EnvironmentBasedRulesManager implements IEnvironmentBasedRulesManag
 
     @Override
     public void addEnvironmentBasedRule(@NonNull final IEnvironmentBasedRule rule) {
-        environmentChecks.add(rule);
+        environmentBasedRules.add(rule);
     }
 
     @Override
     public boolean shouldAllowFeedbackPrompt() {
-        for (final IEnvironmentBasedRule environmentCheck : environmentChecks) {
-            if (!environmentCheck.shouldAllowFeedbackPrompt(environmentCapabilitiesProvider)) {
-                logger.d("Blocking feedback because of environment check: " + environmentCheck);
+        for (final IEnvironmentBasedRule rule : environmentBasedRules) {
+            if (!rule.shouldAllowFeedbackPrompt(environmentCapabilitiesProvider)) {
+                logger.d("Blocking feedback because of environment based rule: " + rule);
                 return false;
             }
         }

@@ -50,7 +50,7 @@ public class GooglePlayStoreRuleTest extends BaseTest {
 
         // Assert
         assertTrue(
-                "Environment check should be met",
+                "Environment based rule should be satisfied",
                 isEnvironmentRuleSatisfied);
     }
 
@@ -65,7 +65,7 @@ public class GooglePlayStoreRuleTest extends BaseTest {
 
         // Assert
         assertFalse(
-                "Environment check should not be met",
+                "Environment based rule should not be satisfied",
                 isEnvironmentRuleSatisfied);
     }
 
