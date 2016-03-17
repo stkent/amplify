@@ -333,7 +333,7 @@ promptView.applyConfig(defaultLayoutPromptViewConfig);
 Provided by the `CustomLayoutPromptView` class. You provide the basic layouts to use, and any customization of the default strings you require. The full set of available xml configuration hooks is shown below (remember to use the `app` xml namespace when setting these properties!):
 
 ```xml
-<com.github.stkent.amplify.prompt.DefaultLayoutPromptView
+<com.github.stkent.amplify.prompt.CustomLayoutPromptView
     android:id="@+id/prompt_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
