@@ -53,7 +53,7 @@ _amplify_ consists of two main components:
 
 | Positive feedback flow            | Critical feedback flow            |
 |-----------------------------------|-----------------------------------|
-| ![](assets/positive-feedback.gif) | ![](assets/critical-feedback.gif) |
+| ![](https://raw.githubusercontent.com/stkent/amplify/master/assets/positive-feedback.gif) | ![](https://raw.githubusercontent.com/stkent/amplify/master/assets/critical-feedback.gif) |
 
 <br />
 
@@ -246,7 +246,7 @@ _amplify_ provides two configurable prompt UIs. The test app associated with thi
 
 | Test app UI; use me to explore!  |
 |----------------------------------|
-| ![](assets/testapp.png)          |
+| ![](https://raw.githubusercontent.com/stkent/amplify/master/assets/testapp.png) |
 
 ### Default Layout
 
