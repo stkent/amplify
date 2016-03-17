@@ -338,7 +338,7 @@ Provided by the `CustomLayoutPromptView` class. You provide the basic layouts to
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:prompt_view_question_layout="@layout/include_amplify_question_layout"
-    app:prompt_view_thanks_layout="@layout/include_amplify_question_layout"
+    app:prompt_view_thanks_layout="@layout/include_amplify_thanks_layout"
     app:prompt_view_user_opinion_question_title="Custom Title"
     app:prompt_view_user_opinion_question_subtitle="Custom Subtitle"
     app:prompt_view_user_opinion_question_positive_button_label="Custom Button Label"
