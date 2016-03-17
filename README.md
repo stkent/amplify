@@ -182,7 +182,7 @@ public class ExampleApplication extends Application {
         
         Amplify.get(this)
                .setFeedbackEmailAddress("someone@example.com")
-               .setInstallTimeCooldownDays(14) // Prompt not shown within two weeks of initial install.
+               .setInstallTimeCooldownDays(14)   // Prompt not shown within two weeks of initial install.
                .setLastUpdateTimeCooldownDays(7) // Prompt not shown within one week of most recent update.
                .setLastCrashTimeCooldownDays(7); // Prompt not shown within one week of most recent crash.
     }
@@ -425,9 +425,9 @@ Amplify.get(this).promptIfReady(this, promptView, new IEventListener<PromptViewE
     public void notifyEventTriggered(@NonNull final PromptViewEvent event) {
         AnalyticsTracker.notifyOfEvent(event);
     
-        if (event == PROMPT_SHOWN) {
+        if (event == PromptViewEvent.PROMPT_SHOWN) {
             relatedView.setVisibility(VISIBLE);
-        } else if (event == PROMPT_DISMISSED) {
+        } else if (event == PromptViewEvent.PROMPT_DISMISSED) {
             relatedView.setVisibility(GONE);
         }
     }
