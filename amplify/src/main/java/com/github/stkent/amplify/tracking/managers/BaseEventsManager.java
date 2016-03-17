@@ -96,14 +96,25 @@ public abstract class BaseEventsManager<T> implements IEventsManager<T> {
             final IEvent event = eventBasedRules.getKey();
 
             for (final IEventBasedRule<T> eventBasedRule : eventBasedRules.getValue()) {
-                final T cachedEventValue = getCachedTrackingValue(event);
+                if (eventHasOccurredBefore(event)) {
+                    final T cachedEventValue = getCachedTrackingValue(event);
 
-                logger.d(getTrackingKey(event) + ": " + eventBasedRule.getStatusString(cachedEventValue));
+                    logger.d(getTrackingKey(event) + ": " + eventBasedRule.getStatusString(cachedEventValue));
 
-                if (!eventBasedRule.shouldAllowFeedbackPrompt(cachedEventValue)) {
-                    logger.d("Blocking feedback for event: " + event + " because of check: " + eventBasedRule);
-                    return false;
+                    if (!eventBasedRule.shouldAllowFeedbackPrompt(cachedEventValue)) {
+                        logger.d("Blocking feedback for event: " + event + " because of rule: " + eventBasedRule);
+                        return false;
+                    }
+                } else {
+                    logger.d(getTrackingKey(event) + " has never occurred before!");
+
+                    if (!eventBasedRule.shouldAllowFeedbackPromptByDefault()) {
+                        logger.d("Blocking feedback for event: " + event + " because of rule: " + eventBasedRule);
+                        return false;
+                    }
                 }
+
+
             }
         }
 
@@ -128,6 +139,10 @@ public abstract class BaseEventsManager<T> implements IEventsManager<T> {
     private T getCachedTrackingValue(@NonNull final IEvent event) {
         T value = settings.readTrackingValue(getTrackingKey(event));
         return value != null ? value : defaultTrackingValue();
+    }
+
+    private boolean eventHasOccurredBefore(@NonNull final IEvent event) {
+        return !getCachedTrackingValue(event).equals(defaultTrackingValue());
     }
 
 }

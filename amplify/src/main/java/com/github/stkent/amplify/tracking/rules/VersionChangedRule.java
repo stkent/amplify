@@ -24,6 +24,11 @@ import com.github.stkent.amplify.utils.AppInfoProvider;
 public final class VersionChangedRule implements IEventBasedRule<String> {
 
     @Override
+    public boolean shouldAllowFeedbackPromptByDefault() {
+        return true;
+    }
+
+    @Override
     public boolean shouldAllowFeedbackPrompt(@NonNull final String cachedEventValue) {
         // We access the singleton AppInfoProvider instance statically here to make it possible for
         // library consumers to create new VersionChangedRule instances easily!

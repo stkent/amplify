@@ -25,6 +25,8 @@ import android.support.annotation.NonNull;
  */
 public interface IEventBasedRule<T> {
 
+    boolean shouldAllowFeedbackPromptByDefault();
+
     /**
      * Call to determine whether this rule allows us to prompt the user for feedback at this time.
      *

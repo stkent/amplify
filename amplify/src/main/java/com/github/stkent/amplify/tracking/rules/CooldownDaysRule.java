@@ -21,7 +21,8 @@ import android.support.annotation.NonNull;
 import com.github.stkent.amplify.tracking.interfaces.IEventBasedRule;
 import com.github.stkent.amplify.utils.time.SystemTimeUtil;
 
-import java.util.concurrent.TimeUnit;
+import static java.util.concurrent.TimeUnit.DAYS;
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 public final class CooldownDaysRule implements IEventBasedRule<Long> {
 
@@ -32,16 +33,20 @@ public final class CooldownDaysRule implements IEventBasedRule<Long> {
     }
 
     @Override
+    public boolean shouldAllowFeedbackPromptByDefault() {
+        return true;
+    }
+
+    @Override
     public boolean shouldAllowFeedbackPrompt(@NonNull final Long cachedEventValue) {
-        return cachedEventValue == Long.MAX_VALUE
-                || (SystemTimeUtil.currentTimeMillis() - cachedEventValue) >= TimeUnit.DAYS.toMillis(cooldownPeriodDays);
+        return (SystemTimeUtil.currentTimeMillis() - cachedEventValue) >= DAYS.toMillis(cooldownPeriodDays);
     }
 
     @NonNull
     @Override
     public String getStatusString(@NonNull final Long cachedEventValue) {
-        final Long daysSinceLastEvent = TimeUnit.MILLISECONDS.toDays(SystemTimeUtil.currentTimeMillis() - cachedEventValue);
-        return "Cooldown period: " + cooldownPeriodDays + " days. Time since last event: " + daysSinceLastEvent + " days.";
+        final Long daysSinceLastEvent = MILLISECONDS.toDays(SystemTimeUtil.currentTimeMillis() - cachedEventValue);
+        return "Cooldown period: " + cooldownPeriodDays + " days. Days since last event: " + daysSinceLastEvent + ".";
     }
 
 }
