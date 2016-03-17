@@ -552,7 +552,7 @@ Early versions of _amplify_ are integrated in apps with state-wide and nation-wi
 
 | Styled default layout |
 |-----------------------|
-| ![](assets/dte.png)   |
+| <img src="https://raw.githubusercontent.com/stkent/amplify/master/assets/dte.png" /> |
 
 # License
 
