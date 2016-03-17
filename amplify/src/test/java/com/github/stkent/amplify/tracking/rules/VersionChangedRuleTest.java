@@ -34,6 +34,7 @@ public class VersionChangedRuleTest extends BaseTest {
 
     private VersionChangedRule versionChangedRule;
 
+    @SuppressWarnings("FieldCanBeLocal")
     private PackageInfo fakePackageInfo;
 
     @Mock
@@ -41,9 +42,27 @@ public class VersionChangedRuleTest extends BaseTest {
 
     @Override
     public void localSetUp() {
-        AppInfoProvider.setSharedInstance(mockAppInfoProvider);
         versionChangedRule = new VersionChangedRule();
+
         fakePackageInfo = new PackageInfo();
+        when(mockAppInfoProvider.getPackageInfo()).thenReturn(fakePackageInfo);
+        AppInfoProvider.setSharedInstance(mockAppInfoProvider);
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    @Test
+    public void testThatRuleAllowsPromptIfEventHasNeverOccurred() {
+        // Arrange
+        fakePackageInfo.versionName = "any string";
+
+        // Act
+        final boolean ruleShouldAllowFeedbackPrompt
+                = versionChangedRule.shouldAllowFeedbackPromptByDefault();
+
+        // Assert
+        assertTrue(
+                "Feedback prompt should be allowed if the associated event has never occurred.",
+                ruleShouldAllowFeedbackPrompt);
     }
 
     @Test
@@ -51,7 +70,6 @@ public class VersionChangedRuleTest extends BaseTest {
         // Arrange
         final String fakeVersionName = "any string";
 
-        when(mockAppInfoProvider.getPackageInfo()).thenReturn(fakePackageInfo);
         fakePackageInfo.versionName = fakeVersionName;
 
         // Act
@@ -73,7 +91,6 @@ public class VersionChangedRuleTest extends BaseTest {
         final String fakeCurrentVersionName = "any other string";
         assert !fakeCachedVersionName.equals(fakeCurrentVersionName);
 
-        when(mockAppInfoProvider.getPackageInfo()).thenReturn(fakePackageInfo);
         fakePackageInfo.versionName = fakeCurrentVersionName;
 
         // Act

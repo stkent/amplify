@@ -30,6 +30,26 @@ public class MaximumCountRuleTest extends BaseTest {
     @SuppressLint("Assert")
     @SuppressWarnings("ConstantConditions")
     @Test
+    public void testThatRuleAllowsPromptIfEventHasNeverOccurred() {
+        // Arrange
+        final int anyPositiveInteger = 1;
+        assert anyPositiveInteger > 0;
+
+        final MaximumCountRule maximumCountRule = new MaximumCountRule(anyPositiveInteger);
+
+        // Act
+        final boolean ruleShouldAllowFeedbackPrompt
+                = maximumCountRule.shouldAllowFeedbackPromptByDefault();
+
+        // Assert
+        assertTrue(
+                "Feedback prompt should be allowed if the associated event has never occurred.",
+                ruleShouldAllowFeedbackPrompt);
+    }
+
+    @SuppressLint("Assert")
+    @SuppressWarnings("ConstantConditions")
+    @Test
     public void testThatCheckBlocksPromptIfCountThresholdHasBeenExceeded() {
         // Arrange
         final int maximumEventCount = 7;
