@@ -66,7 +66,7 @@ public class VersionChangedRuleTest extends BaseTest {
     }
 
     @Test
-    public void testThatCheckBlocksPromptIfAppVersionHasNotChanged() throws PackageManager.NameNotFoundException {
+    public void testThatRuleBlocksPromptIfAppVersionHasNotChanged() throws PackageManager.NameNotFoundException {
         // Arrange
         final String fakeVersionName = "any string";
 
@@ -85,7 +85,7 @@ public class VersionChangedRuleTest extends BaseTest {
     @SuppressLint("Assert")
     @SuppressWarnings("ConstantConditions")
     @Test
-    public void testThatCheckAllowsPromptIfAppVersionHasChanged() throws PackageManager.NameNotFoundException {
+    public void testThatRuleAllowsPromptIfAppVersionHasChanged() throws PackageManager.NameNotFoundException {
         // Arrange
         final String fakeCachedVersionName = "any string";
         final String fakeCurrentVersionName = "any other string";

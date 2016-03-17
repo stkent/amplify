@@ -50,7 +50,7 @@ public class MaximumCountRuleTest extends BaseTest {
     @SuppressLint("Assert")
     @SuppressWarnings("ConstantConditions")
     @Test
-    public void testThatCheckBlocksPromptIfCountThresholdHasBeenExceeded() {
+    public void testThatRuleBlocksPromptIfCountThresholdHasBeenExceeded() {
         // Arrange
         final int maximumEventCount = 7;
         final int currentEventCount = 9;
@@ -71,7 +71,7 @@ public class MaximumCountRuleTest extends BaseTest {
     @SuppressLint("Assert")
     @SuppressWarnings("ConstantConditions")
     @Test
-    public void testThatCheckAllowsPromptIfCountThresholdHasNotBeenExceeded() {
+    public void testThatRuleAllowsPromptIfCountThresholdHasNotBeenExceeded() {
         // Arrange
         final int maximumEventCount = 7;
         final int currentEventCount = 2;

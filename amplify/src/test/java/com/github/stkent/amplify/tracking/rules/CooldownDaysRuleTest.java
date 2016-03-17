@@ -53,7 +53,7 @@ public class CooldownDaysRuleTest extends BaseTest {
     @SuppressLint("Assert")
     @SuppressWarnings("ConstantConditions")
     @Test
-    public void testThatCheckBlocksPromptIfCooldownPeriodHasNotPassed() {
+    public void testThatRuleBlocksPromptIfCooldownPeriodHasNotPassed() {
         // Arrange
         final int cooldownTimeDays = 7;
         final int daysSinceLastEvent = 2;
@@ -75,7 +75,7 @@ public class CooldownDaysRuleTest extends BaseTest {
     @SuppressLint("Assert")
     @SuppressWarnings("ConstantConditions")
     @Test
-    public void testThatCheckAllowsPromptIfCooldownPeriodHasPassed() {
+    public void testThatRuleAllowsPromptIfCooldownPeriodHasPassed() {
         // Arrange
         final int cooldownTimeDays = 7;
         final int daysSinceLastEvent = 9;

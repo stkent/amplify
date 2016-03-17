@@ -53,7 +53,7 @@ public class WarmupDaysRuleTest extends BaseTest {
     @SuppressLint("Assert")
     @SuppressWarnings("ConstantConditions")
     @Test
-    public void testThatCheckBlocksPromptIfWarmUpPeriodHasNotPassed() {
+    public void testThatRuleBlocksPromptIfWarmUpPeriodHasNotPassed() {
         // Arrange
         final int warmUpTimeDays = 7;
         final int daysSinceLastEvent = 2;
@@ -75,7 +75,7 @@ public class WarmupDaysRuleTest extends BaseTest {
     @SuppressLint("Assert")
     @SuppressWarnings("ConstantConditions")
     @Test
-    public void testThatCheckAllowsPromptIfWarmUpPeriodHasPassed() {
+    public void testThatRuleAllowsPromptIfWarmUpPeriodHasPassed() {
         // Arrange
         final int warmUpTimeDays = 7;
         final int daysSinceLastEvent = 9;
