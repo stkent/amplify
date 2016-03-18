@@ -25,6 +25,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+@SuppressWarnings("PMD.AvoidDuplicateLiterals")
 public class MaximumCountRuleTest extends BaseTest {
 
     @SuppressLint("Assert")
@@ -44,6 +45,26 @@ public class MaximumCountRuleTest extends BaseTest {
         // Assert
         assertTrue(
                 "Feedback prompt should be allowed if the associated event has never occurred.",
+                ruleShouldAllowFeedbackPrompt);
+    }
+
+    @SuppressLint("Assert")
+    @SuppressWarnings({"ConstantConditions", "UnnecessaryLocalVariable"})
+    @Test
+    public void testThatRuleBlocksPromptAtCountThreshold() {
+        // Arrange
+        final int maximumEventCount = 7;
+        final int currentEventCount = maximumEventCount;
+
+        final MaximumCountRule maximumCountRule = new MaximumCountRule(maximumEventCount);
+
+        // Act
+        final boolean ruleShouldAllowFeedbackPrompt
+                = maximumCountRule.shouldAllowFeedbackPrompt(currentEventCount);
+
+        // Assert
+        assertFalse(
+                "Feedback prompt should be blocked at the count threshold.",
                 ruleShouldAllowFeedbackPrompt);
     }
 

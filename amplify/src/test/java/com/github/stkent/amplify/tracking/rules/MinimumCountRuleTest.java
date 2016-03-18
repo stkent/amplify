@@ -25,6 +25,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+@SuppressWarnings("PMD.AvoidDuplicateLiterals")
 public class MinimumCountRuleTest extends BaseTest {
 
     @SuppressLint("Assert")
@@ -48,6 +49,26 @@ public class MinimumCountRuleTest extends BaseTest {
     }
 
     @SuppressLint("Assert")
+    @SuppressWarnings({"ConstantConditions", "UnnecessaryLocalVariable"})
+    @Test
+    public void testThatRuleAllowsPromptAtCountThreshold() {
+        // Arrange
+        final int minimumEventCount = 7;
+        final int currentEventCount = minimumEventCount;
+
+        final MinimumCountRule minimumCountRule = new MinimumCountRule(minimumEventCount);
+
+        // Act
+        final boolean ruleShouldAllowFeedbackPrompt
+                = minimumCountRule.shouldAllowFeedbackPrompt(currentEventCount);
+
+        // Assert
+        assertTrue(
+                "Feedback prompt should be allowed at the count threshold.",
+                ruleShouldAllowFeedbackPrompt);
+    }
+
+    @SuppressLint("Assert")
     @SuppressWarnings("ConstantConditions")
     @Test
     public void testThatRuleAllowsPromptIfCountThresholdHasBeenExceeded() {
@@ -64,7 +85,7 @@ public class MinimumCountRuleTest extends BaseTest {
 
         // Assert
         assertTrue(
-                "Feedback prompt should be blocked if the count threshold has been exceeded",
+                "Feedback prompt should be allowed if the count threshold has been exceeded",
                 ruleShouldAllowFeedbackPrompt);
     }
 
