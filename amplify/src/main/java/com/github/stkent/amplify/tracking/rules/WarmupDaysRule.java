@@ -52,8 +52,8 @@ public class WarmupDaysRule implements IEventBasedRule<Long> {
     @NonNull
     @Override
     public String getDescription() {
-        return "WarmupDaysRule with a warmup period of " +
-                warmupPeriodDays + " day" + (warmupPeriodDays > 1 ? "s" : "");
+        return "WarmupDaysRule with a warmup period of "
+                + warmupPeriodDays + " day" + (warmupPeriodDays > 1 ? "s" : "");
     }
 
 }
