@@ -44,9 +44,9 @@ public class WarmupDaysRule implements IEventBasedRule<Long> {
 
     @NonNull
     @Override
-    public String getStatusString(@NonNull final Long cachedEventValue) {
+    public String getEventTrackingStatusStringSuffix(@NonNull final Long cachedEventValue) {
         final Long daysSinceFirstEvent = MILLISECONDS.toDays(SystemTimeUtil.currentTimeMillis() - cachedEventValue);
-        return "Warmup period: " + warmupPeriodDays + " days. Days since first event: " + daysSinceFirstEvent + ".";
+        return " first occurred " + daysSinceFirstEvent + " days ago";
     }
 
     @NonNull

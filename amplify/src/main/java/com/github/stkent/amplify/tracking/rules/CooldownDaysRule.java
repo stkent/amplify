@@ -44,9 +44,9 @@ public final class CooldownDaysRule implements IEventBasedRule<Long> {
 
     @NonNull
     @Override
-    public String getStatusString(@NonNull final Long cachedEventValue) {
+    public String getEventTrackingStatusStringSuffix(@NonNull final Long cachedEventValue) {
         final Long daysSinceLastEvent = MILLISECONDS.toDays(SystemTimeUtil.currentTimeMillis() - cachedEventValue);
-        return "Cooldown period: " + cooldownPeriodDays + " days. Days since last event: " + daysSinceLastEvent + ".";
+        return " last occurred " + daysSinceLastEvent + " days ago";
     }
 
     @NonNull

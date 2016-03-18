@@ -106,7 +106,7 @@ public abstract class BaseEventsManager<T> implements IEventsManager<T> {
                 final T cachedEventValue = getCachedTrackingValue(event);
 
                 if (cachedEventValue != null) {
-                    logger.d(getTrackingKey(event) + ": " + rule.getStatusString(cachedEventValue));
+                    logger.d(event.getTrackingKey() + rule.getEventTrackingStatusStringSuffix(cachedEventValue));
 
                     if (!rule.shouldAllowFeedbackPrompt(cachedEventValue)) {
                         logPromptBlockedMessage(rule, event);
