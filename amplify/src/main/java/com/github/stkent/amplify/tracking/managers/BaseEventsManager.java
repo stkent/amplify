@@ -108,19 +108,17 @@ public abstract class BaseEventsManager<T> implements IEventsManager<T> {
                     logger.d(getTrackingKey(event) + ": " + eventBasedRule.getStatusString(cachedEventValue));
 
                     if (!eventBasedRule.shouldAllowFeedbackPrompt(cachedEventValue)) {
-                        logger.d("Blocking feedback for event: " + event + " because of rule: " + eventBasedRule);
+                        logPromptBlockedMessage(eventBasedRule, event);
                         return false;
                     }
                 } else {
                     logger.d(getTrackingKey(event) + " has never occurred before!");
 
                     if (!eventBasedRule.shouldAllowFeedbackPromptByDefault()) {
-                        logger.d("Blocking feedback for event: " + event + " because of rule: " + eventBasedRule);
+                        logPromptBlockedMessage(eventBasedRule, event);
                         return false;
                     }
                 }
-
-
             }
         }
 
@@ -141,6 +139,14 @@ public abstract class BaseEventsManager<T> implements IEventsManager<T> {
     @Nullable
     private T getCachedTrackingValue(@NonNull final IEvent event) {
         return settings.readTrackingValue(getTrackingKey(event));
+    }
+
+    private void logPromptBlockedMessage(
+            @NonNull final IEventBasedRule<T> rule,
+            @NonNull final IEvent event) {
+
+        logger.d("Blocking feedback because of " + rule
+                + " associated with event " + event.getTrackingKey());
     }
 
 }
