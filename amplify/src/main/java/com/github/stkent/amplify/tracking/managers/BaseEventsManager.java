@@ -55,6 +55,7 @@ public abstract class BaseEventsManager<T> implements IEventsManager<T> {
     protected BaseEventsManager(
             @NonNull final ILogger logger,
             @NonNull final ISettings<T> settings) {
+
         this.logger = logger;
         this.settings = settings;
         this.internalMap = new ConcurrentHashMap<>();
@@ -98,24 +99,24 @@ public abstract class BaseEventsManager<T> implements IEventsManager<T> {
 
     @Override
     public boolean shouldAllowFeedbackPrompt() {
-        for (final Map.Entry<IEvent, List<IEventBasedRule<T>>> eventBasedRules : internalMap.entrySet()) {
-            final IEvent event = eventBasedRules.getKey();
+        for (final Map.Entry<IEvent, List<IEventBasedRule<T>>> rules : internalMap.entrySet()) {
+            final IEvent event = rules.getKey();
 
-            for (final IEventBasedRule<T> eventBasedRule : eventBasedRules.getValue()) {
+            for (final IEventBasedRule<T> rule : rules.getValue()) {
                 final T cachedEventValue = getCachedTrackingValue(event);
 
                 if (cachedEventValue != null) {
-                    logger.d(getTrackingKey(event) + ": " + eventBasedRule.getStatusString(cachedEventValue));
+                    logger.d(getTrackingKey(event) + ": " + rule.getStatusString(cachedEventValue));
 
-                    if (!eventBasedRule.shouldAllowFeedbackPrompt(cachedEventValue)) {
-                        logPromptBlockedMessage(eventBasedRule, event);
+                    if (!rule.shouldAllowFeedbackPrompt(cachedEventValue)) {
+                        logPromptBlockedMessage(rule, event);
                         return false;
                     }
                 } else {
                     logger.d(getTrackingKey(event) + " has never occurred before!");
 
-                    if (!eventBasedRule.shouldAllowFeedbackPromptByDefault()) {
-                        logPromptBlockedMessage(eventBasedRule, event);
+                    if (!rule.shouldAllowFeedbackPromptByDefault()) {
+                        logPromptBlockedMessage(rule, event);
                         return false;
                     }
                 }
@@ -133,7 +134,7 @@ public abstract class BaseEventsManager<T> implements IEventsManager<T> {
         return AMPLIFY_TRACKING_KEY_PREFIX
                 + event.getTrackingKey()
                 + "_"
-                + this.getTrackingKeySuffix().toUpperCase();
+                + getTrackingKeySuffix().toUpperCase();
     }
 
     @Nullable
