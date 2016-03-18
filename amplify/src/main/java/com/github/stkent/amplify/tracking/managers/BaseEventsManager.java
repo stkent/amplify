@@ -80,15 +80,14 @@ public abstract class BaseEventsManager<T> implements IEventsManager<T> {
             final T updatedTrackingValue = getUpdatedTrackingValue(cachedTrackingValue);
 
             if (cachedTrackingValue == null) {
-                logger.d(IEventBasedRule.class.getSimpleName()
-                        + " setting event value to: "
-                        + updatedTrackingValue);
+                logger.d("Setting " + getTrackedEventDimensionDescription().toLowerCase(Locale.US)
+                        + " of " + event.getTrackingKey()
+                        + " event to " + updatedTrackingValue);
             } else if (!updatedTrackingValue.equals(cachedTrackingValue)) {
-                logger.d(IEventBasedRule.class.getSimpleName()
-                        + " updating event value from: "
-                        + cachedTrackingValue
-                        + " to "
-                        + updatedTrackingValue);
+                logger.d("Updating " + getTrackedEventDimensionDescription().toLowerCase(Locale.US)
+                        + " of " + event.getTrackingKey()
+                        + " event from " + cachedTrackingValue
+                        + " to " + updatedTrackingValue);
             }
 
             settings.writeTrackingValue(getTrackingKey(event), updatedTrackingValue);
