@@ -30,29 +30,27 @@ public final class VersionChangedRule implements IEventBasedRule<String> {
 
     @Override
     public boolean shouldAllowFeedbackPrompt(@NonNull final String cachedEventValue) {
-        // We access the singleton AppInfoProvider instance statically here to make it possible for
-        // library consumers to create new VersionChangedRule instances easily!
-        final String currentAppVersion
-                = AppInfoProvider.getSharedInstance().getPackageInfo().versionName;
-
-        return !cachedEventValue.equals(currentAppVersion);
+        return !cachedEventValue.equals(getCurrentAppVersionName());
     }
 
     @NonNull
     @Override
     public String getStatusString(@NonNull final String cachedEventValue) {
-        // We access the singleton AppInfoProvider instance statically here to make it possible for
-        // library consumers to create new VersionChangedRule instances easily!
-        final String suffix = "Current app version: "
-                    + AppInfoProvider.getSharedInstance().getPackageInfo().versionName;
-
-        return "Event last triggered for app version " + cachedEventValue + ". " + suffix;
+        return "Event last triggered for app version " + cachedEventValue + ". "
+                + "Current app version: " + getCurrentAppVersionName();
     }
 
     @NonNull
     @Override
     public String getDescription() {
         return "VersionChangedRule";
+    }
+
+    @NonNull
+    private String getCurrentAppVersionName() {
+        // We access the singleton AppInfoProvider instance statically here to make it possible for
+        // library consumers to create new VersionChangedRule instances easily!
+        return AppInfoProvider.getSharedInstance().getPackageInfo().versionName;
     }
 
 }
