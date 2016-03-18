@@ -11,11 +11,13 @@ android:
     - build-tools-23.0.2
     - android-23
 
-    # Additional components
+    # Additional components:
     - extra-android-m2repository
 
 branches:
   only:
     - master
+    # Match semver branch names like 1.0.0, 1.0.0-rc.2, etc.:
+    - /^\d+\.\d+\.\d+(?:-rc\.\d+)?$/
 
 script: ./travis-build.sh

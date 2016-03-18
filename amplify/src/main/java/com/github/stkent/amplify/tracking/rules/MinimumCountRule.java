@@ -19,38 +19,34 @@ package com.github.stkent.amplify.tracking.rules;
 import android.support.annotation.NonNull;
 
 import com.github.stkent.amplify.tracking.interfaces.IEventBasedRule;
-import com.github.stkent.amplify.utils.time.SystemTimeUtil;
 
-import static java.util.concurrent.TimeUnit.DAYS;
+public final class MinimumCountRule implements IEventBasedRule<Integer> {
 
-public final class CooldownDaysRule implements IEventBasedRule<Long> {
+    private final int minimumCount;
 
-    private final long cooldownPeriodDays;
-
-    public CooldownDaysRule(final long cooldownPeriodDays) {
-        if (cooldownPeriodDays <= 0) {
+    public MinimumCountRule(final int minimumCount) {
+        if (minimumCount <= 0) {
             throw new IllegalStateException(
-                    "Cooldown days rule must be configured with a positive cooldown period");
+                    "Minimum count rule must be configured with a positive threshold");
         }
 
-        this.cooldownPeriodDays = cooldownPeriodDays;
+        this.minimumCount = minimumCount;
     }
 
     @Override
     public boolean shouldAllowFeedbackPromptByDefault() {
-        return true;
+        return false;
     }
 
     @Override
-    public boolean shouldAllowFeedbackPrompt(@NonNull final Long cachedEventValue) {
-        return (SystemTimeUtil.currentTimeMillis() - cachedEventValue) >= DAYS.toMillis(cooldownPeriodDays);
+    public boolean shouldAllowFeedbackPrompt(@NonNull final Integer cachedEventValue) {
+        return cachedEventValue >= minimumCount;
     }
 
     @NonNull
     @Override
     public String getDescription() {
-        return "CooldownDaysRule with a cooldown period of "
-                + cooldownPeriodDays + " day" + (cooldownPeriodDays > 1 ? "s" : "");
+        return "MinimumCountRule with minimum required count of " + minimumCount;
     }
 
 }

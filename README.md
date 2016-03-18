@@ -212,8 +212,9 @@ To apply rules based on these events, use the configuration methods `addTotalEve
 _amplify_ is packaged with the following event-based rules:
 
 - `CooldownDaysRule`: checks whether enough time has elapsed since the last occurrence of this event.
-- `MaximumCountRule`: checks whether this event has occurred enough times.
-- `VersionChangedRule`: checks whether this event has occurred for the current version of the embedding application.
+- `MaximumCountRule`: checks whether this event has occurred fewer than N times, for some number N.
+- `MinimumCountRule`: checks whether this event has occurred at least N times, for some number N.
+- `VersionChangedRule`: checks whether this event has already occurred for the current version of the embedding application.
 - `WarmupDaysRule`: checks whether enough time has elapsed since the first occurrence of this event.
 
 An example configuration that leverage these rules is below:
@@ -285,7 +286,7 @@ Provided by the `DefaultLayoutPromptView` class. The basic layouts of the questi
     app:prompt_view_negative_button_border_color="@color/custom_negative_button_border_color" />
 ```
 
-All attributes are optional. The most important are `prompt_view_foreground_color` and `prompt_view_background_color`. All other attributes default to one of these two colors, so most use-cases can probably be supported by setting one or both of these attributes only.
+All attributes are optional. The most important are `prompt_view_foreground_color` and `prompt_view_background_color`. All other color attributes default to one of these two colors, so most use-cases can probably be supported by setting one or both of these attributes only.
 
 It is also possible to configure this layout in code. To do so, users apply a `BasePromptViewConfig` and/or a `DefaultLayoutPromptViewConfig` to the view. Each configuration type can be constructed using a builder, which allows only the desired attributes to be overridden. Below shows an example in which every possible attribute is configured this way:
 
