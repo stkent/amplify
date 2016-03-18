@@ -75,8 +75,6 @@ public class Settings<T> implements ISettings<T> {
             }
         }
 
-        logger.e("No event value for " + trackingKey);
-
         return null;
     }
 
