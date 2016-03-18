@@ -26,16 +26,25 @@ import android.support.annotation.NonNull;
 public interface IEventBasedRule<T> {
 
     /**
-     * Call to determine whether this rule allows us to prompt the user for feedback at this time.
+     * This method should only be called if the associated event has never occurred before.
      *
-     * @param cachedEventValue the current value associated with the tracked event this rule is
-     *        associated with
+     * @return true if this rule should allow the feedback prompt to be shown if the associated
+     *         event has never occurred before; false otherwise
+     */
+    boolean shouldAllowFeedbackPromptByDefault();
+
+    /**
+     * This method should only be called if the associated event has occurred before.
+     *
+     * @param cachedEventValue the currently cached value for the associated event
      * @return true if this rule is satisfied and should allow the feedback prompt to be shown;
      *         false otherwise
      */
     boolean shouldAllowFeedbackPrompt(@NonNull final T cachedEventValue);
 
     /**
+     * This method should only be called if the associated event has occurred before.
+     *
      * @param cachedEventValue the current value associated with the tracked event this rule is
      *        associated with
      * @return a string representation of the current rule status; primarily used for debugging

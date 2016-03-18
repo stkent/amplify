@@ -18,7 +18,7 @@ package com.github.stkent.amplify.tracking.managers;
 
 import android.annotation.SuppressLint;
 import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.support.annotation.NonNull;
 
 import com.github.stkent.amplify.ILogger;
@@ -65,7 +65,7 @@ public class LastEventVersionRulesManagerTest extends BaseTest {
     }
 
     @Test
-    public void testThatEventsAreSavedWithCorrectTrackingKey() throws PackageManager.NameNotFoundException {
+    public void testThatEventsAreSavedWithCorrectTrackingKey() throws NameNotFoundException {
         // Arrange
         final String fakeVersionName = "any string";
 
@@ -85,7 +85,7 @@ public class LastEventVersionRulesManagerTest extends BaseTest {
 
     @SuppressLint("Assert")
     @Test
-    public void testThatFirstAppVersionNameIsRecorded() throws PackageManager.NameNotFoundException {
+    public void testThatFirstAppVersionNameIsRecorded() throws NameNotFoundException {
         // Arrange
         final String fakeVersionName = "any string";
 
@@ -93,7 +93,8 @@ public class LastEventVersionRulesManagerTest extends BaseTest {
         triggerEventForAppVersion(fakeVersionName);
 
         // Assert
-        final String trackedEventVersionName = fakeSettings.readTrackingValue(getExpectedTrackingKeyForEvent(mockEvent));
+        final String trackedEventVersionName
+                = fakeSettings.readTrackingValue(getExpectedTrackingKeyForEvent(mockEvent));
 
         assertEquals(
                 "The correct application version name should have been recorded",
@@ -103,7 +104,7 @@ public class LastEventVersionRulesManagerTest extends BaseTest {
 
     @SuppressLint("Assert")
     @Test
-    public void testThatSecondAppVersionNameIsRecorded() throws PackageManager.NameNotFoundException {
+    public void testThatMostRecentAppVersionNameIsRecorded() throws NameNotFoundException {
         // Arrange
         final String fakeFirstVersionName = "any string";
         final String fakeSecondVersionName = "any other string";
@@ -114,7 +115,8 @@ public class LastEventVersionRulesManagerTest extends BaseTest {
         triggerEventForAppVersion(fakeSecondVersionName);
 
         // Assert
-        final String trackedEventVersionName = fakeSettings.readTrackingValue(getExpectedTrackingKeyForEvent(mockEvent));
+        final String trackedEventVersionName
+                = fakeSettings.readTrackingValue(getExpectedTrackingKeyForEvent(mockEvent));
 
         assertEquals(
                 "The correct (latest) application version name should have been recorded",
@@ -126,7 +128,9 @@ public class LastEventVersionRulesManagerTest extends BaseTest {
         return "AMPLIFY_" + event.getTrackingKey() + "_LASTEVENTVERSIONSMANAGER";
     }
 
-    private void triggerEventForAppVersion(@NonNull final String appVersionName) throws PackageManager.NameNotFoundException {
+    private void triggerEventForAppVersion(
+            @NonNull final String appVersionName) throws NameNotFoundException {
+
         final PackageInfo fakePackageInfo = new PackageInfo();
         fakePackageInfo.versionName = appVersionName;
         when(mockAppInfoProvider.getPackageInfo()).thenReturn(fakePackageInfo);

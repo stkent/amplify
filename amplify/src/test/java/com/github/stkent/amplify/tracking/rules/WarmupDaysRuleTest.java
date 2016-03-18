@@ -33,29 +33,27 @@ public class WarmupDaysRuleTest extends BaseTest {
     @SuppressLint("Assert")
     @SuppressWarnings("ConstantConditions")
     @Test
-    public void testThatCheckBlocksPromptIfEventHasNotOccurredYet() {
+    public void testThatRuleBlocksPromptIfEventHasNeverOccurred() {
         // Arrange
-        final int warmUpTimeDays = 7;
+        final int anyPositiveInteger = 1;
+        assert anyPositiveInteger > 0;
 
-        final WarmupDaysRule warmupDaysRule = new WarmupDaysRule(warmUpTimeDays);
-
-        // todo: refactor to avoid this nasty dependency on a magic number
-        final long lastEventTime = Long.MAX_VALUE;
+        final WarmupDaysRule warmupDaysRule = new WarmupDaysRule(anyPositiveInteger);
 
         // Act
         final boolean ruleShouldAllowFeedbackPrompt
-                = warmupDaysRule.shouldAllowFeedbackPrompt(lastEventTime);
+                = warmupDaysRule.shouldAllowFeedbackPromptByDefault();
 
         // Assert
         assertFalse(
-                "Feedback prompt should be blocked if the event has not occurred yet",
+                "Feedback prompt should be blocked if the associated event has never occurred.",
                 ruleShouldAllowFeedbackPrompt);
     }
 
     @SuppressLint("Assert")
     @SuppressWarnings("ConstantConditions")
     @Test
-    public void testThatCheckBlocksPromptIfWarmUpPeriodHasNotPassed() {
+    public void testThatRuleBlocksPromptIfWarmUpPeriodHasNotPassed() {
         // Arrange
         final int warmUpTimeDays = 7;
         final int daysSinceLastEvent = 2;
@@ -77,7 +75,7 @@ public class WarmupDaysRuleTest extends BaseTest {
     @SuppressLint("Assert")
     @SuppressWarnings("ConstantConditions")
     @Test
-    public void testThatCheckAllowsPromptIfWarmUpPeriodHasPassed() {
+    public void testThatRuleAllowsPromptIfWarmUpPeriodHasPassed() {
         // Arrange
         final int warmUpTimeDays = 7;
         final int daysSinceLastEvent = 9;

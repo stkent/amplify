@@ -18,6 +18,7 @@ package com.github.stkent.amplify.tracking.managers;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 
 import com.github.stkent.amplify.ILogger;
@@ -46,18 +47,14 @@ public class FirstEventTimeRulesManager extends BaseEventsManager<Long> {
 
     @NonNull
     @Override
-    public Long defaultTrackingValue() {
-        return Long.MAX_VALUE;
-    }
+    public Long getUpdatedTrackingValue(@Nullable final Long cachedTrackingValue) {
+        final long currentTimeMillis = SystemTimeUtil.currentTimeMillis();
 
-    @NonNull
-    @Override
-    public Long getUpdatedTrackingValue(@NonNull final Long cachedTrackingValue) {
-        if (cachedTrackingValue == Long.MAX_VALUE) {
-            return Math.min(cachedTrackingValue, SystemTimeUtil.currentTimeMillis());
+        if (cachedTrackingValue == null) {
+            return currentTimeMillis;
+        } else {
+            return Math.min(cachedTrackingValue, currentTimeMillis);
         }
-
-        return cachedTrackingValue;
     }
 
 }

@@ -29,6 +29,11 @@ public final class MaximumCountRule implements IEventBasedRule<Integer> {
     }
 
     @Override
+    public boolean shouldAllowFeedbackPromptByDefault() {
+        return true;
+    }
+
+    @Override
     public boolean shouldAllowFeedbackPrompt(@NonNull final Integer cachedEventValue) {
         return cachedEventValue < maximumCount;
     }

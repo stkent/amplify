@@ -18,6 +18,7 @@ package com.github.stkent.amplify.tracking.managers;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 
 import com.github.stkent.amplify.ILogger;
@@ -46,13 +47,7 @@ public class LastEventTimeRulesManager extends BaseEventsManager<Long> {
 
     @NonNull
     @Override
-    public Long defaultTrackingValue() {
-        return Long.MAX_VALUE;
-    }
-
-    @NonNull
-    @Override
-    public Long getUpdatedTrackingValue(@NonNull final Long cachedTrackingValue) {
+    public Long getUpdatedTrackingValue(@Nullable final Long cachedTrackingValue) {
         return SystemTimeUtil.currentTimeMillis();
     }
 

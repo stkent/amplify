@@ -17,6 +17,7 @@
 package com.github.stkent.amplify.tracking.managers;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.github.stkent.amplify.ILogger;
 import com.github.stkent.amplify.tracking.interfaces.IEvent;
@@ -43,11 +44,13 @@ public abstract class BaseEventsManager<T> implements IEventsManager<T> {
     @NonNull
     protected abstract String getTrackingKeySuffix();
 
+    /**
+     * @param cachedEventValue the existing cached value associated with the tracked event; null if
+     *                         the event has never occurred before
+     * @return a new value to replace the existing value in the cache
+     */
     @NonNull
-    protected abstract T defaultTrackingValue();
-
-    @NonNull
-    protected abstract T getUpdatedTrackingValue(@NonNull final T cachedEventValue);
+    protected abstract T getUpdatedTrackingValue(@Nullable final T cachedEventValue);
 
     protected BaseEventsManager(
             @NonNull final ILogger logger,
@@ -74,11 +77,14 @@ public abstract class BaseEventsManager<T> implements IEventsManager<T> {
     @Override
     public void notifyEventTriggered(@NonNull final IEvent event) {
         if (isTrackingEvent(event)) {
-
             final T cachedTrackingValue = getCachedTrackingValue(event);
             final T updatedTrackingValue = getUpdatedTrackingValue(cachedTrackingValue);
 
-            if (!updatedTrackingValue.equals(cachedTrackingValue)) {
+            if (cachedTrackingValue == null) {
+                logger.d(IEventBasedRule.class.getSimpleName()
+                        + " setting event value to: "
+                        + updatedTrackingValue);
+            } else if (!updatedTrackingValue.equals(cachedTrackingValue)) {
                 logger.d(IEventBasedRule.class.getSimpleName()
                         + " updating event value from: "
                         + cachedTrackingValue
@@ -98,12 +104,23 @@ public abstract class BaseEventsManager<T> implements IEventsManager<T> {
             for (final IEventBasedRule<T> eventBasedRule : eventBasedRules.getValue()) {
                 final T cachedEventValue = getCachedTrackingValue(event);
 
-                logger.d(getTrackingKey(event) + ": " + eventBasedRule.getStatusString(cachedEventValue));
+                if (cachedEventValue != null) {
+                    logger.d(getTrackingKey(event) + ": " + eventBasedRule.getStatusString(cachedEventValue));
 
-                if (!eventBasedRule.shouldAllowFeedbackPrompt(cachedEventValue)) {
-                    logger.d("Blocking feedback for event: " + event + " because of check: " + eventBasedRule);
-                    return false;
+                    if (!eventBasedRule.shouldAllowFeedbackPrompt(cachedEventValue)) {
+                        logger.d("Blocking feedback for event: " + event + " because of rule: " + eventBasedRule);
+                        return false;
+                    }
+                } else {
+                    logger.d(getTrackingKey(event) + " has never occurred before!");
+
+                    if (!eventBasedRule.shouldAllowFeedbackPromptByDefault()) {
+                        logger.d("Blocking feedback for event: " + event + " because of rule: " + eventBasedRule);
+                        return false;
+                    }
                 }
+
+
             }
         }
 
@@ -125,9 +142,9 @@ public abstract class BaseEventsManager<T> implements IEventsManager<T> {
                 + this.getTrackingKeySuffix().toUpperCase();
     }
 
+    @Nullable
     private T getCachedTrackingValue(@NonNull final IEvent event) {
-        T value = settings.readTrackingValue(getTrackingKey(event));
-        return value != null ? value : defaultTrackingValue();
+        return settings.readTrackingValue(getTrackingKey(event));
     }
 
 }

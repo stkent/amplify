@@ -34,6 +34,7 @@ public class VersionChangedRuleTest extends BaseTest {
 
     private VersionChangedRule versionChangedRule;
 
+    @SuppressWarnings("FieldCanBeLocal")
     private PackageInfo fakePackageInfo;
 
     @Mock
@@ -41,17 +42,34 @@ public class VersionChangedRuleTest extends BaseTest {
 
     @Override
     public void localSetUp() {
-        AppInfoProvider.setSharedInstance(mockAppInfoProvider);
         versionChangedRule = new VersionChangedRule();
+
         fakePackageInfo = new PackageInfo();
+        when(mockAppInfoProvider.getPackageInfo()).thenReturn(fakePackageInfo);
+        AppInfoProvider.setSharedInstance(mockAppInfoProvider);
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    @Test
+    public void testThatRuleAllowsPromptIfEventHasNeverOccurred() {
+        // Arrange
+        fakePackageInfo.versionName = "any string";
+
+        // Act
+        final boolean ruleShouldAllowFeedbackPrompt
+                = versionChangedRule.shouldAllowFeedbackPromptByDefault();
+
+        // Assert
+        assertTrue(
+                "Feedback prompt should be allowed if the associated event has never occurred.",
+                ruleShouldAllowFeedbackPrompt);
     }
 
     @Test
-    public void testThatCheckBlocksPromptIfAppVersionHasNotChanged() throws PackageManager.NameNotFoundException {
+    public void testThatRuleBlocksPromptIfAppVersionHasNotChanged() throws PackageManager.NameNotFoundException {
         // Arrange
         final String fakeVersionName = "any string";
 
-        when(mockAppInfoProvider.getPackageInfo()).thenReturn(fakePackageInfo);
         fakePackageInfo.versionName = fakeVersionName;
 
         // Act
@@ -67,13 +85,12 @@ public class VersionChangedRuleTest extends BaseTest {
     @SuppressLint("Assert")
     @SuppressWarnings("ConstantConditions")
     @Test
-    public void testThatCheckAllowsPromptIfAppVersionHasChanged() throws PackageManager.NameNotFoundException {
+    public void testThatRuleAllowsPromptIfAppVersionHasChanged() throws PackageManager.NameNotFoundException {
         // Arrange
         final String fakeCachedVersionName = "any string";
         final String fakeCurrentVersionName = "any other string";
         assert !fakeCachedVersionName.equals(fakeCurrentVersionName);
 
-        when(mockAppInfoProvider.getPackageInfo()).thenReturn(fakePackageInfo);
         fakePackageInfo.versionName = fakeCurrentVersionName;
 
         // Act

@@ -40,33 +40,33 @@ public class GooglePlayStoreRuleTest extends BaseTest {
     }
 
     @Test
-    public void testThatEnvironmentCheckIsMetIfGooglePlayStoreIsInstalledOnDevice() {
+    public void testThatEnvironmentRuleIsSatisfiedIfGooglePlayStoreIsInstalledOnDevice() {
         // Arrange
        when(mockEnvironmentInfoProvider.isGooglePlayStoreInstalled()).thenReturn(true);
 
         // Act
-        final boolean isEnvironmentCheckMet =
+        final boolean isEnvironmentRuleSatisfied =
                 googlePlayStoreRule.shouldAllowFeedbackPrompt(mockEnvironmentInfoProvider);
 
         // Assert
         assertTrue(
-                "Environment check should be met",
-                isEnvironmentCheckMet);
+                "Environment based rule should be satisfied",
+                isEnvironmentRuleSatisfied);
     }
 
     @Test
-    public void testThatEnvironmentCheckIsNotMetIfGooglePlayStoreIsNotInstalledOnDevice() {
+    public void testThatEnvironmentRuleIsNotSatisfiedIfGooglePlayStoreIsNotInstalledOnDevice() {
         // Arrange
         when(mockEnvironmentInfoProvider.isGooglePlayStoreInstalled()).thenReturn(false);
 
         // Act
-        final boolean isEnvironmentCheckMet =
+        final boolean isEnvironmentRuleSatisfied =
                 googlePlayStoreRule.shouldAllowFeedbackPrompt(mockEnvironmentInfoProvider);
 
         // Assert
         assertFalse(
-                "Environment check should not be met",
-                isEnvironmentCheckMet);
+                "Environment based rule should not be satisfied",
+                isEnvironmentRuleSatisfied);
     }
 
 }

@@ -33,7 +33,27 @@ public class CooldownDaysRuleTest extends BaseTest {
     @SuppressLint("Assert")
     @SuppressWarnings("ConstantConditions")
     @Test
-    public void testThatCheckBlocksPromptIfCooldownPeriodHasNotPassed() {
+    public void testThatRuleAllowsPromptIfEventHasNeverOccurred() {
+        // Arrange
+        final int anyPositiveInteger = 1;
+        assert anyPositiveInteger > 0;
+
+        final CooldownDaysRule cooldownDaysRule = new CooldownDaysRule(anyPositiveInteger);
+
+        // Act
+        final boolean ruleShouldAllowFeedbackPrompt
+                = cooldownDaysRule.shouldAllowFeedbackPromptByDefault();
+
+        // Assert
+        assertTrue(
+                "Feedback prompt should be allowed if the associated event has never occurred.",
+                ruleShouldAllowFeedbackPrompt);
+    }
+
+    @SuppressLint("Assert")
+    @SuppressWarnings("ConstantConditions")
+    @Test
+    public void testThatRuleBlocksPromptIfCooldownPeriodHasNotPassed() {
         // Arrange
         final int cooldownTimeDays = 7;
         final int daysSinceLastEvent = 2;
@@ -55,7 +75,7 @@ public class CooldownDaysRuleTest extends BaseTest {
     @SuppressLint("Assert")
     @SuppressWarnings("ConstantConditions")
     @Test
-    public void testThatCheckAllowsPromptIfCooldownPeriodHasPassed() {
+    public void testThatRuleAllowsPromptIfCooldownPeriodHasPassed() {
         // Arrange
         final int cooldownTimeDays = 7;
         final int daysSinceLastEvent = 9;
