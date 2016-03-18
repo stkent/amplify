@@ -97,14 +97,7 @@ public class AppLevelEventRulesManager implements IAppLevelEventRulesManager {
         }
 
         if (lastEventTimeRulesManager != null) {
-
-            boolean lastCrashResult = lastEventTimeRulesManager.shouldAllowFeedbackPrompt();
-
-            if (!lastCrashResult) {
-                logger.d("Blocking prompt based on last crash time");
-            }
-
-            result = result && lastCrashResult;
+            result = result && lastEventTimeRulesManager.shouldAllowFeedbackPrompt();
         }
 
         return result;
