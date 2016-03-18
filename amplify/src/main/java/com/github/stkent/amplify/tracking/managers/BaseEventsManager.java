@@ -113,9 +113,10 @@ public abstract class BaseEventsManager<T> implements IEventsManager<T> {
                         result = false;
                     }
                 } else {
-                    logger.d(getTrackedEventDimensionDescription()
+                    logger.d("No tracked value for "
+                            + getTrackedEventDimensionDescription().toLowerCase(Locale.US)
                             + " of " + event.getTrackingKey()
-                            + " event(s) is unknown");
+                            + " event");
 
                     if (!rule.shouldAllowFeedbackPromptByDefault()) {
                         logPromptBlockedMessage(rule, event);
@@ -160,7 +161,7 @@ public abstract class BaseEventsManager<T> implements IEventsManager<T> {
             @NonNull final IEvent event) {
 
         logger.d("Blocking feedback because of " + rule.getDescription()
-                + " associated with event " + event.getTrackingKey());
+                + " associated with " + event.getTrackingKey() + " event");
     }
 
 }
