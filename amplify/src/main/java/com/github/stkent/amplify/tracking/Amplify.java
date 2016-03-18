@@ -208,7 +208,7 @@ public final class Amplify implements IEventListener {
 
     @Override
     public void notifyEventTriggered(@NonNull final IEvent event) {
-        logger.d("Triggered Event: " + event);
+        logger.d(event + " event triggered");
         totalEventCountRulesManager.notifyEventTriggered(event);
         firstEventTimeRulesManager.notifyEventTriggered(event);
         lastEventTimeRulesManager.notifyEventTriggered(event);

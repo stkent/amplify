@@ -106,6 +106,7 @@ public abstract class BaseEventsManager<T> implements IEventsManager<T> {
 
                 if (cachedEventValue != null) {
                     logger.d(event.getTrackingKey()
+                            + " event "
                             + rule.getEventTrackingStatusStringSuffix(cachedEventValue));
 
                     if (!rule.shouldAllowFeedbackPrompt(cachedEventValue)) {
@@ -115,7 +116,8 @@ public abstract class BaseEventsManager<T> implements IEventsManager<T> {
                 } else {
                     logger.d("No tracked value for "
                             + getTrackedEventDimensionDescription().toLowerCase(Locale.US)
-                            + " of " + event.getTrackingKey()
+                            + " of "
+                            + event.getTrackingKey()
                             + " event");
 
                     if (!rule.shouldAllowFeedbackPromptByDefault()) {
