@@ -57,6 +57,12 @@ public class LastEventVersionRulesManager extends BaseEventsManager<String> {
 
     @NonNull
     @Override
+    protected String getEventTrackingStatusStringSuffix(@NonNull final String cachedEventValue) {
+        return " last occurred for app version name " + cachedEventValue;
+    }
+
+    @NonNull
+    @Override
     public String getUpdatedTrackingValue(@Nullable final String cachedTrackingValue) {
         return appInfoProvider.getPackageInfo().versionName;
     }

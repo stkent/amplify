@@ -50,6 +50,12 @@ public class TotalEventCountRulesManager extends BaseEventsManager<Integer> {
 
     @NonNull
     @Override
+    protected String getEventTrackingStatusStringSuffix(@NonNull final Integer cachedEventValue) {
+        return " has previously occurred " + cachedEventValue + " times";
+    }
+
+    @NonNull
+    @Override
     public Integer getUpdatedTrackingValue(@Nullable final Integer cachedTrackingValue) {
         return cachedTrackingValue == null ? 1 : cachedTrackingValue + 1;
     }

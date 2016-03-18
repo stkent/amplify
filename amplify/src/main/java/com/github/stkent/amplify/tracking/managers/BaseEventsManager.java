@@ -43,6 +43,17 @@ public abstract class BaseEventsManager<T> implements IEventsManager<T> {
     protected abstract String getTrackedEventDimensionDescription();
 
     /**
+     * This method should only be called if the associated event has occurred before.
+     *
+     * @param cachedEventValue the currently cached value for the associated event
+     * @return a string representation of an associated event's tracking status, given the currently
+     *         cached value for that event
+     */
+    @NonNull
+    protected abstract String getEventTrackingStatusStringSuffix(
+            @NonNull final T cachedEventValue);
+
+    /**
      * @param cachedEventValue the existing cached value associated with the tracked event; null if
      *                         the event has never occurred before
      * @return a new value to replace the existing value in the cache
@@ -107,7 +118,7 @@ public abstract class BaseEventsManager<T> implements IEventsManager<T> {
                 if (cachedEventValue != null) {
                     logger.d(event.getTrackingKey()
                             + " event "
-                            + rule.getEventTrackingStatusStringSuffix(cachedEventValue));
+                            + getEventTrackingStatusStringSuffix(cachedEventValue));
 
                     if (!rule.shouldAllowFeedbackPrompt(cachedEventValue)) {
                         logPromptBlockedMessage(rule, event);

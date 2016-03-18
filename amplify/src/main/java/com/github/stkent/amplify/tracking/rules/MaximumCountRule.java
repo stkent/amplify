@@ -40,12 +40,6 @@ public final class MaximumCountRule implements IEventBasedRule<Integer> {
 
     @NonNull
     @Override
-    public String getEventTrackingStatusStringSuffix(@NonNull final Integer cachedEventValue) {
-        return " has previously occurred " + cachedEventValue + " times";
-    }
-
-    @NonNull
-    @Override
     public String getDescription() {
         return "MaximumCountRule with maximum allowed count of " + maximumCount;
     }

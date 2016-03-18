@@ -22,7 +22,6 @@ import com.github.stkent.amplify.tracking.interfaces.IEventBasedRule;
 import com.github.stkent.amplify.utils.time.SystemTimeUtil;
 
 import static java.util.concurrent.TimeUnit.DAYS;
-import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 public final class CooldownDaysRule implements IEventBasedRule<Long> {
 
@@ -40,13 +39,6 @@ public final class CooldownDaysRule implements IEventBasedRule<Long> {
     @Override
     public boolean shouldAllowFeedbackPrompt(@NonNull final Long cachedEventValue) {
         return (SystemTimeUtil.currentTimeMillis() - cachedEventValue) >= DAYS.toMillis(cooldownPeriodDays);
-    }
-
-    @NonNull
-    @Override
-    public String getEventTrackingStatusStringSuffix(@NonNull final Long cachedEventValue) {
-        final Long daysSinceLastEvent = MILLISECONDS.toDays(SystemTimeUtil.currentTimeMillis() - cachedEventValue);
-        return " last occurred " + daysSinceLastEvent + " days ago";
     }
 
     @NonNull

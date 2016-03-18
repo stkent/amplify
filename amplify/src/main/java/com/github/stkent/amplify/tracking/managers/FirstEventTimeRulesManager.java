@@ -26,6 +26,8 @@ import com.github.stkent.amplify.tracking.Settings;
 import com.github.stkent.amplify.tracking.interfaces.ISettings;
 import com.github.stkent.amplify.utils.time.SystemTimeUtil;
 
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
+
 public class FirstEventTimeRulesManager extends BaseEventsManager<Long> {
 
     public FirstEventTimeRulesManager(
@@ -47,6 +49,13 @@ public class FirstEventTimeRulesManager extends BaseEventsManager<Long> {
     @Override
     protected String getTrackedEventDimensionDescription() {
         return "First time";
+    }
+
+    @NonNull
+    @Override
+    protected String getEventTrackingStatusStringSuffix(@NonNull final Long cachedEventValue) {
+        final Long daysSinceFirstEvent = MILLISECONDS.toDays(SystemTimeUtil.currentTimeMillis() - cachedEventValue);
+        return " first occurred " + daysSinceFirstEvent + " days ago";
     }
 
     @NonNull

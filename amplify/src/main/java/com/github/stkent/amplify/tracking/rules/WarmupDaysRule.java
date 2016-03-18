@@ -22,7 +22,6 @@ import com.github.stkent.amplify.tracking.interfaces.IEventBasedRule;
 import com.github.stkent.amplify.utils.time.SystemTimeUtil;
 
 import static java.util.concurrent.TimeUnit.DAYS;
-import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 public class WarmupDaysRule implements IEventBasedRule<Long> {
 
@@ -40,13 +39,6 @@ public class WarmupDaysRule implements IEventBasedRule<Long> {
     @Override
     public boolean shouldAllowFeedbackPrompt(@NonNull final Long cachedEventValue) {
         return SystemTimeUtil.currentTimeMillis() - cachedEventValue > DAYS.toMillis(warmupPeriodDays);
-    }
-
-    @NonNull
-    @Override
-    public String getEventTrackingStatusStringSuffix(@NonNull final Long cachedEventValue) {
-        final Long daysSinceFirstEvent = MILLISECONDS.toDays(SystemTimeUtil.currentTimeMillis() - cachedEventValue);
-        return " first occurred " + daysSinceFirstEvent + " days ago";
     }
 
     @NonNull

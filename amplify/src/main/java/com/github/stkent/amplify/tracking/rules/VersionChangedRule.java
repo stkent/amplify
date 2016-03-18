@@ -35,12 +35,6 @@ public final class VersionChangedRule implements IEventBasedRule<String> {
 
     @NonNull
     @Override
-    public String getEventTrackingStatusStringSuffix(@NonNull final String cachedEventValue) {
-        return " last occurred for app version name " + cachedEventValue;
-    }
-
-    @NonNull
-    @Override
     public String getDescription() {
         return "VersionChangedRule with current app version name " + getCurrentAppVersionName();
     }

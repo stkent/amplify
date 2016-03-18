@@ -42,14 +42,5 @@ public interface IEventBasedRule<T> extends IRule {
      */
     boolean shouldAllowFeedbackPrompt(@NonNull final T cachedEventValue);
 
-    /**
-     * This method should only be called if the associated event has occurred before.
-     *
-     * @param cachedEventValue the currently cached value for the associated event
-     * @return a string representation of an associated event's tracking status, given the currently
-     *         cached value for that event
-     */
-    @NonNull
-    String getEventTrackingStatusStringSuffix(@NonNull final T cachedEventValue);
 
 }
