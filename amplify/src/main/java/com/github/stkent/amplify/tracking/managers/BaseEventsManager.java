@@ -96,6 +96,8 @@ public abstract class BaseEventsManager<T> implements IEventsManager<T> {
 
     @Override
     public boolean shouldAllowFeedbackPrompt() {
+        boolean result = true;
+
         for (final Map.Entry<IEvent, List<IEventBasedRule<T>>> rules : internalMap.entrySet()) {
             final IEvent event = rules.getKey();
 
@@ -103,11 +105,12 @@ public abstract class BaseEventsManager<T> implements IEventsManager<T> {
                 final T cachedEventValue = getCachedTrackingValue(event);
 
                 if (cachedEventValue != null) {
-                    logger.d(event.getTrackingKey() + rule.getEventTrackingStatusStringSuffix(cachedEventValue));
+                    logger.d(event.getTrackingKey()
+                            + rule.getEventTrackingStatusStringSuffix(cachedEventValue));
 
                     if (!rule.shouldAllowFeedbackPrompt(cachedEventValue)) {
                         logPromptBlockedMessage(rule, event);
-                        return false;
+                        result = false;
                     }
                 } else {
                     logger.d(getTrackedEventDimensionDescription()
@@ -116,13 +119,13 @@ public abstract class BaseEventsManager<T> implements IEventsManager<T> {
 
                     if (!rule.shouldAllowFeedbackPromptByDefault()) {
                         logPromptBlockedMessage(rule, event);
-                        return false;
+                        result = false;
                     }
                 }
             }
         }
 
-        return true;
+        return result;
     }
 
     private boolean isTrackingEvent(@NonNull final IEvent event) {
