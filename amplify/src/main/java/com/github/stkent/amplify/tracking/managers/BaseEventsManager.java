@@ -127,10 +127,6 @@ public abstract class BaseEventsManager<T> implements IEventsManager<T> {
         return true;
     }
 
-    protected ILogger getLogger() {
-        return logger;
-    }
-
     private boolean isTrackingEvent(@NonNull final IEvent event) {
         return internalMap.containsKey(event);
     }
