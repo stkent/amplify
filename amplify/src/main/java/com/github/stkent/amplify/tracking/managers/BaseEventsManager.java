@@ -80,15 +80,14 @@ public abstract class BaseEventsManager<T> implements IEventsManager<T> {
             final T updatedTrackingValue = getUpdatedTrackingValue(cachedTrackingValue);
 
             if (cachedTrackingValue == null) {
-                logger.d(IEventBasedRule.class.getSimpleName()
-                        + " setting event value to: "
-                        + updatedTrackingValue);
+                logger.d("Setting " + getTrackedEventDimensionDescription().toLowerCase(Locale.US)
+                        + " of " + event.getTrackingKey()
+                        + " event to " + updatedTrackingValue);
             } else if (!updatedTrackingValue.equals(cachedTrackingValue)) {
-                logger.d(IEventBasedRule.class.getSimpleName()
-                        + " updating event value from: "
-                        + cachedTrackingValue
-                        + " to "
-                        + updatedTrackingValue);
+                logger.d("Updating " + getTrackedEventDimensionDescription().toLowerCase(Locale.US)
+                        + " of " + event.getTrackingKey()
+                        + " event from " + cachedTrackingValue
+                        + " to " + updatedTrackingValue);
             }
 
             settings.writeTrackingValue(getTrackingKey(event), updatedTrackingValue);
@@ -97,6 +96,8 @@ public abstract class BaseEventsManager<T> implements IEventsManager<T> {
 
     @Override
     public boolean shouldAllowFeedbackPrompt() {
+        boolean result = true;
+
         for (final Map.Entry<IEvent, List<IEventBasedRule<T>>> rules : internalMap.entrySet()) {
             final IEvent event = rules.getKey();
 
@@ -104,26 +105,28 @@ public abstract class BaseEventsManager<T> implements IEventsManager<T> {
                 final T cachedEventValue = getCachedTrackingValue(event);
 
                 if (cachedEventValue != null) {
-                    logger.d(event.getTrackingKey() + rule.getEventTrackingStatusStringSuffix(cachedEventValue));
+                    logger.d(event.getTrackingKey()
+                            + rule.getEventTrackingStatusStringSuffix(cachedEventValue));
 
                     if (!rule.shouldAllowFeedbackPrompt(cachedEventValue)) {
                         logPromptBlockedMessage(rule, event);
-                        return false;
+                        result = false;
                     }
                 } else {
-                    logger.d(getTrackedEventDimensionDescription()
+                    logger.d("No tracked value for "
+                            + getTrackedEventDimensionDescription().toLowerCase(Locale.US)
                             + " of " + event.getTrackingKey()
-                            + " event(s) is unknown");
+                            + " event");
 
                     if (!rule.shouldAllowFeedbackPromptByDefault()) {
                         logPromptBlockedMessage(rule, event);
-                        return false;
+                        result = false;
                     }
                 }
             }
         }
 
-        return true;
+        return result;
     }
 
     private boolean isTrackingEvent(@NonNull final IEvent event) {
@@ -158,7 +161,7 @@ public abstract class BaseEventsManager<T> implements IEventsManager<T> {
             @NonNull final IEvent event) {
 
         logger.d("Blocking feedback because of " + rule.getDescription()
-                + " associated with event " + event.getTrackingKey());
+                + " associated with " + event.getTrackingKey() + " event");
     }
 
 }
