@@ -32,4 +32,10 @@ public class GooglePlayStoreRule implements IEnvironmentBasedRule {
         return environmentInfoProvider.isGooglePlayStoreInstalled();
     }
 
+    @NonNull
+    @Override
+    public String getDescription() {
+        return "GooglePlayStoreRule";
+    }
+
 }

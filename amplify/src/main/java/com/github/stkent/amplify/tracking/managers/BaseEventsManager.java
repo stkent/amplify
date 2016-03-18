@@ -55,6 +55,7 @@ public abstract class BaseEventsManager<T> implements IEventsManager<T> {
     protected BaseEventsManager(
             @NonNull final ILogger logger,
             @NonNull final ISettings<T> settings) {
+
         this.logger = logger;
         this.settings = settings;
         this.internalMap = new ConcurrentHashMap<>();
@@ -71,7 +72,7 @@ public abstract class BaseEventsManager<T> implements IEventsManager<T> {
 
         internalMap.get(event).add(rule);
 
-        logger.d(internalMap.get(event).toString());
+        logger.d("Registered " + rule.getDescription() + " for event " + event.getTrackingKey());
     }
 
     @Override
@@ -98,37 +99,31 @@ public abstract class BaseEventsManager<T> implements IEventsManager<T> {
 
     @Override
     public boolean shouldAllowFeedbackPrompt() {
-        for (final Map.Entry<IEvent, List<IEventBasedRule<T>>> eventBasedRules : internalMap.entrySet()) {
-            final IEvent event = eventBasedRules.getKey();
+        for (final Map.Entry<IEvent, List<IEventBasedRule<T>>> rules : internalMap.entrySet()) {
+            final IEvent event = rules.getKey();
 
-            for (final IEventBasedRule<T> eventBasedRule : eventBasedRules.getValue()) {
+            for (final IEventBasedRule<T> rule : rules.getValue()) {
                 final T cachedEventValue = getCachedTrackingValue(event);
 
                 if (cachedEventValue != null) {
-                    logger.d(getTrackingKey(event) + ": " + eventBasedRule.getStatusString(cachedEventValue));
+                    logger.d(getTrackingKey(event) + ": " + rule.getStatusString(cachedEventValue));
 
-                    if (!eventBasedRule.shouldAllowFeedbackPrompt(cachedEventValue)) {
-                        logger.d("Blocking feedback for event: " + event + " because of rule: " + eventBasedRule);
+                    if (!rule.shouldAllowFeedbackPrompt(cachedEventValue)) {
+                        logPromptBlockedMessage(rule, event);
                         return false;
                     }
                 } else {
                     logger.d(getTrackingKey(event) + " has never occurred before!");
 
-                    if (!eventBasedRule.shouldAllowFeedbackPromptByDefault()) {
-                        logger.d("Blocking feedback for event: " + event + " because of rule: " + eventBasedRule);
+                    if (!rule.shouldAllowFeedbackPromptByDefault()) {
+                        logPromptBlockedMessage(rule, event);
                         return false;
                     }
                 }
-
-
             }
         }
 
         return true;
-    }
-
-    protected ILogger getLogger() {
-        return logger;
     }
 
     private boolean isTrackingEvent(@NonNull final IEvent event) {
@@ -139,12 +134,20 @@ public abstract class BaseEventsManager<T> implements IEventsManager<T> {
         return AMPLIFY_TRACKING_KEY_PREFIX
                 + event.getTrackingKey()
                 + "_"
-                + this.getTrackingKeySuffix().toUpperCase();
+                + getTrackingKeySuffix().toUpperCase();
     }
 
     @Nullable
     private T getCachedTrackingValue(@NonNull final IEvent event) {
         return settings.readTrackingValue(getTrackingKey(event));
+    }
+
+    private void logPromptBlockedMessage(
+            @NonNull final IEventBasedRule<T> rule,
+            @NonNull final IEvent event) {
+
+        logger.d("Blocking feedback because of " + rule
+                + " associated with event " + event.getTrackingKey());
     }
 
 }
