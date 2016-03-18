@@ -46,7 +46,7 @@ public class LastEventTimeRulesManager extends BaseEventsManager<Long> {
     @NonNull
     @Override
     protected String getTrackedEventDimensionDescription() {
-        return "Last event time";
+        return "Last time";
     }
 
     @NonNull

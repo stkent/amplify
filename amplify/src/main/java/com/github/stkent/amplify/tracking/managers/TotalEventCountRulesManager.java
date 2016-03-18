@@ -45,7 +45,7 @@ public class TotalEventCountRulesManager extends BaseEventsManager<Integer> {
     @NonNull
     @Override
     protected String getTrackedEventDimensionDescription() {
-        return "Total event count";
+        return "Total count";
     }
 
     @NonNull

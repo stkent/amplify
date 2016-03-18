@@ -97,7 +97,7 @@ public class TotalEventCountRulesManagerTest extends BaseTest {
     }
 
     private String getExpectedTrackingKeyForEvent(@NonNull final IEvent event) {
-        return "AMPLIFY_" + event.getTrackingKey() + "_TOTAL_EVENT_COUNT";
+        return "AMPLIFY_" + event.getTrackingKey() + "_TOTAL_COUNT";
     }
 
 }

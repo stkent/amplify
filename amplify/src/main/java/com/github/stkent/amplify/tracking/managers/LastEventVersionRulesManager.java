@@ -52,7 +52,7 @@ public class LastEventVersionRulesManager extends BaseEventsManager<String> {
     @NonNull
     @Override
     protected String getTrackedEventDimensionDescription() {
-        return "Last event version name";
+        return "Last version name";
     }
 
     @NonNull

@@ -112,8 +112,8 @@ public abstract class BaseEventsManager<T> implements IEventsManager<T> {
                     }
                 } else {
                     logger.d(getTrackedEventDimensionDescription()
-                            + "of " + event.getTrackingKey()
-                            + " has never previously been recorded");
+                            + " of " + event.getTrackingKey()
+                            + " event(s) is unknown");
 
                     if (!rule.shouldAllowFeedbackPromptByDefault()) {
                         logPromptBlockedMessage(rule, event);

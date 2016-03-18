@@ -123,7 +123,7 @@ public class LastEventVersionRulesManagerTest extends BaseTest {
     }
 
     private String getExpectedTrackingKeyForEvent(@NonNull final IEvent event) {
-        return "AMPLIFY_" + event.getTrackingKey() + "_LAST_EVENT_VERSION_NAME";
+        return "AMPLIFY_" + event.getTrackingKey() + "_LAST_VERSION_NAME";
     }
 
     private void triggerEventForAppVersion(

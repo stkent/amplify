@@ -46,7 +46,7 @@ public class FirstEventTimeRulesManager extends BaseEventsManager<Long> {
     @NonNull
     @Override
     protected String getTrackedEventDimensionDescription() {
-        return "First event time";
+        return "First time";
     }
 
     @NonNull
