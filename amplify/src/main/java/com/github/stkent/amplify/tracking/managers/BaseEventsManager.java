@@ -146,7 +146,7 @@ public abstract class BaseEventsManager<T> implements IEventsManager<T> {
             @NonNull final IEventBasedRule<T> rule,
             @NonNull final IEvent event) {
 
-        logger.d("Blocking feedback because of " + rule
+        logger.d("Blocking feedback because of " + rule.getDescription()
                 + " associated with event " + event.getTrackingKey());
     }
 
