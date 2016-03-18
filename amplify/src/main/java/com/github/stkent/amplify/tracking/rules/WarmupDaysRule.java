@@ -28,6 +28,11 @@ public class WarmupDaysRule implements IEventBasedRule<Long> {
     private final long warmupPeriodDays;
 
     public WarmupDaysRule(final long warmupPeriodDays) {
+        if (warmupPeriodDays <= 0) {
+            throw new IllegalStateException(
+                    "Warmup days rule must be configured with a positive warmup period");
+        }
+
         this.warmupPeriodDays = warmupPeriodDays;
     }
 
