@@ -49,9 +49,7 @@ public class TotalEventCountRulesManagerTest extends BaseTest {
     public void localSetUp() {
         fakeSettings = new FakeSettings<>();
 
-        totalEventCountRulesManager = new TotalEventCountRulesManager(
-                mockLogger,
-                fakeSettings);
+        totalEventCountRulesManager = new TotalEventCountRulesManager(fakeSettings, mockLogger);
 
         when(mockEvent.getTrackingKey()).thenReturn(DEFAULT_MOCK_EVENT_TRACKING_KEY);
         totalEventCountRulesManager.addEventBasedRule(mockEvent, mockRule);
@@ -89,7 +87,8 @@ public class TotalEventCountRulesManagerTest extends BaseTest {
         }
 
         // Assert
-        final Integer actualEventCount = fakeSettings.readTrackingValue(getExpectedTrackingKeyForEvent(mockEvent));
+        final Integer actualEventCount
+                = fakeSettings.readTrackingValue(getExpectedTrackingKeyForEvent(mockEvent));
 
         assertEquals(
                 "The correct number of events should have been recorded",

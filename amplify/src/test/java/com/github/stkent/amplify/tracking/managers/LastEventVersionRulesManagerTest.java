@@ -55,10 +55,8 @@ public class LastEventVersionRulesManagerTest extends BaseTest {
     public void localSetUp() {
         fakeSettings = new FakeSettings<>();
 
-        lastEventVersionRulesManager = new LastEventVersionRulesManager(
-                mockLogger,
-                mockAppInfoProvider,
-                fakeSettings);
+        lastEventVersionRulesManager
+                = new LastEventVersionRulesManager(fakeSettings, mockAppInfoProvider, mockLogger);
 
         when(mockEvent.getTrackingKey()).thenReturn(DEFAULT_MOCK_EVENT_TRACKING_KEY);
         lastEventVersionRulesManager.addEventBasedRule(mockEvent, mockEventBasedRule);
@@ -125,7 +123,7 @@ public class LastEventVersionRulesManagerTest extends BaseTest {
     }
 
     private String getExpectedTrackingKeyForEvent(@NonNull final IEvent event) {
-        return "AMPLIFY_" + event.getTrackingKey() + "_LAST_EVENT_VERSION";
+        return "AMPLIFY_" + event.getTrackingKey() + "_LAST_EVENT_VERSION_NAME";
     }
 
     private void triggerEventForAppVersion(

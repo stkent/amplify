@@ -27,6 +27,7 @@ import com.github.stkent.amplify.tracking.interfaces.ISettings;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -38,11 +39,8 @@ public abstract class BaseEventsManager<T> implements IEventsManager<T> {
     private final ISettings<T> settings;
     private final ConcurrentHashMap<IEvent, List<IEventBasedRule<T>>> internalMap;
 
-    /**
-     * @return a key that uniquely identifies this event tracker within the embedding application
-     */
     @NonNull
-    protected abstract String getTrackingKeySuffix();
+    protected abstract String getTrackedEventDimensionDescription();
 
     /**
      * @param cachedEventValue the existing cached value associated with the tracked event; null if
@@ -53,8 +51,8 @@ public abstract class BaseEventsManager<T> implements IEventsManager<T> {
     protected abstract T getUpdatedTrackingValue(@Nullable final T cachedEventValue);
 
     protected BaseEventsManager(
-            @NonNull final ILogger logger,
-            @NonNull final ISettings<T> settings) {
+            @NonNull final ISettings<T> settings,
+            @NonNull final ILogger logger) {
 
         this.logger = logger;
         this.settings = settings;
@@ -113,7 +111,9 @@ public abstract class BaseEventsManager<T> implements IEventsManager<T> {
                         return false;
                     }
                 } else {
-                    logger.d(getTrackingKey(event) + " has never occurred before!");
+                    logger.d(getTrackedEventDimensionDescription()
+                            + "of " + event.getTrackingKey()
+                            + " has never previously been recorded");
 
                     if (!rule.shouldAllowFeedbackPromptByDefault()) {
                         logPromptBlockedMessage(rule, event);
@@ -135,6 +135,17 @@ public abstract class BaseEventsManager<T> implements IEventsManager<T> {
                 + event.getTrackingKey()
                 + "_"
                 + getTrackingKeySuffix().toUpperCase();
+    }
+
+    /**
+     * @return a key that uniquely identifies this event tracker within the embedding application
+     */
+    @NonNull
+    private String getTrackingKeySuffix() {
+        return getTrackedEventDimensionDescription()
+                .trim()
+                .toUpperCase(Locale.US)
+                .replaceAll("\\s+", "_");
     }
 
     @Nullable

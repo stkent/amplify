@@ -27,21 +27,25 @@ import com.github.stkent.amplify.tracking.interfaces.ISettings;
 
 public class TotalEventCountRulesManager extends BaseEventsManager<Integer> {
 
-    public TotalEventCountRulesManager(@NonNull final Context appContext, @NonNull final ILogger logger) {
-        this(logger, new Settings<Integer>(appContext, logger));
+    public TotalEventCountRulesManager(
+            @NonNull final Context appContext,
+            @NonNull final ILogger logger) {
+
+        this(new Settings<Integer>(appContext), logger);
     }
 
     @VisibleForTesting
     protected TotalEventCountRulesManager(
-            @NonNull final ILogger logger,
-            @NonNull final ISettings<Integer> settings) {
-        super(logger, settings);
+            @NonNull final ISettings<Integer> settings,
+            @NonNull final ILogger logger) {
+
+        super(settings, logger);
     }
 
     @NonNull
     @Override
-    protected String getTrackingKeySuffix() {
-        return "TOTAL_EVENT_COUNT";
+    protected String getTrackedEventDimensionDescription() {
+        return "Total event count";
     }
 
     @NonNull

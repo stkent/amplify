@@ -28,21 +28,25 @@ import com.github.stkent.amplify.utils.time.SystemTimeUtil;
 
 public class LastEventTimeRulesManager extends BaseEventsManager<Long> {
 
-    public LastEventTimeRulesManager(@NonNull final Context appContext, @NonNull final ILogger logger) {
-        this(logger, new Settings<Long>(appContext, logger));
+    public LastEventTimeRulesManager(
+            @NonNull final Context appContext,
+            @NonNull final ILogger logger) {
+
+        this(new Settings<Long>(appContext), logger);
     }
 
     @VisibleForTesting
     protected LastEventTimeRulesManager(
-            @NonNull final ILogger logger,
-            @NonNull final ISettings<Long> settings) {
-        super(logger, settings);
+            @NonNull final ISettings<Long> settings,
+            @NonNull final ILogger logger) {
+
+        super(settings, logger);
     }
 
     @NonNull
     @Override
-    protected String getTrackingKeySuffix() {
-        return "LAST_EVENT_TIME";
+    protected String getTrackedEventDimensionDescription() {
+        return "Last event time";
     }
 
     @NonNull

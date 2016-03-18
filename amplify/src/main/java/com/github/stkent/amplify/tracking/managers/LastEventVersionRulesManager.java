@@ -36,23 +36,23 @@ public class LastEventVersionRulesManager extends BaseEventsManager<String> {
             @NonNull final IAppInfoProvider appInfoProvider,
             @NonNull final ILogger logger) {
 
-        this(logger, appInfoProvider, new Settings<String>(appContext, logger));
+        this(new Settings<String>(appContext), appInfoProvider, logger);
     }
 
     @VisibleForTesting
     protected LastEventVersionRulesManager(
-            @NonNull final ILogger logger,
+            @NonNull final ISettings<String> settings,
             @NonNull final IAppInfoProvider appInfoProvider,
-            @NonNull final ISettings<String> settings) {
+            @NonNull final ILogger logger) {
 
-        super(logger, settings);
+        super(settings, logger);
         this.appInfoProvider = appInfoProvider;
     }
 
     @NonNull
     @Override
-    protected String getTrackingKeySuffix() {
-        return "LAST_EVENT_VERSION";
+    protected String getTrackedEventDimensionDescription() {
+        return "Last event version name";
     }
 
     @NonNull
