@@ -21,7 +21,6 @@ import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.github.stkent.amplify.ILogger;
 import com.github.stkent.amplify.tracking.interfaces.ISettings;
 
 import java.util.Map;
@@ -31,13 +30,8 @@ public class Settings<T> implements ISettings<T> {
     private static final String SHARED_PREFERENCES_NAME = "AMPLIFY_SHARED_PREFERENCES_NAME";
 
     private final SharedPreferences sharedPreferences;
-    private final ILogger logger;
 
-    public Settings(
-            @NonNull final Context appContext,
-            @NonNull final ILogger logger) {
-
-        this.logger = logger;
+    public Settings(@NonNull final Context appContext) {
         this.sharedPreferences = appContext
                 .getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
     }
@@ -58,7 +52,8 @@ public class Settings<T> implements ISettings<T> {
         } else if (value.getClass().equals(Float.class)) {
             editor.putLong(trackingKey, (Long) value);
         } else {
-            throw new IllegalArgumentException("Event value must be one of String, Boolean, Long, Integer or Float");
+            throw new IllegalArgumentException(
+                    "Event value must be one of String, Boolean, Long, Integer or Float");
         }
 
         // todo: is it alright that this is asynchronous?
@@ -74,8 +69,6 @@ public class Settings<T> implements ISettings<T> {
                 return (T) entry.getValue();
             }
         }
-
-        logger.e("No event value for " + trackingKey);
 
         return null;
     }

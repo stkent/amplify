@@ -28,21 +28,25 @@ import com.github.stkent.amplify.utils.time.SystemTimeUtil;
 
 public class FirstEventTimeRulesManager extends BaseEventsManager<Long> {
 
-    public FirstEventTimeRulesManager(@NonNull final Context appContext, @NonNull final ILogger logger) {
-        this(logger, new Settings<Long>(appContext, logger));
+    public FirstEventTimeRulesManager(
+            @NonNull final Context appContext,
+            @NonNull final ILogger logger) {
+
+        this(new Settings<Long>(appContext), logger);
     }
 
     @VisibleForTesting
     protected FirstEventTimeRulesManager(
-            @NonNull final ILogger logger,
-            @NonNull final ISettings<Long> settings) {
-        super(logger, settings);
+            @NonNull final ISettings<Long> settings,
+            @NonNull final ILogger logger) {
+
+        super(settings, logger);
     }
 
     @NonNull
     @Override
-    protected String getTrackingKeySuffix() {
-        return "FIRSTEVENTTIMESMANAGER";
+    protected String getTrackedEventDimensionDescription() {
+        return "First time";
     }
 
     @NonNull

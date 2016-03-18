@@ -45,11 +45,11 @@ public interface IEventBasedRule<T> extends IRule {
     /**
      * This method should only be called if the associated event has occurred before.
      *
-     * @param cachedEventValue the current value associated with the tracked event this rule is
-     *        associated with
-     * @return a string representation of the current rule status; primarily used for debugging
+     * @param cachedEventValue the currently cached value for the associated event
+     * @return a string representation of an associated event's tracking status, given the currently
+     *         cached value for that event
      */
     @NonNull
-    String getStatusString(@NonNull final T cachedEventValue);
+    String getEventTrackingStatusStringSuffix(@NonNull final T cachedEventValue);
 
 }
