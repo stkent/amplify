@@ -41,7 +41,7 @@ public class TotalEventCountRulesManager extends BaseEventsManager<Integer> {
     @NonNull
     @Override
     protected String getTrackingKeySuffix() {
-        return "TOTALEVENTCOUNTSMANAGER";
+        return "TOTAL_EVENT_COUNT";
     }
 
     @NonNull

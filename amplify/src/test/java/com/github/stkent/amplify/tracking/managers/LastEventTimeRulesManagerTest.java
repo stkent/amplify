@@ -115,7 +115,7 @@ public class LastEventTimeRulesManagerTest extends BaseTest {
     }
 
     private String getExpectedTrackingKeyForEvent(@NonNull final IEvent event) {
-        return "AMPLIFY_" + event.getTrackingKey() + "_LASTEVENTTIMESMANAGER";
+        return "AMPLIFY_" + event.getTrackingKey() + "_LAST_EVENT_TIME";
     }
 
     private void triggerEventAtTime(@NonNull final IEvent event, final long time) {

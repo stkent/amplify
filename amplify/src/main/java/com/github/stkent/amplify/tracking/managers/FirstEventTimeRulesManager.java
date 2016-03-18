@@ -42,7 +42,7 @@ public class FirstEventTimeRulesManager extends BaseEventsManager<Long> {
     @NonNull
     @Override
     protected String getTrackingKeySuffix() {
-        return "FIRSTEVENTTIMESMANAGER";
+        return "FIRST_EVENT_TIME";
     }
 
     @NonNull

@@ -42,7 +42,7 @@ public class LastEventTimeRulesManager extends BaseEventsManager<Long> {
     @NonNull
     @Override
     protected String getTrackingKeySuffix() {
-        return "LASTEVENTTIMESMANAGER";
+        return "LAST_EVENT_TIME";
     }
 
     @NonNull

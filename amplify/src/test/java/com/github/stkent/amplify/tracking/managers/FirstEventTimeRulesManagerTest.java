@@ -115,7 +115,7 @@ public class FirstEventTimeRulesManagerTest extends BaseTest {
     }
 
     private String getExpectedTrackingKeyForEvent(@NonNull final IEvent event) {
-        return "AMPLIFY_" + event.getTrackingKey() + "_FIRSTEVENTTIMESMANAGER";
+        return "AMPLIFY_" + event.getTrackingKey() + "_FIRST_EVENT_TIME";
     }
 
     private void triggerEventAtTime(final long time) {

@@ -52,7 +52,7 @@ public class LastEventVersionRulesManager extends BaseEventsManager<String> {
     @NonNull
     @Override
     protected String getTrackingKeySuffix() {
-        return "LASTEVENTVERSIONSMANAGER";
+        return "LAST_EVENT_VERSION";
     }
 
     @NonNull
