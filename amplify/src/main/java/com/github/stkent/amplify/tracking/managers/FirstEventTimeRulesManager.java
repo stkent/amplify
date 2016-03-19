@@ -28,7 +28,7 @@ import com.github.stkent.amplify.utils.time.SystemTimeUtil;
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
-public class FirstEventTimeRulesManager extends BaseEventsManager<Long> {
+public final class FirstEventTimeRulesManager extends BaseEventsManager<Long> {
 
     public FirstEventTimeRulesManager(
             @NonNull final Context appContext,

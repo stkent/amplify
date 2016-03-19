@@ -27,7 +27,6 @@ import com.github.stkent.amplify.prompt.PromptPresenter;
 import com.github.stkent.amplify.prompt.interfaces.IPromptPresenter;
 import com.github.stkent.amplify.prompt.interfaces.IPromptView;
 import com.github.stkent.amplify.tracking.interfaces.IAppEventTimeProvider;
-import com.github.stkent.amplify.tracking.interfaces.IAppInfoProvider;
 import com.github.stkent.amplify.tracking.interfaces.IAppLevelEventRulesManager;
 import com.github.stkent.amplify.tracking.interfaces.IEnvironmentBasedRule;
 import com.github.stkent.amplify.tracking.interfaces.IEnvironmentBasedRulesManager;
@@ -42,13 +41,14 @@ import com.github.stkent.amplify.tracking.managers.LastEventTimeRulesManager;
 import com.github.stkent.amplify.tracking.managers.LastEventVersionCodeRulesManager;
 import com.github.stkent.amplify.tracking.managers.LastEventVersionNameRulesManager;
 import com.github.stkent.amplify.tracking.managers.TotalEventCountRulesManager;
-import com.github.stkent.amplify.tracking.prerequisites.GooglePlayStoreRule;
+import com.github.stkent.amplify.tracking.rules.GooglePlayStoreRule;
 import com.github.stkent.amplify.tracking.rules.MaximumCountRule;
 import com.github.stkent.amplify.tracking.rules.VersionNameChangedRule;
 import com.github.stkent.amplify.utils.ActivityStateUtil;
-import com.github.stkent.amplify.utils.AppInfoProvider;
 import com.github.stkent.amplify.utils.FeedbackUtil;
 import com.github.stkent.amplify.utils.PlayStoreUtil;
+import com.github.stkent.amplify.utils.appinfo.AppInfoUtil;
+import com.github.stkent.amplify.utils.appinfo.IAppInfoProvider;
 
 public final class Amplify implements IEventListener {
 
@@ -89,8 +89,8 @@ public final class Amplify implements IEventListener {
     // constructors
 
     private Amplify(@NonNull final Context context, @NonNull final ILogger logger) {
-        AppInfoProvider.initialize(context);
-        final IAppInfoProvider appInfoProvider = AppInfoProvider.getSharedInstance();
+        AppInfoUtil.initialize(context);
+        final IAppInfoProvider appInfoProvider = AppInfoUtil.getSharedAppInfoProvider();
 
         final Context appContext = context.getApplicationContext();
         final IAppEventTimeProvider appEventTimeProvider
@@ -268,7 +268,7 @@ public final class Amplify implements IEventListener {
                         PlayStoreUtil.openPlayStoreToRate(activity, packageName);
                     } else if (event == PromptViewEvent.USER_GAVE_CRITICAL_FEEDBACK) {
                         final IAppInfoProvider appInfoProvider
-                                = AppInfoProvider.getSharedInstance();
+                                = AppInfoUtil.getSharedAppInfoProvider();
 
                         final FeedbackUtil feedbackUtil = new FeedbackUtil(
                                 new AppFeedbackDataProvider(appInfoProvider),

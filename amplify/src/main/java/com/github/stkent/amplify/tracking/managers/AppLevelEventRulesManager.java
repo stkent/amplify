@@ -29,7 +29,7 @@ import com.github.stkent.amplify.tracking.interfaces.IEventBasedRule;
 import com.github.stkent.amplify.tracking.interfaces.IEventsManager;
 import com.github.stkent.amplify.tracking.rules.CooldownDaysRule;
 
-public class AppLevelEventRulesManager implements IAppLevelEventRulesManager {
+public final class AppLevelEventRulesManager implements IAppLevelEventRulesManager {
 
     private static final IEvent APP_CRASHED = new IEvent() {
         @NonNull

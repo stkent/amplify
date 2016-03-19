@@ -21,7 +21,8 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 
 import com.github.stkent.amplify.helpers.BaseTest;
-import com.github.stkent.amplify.utils.AppInfoProvider;
+import com.github.stkent.amplify.utils.appinfo.AppInfoUtil;
+import com.github.stkent.amplify.utils.appinfo.IAppInfoProvider;
 
 import org.junit.Test;
 import org.mockito.Mock;
@@ -38,7 +39,7 @@ public class VersionCodeChangedRuleTest extends BaseTest {
     private PackageInfo fakePackageInfo;
 
     @Mock
-    private AppInfoProvider mockAppInfoProvider;
+    private IAppInfoProvider mockAppInfoProvider;
 
     @Override
     public void localSetUp() {
@@ -46,7 +47,7 @@ public class VersionCodeChangedRuleTest extends BaseTest {
 
         fakePackageInfo = new PackageInfo();
         when(mockAppInfoProvider.getPackageInfo()).thenReturn(fakePackageInfo);
-        AppInfoProvider.setSharedInstance(mockAppInfoProvider);
+        AppInfoUtil.setSharedAppInfoProvider(mockAppInfoProvider);
     }
 
     @SuppressWarnings("ConstantConditions")

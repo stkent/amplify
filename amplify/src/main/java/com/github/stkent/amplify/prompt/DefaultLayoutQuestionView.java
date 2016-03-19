@@ -97,6 +97,7 @@ final class DefaultLayoutQuestionView extends CustomLayoutQuestionView {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             button.setBackground(buttonBackgroundDrawable);
         } else {
+            //noinspection deprecation
             button.setBackgroundDrawable(buttonBackgroundDrawable);
         }
     }

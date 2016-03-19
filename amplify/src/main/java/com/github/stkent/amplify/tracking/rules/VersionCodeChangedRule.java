@@ -19,7 +19,7 @@ package com.github.stkent.amplify.tracking.rules;
 import android.support.annotation.NonNull;
 
 import com.github.stkent.amplify.tracking.interfaces.IEventBasedRule;
-import com.github.stkent.amplify.utils.AppInfoProvider;
+import com.github.stkent.amplify.utils.appinfo.AppInfoUtil;
 
 public final class VersionCodeChangedRule implements IEventBasedRule<Integer> {
 
@@ -42,7 +42,7 @@ public final class VersionCodeChangedRule implements IEventBasedRule<Integer> {
     private int getCurrentAppVersionCode() {
         // We access the singleton AppInfoProvider instance statically here to make it possible for
         // library consumers to create new VersionCodeChangedRule instances easily!
-        return AppInfoProvider.getSharedInstance().getPackageInfo().versionCode;
+        return AppInfoUtil.getSharedAppInfoProvider().getPackageInfo().versionCode;
     }
 
 }

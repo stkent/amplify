@@ -24,7 +24,7 @@ import android.support.annotation.NonNull;
 import com.github.stkent.amplify.ILogger;
 import com.github.stkent.amplify.helpers.BaseTest;
 import com.github.stkent.amplify.helpers.FakeSettings;
-import com.github.stkent.amplify.tracking.interfaces.IAppInfoProvider;
+import com.github.stkent.amplify.utils.appinfo.IAppInfoProvider;
 import com.github.stkent.amplify.tracking.interfaces.IEvent;
 import com.github.stkent.amplify.tracking.interfaces.IEventBasedRule;
 
