@@ -15,10 +15,10 @@ Respectfully request feedback in your Android app.
 - [Configuring](#configuring)
   - [Prompt Timing](#prompt-timing)
   - [Prompt UI](#prompt-ui)
-  - [Debug Settings](#debug-settings)
 - [Customizing](#customizing)
   - [Prompt Timing](#prompt-timing-1)
   - [Prompt UI](#prompt-ui-1)
+- [Debug Settings](#debug-settings)
 - [Case Studies](#case-studies)
 - [License](#license)
 
@@ -445,7 +445,66 @@ Amplify.get(this).promptIfReady(this, promptView, new IEventListener<PromptViewE
 });
 ```
 
-## Debug Settings
+# Customizing
+
+## Prompt Timing
+
+### Applying Custom Environment-based Rules
+
+A new custom environment-based rule can be added by implementing the `IEnvironmentBasedRule` interface and passing an instance of this implementation to the `Amplify` instance method `addEnvironmentBasedRule`:
+
+```java
+public class ExampleApplication extends Application {
+    
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        
+        Amplify.get(this)
+               .setFeedbackEmailAddress("someone@example.com")
+               .addEnvironmentBasedRule(new MyCustomEnvironmentBasedRule());
+    }
+    
+}
+```
+
+### Tracking Custom Events
+
+A new custom event can be tracked by implementing the `IEvent` interface, registering this event with a corresponding (default or custom) `IEventBasedRule` using one of the following methods:
+
+- `addTotalEventCountRule`;
+- `addFirstEventTimeRule`;
+- `addLastEventTimeRule`;
+- `addLastEventVersionCodeRule`;
+- `addLastEventVersionNameRule`,
+
+and then notifying the `Amplify` instance of occurrences of this event using the `notifyEventTriggered` method:
+
+```java
+Amplify.get(this).notifyEventTriggered(new MyCustomEvent());
+```
+
+As before, the dimension of the event that will be tracked is dictated by which registration method is called.
+
+### Applying Custom Event-based Rules
+
+A new custom event can be tracked by implementing the `IEventBasedRule<T>` interface, and registering a (default or custom) `IEvent` with this custom `IEventBasedRule` using one of the following methods:
+
+- `addTotalEventCountRule`;
+- `addFirstEventTimeRule`;
+- `addLastEventTimeRule`;
+- `addLastEventVersionCodeRule`;
+- `addLastEventVersionNameRule`.
+
+The generic type `T` must be one of: `Integer`, `Long`, or `String`. The type you select will depend on which tracked event aspect (time, count, etc.) you wish to apply this check to.
+
+## Prompt UI
+
+To provide fully-custom views for each phase of the typical prompt flow, implement the `IPromptView` interface and pass an instance of this implementation to one of the `promptIfReady` methods. You should save the presenter injected into your custom class via the `setPresenter` method, and communicate user-driven events to the presenter within your custom view. See the `BasePromptView` for a sample implementation in which all questions are assumed to share a common view structure.
+
+To provide a totally custom experience in which _amplify_ does not manage the prompt/rating/feedback UI flows at all, replace any calls to `promptIfReady` with calls to `shouldPrompt`. This method will evaluate all rules and provide a boolean that indicates whether every provided rule is currently satisfied. You may then use this hook to begin your own feedback request flow.
+
+# Debug Settings
 
 The delayed nature of _amplify_ prompts can make it hard to test effectively when integrated. We provide the following debug configuration methods to help with this:
 
@@ -499,65 +558,6 @@ public class ExampleApplication extends Application {
     
 }
 ```
-
-# Customizing
-
-## Prompt Timing
-
-### Applying Custom Environment-based Rules
-
-A new custom environment-based rule can be added by implementing the `IEnvironmentBasedRule` interface and passing an instance of this implementation to the `Amplify` instance method `addEnvironmentBasedRule`:
-
-```java
-public class ExampleApplication extends Application {
-    
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        
-        Amplify.get(this)
-               .setFeedbackEmailAddress("someone@example.com")
-               .addEnvironmentBasedRule(new MyCustomEnvironmentBasedRule());
-    }
-    
-}
-```
-
-### Tracking Custom Events
-
-A new custom event can be tracked by implementing the `IEvent` interface, registering this event with a corresponding (default or custom) `IEventBasedRule` using one of the following methods:
-
-- `addTotalEventCountRule`;
-- `addFirstEventTimeRule`;
-- `addLastEventTimeRule`;
-- `addLastEventVersionCodeRule`;
-- `addLastEventVersionNameRule`,
-
-and then notifying the `Amplify` instance of occurrences of this event using the `notifyEventTriggered` method:
-
-```java
-Amplify.get(this).notifyEventTriggered(new MyCustomEvent());
-```
-    
-As before, the dimension of the event that will be tracked is dictated by which registration method is called.
-
-### Applying Custom Event-based Rules
-
-A new custom event can be tracked by implementing the `IEventBasedRule<T>` interface, and registering a (default or custom) `IEvent` with this custom `IEventBasedRule` using one of the following methods:
-
-- `addTotalEventCountRule`;
-- `addFirstEventTimeRule`;
-- `addLastEventTimeRule`;
-- `addLastEventVersionCodeRule`;
-- `addLastEventVersionNameRule`.
-
-The generic type `T` must be one of: `Integer`, `Long`, or `String`. The type you select will depend on which tracked event aspect (time, count, etc.) you wish to apply this check to.
-
-## Prompt UI
-
-To provide fully-custom views for each phase of the typical prompt flow, implement the `IPromptView` interface and pass an instance of this implementation to one of the `promptIfReady` methods. You should save the presenter injected into your custom class via the `setPresenter` method, and communicate user-driven events to the presenter within your custom view. See the `BasePromptView` for a sample implementation in which all questions are assumed to share a common view structure.
-
-To provide a totally custom experience in which _amplify_ does not manage the prompt/rating/feedback UI flows at all, replace any calls to `promptIfReady` with calls to `shouldPrompt`. This method will evaluate all rules and provide a boolean that indicates whether every provided rule is currently satisfied. You may then use this hook to begin your own feedback request flow.
 
 # Case Studies
 
