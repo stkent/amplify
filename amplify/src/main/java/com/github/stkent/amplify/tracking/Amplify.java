@@ -39,6 +39,7 @@ import com.github.stkent.amplify.tracking.managers.AppLevelEventRulesManager;
 import com.github.stkent.amplify.tracking.managers.EnvironmentBasedRulesManager;
 import com.github.stkent.amplify.tracking.managers.FirstEventTimeRulesManager;
 import com.github.stkent.amplify.tracking.managers.LastEventTimeRulesManager;
+import com.github.stkent.amplify.tracking.managers.LastEventVersionCodeRulesManager;
 import com.github.stkent.amplify.tracking.managers.LastEventVersionNameRulesManager;
 import com.github.stkent.amplify.tracking.managers.TotalEventCountRulesManager;
 import com.github.stkent.amplify.tracking.prerequisites.GooglePlayStoreRule;
@@ -61,6 +62,7 @@ public final class Amplify implements IEventListener {
     private final IEnvironmentBasedRulesManager environmentBasedRulesManager;
     private final FirstEventTimeRulesManager firstEventTimeRulesManager;
     private final LastEventTimeRulesManager lastEventTimeRulesManager;
+    private final LastEventVersionCodeRulesManager lastEventVersionCodeRulesManager;
     private final LastEventVersionNameRulesManager lastEventVersionNameRulesManager;
     private final TotalEventCountRulesManager totalEventCountRulesManager;
 
@@ -104,9 +106,14 @@ public final class Amplify implements IEventListener {
                 = new EnvironmentBasedRulesManager(environmentCapabilitiesProvider, logger);
 
         this.firstEventTimeRulesManager = new FirstEventTimeRulesManager(appContext, logger);
+
         this.lastEventTimeRulesManager = new LastEventTimeRulesManager(appContext, logger);
+
         this.lastEventVersionNameRulesManager
                 = new LastEventVersionNameRulesManager(appContext, appInfoProvider, logger);
+
+        this.lastEventVersionCodeRulesManager
+                = new LastEventVersionCodeRulesManager(appContext, appInfoProvider, logger);
 
         this.totalEventCountRulesManager = new TotalEventCountRulesManager(appContext, logger);
 
@@ -179,6 +186,14 @@ public final class Amplify implements IEventListener {
         return this;
     }
 
+    public Amplify addLastEventVersionCodeRule(
+            @NonNull final IEvent event,
+            @NonNull final IEventBasedRule<Integer> rule) {
+
+        lastEventVersionCodeRulesManager.addEventBasedRule(event, rule);
+        return this;
+    }
+
     public Amplify addLastEventVersionNameRule(
             @NonNull final IEvent event,
             @NonNull final IEventBasedRule<String> rule) {
@@ -212,6 +227,7 @@ public final class Amplify implements IEventListener {
         totalEventCountRulesManager.notifyEventTriggered(event);
         firstEventTimeRulesManager.notifyEventTriggered(event);
         lastEventTimeRulesManager.notifyEventTriggered(event);
+        lastEventVersionCodeRulesManager.notifyEventTriggered(event);
         lastEventVersionNameRulesManager.notifyEventTriggered(event);
     }
 
@@ -281,6 +297,7 @@ public final class Amplify implements IEventListener {
                 & totalEventCountRulesManager.shouldAllowFeedbackPrompt()
                 & firstEventTimeRulesManager.shouldAllowFeedbackPrompt()
                 & lastEventTimeRulesManager.shouldAllowFeedbackPrompt()
+                & lastEventVersionCodeRulesManager.shouldAllowFeedbackPrompt()
                 & lastEventVersionNameRulesManager.shouldAllowFeedbackPrompt());
     }
 

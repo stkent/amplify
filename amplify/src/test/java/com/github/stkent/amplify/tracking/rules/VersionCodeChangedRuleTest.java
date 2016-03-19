@@ -30,9 +30,9 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
-public class VersionNameChangedRuleTest extends BaseTest {
+public class VersionCodeChangedRuleTest extends BaseTest {
 
-    private VersionNameChangedRule versionNameChangedRule;
+    private VersionCodeChangedRule versionCodeChangedRule;
 
     @SuppressWarnings("FieldCanBeLocal")
     private PackageInfo fakePackageInfo;
@@ -42,7 +42,7 @@ public class VersionNameChangedRuleTest extends BaseTest {
 
     @Override
     public void localSetUp() {
-        versionNameChangedRule = new VersionNameChangedRule();
+        versionCodeChangedRule = new VersionCodeChangedRule();
 
         fakePackageInfo = new PackageInfo();
         when(mockAppInfoProvider.getPackageInfo()).thenReturn(fakePackageInfo);
@@ -54,7 +54,7 @@ public class VersionNameChangedRuleTest extends BaseTest {
     public void testThatRuleAllowsPromptIfEventHasNeverOccurred() {
         // Act
         final boolean ruleShouldAllowFeedbackPrompt
-                = versionNameChangedRule.shouldAllowFeedbackPromptByDefault();
+                = versionCodeChangedRule.shouldAllowFeedbackPromptByDefault();
 
         // Assert
         assertTrue(
@@ -64,43 +64,43 @@ public class VersionNameChangedRuleTest extends BaseTest {
 
     @SuppressWarnings("UnnecessaryLocalVariable")
     @Test
-    public void testThatRuleBlocksPromptIfAppVersionNameHasNotChanged()
+    public void testThatRuleBlocksPromptIfAppVersionCodeHasNotChanged()
             throws NameNotFoundException {
 
         // Arrange
-        final String fakeCachedVersionName = "any string";
-        final String fakeCurrentVersionName = fakeCachedVersionName;
+        final int fakeCachedVersionCode = 17;
+        final int fakeCurrentVersionCode = fakeCachedVersionCode;
 
-        fakePackageInfo.versionName = fakeCachedVersionName;
+        fakePackageInfo.versionCode = fakeCachedVersionCode;
 
         // Act
         final boolean ruleShouldAllowFeedbackPrompt =
-                versionNameChangedRule.shouldAllowFeedbackPrompt(fakeCurrentVersionName);
+                versionCodeChangedRule.shouldAllowFeedbackPrompt(fakeCurrentVersionCode);
 
         // Assert
         assertFalse(
-                "Feedback prompt should be blocked if the app version name has not changed",
+                "Feedback prompt should be blocked if the app version code has not changed",
                 ruleShouldAllowFeedbackPrompt);
     }
 
     @SuppressLint("Assert")
     @SuppressWarnings("ConstantConditions")
     @Test
-    public void testThatRuleAllowsPromptIfAppVersionNameHasChanged() throws NameNotFoundException {
+    public void testThatRuleAllowsPromptIfAppVersionCodeHasChanged() throws NameNotFoundException {
         // Arrange
-        final String fakeCachedVersionName = "any string";
-        final String fakeCurrentVersionName = "any other string";
-        assert !fakeCachedVersionName.equals(fakeCurrentVersionName);
+        final int fakeCachedVersionCode = 17;
+        final int fakeCurrentVersionCode = 20;
+        assert fakeCachedVersionCode < fakeCurrentVersionCode;
 
-        fakePackageInfo.versionName = fakeCurrentVersionName;
+        fakePackageInfo.versionCode = fakeCurrentVersionCode;
 
         // Act
         final boolean ruleShouldAllowFeedbackPrompt =
-                versionNameChangedRule.shouldAllowFeedbackPrompt(fakeCachedVersionName);
+                versionCodeChangedRule.shouldAllowFeedbackPrompt(fakeCachedVersionCode);
 
         // Assert
         assertTrue(
-                "Feedback prompt should be allowed if the app version name has changed",
+                "Feedback prompt should be allowed if the app version code has changed",
                 ruleShouldAllowFeedbackPrompt);
     }
 
