@@ -214,7 +214,7 @@ _amplify_ is packaged with the following event-based rules:
 - `CooldownDaysRule`: checks whether enough time has elapsed since the last occurrence of this event.
 - `MaximumCountRule`: checks whether this event has occurred fewer than N times, for some number N.
 - `MinimumCountRule`: checks whether this event has occurred at least N times, for some number N.
-- `VersionChangedRule`: checks whether this event has already occurred for the current version of the embedding application.
+- `VersionNameChangedRule`: checks whether this event has already occurred for the current version name of the embedding application.
 - `WarmupDaysRule`: checks whether enough time has elapsed since the first occurrence of this event.
 
 An example configuration that leverage these rules is below:

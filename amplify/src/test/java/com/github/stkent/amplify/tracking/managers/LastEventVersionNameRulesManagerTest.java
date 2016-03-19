@@ -35,9 +35,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
 
-public class LastEventVersionRulesManagerTest extends BaseTest {
+public class LastEventVersionNameRulesManagerTest extends BaseTest {
 
-    private LastEventVersionRulesManager lastEventVersionRulesManager;
+    private LastEventVersionNameRulesManager lastEventVersionNameRulesManager;
 
     private FakeSettings<String> fakeSettings;
 
@@ -55,11 +55,11 @@ public class LastEventVersionRulesManagerTest extends BaseTest {
     public void localSetUp() {
         fakeSettings = new FakeSettings<>();
 
-        lastEventVersionRulesManager
-                = new LastEventVersionRulesManager(fakeSettings, mockAppInfoProvider, mockLogger);
+        lastEventVersionNameRulesManager
+                = new LastEventVersionNameRulesManager(fakeSettings, mockAppInfoProvider, mockLogger);
 
         when(mockEvent.getTrackingKey()).thenReturn(DEFAULT_MOCK_EVENT_TRACKING_KEY);
-        lastEventVersionRulesManager.addEventBasedRule(mockEvent, mockEventBasedRule);
+        lastEventVersionNameRulesManager.addEventBasedRule(mockEvent, mockEventBasedRule);
     }
 
     @Test
@@ -71,7 +71,7 @@ public class LastEventVersionRulesManagerTest extends BaseTest {
         assert fakeSettings.readTrackingValue(expectedTrackingKey) == null;
 
         // Act
-        triggerEventForAppVersion(fakeVersionName);
+        triggerEventForAppVersionName(fakeVersionName);
 
         // Assert
         final String trackedEventVersionName = fakeSettings.readTrackingValue(expectedTrackingKey);
@@ -88,7 +88,7 @@ public class LastEventVersionRulesManagerTest extends BaseTest {
         final String fakeVersionName = "any string";
 
         // Act
-        triggerEventForAppVersion(fakeVersionName);
+        triggerEventForAppVersionName(fakeVersionName);
 
         // Assert
         final String trackedEventVersionName
@@ -109,8 +109,8 @@ public class LastEventVersionRulesManagerTest extends BaseTest {
         assert !fakeFirstVersionName.equals(fakeSecondVersionName);
 
         // Act
-        triggerEventForAppVersion(fakeFirstVersionName);
-        triggerEventForAppVersion(fakeSecondVersionName);
+        triggerEventForAppVersionName(fakeFirstVersionName);
+        triggerEventForAppVersionName(fakeSecondVersionName);
 
         // Assert
         final String trackedEventVersionName
@@ -126,13 +126,13 @@ public class LastEventVersionRulesManagerTest extends BaseTest {
         return "AMPLIFY_" + event.getTrackingKey() + "_LAST_VERSION_NAME";
     }
 
-    private void triggerEventForAppVersion(
+    private void triggerEventForAppVersionName(
             @NonNull final String appVersionName) throws NameNotFoundException {
 
         final PackageInfo fakePackageInfo = new PackageInfo();
         fakePackageInfo.versionName = appVersionName;
         when(mockAppInfoProvider.getPackageInfo()).thenReturn(fakePackageInfo);
-        lastEventVersionRulesManager.notifyEventTriggered(mockEvent);
+        lastEventVersionNameRulesManager.notifyEventTriggered(mockEvent);
     }
 
 }
