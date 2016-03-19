@@ -42,7 +42,7 @@ import com.github.stkent.amplify.tracking.managers.LastEventTimeRulesManager;
 import com.github.stkent.amplify.tracking.managers.LastEventVersionCodeRulesManager;
 import com.github.stkent.amplify.tracking.managers.LastEventVersionNameRulesManager;
 import com.github.stkent.amplify.tracking.managers.TotalEventCountRulesManager;
-import com.github.stkent.amplify.tracking.prerequisites.GooglePlayStoreRule;
+import com.github.stkent.amplify.tracking.rules.GooglePlayStoreRule;
 import com.github.stkent.amplify.tracking.rules.MaximumCountRule;
 import com.github.stkent.amplify.tracking.rules.VersionNameChangedRule;
 import com.github.stkent.amplify.utils.ActivityStateUtil;

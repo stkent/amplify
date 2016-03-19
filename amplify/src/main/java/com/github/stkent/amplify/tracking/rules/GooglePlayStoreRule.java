@@ -14,7 +14,7 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package com.github.stkent.amplify.tracking.prerequisites;
+package com.github.stkent.amplify.tracking.rules;
 
 import android.support.annotation.NonNull;
 
