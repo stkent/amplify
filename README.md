@@ -204,7 +204,7 @@ The following events are also automatically reported to the shared `Amplify` ins
 - thanks view was shown;
 - prompt was auto-dismissed.
 
-To apply rules based on these events, use the configuration methods `addTotalEventCountRule`, `addFirstEventTimeRule`, `addLastEventTimeRule`, `addLastEventVersionRule`. The method you select will determine which dimension of the event is tracked using `SharedPreferences`. Each method accepts two parameters:
+To apply rules based on these events, use the configuration methods `addTotalEventCountRule`, `addFirstEventTimeRule`, `addLastEventTimeRule`, `addLastEventVersionCodeRule`, and `addLastEventVersionNameRule`. The method you select will determine which dimension of the event is tracked using `SharedPreferences`. Each method accepts two parameters:
 
 - the event to be tracked; in this case, one of the events defined in the `PromptViewEvent` enum;
 - the event-based rule to be applied to that tracked dimension.
@@ -214,7 +214,8 @@ _amplify_ is packaged with the following event-based rules:
 - `CooldownDaysRule`: checks whether enough time has elapsed since the last occurrence of this event.
 - `MaximumCountRule`: checks whether this event has occurred fewer than N times, for some number N.
 - `MinimumCountRule`: checks whether this event has occurred at least N times, for some number N.
-- `VersionChangedRule`: checks whether this event has already occurred for the current version of the embedding application.
+- `VersionCodeChangedRule`: checks whether this event has already occurred for the current version _code_ of the embedding application.
+- `VersionNameChangedRule`: checks whether this event has already occurred for the current version _name_ of the embedding application.
 - `WarmupDaysRule`: checks whether enough time has elapsed since the first occurrence of this event.
 
 An example configuration that leverage these rules is below:
@@ -520,7 +521,8 @@ A new custom event can be tracked by implementing the `IEvent` interface, regist
 - `addTotalEventCountRule`;
 - `addFirstEventTimeRule`;
 - `addLastEventTimeRule`;
-- `addLastEventVersionRule`,
+- `addLastEventVersionCodeRule`;
+- `addLastEventVersionNameRule`,
 
 and then notifying the `Amplify` instance of occurrences of this event using the `notifyEventTriggered` method:
 
@@ -537,7 +539,8 @@ A new custom event can be tracked by implementing the `IEventBasedRule<T>` inter
 - `addTotalEventCountRule`;
 - `addFirstEventTimeRule`;
 - `addLastEventTimeRule`;
-- `addLastEventVersionRule`.
+- `addLastEventVersionCodeRule`;
+- `addLastEventVersionNameRule`.
 
 The generic type `T` must be one of: `Integer`, `Long`, or `String`. The type you select will depend on which tracked event aspect (time, count, etc.) you wish to apply this check to.
 
@@ -549,7 +552,7 @@ To provide a totally custom experience in which _amplify_ does not manage the pr
 
 # Case Studies
 
-Early versions of _amplify_ are integrated in apps with state-wide and nation-wide audiences, with over 200,000 installs combined. After integrating _amplify_, our data indicates that the number of Play Store reviews received increases by a factor of **5x-10x**, and the number of feedback emails received **doubles**. We present screenshots showing example implementations below:
+Early versions of _amplify_ are integrated in apps with state-wide and national audiences, with over 200,000 installs combined. After integrating _amplify_, our data indicates that the number of Play Store reviews received increases by a factor of **5x-10x**, and the number of feedback emails received **doubles**. We present screenshots showing example implementations below:
 
 | Styled default layout |
 |-----------------------|

@@ -21,7 +21,7 @@ import android.support.annotation.NonNull;
 import com.github.stkent.amplify.tracking.interfaces.IEventBasedRule;
 import com.github.stkent.amplify.utils.AppInfoProvider;
 
-public final class VersionChangedRule implements IEventBasedRule<String> {
+public final class VersionCodeChangedRule implements IEventBasedRule<Integer> {
 
     @Override
     public boolean shouldAllowFeedbackPromptByDefault() {
@@ -29,21 +29,20 @@ public final class VersionChangedRule implements IEventBasedRule<String> {
     }
 
     @Override
-    public boolean shouldAllowFeedbackPrompt(@NonNull final String cachedEventValue) {
-        return !cachedEventValue.equals(getCurrentAppVersionName());
+    public boolean shouldAllowFeedbackPrompt(@NonNull final Integer cachedEventValue) {
+        return cachedEventValue < getCurrentAppVersionCode();
     }
 
     @NonNull
     @Override
     public String getDescription() {
-        return "VersionChangedRule with current app version name " + getCurrentAppVersionName();
+        return "VersionCodeChangedRule with current app version code " + getCurrentAppVersionCode();
     }
 
-    @NonNull
-    private String getCurrentAppVersionName() {
+    private int getCurrentAppVersionCode() {
         // We access the singleton AppInfoProvider instance statically here to make it possible for
-        // library consumers to create new VersionChangedRule instances easily!
-        return AppInfoProvider.getSharedInstance().getPackageInfo().versionName;
+        // library consumers to create new VersionCodeChangedRule instances easily!
+        return AppInfoProvider.getSharedInstance().getPackageInfo().versionCode;
     }
 
 }
