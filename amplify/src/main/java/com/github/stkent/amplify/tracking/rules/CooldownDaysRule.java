@@ -28,6 +28,11 @@ public final class CooldownDaysRule implements IEventBasedRule<Long> {
     private final long cooldownPeriodDays;
 
     public CooldownDaysRule(final long cooldownPeriodDays) {
+        if (cooldownPeriodDays <= 0) {
+            throw new IllegalStateException(
+                    "Cooldown days rule must be configured with a positive cooldown period");
+        }
+
         this.cooldownPeriodDays = cooldownPeriodDays;
     }
 

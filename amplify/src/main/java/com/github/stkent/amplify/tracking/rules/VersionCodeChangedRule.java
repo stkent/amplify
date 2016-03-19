@@ -19,38 +19,30 @@ package com.github.stkent.amplify.tracking.rules;
 import android.support.annotation.NonNull;
 
 import com.github.stkent.amplify.tracking.interfaces.IEventBasedRule;
-import com.github.stkent.amplify.utils.time.SystemTimeUtil;
+import com.github.stkent.amplify.utils.AppInfoProvider;
 
-import static java.util.concurrent.TimeUnit.DAYS;
-
-public final class WarmupDaysRule implements IEventBasedRule<Long> {
-
-    private final long warmupPeriodDays;
-
-    public WarmupDaysRule(final long warmupPeriodDays) {
-        if (warmupPeriodDays <= 0) {
-            throw new IllegalStateException(
-                    "Warmup days rule must be configured with a positive warmup period");
-        }
-
-        this.warmupPeriodDays = warmupPeriodDays;
-    }
+public final class VersionCodeChangedRule implements IEventBasedRule<Integer> {
 
     @Override
     public boolean shouldAllowFeedbackPromptByDefault() {
-        return false;
+        return true;
     }
 
     @Override
-    public boolean shouldAllowFeedbackPrompt(@NonNull final Long cachedEventValue) {
-        return SystemTimeUtil.currentTimeMillis() - cachedEventValue > DAYS.toMillis(warmupPeriodDays);
+    public boolean shouldAllowFeedbackPrompt(@NonNull final Integer cachedEventValue) {
+        return cachedEventValue < getCurrentAppVersionCode();
     }
 
     @NonNull
     @Override
     public String getDescription() {
-        return "WarmupDaysRule with a warmup period of "
-                + warmupPeriodDays + " day" + (warmupPeriodDays > 1 ? "s" : "");
+        return "VersionCodeChangedRule with current app version code " + getCurrentAppVersionCode();
+    }
+
+    private int getCurrentAppVersionCode() {
+        // We access the singleton AppInfoProvider instance statically here to make it possible for
+        // library consumers to create new VersionCodeChangedRule instances easily!
+        return AppInfoProvider.getSharedInstance().getPackageInfo().versionCode;
     }
 
 }

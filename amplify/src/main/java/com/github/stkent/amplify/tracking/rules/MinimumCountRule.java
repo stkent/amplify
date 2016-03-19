@@ -19,31 +19,34 @@ package com.github.stkent.amplify.tracking.rules;
 import android.support.annotation.NonNull;
 
 import com.github.stkent.amplify.tracking.interfaces.IEventBasedRule;
-import com.github.stkent.amplify.utils.AppInfoProvider;
 
-public final class VersionChangedRule implements IEventBasedRule<String> {
+public final class MinimumCountRule implements IEventBasedRule<Integer> {
 
-    @Override
-    public boolean shouldAllowFeedbackPromptByDefault() {
-        return true;
+    private final int minimumCount;
+
+    public MinimumCountRule(final int minimumCount) {
+        if (minimumCount <= 0) {
+            throw new IllegalStateException(
+                    "Minimum count rule must be configured with a positive threshold");
+        }
+
+        this.minimumCount = minimumCount;
     }
 
     @Override
-    public boolean shouldAllowFeedbackPrompt(@NonNull final String cachedEventValue) {
-        return !cachedEventValue.equals(getCurrentAppVersionName());
+    public boolean shouldAllowFeedbackPromptByDefault() {
+        return false;
+    }
+
+    @Override
+    public boolean shouldAllowFeedbackPrompt(@NonNull final Integer cachedEventValue) {
+        return cachedEventValue >= minimumCount;
     }
 
     @NonNull
     @Override
     public String getDescription() {
-        return "VersionChangedRule with current app version name " + getCurrentAppVersionName();
-    }
-
-    @NonNull
-    private String getCurrentAppVersionName() {
-        // We access the singleton AppInfoProvider instance statically here to make it possible for
-        // library consumers to create new VersionChangedRule instances easily!
-        return AppInfoProvider.getSharedInstance().getPackageInfo().versionName;
+        return "MinimumCountRule with minimum required count of " + minimumCount;
     }
 
 }

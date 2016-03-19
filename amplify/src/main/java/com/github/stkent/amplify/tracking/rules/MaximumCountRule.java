@@ -25,6 +25,11 @@ public final class MaximumCountRule implements IEventBasedRule<Integer> {
     private final int maximumCount;
 
     public MaximumCountRule(final int maximumCount) {
+        if (maximumCount <= 0) {
+            throw new IllegalStateException(
+                    "Maximum count rule must be configured with a positive threshold");
+        }
+
         this.maximumCount = maximumCount;
     }
 

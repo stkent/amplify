@@ -26,12 +26,12 @@ import com.github.stkent.amplify.tracking.Settings;
 import com.github.stkent.amplify.tracking.interfaces.IAppInfoProvider;
 import com.github.stkent.amplify.tracking.interfaces.ISettings;
 
-public class LastEventVersionRulesManager extends BaseEventsManager<String> {
+public class LastEventVersionNameRulesManager extends BaseEventsManager<String> {
 
     @NonNull
     private final IAppInfoProvider appInfoProvider;
 
-    public LastEventVersionRulesManager(
+    public LastEventVersionNameRulesManager(
             @NonNull final Context appContext,
             @NonNull final IAppInfoProvider appInfoProvider,
             @NonNull final ILogger logger) {
@@ -40,7 +40,7 @@ public class LastEventVersionRulesManager extends BaseEventsManager<String> {
     }
 
     @VisibleForTesting
-    protected LastEventVersionRulesManager(
+    protected LastEventVersionNameRulesManager(
             @NonNull final ISettings<String> settings,
             @NonNull final IAppInfoProvider appInfoProvider,
             @NonNull final ILogger logger) {
