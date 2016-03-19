@@ -23,7 +23,7 @@ import com.github.stkent.amplify.utils.time.SystemTimeUtil;
 
 import static java.util.concurrent.TimeUnit.DAYS;
 
-public class WarmupDaysRule implements IEventBasedRule<Long> {
+public final class WarmupDaysRule implements IEventBasedRule<Long> {
 
     private final long warmupPeriodDays;
 
