@@ -40,7 +40,7 @@ public final class AppInfoUtil {
     public static IAppInfoProvider getSharedAppInfoProvider() {
         if (sharedAppInfoProvider == null) {
             throw new IllegalStateException(
-                    "Must initialize AppInfoProvider before calling getSharedAppInfoProvider.");
+                    "Must initialize AppInfoUtil before calling getSharedAppInfoProvider.");
         }
 
         return sharedAppInfoProvider;
