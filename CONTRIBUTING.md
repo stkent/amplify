@@ -47,3 +47,11 @@ Before opening a pull request, you must generate license headers in any new sour
 ```
 
 The Travis CI pull request build will fail if any source file is missing this generated header.
+
+# Updating README Table Of Contents
+
+If your work includes structural changes to the project README (adding/removing/changing/reordering any section headers), you must regenerate the README's table of contents using [DocToc](https://github.com/thlorenz/doctoc). After installing DocToc, execute the provided script to regenerate the table of contents with sensible defaults:
+
+```shell
+./update_toc.sh
+```
