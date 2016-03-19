@@ -77,7 +77,7 @@ public class LastEventVersionNameRulesManagerTest extends BaseTest {
         final String trackedEventVersionName = fakeSettings.readTrackingValue(expectedTrackingKey);
 
         assertNotNull(
-                "The event time should have been saved using the correct tracking key",
+                "The application version name should have been saved using the correct tracking key",
                 trackedEventVersionName);
     }
 
