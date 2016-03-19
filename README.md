@@ -4,16 +4,33 @@ Respectfully request feedback in your Android app.
 
 <a href="https://travis-ci.org/stkent/amplify"><img src="https://travis-ci.org/stkent/amplify.svg" /></a> <a href="https://bintray.com/stkent/android-libraries/amplify/"><img src="https://img.shields.io/bintray/v/stkent/android-libraries/amplify.svg" /></a> <a href="http://www.detroitlabs.com/"><img src="https://img.shields.io/badge/Sponsor-Detroit%20Labs-000000.svg" /></a> [![Coverage Status](https://coveralls.io/repos/github/stkent/amplify/badge.svg?branch=master)](https://coveralls.io/github/stkent/amplify?branch=master) [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-amplify-green.svg?style=true)](https://android-arsenal.com/details/1/3290)
 
-# Table Of Contents
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
 
 - [Introduction](#introduction)
 - [Library Structure](#library-structure)
 - [Getting Started](#getting-started)
-    - [Default Behavior](#default-behavior)
+  - [Default Behavior](#default-behavior)
 - [Configuring](#configuring)
+  - [Rules](#rules)
+    - [Environment-based Rules](#environment-based-rules)
+    - [Event-based Rules](#event-based-rules)
+  - [Prompt UI](#prompt-ui)
+    - [Default Layout](#default-layout)
+    - [Custom Layout](#custom-layout)
+    - [Listening For `IPromptView` Events](#listening-for-ipromptview-events)
+  - [Debug Settings](#debug-settings)
 - [Customizing](#customizing)
+  - [Rules](#rules-1)
+    - [Applying Custom Environment-based Rules](#applying-custom-environment-based-rules)
+    - [Tracking Custom Events](#tracking-custom-events)
+    - [Applying Custom Event-based Rules](#applying-custom-event-based-rules)
+  - [Prompt UI](#prompt-ui-1)
 - [Case Studies](#case-studies)
 - [License](#license)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 # Introduction
 
