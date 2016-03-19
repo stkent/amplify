@@ -13,11 +13,11 @@ Respectfully request feedback in your Android app.
 - [Getting Started](#getting-started)
   - [Default Behavior](#default-behavior)
 - [Configuring](#configuring)
-  - [Rules](#rules)
+  - [Prompt Timing](#prompt-timing)
   - [Prompt UI](#prompt-ui)
   - [Debug Settings](#debug-settings)
 - [Customizing](#customizing)
-  - [Rules](#rules-1)
+  - [Prompt Timing](#prompt-timing-1)
   - [Prompt UI](#prompt-ui-1)
 - [Case Studies](#case-studies)
 - [License](#license)
@@ -141,7 +141,7 @@ More information on how to apply your own collection of rules is available in th
 
 # Configuring
 
-## Rules
+## Prompt Timing
 
 _amplify_ calculates prompt timing based on two types of rule.
 
@@ -502,7 +502,7 @@ public class ExampleApplication extends Application {
 
 # Customizing
 
-## Rules
+## Prompt Timing
 
 ### Applying Custom Environment-based Rules
 
