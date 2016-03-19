@@ -14,7 +14,7 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package com.github.stkent.amplify.tracking.interfaces;
+package com.github.stkent.amplify.utils.appinfo;
 
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;

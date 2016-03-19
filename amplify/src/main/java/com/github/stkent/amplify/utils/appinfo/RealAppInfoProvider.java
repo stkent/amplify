@@ -14,48 +14,19 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package com.github.stkent.amplify.utils;
+package com.github.stkent.amplify.utils.appinfo;
 
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
-import android.support.annotation.VisibleForTesting;
 
-import com.github.stkent.amplify.tracking.interfaces.IAppInfoProvider;
-
-public final class AppInfoProvider implements IAppInfoProvider {
-
-    private static final Object SYNC_LOCK = new Object();
-    private static IAppInfoProvider sharedInstance;
-
-    public static void initialize(@NonNull final Context context) {
-        synchronized (SYNC_LOCK) {
-            if (sharedInstance == null) {
-                sharedInstance = new AppInfoProvider(context);
-            }
-        }
-    }
-
-    @NonNull
-    public static IAppInfoProvider getSharedInstance() {
-        if (sharedInstance == null) {
-            throw new IllegalStateException(
-                    "Must initialize AppInfoProvider before calling getSharedInstance.");
-        }
-
-        return sharedInstance;
-    }
-
-    @VisibleForTesting
-    public static void setSharedInstance(@NonNull final IAppInfoProvider sharedInstance) {
-        AppInfoProvider.sharedInstance = sharedInstance;
-    }
+public final class RealAppInfoProvider implements IAppInfoProvider {
 
     private final Context appContext;
 
-    private AppInfoProvider(@NonNull final Context appContext) {
+    protected RealAppInfoProvider(@NonNull final Context appContext) {
         this.appContext = appContext;
     }
 

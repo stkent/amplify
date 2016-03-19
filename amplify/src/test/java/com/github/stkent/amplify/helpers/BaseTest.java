@@ -16,8 +16,8 @@
  */
 package com.github.stkent.amplify.helpers;
 
-import com.github.stkent.amplify.tracking.interfaces.IAppInfoProvider;
-import com.github.stkent.amplify.utils.AppInfoProvider;
+import com.github.stkent.amplify.utils.appinfo.AppInfoUtil;
+import com.github.stkent.amplify.utils.appinfo.IAppInfoProvider;
 import com.github.stkent.amplify.utils.time.RealSystemTimeProvider;
 import com.github.stkent.amplify.utils.time.SystemTimeUtil;
 
@@ -52,7 +52,7 @@ public class BaseTest {
 
         initMocks(this);
 
-        AppInfoProvider.setSharedInstance(mockAppInfoProvider);
+        AppInfoUtil.setSharedAppInfoProvider(mockAppInfoProvider);
 
         localSetUp();
     }

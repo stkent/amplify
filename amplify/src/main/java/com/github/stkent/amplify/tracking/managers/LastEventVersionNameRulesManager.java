@@ -23,7 +23,7 @@ import android.support.annotation.VisibleForTesting;
 
 import com.github.stkent.amplify.ILogger;
 import com.github.stkent.amplify.tracking.Settings;
-import com.github.stkent.amplify.tracking.interfaces.IAppInfoProvider;
+import com.github.stkent.amplify.utils.appinfo.IAppInfoProvider;
 import com.github.stkent.amplify.tracking.interfaces.ISettings;
 
 public final class LastEventVersionNameRulesManager extends BaseEventsManager<String> {
