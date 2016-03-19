@@ -25,11 +25,10 @@ import android.support.annotation.VisibleForTesting;
 
 import com.github.stkent.amplify.tracking.interfaces.IAppInfoProvider;
 
-@SuppressWarnings({"PMD.ClassWithOnlyPrivateConstructorsShouldBeFinal", "checkstyle:finalclass"})
-public class AppInfoProvider implements IAppInfoProvider {
+public final class AppInfoProvider implements IAppInfoProvider {
 
     private static final Object SYNC_LOCK = new Object();
-    private static AppInfoProvider sharedInstance;
+    private static IAppInfoProvider sharedInstance;
 
     public static void initialize(@NonNull final Context context) {
         synchronized (SYNC_LOCK) {
@@ -40,7 +39,7 @@ public class AppInfoProvider implements IAppInfoProvider {
     }
 
     @NonNull
-    public static AppInfoProvider getSharedInstance() {
+    public static IAppInfoProvider getSharedInstance() {
         if (sharedInstance == null) {
             throw new IllegalStateException(
                     "Must initialize AppInfoProvider before calling getSharedInstance.");
@@ -50,7 +49,7 @@ public class AppInfoProvider implements IAppInfoProvider {
     }
 
     @VisibleForTesting
-    public static void setSharedInstance(@NonNull  final AppInfoProvider sharedInstance) {
+    public static void setSharedInstance(@NonNull final IAppInfoProvider sharedInstance) {
         AppInfoProvider.sharedInstance = sharedInstance;
     }
 

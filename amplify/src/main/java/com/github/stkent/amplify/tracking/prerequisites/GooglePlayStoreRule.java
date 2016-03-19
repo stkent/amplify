@@ -25,7 +25,7 @@ import com.github.stkent.amplify.tracking.interfaces.IEnvironmentCapabilitiesPro
  * An implementation of {@code IEnvironmentBasedRule} that verifies whether or not
  * the Google Play Store is installed on the current device.
  */
-public class GooglePlayStoreRule implements IEnvironmentBasedRule {
+public final class GooglePlayStoreRule implements IEnvironmentBasedRule {
 
     @Override
     public boolean shouldAllowFeedbackPrompt(@NonNull final IEnvironmentCapabilitiesProvider environmentInfoProvider) {

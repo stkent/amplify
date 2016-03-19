@@ -21,6 +21,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 
 import com.github.stkent.amplify.helpers.BaseTest;
+import com.github.stkent.amplify.tracking.interfaces.IAppInfoProvider;
 import com.github.stkent.amplify.utils.AppInfoProvider;
 
 import org.junit.Test;
@@ -38,7 +39,7 @@ public class VersionNameChangedRuleTest extends BaseTest {
     private PackageInfo fakePackageInfo;
 
     @Mock
-    private AppInfoProvider mockAppInfoProvider;
+    private IAppInfoProvider mockAppInfoProvider;
 
     @Override
     public void localSetUp() {

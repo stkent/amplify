@@ -26,7 +26,7 @@ import com.github.stkent.amplify.tracking.interfaces.IEnvironmentCapabilitiesPro
 import java.util.ArrayList;
 import java.util.List;
 
-public class EnvironmentBasedRulesManager implements IEnvironmentBasedRulesManager {
+public final class EnvironmentBasedRulesManager implements IEnvironmentBasedRulesManager {
 
     @NonNull
     private final IEnvironmentCapabilitiesProvider environmentCapabilitiesProvider;
