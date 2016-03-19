@@ -22,25 +22,25 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingBottom="16dp">
+    android:paddingBottom="@dimen/default_prompt_view_default_spacing">
 
     <TextView
         android:id="@+id/amplify_title_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginLeft="@dimen/default_prompt_view_default_spacing"
+        android:layout_marginRight="@dimen/default_prompt_view_default_spacing"
+        android:layout_marginTop="@dimen/default_prompt_view_default_spacing"
         android:gravity="center"
-        android:textSize="18sp" />
+        android:textSize="@dimen/default_prompt_view_default_text_size" />
 
     <TextView
         android:id="@+id/amplify_subtitle_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
+        android:layout_marginLeft="@dimen/default_prompt_view_default_spacing"
+        android:layout_marginRight="@dimen/default_prompt_view_default_spacing"
         android:gravity="center"
-        android:textSize="18sp" />
+        android:textSize="@dimen/default_prompt_view_default_text_size" />
 
 </LinearLayout>

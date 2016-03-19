@@ -27,25 +27,25 @@
         android:id="@+id/amplify_title_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginLeft="@dimen/default_prompt_view_default_spacing"
+        android:layout_marginRight="@dimen/default_prompt_view_default_spacing"
+        android:layout_marginTop="@dimen/default_prompt_view_default_spacing"
         android:gravity="center"
-        android:textSize="18sp" />
+        android:textSize="@dimen/default_prompt_view_default_text_size" />
 
     <TextView
         android:id="@+id/amplify_subtitle_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
+        android:layout_marginLeft="@dimen/default_prompt_view_default_spacing"
+        android:layout_marginRight="@dimen/default_prompt_view_default_spacing"
         android:gravity="center"
-        android:textSize="18sp" />
+        android:textSize="@dimen/default_prompt_view_default_text_size" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
+        android:layout_margin="@dimen/default_prompt_view_default_spacing"
         android:orientation="horizontal">
 
         <TextView
@@ -53,12 +53,12 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:minHeight="48dp"
+            android:minHeight="@dimen/default_prompt_view_default_button_height"
             android:gravity="center"
-            android:textSize="18sp" />
+            android:textSize="@dimen/default_prompt_view_default_text_size" />
 
         <View
-            android:layout_width="16dp"
+            android:layout_width="@dimen/default_prompt_view_default_spacing"
             android:layout_height="match_parent" />
 
         <TextView
@@ -66,9 +66,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:minHeight="48dp"
+            android:minHeight="@dimen/default_prompt_view_default_button_height"
             android:gravity="center"
-            android:textSize="18sp" />
+            android:textSize="@dimen/default_prompt_view_default_text_size" />
 
     </LinearLayout>
 
