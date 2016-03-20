@@ -55,7 +55,7 @@ public final class FirstEventTimeRulesManager extends BaseEventsManager<Long> {
     @Override
     protected String getEventTrackingStatusStringSuffix(@NonNull final Long cachedEventValue) {
         final Long daysSinceFirstEvent = MILLISECONDS.toDays(SystemTimeUtil.currentTimeMillis() - cachedEventValue);
-        return " first occurred " + daysSinceFirstEvent + " days ago";
+        return "first occurred " + daysSinceFirstEvent + " days ago";
     }
 
     @NonNull

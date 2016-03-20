@@ -58,7 +58,7 @@ public final class LastEventVersionNameRulesManager extends BaseEventsManager<St
     @NonNull
     @Override
     protected String getEventTrackingStatusStringSuffix(@NonNull final String cachedEventValue) {
-        return " last occurred for app version name " + cachedEventValue;
+        return "last occurred for app version name " + cachedEventValue;
     }
 
     @NonNull

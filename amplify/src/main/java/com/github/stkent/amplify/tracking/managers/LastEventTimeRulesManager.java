@@ -55,7 +55,7 @@ public final class LastEventTimeRulesManager extends BaseEventsManager<Long> {
     @Override
     protected String getEventTrackingStatusStringSuffix(@NonNull final Long cachedEventValue) {
         final Long daysSinceLastEvent = MILLISECONDS.toDays(SystemTimeUtil.currentTimeMillis() - cachedEventValue);
-        return " last occurred " + daysSinceLastEvent + " days ago";
+        return "last occurred " + daysSinceLastEvent + " days ago";
     }
 
     @NonNull
