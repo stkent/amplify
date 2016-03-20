@@ -28,7 +28,7 @@ apply from: 'coverage.gradle'
 // Shared project metadata
 
 ext {
-    amplifyVersion = "1.0.0"
+    amplifyVersion = "1.1.0"
     amplifyWebsiteUrl = 'https://github.com/stkent/amplify'
     amplifyGitHubRepoName = 'stkent/bugshaker-android'
     amplifyVcsUrl = "https://github.com/${amplifyGitHubRepoName}.git"
