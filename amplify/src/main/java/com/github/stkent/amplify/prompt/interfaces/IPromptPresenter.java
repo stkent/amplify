@@ -16,18 +16,37 @@
  */
 package com.github.stkent.amplify.prompt.interfaces;
 
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 
 public interface IPromptPresenter {
 
     enum UserOpinion {
         POSITIVE,
-        NEGATIVE
+        CRITICAL
+    }
+
+    enum UserFeedbackAction {
+        AGREED,
+        DECLINED
+    }
+
+    enum PromptFlowState {
+        INITIALIZED,
+        QUERYING_USER_OPINION,
+        REQUESTING_POSITIVE_FEEDBACK,
+        REQUESTING_CRITICAL_FEEDBACK,
+        THANKING_USER,
+        DISMISSED
     }
 
     void start();
-    void setUserOpinion(@NonNull final UserOpinion userOpinion);
-    void userAgreedToGiveFeedback();
-    void userDeclinedToGiveFeedback();
+    void reportUserOpinion(@NonNull final UserOpinion userOpinion);
+    void reportUserFeedbackAction(@NonNull final UserFeedbackAction userFeedbackAction);
+
+    @NonNull
+    Bundle saveStateToBundle();
+
+    void restoreStateFromBundle(final Bundle bundle);
 
 }

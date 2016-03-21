@@ -17,14 +17,12 @@
 package com.github.stkent.amplify.tracking;
 
 import android.app.Activity;
+import android.app.Application;
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import com.github.stkent.amplify.ILogger;
 import com.github.stkent.amplify.Logger;
-import com.github.stkent.amplify.prompt.PromptPresenter;
-import com.github.stkent.amplify.prompt.interfaces.IPromptPresenter;
 import com.github.stkent.amplify.prompt.interfaces.IPromptView;
 import com.github.stkent.amplify.tracking.interfaces.IAppEventTimeProvider;
 import com.github.stkent.amplify.tracking.interfaces.IAppLevelEventRulesManager;
@@ -44,7 +42,7 @@ import com.github.stkent.amplify.tracking.managers.TotalEventCountRulesManager;
 import com.github.stkent.amplify.tracking.rules.GooglePlayStoreRule;
 import com.github.stkent.amplify.tracking.rules.MaximumCountRule;
 import com.github.stkent.amplify.tracking.rules.VersionNameChangedRule;
-import com.github.stkent.amplify.utils.ActivityStateUtil;
+import com.github.stkent.amplify.utils.ActivityReferenceManager;
 import com.github.stkent.amplify.utils.FeedbackUtil;
 import com.github.stkent.amplify.utils.PlayStoreUtil;
 import com.github.stkent.amplify.utils.appinfo.AppInfoUtil;
@@ -58,6 +56,7 @@ public final class Amplify implements IEventListener {
 
     private static Amplify sharedInstance;
 
+    private final IAppInfoProvider appInfoProvider;
     private final IAppLevelEventRulesManager appLevelEventRulesManager;
     private final IEnvironmentBasedRulesManager environmentBasedRulesManager;
     private final FirstEventTimeRulesManager firstEventTimeRulesManager;
@@ -65,6 +64,7 @@ public final class Amplify implements IEventListener {
     private final LastEventVersionCodeRulesManager lastEventVersionCodeRulesManager;
     private final LastEventVersionNameRulesManager lastEventVersionNameRulesManager;
     private final TotalEventCountRulesManager totalEventCountRulesManager;
+    private final ActivityReferenceManager activityReferenceManager;
 
     private final ILogger logger;
 
@@ -72,27 +72,42 @@ public final class Amplify implements IEventListener {
     private String packageName;
     private String feedbackEmailAddress;
 
-    public static Amplify get(@NonNull final Context context) {
-        return get(context, new Logger());
+    public static Amplify initialize(@NonNull final Application app) {
+        return initialize(app, new Logger());
     }
 
-    public static Amplify get(@NonNull final Context context, @NonNull final ILogger logger) {
+    public static Amplify initialize(
+            @NonNull final Application app,
+            @NonNull final ILogger logger) {
+
         synchronized (Amplify.class) {
             if (sharedInstance == null) {
-                sharedInstance = new Amplify(context, logger);
+                sharedInstance = new Amplify(app, logger);
             }
         }
 
         return sharedInstance;
     }
 
-    // constructors
+    public static Amplify getSharedInstance() {
+        synchronized (Amplify.class) {
+            if (sharedInstance == null) {
+                throw new IllegalStateException(
+                        "You must call initialize before calling getSharedInstance.");
+            }
+        }
 
-    private Amplify(@NonNull final Context context, @NonNull final ILogger logger) {
-        AppInfoUtil.initialize(context);
-        final IAppInfoProvider appInfoProvider = AppInfoUtil.getSharedAppInfoProvider();
+        return sharedInstance;
+    }
 
-        final Context appContext = context.getApplicationContext();
+    // Constructors
+
+    private Amplify(@NonNull final Application app, @NonNull final ILogger logger) {
+        final Context appContext = app.getApplicationContext();
+
+        AppInfoUtil.initialize(appContext);
+        this.appInfoProvider = AppInfoUtil.getSharedAppInfoProvider();
+
         final IAppEventTimeProvider appEventTimeProvider
                 = new AppEventTimeProvider(appInfoProvider);
 
@@ -116,6 +131,9 @@ public final class Amplify implements IEventListener {
                 = new LastEventVersionCodeRulesManager(appContext, appInfoProvider, logger);
 
         this.totalEventCountRulesManager = new TotalEventCountRulesManager(appContext, logger);
+
+        this.activityReferenceManager = new ActivityReferenceManager();
+        app.registerActivityLifecycleCallbacks(activityReferenceManager);
 
         this.logger = logger;
     }
@@ -223,70 +241,44 @@ public final class Amplify implements IEventListener {
 
     @Override
     public void notifyEventTriggered(@NonNull final IEvent event) {
-        logger.d(event + " event triggered");
+        logger.d(event.getTrackingKey() + " event triggered");
         totalEventCountRulesManager.notifyEventTriggered(event);
         firstEventTimeRulesManager.notifyEventTriggered(event);
         lastEventTimeRulesManager.notifyEventTriggered(event);
         lastEventVersionCodeRulesManager.notifyEventTriggered(event);
         lastEventVersionNameRulesManager.notifyEventTriggered(event);
+
+        if (event == PromptViewEvent.USER_GAVE_POSITIVE_FEEDBACK) {
+            final Activity activity = activityReferenceManager.getValidatedActivity();
+
+            if (activity != null) {
+                PlayStoreUtil.openPlayStoreToRate(activity, packageName);
+            }
+        } else if (event == PromptViewEvent.USER_GAVE_CRITICAL_FEEDBACK) {
+            final Activity activity = activityReferenceManager.getValidatedActivity();
+
+            if (activity != null) {
+                final FeedbackUtil feedbackUtil = new FeedbackUtil(
+                        new AppFeedbackDataProvider(appInfoProvider),
+                        new EnvironmentCapabilitiesProvider(appInfoProvider),
+                        feedbackEmailAddress,
+                        logger);
+
+                feedbackUtil.showFeedbackEmailChooser(activity);
+            }
+        }
     }
 
     // Query methods
 
-    // todo: track activity using application hooks so we don't need to receive it here
-    public void promptIfReady(
-            @NonNull final Activity activity,
-            @NonNull final IPromptView promptView) {
-
-        promptIfReady(activity, promptView, null);
-    }
-
-    // todo: track activity using application hooks so we don't need to receive it here
-    public void promptIfReady(
-            @NonNull final Activity activity,
-            @NonNull final IPromptView promptView,
-            @Nullable final IEventListener<PromptViewEvent> promptViewEventListener) {
-
+    public void promptIfReady(@NonNull final IPromptView promptView) {
         if (feedbackEmailAddress == null) {
             throw new IllegalStateException(
                     "Must provide email address before attempting to prompt.");
         }
 
-        final IEventListener<PromptViewEvent> combinedEventListener
-                = new IEventListener<PromptViewEvent>() {
-
-            @Override
-            public void notifyEventTriggered(@NonNull final PromptViewEvent event) {
-                Amplify.this.notifyEventTriggered(event);
-
-                if (promptViewEventListener != null) {
-                    promptViewEventListener.notifyEventTriggered(event);
-                }
-
-                if (ActivityStateUtil.isActivityValid(activity)) {
-                    if (event == PromptViewEvent.USER_GAVE_POSITIVE_FEEDBACK) {
-                        PlayStoreUtil.openPlayStoreToRate(activity, packageName);
-                    } else if (event == PromptViewEvent.USER_GAVE_CRITICAL_FEEDBACK) {
-                        final IAppInfoProvider appInfoProvider
-                                = AppInfoUtil.getSharedAppInfoProvider();
-
-                        final FeedbackUtil feedbackUtil = new FeedbackUtil(
-                                new AppFeedbackDataProvider(appInfoProvider),
-                                new EnvironmentCapabilitiesProvider(appInfoProvider),
-                                feedbackEmailAddress,
-                                logger);
-
-                        feedbackUtil.showFeedbackEmailChooser(activity);
-                    }
-                }
-            }
-        };
-
         if (shouldPrompt()) {
-            final IPromptPresenter promptPresenter
-                    = new PromptPresenter(combinedEventListener, promptView);
-
-            promptPresenter.start();
+            promptView.getPresenter().start();
         }
     }
 

@@ -18,6 +18,9 @@ package com.github.stkent.amplify.prompt;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
@@ -31,10 +34,11 @@ import com.github.stkent.amplify.prompt.interfaces.IPromptView;
 import com.github.stkent.amplify.prompt.interfaces.IQuestionPresenter;
 import com.github.stkent.amplify.prompt.interfaces.IQuestionView;
 import com.github.stkent.amplify.prompt.interfaces.IThanksView;
+import com.github.stkent.amplify.tracking.Amplify;
 
-import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
-import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
-import static com.github.stkent.amplify.prompt.interfaces.IPromptPresenter.UserOpinion.NEGATIVE;
+import static com.github.stkent.amplify.prompt.interfaces.IPromptPresenter.UserFeedbackAction.AGREED;
+import static com.github.stkent.amplify.prompt.interfaces.IPromptPresenter.UserFeedbackAction.DECLINED;
+import static com.github.stkent.amplify.prompt.interfaces.IPromptPresenter.UserOpinion.CRITICAL;
 import static com.github.stkent.amplify.prompt.interfaces.IPromptPresenter.UserOpinion.POSITIVE;
 
 abstract class BasePromptView<T extends View & IQuestionView, U extends View & IThanksView>
@@ -56,12 +60,12 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
             new IQuestionPresenter() {
                 @Override
                 public void userRespondedPositively() {
-                    promptPresenter.setUserOpinion(POSITIVE);
+                    promptPresenter.reportUserOpinion(POSITIVE);
                 }
 
                 @Override
                 public void userRespondedNegatively() {
-                    promptPresenter.setUserOpinion(NEGATIVE);
+                    promptPresenter.reportUserOpinion(CRITICAL);
                 }
             };
 
@@ -69,12 +73,12 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
             new IQuestionPresenter() {
                 @Override
                 public void userRespondedPositively() {
-                    promptPresenter.userAgreedToGiveFeedback();
+                    promptPresenter.reportUserFeedbackAction(AGREED);
                 }
 
                 @Override
                 public void userRespondedNegatively() {
-                    promptPresenter.userDeclinedToGiveFeedback();
+                    promptPresenter.reportUserFeedbackAction(DECLINED);
                 }
             };
 
@@ -95,14 +99,18 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
             final int defStyleAttr) {
 
         super(context, attributeSet, defStyleAttr);
-        setLayoutParams(new ViewGroup.LayoutParams(MATCH_PARENT, WRAP_CONTENT));
+        setLayoutParams(new ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
         initializeBaseConfig(attributeSet);
+
+        promptPresenter = new PromptPresenter(Amplify.getSharedInstance(), this);
     }
 
+    @NonNull
     @Override
-    public final void setPresenter(@NonNull final IPromptPresenter promptPresenter) {
-        this.promptPresenter = promptPresenter;
+    public IPromptPresenter getPresenter() {
+        return promptPresenter;
     }
 
     @Override
@@ -144,14 +152,11 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
         thanksView.bind(basePromptViewConfig.getThanks());
 
         setContentView(thanksView);
-
-        promptPresenter = null;
     }
 
     @Override
     public final void dismiss() {
         setVisibility(GONE);
-        promptPresenter = null;
     }
 
     @Override
@@ -182,7 +187,64 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
 
     private void setContentView(@NonNull final View view) {
         removeAllViews();
-        addView(view, new LayoutParams(MATCH_PARENT, WRAP_CONTENT));
+        addView(view, new LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+    }
+
+    @Override
+    protected Parcelable onSaveInstanceState() {
+        final Parcelable superState = super.onSaveInstanceState();
+        final AugmentedSavedState augmentedSavedState = new AugmentedSavedState(superState);
+        augmentedSavedState.setAugmentedState(promptPresenter.saveStateToBundle());
+        return augmentedSavedState;
+    }
+
+    @Override
+    protected void onRestoreInstanceState(final Parcelable state) {
+        final AugmentedSavedState augmentedSavedState = (AugmentedSavedState) state;
+        super.onRestoreInstanceState(augmentedSavedState.getSuperState());
+        promptPresenter.restoreStateFromBundle(augmentedSavedState.getAugmentedState());
+    }
+
+    private static class AugmentedSavedState extends BaseSavedState {
+
+        private Bundle augmentedState;
+
+        protected AugmentedSavedState(final Parcelable superState) {
+            super(superState);
+        }
+
+        protected AugmentedSavedState(final Parcel in) {
+            super(in);
+            augmentedState = in.readBundle(getClass().getClassLoader());
+        }
+
+        private Bundle getAugmentedState() {
+            return augmentedState;
+        }
+
+        private void setAugmentedState(final Bundle augmentedState) {
+            this.augmentedState = augmentedState;
+        }
+
+        @Override
+        public void writeToParcel(final Parcel out, final int flags) {
+            super.writeToParcel(out, flags);
+            out.writeBundle(augmentedState);
+        }
+
+        public static final Parcelable.Creator<AugmentedSavedState> CREATOR
+                = new Parcelable.Creator<AugmentedSavedState>() {
+
+            public AugmentedSavedState createFromParcel(final Parcel in) {
+                return new AugmentedSavedState(in);
+            }
+
+            public AugmentedSavedState[] newArray(final int size) {
+                return new AugmentedSavedState[size];
+            }
+
+        };
     }
 
 }

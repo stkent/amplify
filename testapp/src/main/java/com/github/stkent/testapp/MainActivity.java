@@ -21,12 +21,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
-        Amplify.get(this).promptIfReady(
-                this,
+        Amplify.getSharedInstance().promptIfReady(
                 (IPromptView) findViewById(R.id.default_layout_prompt_view_no_customization));
 
-        Amplify.get(this).promptIfReady(
-                this,
+        Amplify.getSharedInstance().promptIfReady(
                 (IPromptView) findViewById(R.id.default_layout_prompt_view_xml_config));
 
         final DefaultLayoutPromptView defaultLayoutPromptView
@@ -65,10 +63,9 @@ public class MainActivity extends AppCompatActivity {
         defaultLayoutPromptView.applyBaseConfig(baseDefaultLayoutPromptViewConfig);
         defaultLayoutPromptView.applyConfig(defaultLayoutPromptViewConfig);
 
-        Amplify.get(this).promptIfReady(this, defaultLayoutPromptView);
+        Amplify.getSharedInstance().promptIfReady(defaultLayoutPromptView);
 
-        Amplify.get(this).promptIfReady(
-                this,
+        Amplify.getSharedInstance().promptIfReady(
                 (IPromptView) findViewById(R.id.custom_layout_prompt_view_xml_config));
 
 
@@ -98,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
         customLayoutPromptView.applyBaseConfig(baseCustomLayoutPromptViewConfig);
         customLayoutPromptView.applyConfig(customLayoutPromptViewConfig);
 
-        Amplify.get(this).promptIfReady(this, customLayoutPromptView);
+        Amplify.getSharedInstance().promptIfReady(customLayoutPromptView);
     }
 
 }

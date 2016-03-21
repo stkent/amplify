@@ -21,7 +21,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import com.github.stkent.amplify.ILogger;
 import com.github.stkent.amplify.tracking.interfaces.IAppFeedbackDataProvider;
@@ -53,7 +52,7 @@ public final class FeedbackUtil {
         this.logger = logger;
     }
 
-    public void showFeedbackEmailChooser(@Nullable final Activity activity) {
+    public void showFeedbackEmailChooser(@NonNull final Activity activity) {
         final Intent feedbackEmailIntent = getFeedbackEmailIntent();
 
         if (!environmentCapabilitiesProvider.canHandleIntent(feedbackEmailIntent)) {
@@ -61,12 +60,10 @@ public final class FeedbackUtil {
             return;
         }
 
-        if (ActivityStateUtil.isActivityValid(activity)) {
-            activity.startActivity(Intent.createChooser(
-                    feedbackEmailIntent, "Choose an email provider:"));
+        activity.startActivity(Intent.createChooser(
+                feedbackEmailIntent, "Choose an email provider:"));
 
-            activity.overridePendingTransition(0, 0);
-        }
+        activity.overridePendingTransition(0, 0);
     }
 
     @NonNull

@@ -35,31 +35,29 @@ public final class PlayStoreUtil {
     }
 
     public static void openPlayStoreToRate(
-            @Nullable final Activity activity,
+            @NonNull final Activity activity,
             @Nullable String packageName) {
 
-        if (ActivityStateUtil.isActivityValid(activity)) {
-            if (packageName == null) {
-                packageName = activity.getPackageName();
-            }
+        if (packageName == null) {
+            packageName = activity.getPackageName();
+        }
 
-            try {
-                activity.startActivity(
-                        new Intent(
-                                ACTION_VIEW,
-                                getAndroidMarketUriForPackageName(packageName)
-                        )
-                );
-            } catch (final ActivityNotFoundException e) {
-                activity.startActivity(
-                        new Intent(
-                                ACTION_VIEW,
-                                getGooglePlayStoreUriForPackageName(packageName)
-                        )
-                );
-            } finally {
-                activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-            }
+        try {
+            activity.startActivity(
+                    new Intent(
+                            ACTION_VIEW,
+                            getAndroidMarketUriForPackageName(packageName)
+                    )
+            );
+        } catch (final ActivityNotFoundException e) {
+            activity.startActivity(
+                    new Intent(
+                            ACTION_VIEW,
+                            getGooglePlayStoreUriForPackageName(packageName)
+                    )
+            );
+        } finally {
+            activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         }
     }
 

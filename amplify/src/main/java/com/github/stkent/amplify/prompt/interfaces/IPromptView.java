@@ -20,7 +20,9 @@ import android.support.annotation.NonNull;
 
 public interface IPromptView {
 
-    void setPresenter(@NonNull final IPromptPresenter promptPresenter);
+    @NonNull
+    IPromptPresenter getPresenter();
+
     void queryUserOpinion();
     void requestPositiveFeedback();
     void requestCriticalFeedback();

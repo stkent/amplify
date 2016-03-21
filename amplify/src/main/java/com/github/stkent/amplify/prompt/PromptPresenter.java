@@ -16,112 +16,141 @@
  */
 package com.github.stkent.amplify.prompt;
 
+import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import com.github.stkent.amplify.prompt.interfaces.IPromptPresenter;
 import com.github.stkent.amplify.prompt.interfaces.IPromptView;
 import com.github.stkent.amplify.tracking.PromptViewEvent;
 import com.github.stkent.amplify.tracking.interfaces.IEventListener;
 
-import static com.github.stkent.amplify.utils.Constants.EXHAUSTIVE_SWITCH_EXCEPTION_MESSAGE;
-
 public final class PromptPresenter implements IPromptPresenter {
 
-    private static final String USER_OPINION_EXCEPTION_MESSAGE
-            = "User opinion must be specified before this method is called.";
+    private static final String PROMPT_FLOW_STATE_KEY = "PromptFlowStateKey";
+    private static final PromptFlowState DEFAULT_PROMPT_FLOW_STATE = PromptFlowState.INITIALIZED;
 
     @NonNull
-    private final IEventListener<PromptViewEvent> eventListener;
+    private final IEventListener eventListener;
 
     @NonNull
     private final IPromptView promptView;
 
-    @Nullable
-    private UserOpinion userOpinion;
+    @NonNull
+    private PromptFlowState promptFlowState = DEFAULT_PROMPT_FLOW_STATE;
 
     public PromptPresenter(
-            @NonNull final IEventListener<PromptViewEvent> eventListener,
+            @NonNull final IEventListener eventListener,
             @NonNull final IPromptView promptView) {
 
         this.eventListener = eventListener;
         this.promptView = promptView;
-
-        promptView.setPresenter(this);
     }
 
+    @Override
     public void start() {
-        promptView.queryUserOpinion();
         eventListener.notifyEventTriggered(PromptViewEvent.PROMPT_SHOWN);
+        setToState(PromptFlowState.QUERYING_USER_OPINION);
     }
 
     @Override
-    public void setUserOpinion(@NonNull final UserOpinion userOpinion) {
-        this.userOpinion = userOpinion;
-
-        switch (userOpinion) {
-            case POSITIVE:
-                promptView.requestPositiveFeedback();
-                eventListener.notifyEventTriggered(PromptViewEvent.USER_INDICATED_POSITIVE_OPINION);
-                break;
-            case NEGATIVE:
-                promptView.requestCriticalFeedback();
-                eventListener.notifyEventTriggered(PromptViewEvent.USER_INDICATED_CRITICAL_OPINION);
-                break;
-            default:
-                throw new IllegalStateException(EXHAUSTIVE_SWITCH_EXCEPTION_MESSAGE);
+    public void reportUserOpinion(@NonNull final UserOpinion userOpinion) {
+        if (userOpinion == UserOpinion.POSITIVE) {
+            eventListener.notifyEventTriggered(PromptViewEvent.USER_INDICATED_POSITIVE_OPINION);
+            setToState(PromptFlowState.REQUESTING_POSITIVE_FEEDBACK);
+        } else if (userOpinion == UserOpinion.CRITICAL) {
+            eventListener.notifyEventTriggered(PromptViewEvent.USER_INDICATED_CRITICAL_OPINION);
+            setToState(PromptFlowState.REQUESTING_CRITICAL_FEEDBACK);
         }
     }
 
     @Override
-    public void userAgreedToGiveFeedback() {
-        if (userOpinion == null) {
-            throw new IllegalStateException(USER_OPINION_EXCEPTION_MESSAGE);
+    public void reportUserFeedbackAction(@NonNull final UserFeedbackAction userFeedbackAction) {
+        if (promptFlowState != PromptFlowState.REQUESTING_POSITIVE_FEEDBACK
+                && promptFlowState != PromptFlowState.REQUESTING_CRITICAL_FEEDBACK) {
+
+            throw new IllegalStateException(
+                    "User opinion must be set before this method is called.");
         }
 
-        switch (userOpinion) {
-            case POSITIVE:
-                eventListener.notifyEventTriggered(PromptViewEvent.USER_GAVE_POSITIVE_FEEDBACK);
-                eventListener.notifyEventTriggered(PromptViewEvent.USER_GAVE_FEEDBACK);
-                break;
-            case NEGATIVE:
-                eventListener.notifyEventTriggered(PromptViewEvent.USER_GAVE_CRITICAL_FEEDBACK);
-                eventListener.notifyEventTriggered(PromptViewEvent.USER_GAVE_FEEDBACK);
-                break;
-            default:
-                throw new IllegalStateException(EXHAUSTIVE_SWITCH_EXCEPTION_MESSAGE);
+        if (userFeedbackAction == UserFeedbackAction.AGREED) {
+            handleUserAgreedToGiveFeedback();
+        } else if (userFeedbackAction == UserFeedbackAction.DECLINED) {
+            handleUserDeclinedToGiveFeedback();
+        }
+    }
+
+    @Override
+    public void restoreStateFromBundle(@NonNull final Bundle bundle) {
+        final PromptFlowState promptFlowState =
+                PromptFlowState.values()[
+                        bundle.getInt(
+                                PROMPT_FLOW_STATE_KEY,
+                                DEFAULT_PROMPT_FLOW_STATE.ordinal())];
+
+        setToState(promptFlowState);
+    }
+
+    @NonNull
+    @Override
+    public Bundle saveStateToBundle() {
+        final Bundle result = new Bundle();
+        result.putInt(PROMPT_FLOW_STATE_KEY, promptFlowState.ordinal());
+        return result;
+    }
+
+    private void handleUserAgreedToGiveFeedback() {
+        eventListener.notifyEventTriggered(PromptViewEvent.USER_GAVE_FEEDBACK);
+
+        if (promptFlowState == PromptFlowState.REQUESTING_POSITIVE_FEEDBACK) {
+            eventListener.notifyEventTriggered(PromptViewEvent.USER_GAVE_POSITIVE_FEEDBACK);
+        } else if (promptFlowState == PromptFlowState.REQUESTING_CRITICAL_FEEDBACK) {
+            eventListener.notifyEventTriggered(PromptViewEvent.USER_GAVE_CRITICAL_FEEDBACK);
         }
 
         if (promptView.providesThanksView()) {
-            promptView.thankUser();
             eventListener.notifyEventTriggered(PromptViewEvent.THANKS_SHOWN);
+            setToState(PromptFlowState.THANKING_USER);
         } else {
-            promptView.dismiss();
             eventListener.notifyEventTriggered(PromptViewEvent.PROMPT_DISMISSED);
+            setToState(PromptFlowState.DISMISSED);
         }
     }
 
-    @Override
-    public void userDeclinedToGiveFeedback() {
-        if (userOpinion == null) {
-            throw new IllegalStateException(USER_OPINION_EXCEPTION_MESSAGE);
+    private void handleUserDeclinedToGiveFeedback() {
+        eventListener.notifyEventTriggered(PromptViewEvent.USER_DECLINED_FEEDBACK);
+
+        if (promptFlowState == PromptFlowState.REQUESTING_POSITIVE_FEEDBACK) {
+            eventListener.notifyEventTriggered(PromptViewEvent.USER_DECLINED_POSITIVE_FEEDBACK);
+        } else if (promptFlowState == PromptFlowState.REQUESTING_CRITICAL_FEEDBACK) {
+            eventListener.notifyEventTriggered(PromptViewEvent.USER_DECLINED_CRITICAL_FEEDBACK);
         }
 
-        switch (userOpinion) {
-            case POSITIVE:
-                eventListener.notifyEventTriggered(PromptViewEvent.USER_DECLINED_POSITIVE_FEEDBACK);
-                eventListener.notifyEventTriggered(PromptViewEvent.USER_DECLINED_FEEDBACK);
+        eventListener.notifyEventTriggered(PromptViewEvent.PROMPT_DISMISSED);
+        setToState(PromptFlowState.DISMISSED);
+    }
+
+    private void setToState(@NonNull final PromptFlowState promptFlowState) {
+        this.promptFlowState = promptFlowState;
+
+        switch (promptFlowState) {
+            case QUERYING_USER_OPINION:
+                promptView.queryUserOpinion();
                 break;
-            case NEGATIVE:
-                eventListener.notifyEventTriggered(PromptViewEvent.USER_DECLINED_CRITICAL_FEEDBACK);
-                eventListener.notifyEventTriggered(PromptViewEvent.USER_DECLINED_FEEDBACK);
+            case REQUESTING_POSITIVE_FEEDBACK:
+                promptView.requestPositiveFeedback();
+                break;
+            case REQUESTING_CRITICAL_FEEDBACK:
+                promptView.requestCriticalFeedback();
+                break;
+            case THANKING_USER:
+                promptView.thankUser();
+                break;
+            case DISMISSED:
+                promptView.dismiss();
                 break;
             default:
-                throw new IllegalStateException(EXHAUSTIVE_SWITCH_EXCEPTION_MESSAGE);
+                break;
         }
-
-        promptView.dismiss();
-        eventListener.notifyEventTriggered(PromptViewEvent.PROMPT_DISMISSED);
     }
 
 }

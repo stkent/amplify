@@ -10,7 +10,7 @@ public class ExampleApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        Amplify.get(this)
+        Amplify.initialize(this)
                .setFeedbackEmailAddress("someone@example.com")
                .setAlwaysShow(true);
     }
