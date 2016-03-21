@@ -26,87 +26,87 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 @SuppressWarnings("PMD.AvoidDuplicateLiterals")
-public class MaximumCountRuleTest extends BaseTest {
+public class MinimumCountRuleTest extends BaseTest {
 
     @SuppressLint("Assert")
     @SuppressWarnings("ConstantConditions")
     @Test
-    public void testThatRuleAllowsPromptIfEventHasNeverOccurred() {
+    public void testThatRuleBlocksPromptIfEventHasNeverOccurred() {
         // Arrange
         final int anyPositiveInteger = 1;
         assert anyPositiveInteger > 0;
 
-        final MaximumCountRule maximumCountRule = new MaximumCountRule(anyPositiveInteger);
+        final MinimumCountRule minimumCountRule = new MinimumCountRule(anyPositiveInteger);
 
         // Act
         final boolean ruleShouldAllowFeedbackPrompt
-                = maximumCountRule.shouldAllowFeedbackPromptByDefault();
+                = minimumCountRule.shouldAllowFeedbackPromptByDefault();
 
         // Assert
-        assertTrue(
-                "Feedback prompt should be allowed if the associated event has never occurred.",
+        assertFalse(
+                "Feedback prompt should be blocked if the associated event has never occurred.",
                 ruleShouldAllowFeedbackPrompt);
     }
 
     @SuppressLint("Assert")
     @SuppressWarnings({"ConstantConditions", "UnnecessaryLocalVariable"})
     @Test
-    public void testThatRuleBlocksPromptAtCountThreshold() {
+    public void testThatRuleAllowsPromptAtCountThreshold() {
         // Arrange
-        final int maximumEventCount = 7;
-        final int currentEventCount = maximumEventCount;
+        final int minimumEventCount = 7;
+        final int currentEventCount = minimumEventCount;
 
-        final MaximumCountRule maximumCountRule = new MaximumCountRule(maximumEventCount);
+        final MinimumCountRule minimumCountRule = new MinimumCountRule(minimumEventCount);
 
         // Act
         final boolean ruleShouldAllowFeedbackPrompt
-                = maximumCountRule.shouldAllowFeedbackPrompt(currentEventCount);
-
-        // Assert
-        assertFalse(
-                "Feedback prompt should be blocked at the count threshold.",
-                ruleShouldAllowFeedbackPrompt);
-    }
-
-    @SuppressLint("Assert")
-    @SuppressWarnings("ConstantConditions")
-    @Test
-    public void testThatRuleBlocksPromptIfCountThresholdHasBeenExceeded() {
-        // Arrange
-        final int maximumEventCount = 7;
-        final int currentEventCount = 9;
-        assert currentEventCount > maximumEventCount;
-
-        final MaximumCountRule maximumCountRule = new MaximumCountRule(maximumEventCount);
-
-        // Act
-        final boolean ruleShouldAllowFeedbackPrompt
-                = maximumCountRule.shouldAllowFeedbackPrompt(currentEventCount);
-
-        // Assert
-        assertFalse(
-                "Feedback prompt should be blocked if the count threshold has been exceeded",
-                ruleShouldAllowFeedbackPrompt);
-    }
-
-    @SuppressLint("Assert")
-    @SuppressWarnings("ConstantConditions")
-    @Test
-    public void testThatRuleAllowsPromptIfCountThresholdHasNotBeenExceeded() {
-        // Arrange
-        final int maximumEventCount = 7;
-        final int currentEventCount = 2;
-        assert currentEventCount < maximumEventCount;
-
-        final MaximumCountRule maximumCountRule = new MaximumCountRule(maximumEventCount);
-
-        // Act
-        final boolean ruleShouldAllowFeedbackPrompt
-                = maximumCountRule.shouldAllowFeedbackPrompt(currentEventCount);
+                = minimumCountRule.shouldAllowFeedbackPrompt(currentEventCount);
 
         // Assert
         assertTrue(
-                "Feedback prompt should be allowed if the count threshold has not been exceeded",
+                "Feedback prompt should be allowed at the count threshold.",
+                ruleShouldAllowFeedbackPrompt);
+    }
+
+    @SuppressLint("Assert")
+    @SuppressWarnings("ConstantConditions")
+    @Test
+    public void testThatRuleAllowsPromptIfCountThresholdHasBeenExceeded() {
+        // Arrange
+        final int minimumEventCount = 7;
+        final int currentEventCount = 9;
+        assert currentEventCount > minimumEventCount;
+
+        final MinimumCountRule minimumCountRule = new MinimumCountRule(minimumEventCount);
+
+        // Act
+        final boolean ruleShouldAllowFeedbackPrompt
+                = minimumCountRule.shouldAllowFeedbackPrompt(currentEventCount);
+
+        // Assert
+        assertTrue(
+                "Feedback prompt should be allowed if the count threshold has been exceeded",
+                ruleShouldAllowFeedbackPrompt);
+    }
+
+    @SuppressLint("Assert")
+    @SuppressWarnings("ConstantConditions")
+    @Test
+    public void testThatRuleBlocksPromptIfCountThresholdHasNotBeenExceeded() {
+        // Arrange
+        final int minimumEventCount = 7;
+        final int currentEventCount = 2;
+        assert currentEventCount < minimumEventCount;
+
+        final MinimumCountRule minimumCountRule = new MinimumCountRule(minimumEventCount);
+
+        // Act
+        final boolean ruleShouldAllowFeedbackPrompt
+                = minimumCountRule.shouldAllowFeedbackPrompt(currentEventCount);
+
+        // Assert
+        assertFalse(
+                "Feedback prompt should be blocked if the count threshold is not met or exceeded",
                 ruleShouldAllowFeedbackPrompt);
     }
 

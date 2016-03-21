@@ -19,21 +19,18 @@ package com.github.stkent.amplify.tracking.rules;
 import android.support.annotation.NonNull;
 
 import com.github.stkent.amplify.tracking.interfaces.IEventBasedRule;
-import com.github.stkent.amplify.utils.time.SystemTimeUtil;
 
-import static java.util.concurrent.TimeUnit.DAYS;
+public final class MinimumCountRule implements IEventBasedRule<Integer> {
 
-public final class WarmupDaysRule implements IEventBasedRule<Long> {
+    private final int minimumCount;
 
-    private final long warmupPeriodDays;
-
-    public WarmupDaysRule(final long warmupPeriodDays) {
-        if (warmupPeriodDays <= 0) {
+    public MinimumCountRule(final int minimumCount) {
+        if (minimumCount <= 0) {
             throw new IllegalStateException(
-                    "Warmup days rule must be configured with a positive warmup period");
+                    "Minimum count rule must be configured with a positive threshold");
         }
 
-        this.warmupPeriodDays = warmupPeriodDays;
+        this.minimumCount = minimumCount;
     }
 
     @Override
@@ -42,15 +39,14 @@ public final class WarmupDaysRule implements IEventBasedRule<Long> {
     }
 
     @Override
-    public boolean shouldAllowFeedbackPrompt(@NonNull final Long cachedEventValue) {
-        return SystemTimeUtil.currentTimeMillis() - cachedEventValue > DAYS.toMillis(warmupPeriodDays);
+    public boolean shouldAllowFeedbackPrompt(@NonNull final Integer cachedEventValue) {
+        return cachedEventValue >= minimumCount;
     }
 
     @NonNull
     @Override
     public String getDescription() {
-        return "WarmupDaysRule with a warmup period of "
-                + warmupPeriodDays + " day" + (warmupPeriodDays > 1 ? "s" : "");
+        return "MinimumCountRule with minimum required count of " + minimumCount;
     }
 
 }

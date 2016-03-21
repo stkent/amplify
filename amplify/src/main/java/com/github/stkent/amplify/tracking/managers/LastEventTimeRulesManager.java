@@ -28,7 +28,7 @@ import com.github.stkent.amplify.utils.time.SystemTimeUtil;
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
-public class LastEventTimeRulesManager extends BaseEventsManager<Long> {
+public final class LastEventTimeRulesManager extends BaseEventsManager<Long> {
 
     public LastEventTimeRulesManager(
             @NonNull final Context appContext,
@@ -55,7 +55,7 @@ public class LastEventTimeRulesManager extends BaseEventsManager<Long> {
     @Override
     protected String getEventTrackingStatusStringSuffix(@NonNull final Long cachedEventValue) {
         final Long daysSinceLastEvent = MILLISECONDS.toDays(SystemTimeUtil.currentTimeMillis() - cachedEventValue);
-        return " last occurred " + daysSinceLastEvent + " days ago";
+        return "last occurred " + daysSinceLastEvent + " days ago";
     }
 
     @NonNull

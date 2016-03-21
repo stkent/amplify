@@ -25,7 +25,7 @@ import com.github.stkent.amplify.tracking.interfaces.ISettings;
 
 import java.util.Map;
 
-public class Settings<T> implements ISettings<T> {
+public final class Settings<T> implements ISettings<T> {
 
     private static final String SHARED_PREFERENCES_NAME = "AMPLIFY_SHARED_PREFERENCES_NAME";
 

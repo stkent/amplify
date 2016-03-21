@@ -21,7 +21,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.support.annotation.NonNull;
 
-import com.github.stkent.amplify.tracking.interfaces.IAppInfoProvider;
+import com.github.stkent.amplify.utils.appinfo.IAppInfoProvider;
 import com.github.stkent.amplify.tracking.interfaces.IEnvironmentCapabilitiesProvider;
 
 import java.util.List;

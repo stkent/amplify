@@ -4,16 +4,25 @@ Respectfully request feedback in your Android app.
 
 <a href="https://travis-ci.org/stkent/amplify"><img src="https://travis-ci.org/stkent/amplify.svg" /></a> <a href="https://bintray.com/stkent/android-libraries/amplify/"><img src="https://img.shields.io/bintray/v/stkent/android-libraries/amplify.svg" /></a> <a href="http://www.detroitlabs.com/"><img src="https://img.shields.io/badge/Sponsor-Detroit%20Labs-000000.svg" /></a> [![Coverage Status](https://coveralls.io/repos/github/stkent/amplify/badge.svg?branch=master)](https://coveralls.io/github/stkent/amplify?branch=master) [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-amplify-green.svg?style=true)](https://android-arsenal.com/details/1/3290)
 
-# Table Of Contents
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
 
 - [Introduction](#introduction)
 - [Library Structure](#library-structure)
 - [Getting Started](#getting-started)
-    - [Default Behavior](#default-behavior)
+  - [Default Behavior](#default-behavior)
 - [Configuring](#configuring)
+  - [Prompt Timing](#prompt-timing)
+  - [Prompt UI](#prompt-ui)
 - [Customizing](#customizing)
+  - [Prompt Timing](#prompt-timing-1)
+  - [Prompt UI](#prompt-ui-1)
+- [Debug Settings](#debug-settings)
 - [Case Studies](#case-studies)
 - [License](#license)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 # Introduction
 
@@ -132,7 +141,7 @@ More information on how to apply your own collection of rules is available in th
 
 # Configuring
 
-## Rules
+## Prompt Timing
 
 _amplify_ calculates prompt timing based on two types of rule.
 
@@ -204,7 +213,7 @@ The following events are also automatically reported to the shared `Amplify` ins
 - thanks view was shown;
 - prompt was auto-dismissed.
 
-To apply rules based on these events, use the configuration methods `addTotalEventCountRule`, `addFirstEventTimeRule`, `addLastEventTimeRule`, `addLastEventVersionRule`. The method you select will determine which dimension of the event is tracked using `SharedPreferences`. Each method accepts two parameters:
+To apply rules based on these events, use the configuration methods `addTotalEventCountRule`, `addFirstEventTimeRule`, `addLastEventTimeRule`, `addLastEventVersionCodeRule`, and `addLastEventVersionNameRule`. The method you select will determine which dimension of the event is tracked using `SharedPreferences`. Each method accepts two parameters:
 
 - the event to be tracked; in this case, one of the events defined in the `PromptViewEvent` enum;
 - the event-based rule to be applied to that tracked dimension.
@@ -212,8 +221,10 @@ To apply rules based on these events, use the configuration methods `addTotalEve
 _amplify_ is packaged with the following event-based rules:
 
 - `CooldownDaysRule`: checks whether enough time has elapsed since the last occurrence of this event.
-- `MaximumCountRule`: checks whether this event has occurred enough times.
-- `VersionChangedRule`: checks whether this event has occurred for the current version of the embedding application.
+- `MaximumCountRule`: checks whether this event has occurred fewer than N times, for some number N.
+- `MinimumCountRule`: checks whether this event has occurred at least N times, for some number N.
+- `VersionCodeChangedRule`: checks whether this event has already occurred for the current version _code_ of the embedding application.
+- `VersionNameChangedRule`: checks whether this event has already occurred for the current version _name_ of the embedding application.
 - `WarmupDaysRule`: checks whether enough time has elapsed since the first occurrence of this event.
 
 An example configuration that leverage these rules is below:
@@ -285,7 +296,7 @@ Provided by the `DefaultLayoutPromptView` class. The basic layouts of the questi
     app:prompt_view_negative_button_border_color="@color/custom_negative_button_border_color" />
 ```
 
-All attributes are optional. The most important are `prompt_view_foreground_color` and `prompt_view_background_color`. All other attributes default to one of these two colors, so most use-cases can probably be supported by setting one or both of these attributes only.
+All attributes are optional. The most important are `prompt_view_foreground_color` and `prompt_view_background_color`. All other color attributes default to one of these two colors, so most use-cases can probably be supported by setting one or both of these attributes only.
 
 It is also possible to configure this layout in code. To do so, users apply a `BasePromptViewConfig` and/or a `DefaultLayoutPromptViewConfig` to the view. Each configuration type can be constructed using a builder, which allows only the desired attributes to be overridden. Below shows an example in which every possible attribute is configured this way:
 
@@ -434,7 +445,66 @@ Amplify.get(this).promptIfReady(this, promptView, new IEventListener<PromptViewE
 });
 ```
 
-## Debug Settings
+# Customizing
+
+## Prompt Timing
+
+### Applying Custom Environment-based Rules
+
+A new custom environment-based rule can be added by implementing the `IEnvironmentBasedRule` interface and passing an instance of this implementation to the `Amplify` instance method `addEnvironmentBasedRule`:
+
+```java
+public class ExampleApplication extends Application {
+    
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        
+        Amplify.get(this)
+               .setFeedbackEmailAddress("someone@example.com")
+               .addEnvironmentBasedRule(new MyCustomEnvironmentBasedRule());
+    }
+    
+}
+```
+
+### Tracking Custom Events
+
+A new custom event can be tracked by implementing the `IEvent` interface, registering this event with a corresponding (default or custom) `IEventBasedRule` using one of the following methods:
+
+- `addTotalEventCountRule`;
+- `addFirstEventTimeRule`;
+- `addLastEventTimeRule`;
+- `addLastEventVersionCodeRule`;
+- `addLastEventVersionNameRule`,
+
+and then notifying the `Amplify` instance of occurrences of this event using the `notifyEventTriggered` method:
+
+```java
+Amplify.get(this).notifyEventTriggered(new MyCustomEvent());
+```
+
+As before, the dimension of the event that will be tracked is dictated by which registration method is called.
+
+### Applying Custom Event-based Rules
+
+A new custom event can be tracked by implementing the `IEventBasedRule<T>` interface, and registering a (default or custom) `IEvent` with this custom `IEventBasedRule` using one of the following methods:
+
+- `addTotalEventCountRule`;
+- `addFirstEventTimeRule`;
+- `addLastEventTimeRule`;
+- `addLastEventVersionCodeRule`;
+- `addLastEventVersionNameRule`.
+
+The generic type `T` must be one of: `Integer`, `Long`, or `String`. The type you select will depend on which tracked event aspect (time, count, etc.) you wish to apply this check to.
+
+## Prompt UI
+
+To provide fully-custom views for each phase of the typical prompt flow, implement the `IPromptView` interface and pass an instance of this implementation to one of the `promptIfReady` methods. You should save the presenter injected into your custom class via the `setPresenter` method, and communicate user-driven events to the presenter within your custom view. See the `BasePromptView` for a sample implementation in which all questions are assumed to share a common view structure.
+
+To provide a totally custom experience in which _amplify_ does not manage the prompt/rating/feedback UI flows at all, replace any calls to `promptIfReady` with calls to `shouldPrompt`. This method will evaluate all rules and provide a boolean that indicates whether every provided rule is currently satisfied. You may then use this hook to begin your own feedback request flow.
+
+# Debug Settings
 
 The delayed nature of _amplify_ prompts can make it hard to test effectively when integrated. We provide the following debug configuration methods to help with this:
 
@@ -489,66 +559,9 @@ public class ExampleApplication extends Application {
 }
 ```
 
-# Customizing
-
-## Rules
-
-### Applying Custom Environment-based Rules
-
-A new custom environment-based rule can be added by implementing the `IEnvironmentBasedRule` interface and passing an instance of this implementation to the `Amplify` instance method `addEnvironmentBasedRule`:
-
-```java
-public class ExampleApplication extends Application {
-    
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        
-        Amplify.get(this)
-               .setFeedbackEmailAddress("someone@example.com")
-               .addEnvironmentBasedRule(new MyCustomEnvironmentBasedRule());
-    }
-    
-}
-```
-
-### Tracking Custom Events
-
-A new custom event can be tracked by implementing the `IEvent` interface, registering this event with a corresponding (default or custom) `IEventBasedRule` using one of the following methods:
-
-- `addTotalEventCountRule`;
-- `addFirstEventTimeRule`;
-- `addLastEventTimeRule`;
-- `addLastEventVersionRule`,
-
-and then notifying the `Amplify` instance of occurrences of this event using the `notifyEventTriggered` method:
-
-```java
-Amplify.get(this).notifyEventTriggered(new MyCustomEvent());
-```
-    
-As before, the dimension of the event that will be tracked is dictated by which registration method is called.
-
-### Applying Custom Event-based Rules
-
-A new custom event can be tracked by implementing the `IEventBasedRule<T>` interface, and registering a (default or custom) `IEvent` with this custom `IEventBasedRule` using one of the following methods:
-
-- `addTotalEventCountRule`;
-- `addFirstEventTimeRule`;
-- `addLastEventTimeRule`;
-- `addLastEventVersionRule`.
-
-The generic type `T` must be one of: `Integer`, `Long`, or `String`. The type you select will depend on which tracked event aspect (time, count, etc.) you wish to apply this check to.
-
-## Prompt UI
-
-To provide fully-custom views for each phase of the typical prompt flow, implement the `IPromptView` interface and pass an instance of this implementation to one of the `promptIfReady` methods. You should save the presenter injected into your custom class via the `setPresenter` method, and communicate user-driven events to the presenter within your custom view. See the `BasePromptView` for a sample implementation in which all questions are assumed to share a common view structure.
-
-To provide a totally custom experience in which _amplify_ does not manage the prompt/rating/feedback UI flows at all, replace any calls to `promptIfReady` with calls to `shouldPrompt`. This method will evaluate all rules and provide a boolean that indicates whether every provided rule is currently satisfied. You may then use this hook to begin your own feedback request flow.
-
 # Case Studies
 
-Early versions of _amplify_ are integrated in apps with state-wide and nation-wide audiences, with over 200,000 installs combined. After integrating _amplify_, our data indicates that the number of Play Store reviews received increases by a factor of **5x-10x**, and the number of feedback emails received **doubles**. We present screenshots showing example implementations below:
+Early versions of _amplify_ are integrated in apps with state-wide and national audiences, with over 200,000 installs combined. After integrating _amplify_, our data indicates that the number of Play Store reviews received increases by a factor of **5x-10x**, and the number of feedback emails received **doubles**. We present screenshots showing example implementations below:
 
 | Styled default layout |
 |-----------------------|

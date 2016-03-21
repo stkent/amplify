@@ -18,7 +18,6 @@ package com.github.stkent.amplify.tracking.rules;
 
 import com.github.stkent.amplify.helpers.BaseTest;
 import com.github.stkent.amplify.tracking.interfaces.IEnvironmentCapabilitiesProvider;
-import com.github.stkent.amplify.tracking.prerequisites.GooglePlayStoreRule;
 
 import org.junit.Test;
 import org.mockito.Mock;

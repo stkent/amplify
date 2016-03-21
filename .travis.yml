@@ -17,7 +17,7 @@ android:
 branches:
   only:
     - master
-    # Match semvar branch names like 1.0.0, 1.0.0-rc.2, etc.:
+    # Match semver branch names like 1.0.0, 1.0.0-rc.2, etc.:
     - /^\d+\.\d+\.\d+(?:-rc\.\d+)?$/
 
 script: ./travis-build.sh

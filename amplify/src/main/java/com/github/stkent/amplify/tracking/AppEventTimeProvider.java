@@ -19,9 +19,9 @@ package com.github.stkent.amplify.tracking;
 import android.support.annotation.NonNull;
 
 import com.github.stkent.amplify.tracking.interfaces.IAppEventTimeProvider;
-import com.github.stkent.amplify.tracking.interfaces.IAppInfoProvider;
+import com.github.stkent.amplify.utils.appinfo.IAppInfoProvider;
 
-public class AppEventTimeProvider implements IAppEventTimeProvider {
+public final class AppEventTimeProvider implements IAppEventTimeProvider {
 
     @NonNull
     private final IAppInfoProvider appInfoProvider;

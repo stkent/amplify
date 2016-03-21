@@ -23,25 +23,25 @@ import android.support.annotation.VisibleForTesting;
 
 import com.github.stkent.amplify.ILogger;
 import com.github.stkent.amplify.tracking.Settings;
-import com.github.stkent.amplify.tracking.interfaces.IAppInfoProvider;
+import com.github.stkent.amplify.utils.appinfo.IAppInfoProvider;
 import com.github.stkent.amplify.tracking.interfaces.ISettings;
 
-public class LastEventVersionRulesManager extends BaseEventsManager<String> {
+public final class LastEventVersionCodeRulesManager extends BaseEventsManager<Integer> {
 
     @NonNull
     private final IAppInfoProvider appInfoProvider;
 
-    public LastEventVersionRulesManager(
+    public LastEventVersionCodeRulesManager(
             @NonNull final Context appContext,
             @NonNull final IAppInfoProvider appInfoProvider,
             @NonNull final ILogger logger) {
 
-        this(new Settings<String>(appContext), appInfoProvider, logger);
+        this(new Settings<Integer>(appContext), appInfoProvider, logger);
     }
 
     @VisibleForTesting
-    protected LastEventVersionRulesManager(
-            @NonNull final ISettings<String> settings,
+    protected LastEventVersionCodeRulesManager(
+            @NonNull final ISettings<Integer> settings,
             @NonNull final IAppInfoProvider appInfoProvider,
             @NonNull final ILogger logger) {
 
@@ -52,19 +52,19 @@ public class LastEventVersionRulesManager extends BaseEventsManager<String> {
     @NonNull
     @Override
     protected String getTrackedEventDimensionDescription() {
-        return "Last version name";
+        return "Last version code";
     }
 
     @NonNull
     @Override
-    protected String getEventTrackingStatusStringSuffix(@NonNull final String cachedEventValue) {
-        return " last occurred for app version name " + cachedEventValue;
+    protected String getEventTrackingStatusStringSuffix(@NonNull final Integer cachedEventValue) {
+        return "last occurred for app version code " + cachedEventValue;
     }
 
     @NonNull
     @Override
-    public String getUpdatedTrackingValue(@Nullable final String cachedTrackingValue) {
-        return appInfoProvider.getPackageInfo().versionName;
+    public Integer getUpdatedTrackingValue(@Nullable final Integer cachedTrackingValue) {
+        return appInfoProvider.getPackageInfo().versionCode;
     }
 
 }

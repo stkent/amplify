@@ -23,41 +23,48 @@ import android.support.annotation.VisibleForTesting;
 
 import com.github.stkent.amplify.ILogger;
 import com.github.stkent.amplify.tracking.Settings;
+import com.github.stkent.amplify.utils.appinfo.IAppInfoProvider;
 import com.github.stkent.amplify.tracking.interfaces.ISettings;
 
-public final class TotalEventCountRulesManager extends BaseEventsManager<Integer> {
+public final class LastEventVersionNameRulesManager extends BaseEventsManager<String> {
 
-    public TotalEventCountRulesManager(
+    @NonNull
+    private final IAppInfoProvider appInfoProvider;
+
+    public LastEventVersionNameRulesManager(
             @NonNull final Context appContext,
+            @NonNull final IAppInfoProvider appInfoProvider,
             @NonNull final ILogger logger) {
 
-        this(new Settings<Integer>(appContext), logger);
+        this(new Settings<String>(appContext), appInfoProvider, logger);
     }
 
     @VisibleForTesting
-    protected TotalEventCountRulesManager(
-            @NonNull final ISettings<Integer> settings,
+    protected LastEventVersionNameRulesManager(
+            @NonNull final ISettings<String> settings,
+            @NonNull final IAppInfoProvider appInfoProvider,
             @NonNull final ILogger logger) {
 
         super(settings, logger);
+        this.appInfoProvider = appInfoProvider;
     }
 
     @NonNull
     @Override
     protected String getTrackedEventDimensionDescription() {
-        return "Total count";
+        return "Last version name";
     }
 
     @NonNull
     @Override
-    protected String getEventTrackingStatusStringSuffix(@NonNull final Integer cachedEventValue) {
-        return "has previously occurred " + cachedEventValue + " times";
+    protected String getEventTrackingStatusStringSuffix(@NonNull final String cachedEventValue) {
+        return "last occurred for app version name " + cachedEventValue;
     }
 
     @NonNull
     @Override
-    public Integer getUpdatedTrackingValue(@Nullable final Integer cachedTrackingValue) {
-        return cachedTrackingValue == null ? 1 : cachedTrackingValue + 1;
+    public String getUpdatedTrackingValue(@Nullable final String cachedTrackingValue) {
+        return appInfoProvider.getPackageInfo().versionName;
     }
 
 }

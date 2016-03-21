@@ -28,7 +28,7 @@ import com.github.stkent.amplify.utils.time.SystemTimeUtil;
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
-public class FirstEventTimeRulesManager extends BaseEventsManager<Long> {
+public final class FirstEventTimeRulesManager extends BaseEventsManager<Long> {
 
     public FirstEventTimeRulesManager(
             @NonNull final Context appContext,
@@ -55,7 +55,7 @@ public class FirstEventTimeRulesManager extends BaseEventsManager<Long> {
     @Override
     protected String getEventTrackingStatusStringSuffix(@NonNull final Long cachedEventValue) {
         final Long daysSinceFirstEvent = MILLISECONDS.toDays(SystemTimeUtil.currentTimeMillis() - cachedEventValue);
-        return " first occurred " + daysSinceFirstEvent + " days ago";
+        return "first occurred " + daysSinceFirstEvent + " days ago";
     }
 
     @NonNull

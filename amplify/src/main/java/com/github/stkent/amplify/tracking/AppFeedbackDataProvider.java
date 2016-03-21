@@ -21,10 +21,10 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 
 import com.github.stkent.amplify.tracking.interfaces.IAppFeedbackDataProvider;
-import com.github.stkent.amplify.tracking.interfaces.IAppInfoProvider;
+import com.github.stkent.amplify.utils.appinfo.IAppInfoProvider;
 import com.github.stkent.amplify.utils.StringUtils;
 
-public class AppFeedbackDataProvider implements IAppFeedbackDataProvider {
+public final class AppFeedbackDataProvider implements IAppFeedbackDataProvider {
 
     @NonNull
     private final IAppInfoProvider appInfoProvider;
