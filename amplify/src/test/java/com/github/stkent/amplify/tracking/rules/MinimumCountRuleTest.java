@@ -106,7 +106,7 @@ public class MinimumCountRuleTest extends BaseTest {
 
         // Assert
         assertFalse(
-                "Feedback prompt should be blocked if the count threshold has not been exceeded",
+                "Feedback prompt should be blocked if the count threshold is not met or exceeded",
                 ruleShouldAllowFeedbackPrompt);
     }
 
