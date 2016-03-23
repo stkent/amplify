@@ -52,10 +52,6 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
     @Nullable
     protected abstract U getThanksView();
 
-    private T displayedQuestionView;
-
-    private boolean displayed;
-
     private final IQuestionPresenter userOpinionQuestionPresenter =
             new IQuestionPresenter() {
                 @Override
@@ -84,6 +80,8 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
 
     private IPromptPresenter promptPresenter;
     private BasePromptViewConfig basePromptViewConfig;
+    private T displayedQuestionView;
+    private boolean displayed;
 
     BasePromptView(final Context context) {
         this(context, null);
