@@ -91,7 +91,7 @@ public class ExampleApplication extends Application {
     public void onCreate() {
         super.onCreate();
         
-        Amplify.get(this)
+        Amplify.initialize(this)
                .setFeedbackEmailAddress("someone@example.com")
                .applyAllDefaultRules();
     }
@@ -116,7 +116,7 @@ public class ExampleApplication extends Application {
 
 ```java
 DefaultLayoutPromptView promptView = (DefaultLayoutPromptView) findViewById(R.id.prompt_view);
-Amplify.get(context).promptIfReady(activity, promptView);
+Amplify.getSharedInstance().promptIfReady(promptView);
 ```
 
 That's it! The prompt timing calculator will evaluate the default rules each time `promptIfReady` is called, and instruct the `PromptView` to automatically update its visibility based on the result. If the user chooses to interact with the prompt, the sequence of questions asked is also automatically managed by the `PromptView`. If the user decides to give feedback, _amplify_ will automatically handle opening the appropriate Google Play Store page or email client with prepopulated details.
@@ -162,7 +162,7 @@ public class ExampleApplication extends Application {
     public void onCreate() {
         super.onCreate();
         
-        Amplify.get(this)
+        Amplify.initialize(this)
                .setFeedbackEmailAddress("someone@example.com")
                .addEnvironmentBasedRule(new GooglePlayStoreRule()); // Prompt never shown if Google Play Store not installed.
     }
@@ -189,7 +189,7 @@ public class ExampleApplication extends Application {
     public void onCreate() {
         super.onCreate();
         
-        Amplify.get(this)
+        Amplify.initialize(this)
                .setFeedbackEmailAddress("someone@example.com")
                .setInstallTimeCooldownDays(14)   // Prompt not shown within two weeks of initial install.
                .setLastUpdateTimeCooldownDays(7) // Prompt not shown within one week of most recent update.
@@ -238,7 +238,7 @@ public class ExampleApplication extends Application {
     public void onCreate() {
         super.onCreate();
         
-        Amplify.get(this)
+        Amplify.initialize(this)
                .setFeedbackEmailAddress("someone@example.com")
                .addTotalEventCountRule(PromptViewEvent.USER_GAVE_POSITIVE_FEEDBACK,
                         new MaximumCountRule(1)) // Never ask the user for feedback again if they already responded positively.
@@ -431,7 +431,7 @@ It may sometimes be useful to know when the state of the `IPromptView` subclass 
 To allow this, the `promptIfReady` method optionally accepts an `IEventListener<PromptViewEvent>` parameter that will receive notifications of all tracked `PromptViewEvents`. An example implementation demonstrating these use-cases is given below:
 
 ```java
-Amplify.get(this).promptIfReady(this, promptView, new IEventListener<PromptViewEvent>() {
+Amplify.getSharedInstance().promptIfReady(promptView, new IEventListener<PromptViewEvent>() {
     @Override
     public void notifyEventTriggered(@NonNull final PromptViewEvent event) {
         AnalyticsTracker.notifyOfEvent(event);
@@ -460,7 +460,7 @@ public class ExampleApplication extends Application {
     public void onCreate() {
         super.onCreate();
         
-        Amplify.get(this)
+        Amplify.initialize(this)
                .setFeedbackEmailAddress("someone@example.com")
                .addEnvironmentBasedRule(new MyCustomEnvironmentBasedRule());
     }
@@ -481,7 +481,7 @@ A new custom event can be tracked by implementing the `IEvent` interface, regist
 and then notifying the `Amplify` instance of occurrences of this event using the `notifyEventTriggered` method:
 
 ```java
-Amplify.get(this).notifyEventTriggered(new MyCustomEvent());
+Amplify.getSharedInstance().notifyEventTriggered(new MyCustomEvent());
 ```
 
 As before, the dimension of the event that will be tracked is dictated by which registration method is called.
@@ -517,7 +517,7 @@ public class ExampleApplication extends Application {
     public void onCreate() {
         super.onCreate();
         
-        Amplify.get(this)
+        Amplify.initialize(this)
                .setFeedbackEmailAddress("someone@example.com")
                .setLogLevel(BuildConfig.DEBUG ? Logger.LogLevel.DEBUG : Logger.LogLevel.NONE);
     }
@@ -534,7 +534,7 @@ public class ExampleApplication extends Application {
     public void onCreate() {
         super.onCreate();
         
-        Amplify.get(this)
+        Amplify.initialize(this)
                .setFeedbackEmailAddress("someone@example.com")
                .setAlwaysShow(BuildConfig.DEBUG);
     }
@@ -551,7 +551,7 @@ public class ExampleApplication extends Application {
     public void onCreate() {
         super.onCreate();
         
-        Amplify.get(this)
+        Amplify.initialize(this)
                .setFeedbackEmailAddress("someone@example.com")
                .setPackageName("my.release.package.name");
     }
