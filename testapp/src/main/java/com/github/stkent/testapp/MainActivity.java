@@ -20,7 +20,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         Amplify.getSharedInstance().promptIfReady(
                 (IPromptView) findViewById(R.id.default_layout_prompt_view_no_customization));
 
