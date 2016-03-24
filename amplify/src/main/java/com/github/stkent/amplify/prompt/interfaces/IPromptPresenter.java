@@ -19,7 +19,9 @@ package com.github.stkent.amplify.prompt.interfaces;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
-public interface IPromptPresenter {
+import com.github.stkent.amplify.tracking.interfaces.IEventListener;
+
+public interface IPromptPresenter extends IEventListener {
 
     enum UserOpinion {
         POSITIVE,

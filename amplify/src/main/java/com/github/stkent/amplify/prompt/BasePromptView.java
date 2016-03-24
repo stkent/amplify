@@ -35,6 +35,7 @@ import com.github.stkent.amplify.prompt.interfaces.IQuestionPresenter;
 import com.github.stkent.amplify.prompt.interfaces.IQuestionView;
 import com.github.stkent.amplify.prompt.interfaces.IThanksView;
 import com.github.stkent.amplify.tracking.Amplify;
+import com.github.stkent.amplify.tracking.PromptViewEvent;
 
 import static com.github.stkent.amplify.prompt.interfaces.IPromptPresenter.UserFeedbackAction.AGREED;
 import static com.github.stkent.amplify.prompt.interfaces.IPromptPresenter.UserFeedbackAction.DECLINED;
@@ -117,6 +118,9 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
             throw new IllegalStateException("PromptView is not fully configured.");
         }
 
+        // todo: don't fire this on config changes
+        promptPresenter.notifyEventTriggered(PromptViewEvent.PROMPT_SHOWN);
+
         final T userOpinionQuestionView = getQuestionView();
         userOpinionQuestionView.setPresenter(userOpinionQuestionPresenter);
         userOpinionQuestionView.bind(basePromptViewConfig.getUserOpinionQuestion());
@@ -146,6 +150,9 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
     @SuppressWarnings("ConstantConditions")
     @Override
     public final void thankUser() {
+        // todo: don't fire this on config changes
+        promptPresenter.notifyEventTriggered(PromptViewEvent.THANKS_SHOWN);
+
         final U thanksView = getThanksView();
         thanksView.bind(basePromptViewConfig.getThanks());
 
@@ -154,6 +161,9 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
 
     @Override
     public final void dismiss() {
+        // todo: don't fire this on config changes
+        promptPresenter.notifyEventTriggered(PromptViewEvent.PROMPT_DISMISSED);
+
         setVisibility(GONE);
     }
 

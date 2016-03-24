@@ -22,6 +22,7 @@ import android.support.annotation.NonNull;
 import com.github.stkent.amplify.prompt.interfaces.IPromptPresenter;
 import com.github.stkent.amplify.prompt.interfaces.IPromptView;
 import com.github.stkent.amplify.tracking.PromptInteractionEvent;
+import com.github.stkent.amplify.tracking.interfaces.IEvent;
 import com.github.stkent.amplify.tracking.interfaces.IEventListener;
 
 public final class PromptPresenter implements IPromptPresenter {
@@ -44,6 +45,11 @@ public final class PromptPresenter implements IPromptPresenter {
 
         this.eventListener = eventListener;
         this.promptView = promptView;
+    }
+
+    @Override
+    public void notifyEventTriggered(@NonNull final IEvent event) {
+        eventListener.notifyEventTriggered(event);
     }
 
     @Override
