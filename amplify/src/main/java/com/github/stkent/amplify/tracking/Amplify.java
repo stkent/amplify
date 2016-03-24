@@ -150,13 +150,13 @@ public final class Amplify implements IEventListener {
                 .addEnvironmentBasedRule(new GooglePlayStoreRule())
                 .setLastUpdateTimeCooldownDays(DEFAULT_LAST_UPDATE_TIME_COOLDOWN_DAYS)
                 .setLastCrashTimeCooldownDays(DEFAULT_LAST_CRASH_TIME_COOLDOWN_DAYS)
-                .addTotalEventCountRule(PromptViewEvent.USER_GAVE_POSITIVE_FEEDBACK,
+                .addTotalEventCountRule(PromptInteractionEvent.USER_GAVE_POSITIVE_FEEDBACK,
                         new MaximumCountRule(DEFAULT_USER_GAVE_POSITIVE_FEEDBACK_MAXIMUM_COUNT))
-                .addLastEventVersionNameRule(PromptViewEvent.USER_GAVE_CRITICAL_FEEDBACK,
+                .addLastEventVersionNameRule(PromptInteractionEvent.USER_GAVE_CRITICAL_FEEDBACK,
                         new VersionNameChangedRule())
-                .addLastEventVersionNameRule(PromptViewEvent.USER_DECLINED_CRITICAL_FEEDBACK,
+                .addLastEventVersionNameRule(PromptInteractionEvent.USER_DECLINED_CRITICAL_FEEDBACK,
                         new VersionNameChangedRule())
-                .addLastEventVersionNameRule(PromptViewEvent.USER_DECLINED_POSITIVE_FEEDBACK,
+                .addLastEventVersionNameRule(PromptInteractionEvent.USER_DECLINED_POSITIVE_FEEDBACK,
                         new VersionNameChangedRule());
     }
 
@@ -248,13 +248,13 @@ public final class Amplify implements IEventListener {
         lastEventVersionCodeRulesManager.notifyEventTriggered(event);
         lastEventVersionNameRulesManager.notifyEventTriggered(event);
 
-        if (event == PromptViewEvent.USER_GAVE_POSITIVE_FEEDBACK) {
+        if (event == PromptInteractionEvent.USER_GAVE_POSITIVE_FEEDBACK) {
             final Activity activity = activityReferenceManager.getValidatedActivity();
 
             if (activity != null) {
                 PlayStoreUtil.openPlayStoreToRate(activity, packageName);
             }
-        } else if (event == PromptViewEvent.USER_GAVE_CRITICAL_FEEDBACK) {
+        } else if (event == PromptInteractionEvent.USER_GAVE_CRITICAL_FEEDBACK) {
             final Activity activity = activityReferenceManager.getValidatedActivity();
 
             if (activity != null) {

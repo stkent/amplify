@@ -22,18 +22,9 @@ import com.github.stkent.amplify.tracking.interfaces.IEvent;
 
 import static com.github.stkent.amplify.utils.Constants.EXHAUSTIVE_SWITCH_EXCEPTION_MESSAGE;
 
-@SuppressWarnings("PMD.StdCyclomaticComplexity")
 public enum PromptViewEvent implements IEvent {
 
     PROMPT_SHOWN,
-    USER_INDICATED_POSITIVE_OPINION,
-    USER_INDICATED_CRITICAL_OPINION,
-    USER_GAVE_POSITIVE_FEEDBACK,
-    USER_GAVE_CRITICAL_FEEDBACK,
-    USER_DECLINED_POSITIVE_FEEDBACK,
-    USER_DECLINED_CRITICAL_FEEDBACK,
-    USER_GAVE_FEEDBACK,
-    USER_DECLINED_FEEDBACK,
     THANKS_SHOWN,
     PROMPT_DISMISSED;
 
@@ -43,22 +34,6 @@ public enum PromptViewEvent implements IEvent {
         switch (this) {
             case PROMPT_SHOWN:
                 return "PROMPT_SHOWN";
-            case USER_INDICATED_POSITIVE_OPINION:
-                return "USER_INDICATED_POSITIVE_OPINION";
-            case USER_INDICATED_CRITICAL_OPINION:
-                return "USER_INDICATED_CRITICAL_OPINION";
-            case USER_GAVE_CRITICAL_FEEDBACK:
-                return "USER_GAVE_CRITICAL_FEEDBACK";
-            case USER_GAVE_POSITIVE_FEEDBACK:
-                return "USER_GAVE_POSITIVE_FEEDBACK";
-            case USER_DECLINED_CRITICAL_FEEDBACK:
-                return "USER_DECLINED_CRITICAL_FEEDBACK";
-            case USER_DECLINED_POSITIVE_FEEDBACK:
-                return "USER_DECLINED_POSITIVE_FEEDBACK";
-            case USER_GAVE_FEEDBACK:
-                return "USER_GAVE_FEEDBACK";
-            case USER_DECLINED_FEEDBACK:
-                return "USER_DECLINED_FEEDBACK";
             case THANKS_SHOWN:
                 return "THANKS_SHOWN";
             case PROMPT_DISMISSED:
