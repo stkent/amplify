@@ -36,6 +36,7 @@ import com.github.stkent.amplify.prompt.interfaces.IQuestionView;
 import com.github.stkent.amplify.prompt.interfaces.IThanksView;
 import com.github.stkent.amplify.tracking.Amplify;
 import com.github.stkent.amplify.tracking.PromptViewEvent;
+import com.github.stkent.amplify.tracking.interfaces.IEventListener;
 
 import static com.github.stkent.amplify.prompt.interfaces.IPromptPresenter.UserFeedbackAction.AGREED;
 import static com.github.stkent.amplify.prompt.interfaces.IPromptPresenter.UserFeedbackAction.DECLINED;
@@ -174,6 +175,10 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
 
     public void applyBaseConfig(@NonNull final BasePromptViewConfig basePromptViewConfig) {
         this.basePromptViewConfig = basePromptViewConfig;
+    }
+
+    public void addPromptEventListener(@NonNull final IEventListener promptEventListener) {
+        promptPresenter.addPromptEventListener(promptEventListener);
     }
 
     protected boolean isDisplayed() {

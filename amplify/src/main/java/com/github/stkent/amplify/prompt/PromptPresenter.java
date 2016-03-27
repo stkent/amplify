@@ -63,7 +63,7 @@ public final class PromptPresenter implements IPromptPresenter {
     }
 
     @Override
-    public void addEventListener(@NonNull final IEventListener promptEventListener) {
+    public void addPromptEventListener(@NonNull final IEventListener promptEventListener) {
         extraEventListeners.add(promptEventListener);
     }
 

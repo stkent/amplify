@@ -42,7 +42,7 @@ public interface IPromptPresenter extends IEventListener {
         DISMISSED
     }
 
-    void addEventListener(@NonNull final IEventListener promptEventListener);
+    void addPromptEventListener(@NonNull final IEventListener promptEventListener);
 
     void start();
     void reportUserOpinion(@NonNull final UserOpinion userOpinion);
