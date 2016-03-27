@@ -25,6 +25,9 @@ import com.github.stkent.amplify.tracking.PromptInteractionEvent;
 import com.github.stkent.amplify.tracking.interfaces.IEvent;
 import com.github.stkent.amplify.tracking.interfaces.IEventListener;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public final class PromptPresenter implements IPromptPresenter {
 
     private static final String PROMPT_FLOW_STATE_KEY = "PromptFlowStateKey";
@@ -39,6 +42,9 @@ public final class PromptPresenter implements IPromptPresenter {
     @NonNull
     private PromptFlowState promptFlowState = DEFAULT_PROMPT_FLOW_STATE;
 
+    @NonNull
+    private final List<IEventListener> extraEventListeners = new ArrayList<>();
+
     public PromptPresenter(
             @NonNull final IEventListener eventListener,
             @NonNull final IPromptView promptView) {
@@ -50,6 +56,15 @@ public final class PromptPresenter implements IPromptPresenter {
     @Override
     public void notifyEventTriggered(@NonNull final IEvent event) {
         eventListener.notifyEventTriggered(event);
+
+        for (final IEventListener extraEventListener: extraEventListeners) {
+            extraEventListener.notifyEventTriggered(event);
+        }
+    }
+
+    @Override
+    public void addEventListener(@NonNull final IEventListener promptEventListener) {
+        extraEventListeners.add(promptEventListener);
     }
 
     @Override
@@ -60,10 +75,10 @@ public final class PromptPresenter implements IPromptPresenter {
     @Override
     public void reportUserOpinion(@NonNull final UserOpinion userOpinion) {
         if (userOpinion == UserOpinion.POSITIVE) {
-            eventListener.notifyEventTriggered(PromptInteractionEvent.USER_INDICATED_POSITIVE_OPINION);
+            notifyEventTriggered(PromptInteractionEvent.USER_INDICATED_POSITIVE_OPINION);
             setToState(PromptFlowState.REQUESTING_POSITIVE_FEEDBACK);
         } else if (userOpinion == UserOpinion.CRITICAL) {
-            eventListener.notifyEventTriggered(PromptInteractionEvent.USER_INDICATED_CRITICAL_OPINION);
+            notifyEventTriggered(PromptInteractionEvent.USER_INDICATED_CRITICAL_OPINION);
             setToState(PromptFlowState.REQUESTING_CRITICAL_FEEDBACK);
         }
     }
@@ -104,12 +119,12 @@ public final class PromptPresenter implements IPromptPresenter {
     }
 
     private void handleUserAgreedToGiveFeedback() {
-        eventListener.notifyEventTriggered(PromptInteractionEvent.USER_GAVE_FEEDBACK);
+        notifyEventTriggered(PromptInteractionEvent.USER_GAVE_FEEDBACK);
 
         if (promptFlowState == PromptFlowState.REQUESTING_POSITIVE_FEEDBACK) {
-            eventListener.notifyEventTriggered(PromptInteractionEvent.USER_GAVE_POSITIVE_FEEDBACK);
+            notifyEventTriggered(PromptInteractionEvent.USER_GAVE_POSITIVE_FEEDBACK);
         } else if (promptFlowState == PromptFlowState.REQUESTING_CRITICAL_FEEDBACK) {
-            eventListener.notifyEventTriggered(PromptInteractionEvent.USER_GAVE_CRITICAL_FEEDBACK);
+            notifyEventTriggered(PromptInteractionEvent.USER_GAVE_CRITICAL_FEEDBACK);
         }
 
         if (promptView.providesThanksView()) {
@@ -120,12 +135,12 @@ public final class PromptPresenter implements IPromptPresenter {
     }
 
     private void handleUserDeclinedToGiveFeedback() {
-        eventListener.notifyEventTriggered(PromptInteractionEvent.USER_DECLINED_FEEDBACK);
+        notifyEventTriggered(PromptInteractionEvent.USER_DECLINED_FEEDBACK);
 
         if (promptFlowState == PromptFlowState.REQUESTING_POSITIVE_FEEDBACK) {
-            eventListener.notifyEventTriggered(PromptInteractionEvent.USER_DECLINED_POSITIVE_FEEDBACK);
+            notifyEventTriggered(PromptInteractionEvent.USER_DECLINED_POSITIVE_FEEDBACK);
         } else if (promptFlowState == PromptFlowState.REQUESTING_CRITICAL_FEEDBACK) {
-            eventListener.notifyEventTriggered(PromptInteractionEvent.USER_DECLINED_CRITICAL_FEEDBACK);
+            notifyEventTriggered(PromptInteractionEvent.USER_DECLINED_CRITICAL_FEEDBACK);
         }
 
         setToState(PromptFlowState.DISMISSED);
