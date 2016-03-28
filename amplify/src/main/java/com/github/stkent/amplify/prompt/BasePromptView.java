@@ -126,8 +126,7 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
         displayQuestionViewIfNeeded();
         displayedQuestionView.setPresenter(userOpinionQuestionPresenter);
         displayedQuestionView.bind(basePromptViewConfig.getUserOpinionQuestion());
-
-        displayed = true;
+        setDisplayed(true);
     }
 
     @Override
@@ -135,6 +134,7 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
         displayQuestionViewIfNeeded();
         displayedQuestionView.setPresenter(feedbackQuestionPresenter);
         displayedQuestionView.bind(basePromptViewConfig.getPositiveFeedbackQuestion());
+        setDisplayed(true);
     }
 
     @Override
@@ -142,6 +142,7 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
         displayQuestionViewIfNeeded();
         displayedQuestionView.setPresenter(feedbackQuestionPresenter);
         displayedQuestionView.bind(basePromptViewConfig.getCriticalFeedbackQuestion());
+        setDisplayed(true);
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -156,6 +157,7 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
 
         clearDisplayedQuestionViewReference();
         setDisplayedView(thanksView);
+        setDisplayed(true);
     }
 
     @Override
@@ -166,6 +168,7 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
 
         clearDisplayedQuestionViewReference();
         setVisibility(GONE);
+        setDisplayed(false);
     }
 
     @Override
@@ -214,6 +217,10 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
 
     private void clearDisplayedQuestionViewReference() {
         displayedQuestionView = null;
+    }
+
+    private void setDisplayed(final boolean displayed) {
+        this.displayed = displayed;
     }
 
     @Override
