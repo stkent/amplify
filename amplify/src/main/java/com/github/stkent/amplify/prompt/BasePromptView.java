@@ -227,7 +227,7 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
     protected Parcelable onSaveInstanceState() {
         final Parcelable superState = super.onSaveInstanceState();
         final AugmentedSavedState augmentedSavedState = new AugmentedSavedState(superState);
-        augmentedSavedState.setAugmentedState(promptPresenter.saveStateToBundle());
+        augmentedSavedState.setAugmentedState(promptPresenter.generateBundleContainingState());
         return augmentedSavedState;
     }
 
