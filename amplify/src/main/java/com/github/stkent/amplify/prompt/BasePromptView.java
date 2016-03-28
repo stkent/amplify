@@ -114,13 +114,14 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
     }
 
     @Override
-    public final void queryUserOpinion() {
+    public final void queryUserOpinion(final boolean triggeredByConfigChange) {
         if (!isConfigured()) {
             throw new IllegalStateException("PromptView is not fully configured.");
         }
 
-        // todo: don't fire this on config changes
-        promptPresenter.notifyEventTriggered(PromptViewEvent.PROMPT_SHOWN);
+        if (!triggeredByConfigChange) {
+            promptPresenter.notifyEventTriggered(PromptViewEvent.PROMPT_SHOWN);
+        }
 
         final T userOpinionQuestionView = getQuestionView();
         userOpinionQuestionView.setPresenter(userOpinionQuestionPresenter);
@@ -150,9 +151,10 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
 
     @SuppressWarnings("ConstantConditions")
     @Override
-    public final void thankUser() {
-        // todo: don't fire this on config changes
-        promptPresenter.notifyEventTriggered(PromptViewEvent.THANKS_SHOWN);
+    public final void thankUser(final boolean triggeredByConfigChange) {
+        if (!triggeredByConfigChange) {
+            promptPresenter.notifyEventTriggered(PromptViewEvent.THANKS_SHOWN);
+        }
 
         final U thanksView = getThanksView();
         thanksView.bind(basePromptViewConfig.getThanks());
@@ -161,9 +163,10 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
     }
 
     @Override
-    public final void dismiss() {
-        // todo: don't fire this on config changes
-        promptPresenter.notifyEventTriggered(PromptViewEvent.PROMPT_DISMISSED);
+    public final void dismiss(final boolean triggeredByConfigChange) {
+        if (!triggeredByConfigChange) {
+            promptPresenter.notifyEventTriggered(PromptViewEvent.PROMPT_DISMISSED);
+        }
 
         setVisibility(GONE);
     }

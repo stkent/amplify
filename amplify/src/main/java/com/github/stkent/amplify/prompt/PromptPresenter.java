@@ -114,7 +114,7 @@ public final class PromptPresenter implements IPromptPresenter {
                                 PROMPT_FLOW_STATE_KEY,
                                 DEFAULT_PROMPT_FLOW_STATE.ordinal())];
 
-        setToState(promptFlowState);
+        setToState(promptFlowState, true);
     }
 
     @NonNull
@@ -154,13 +154,20 @@ public final class PromptPresenter implements IPromptPresenter {
     }
 
     private void setToState(@NonNull final PromptFlowState promptFlowState) {
+        setToState(promptFlowState, false);
+    }
+
+    private void setToState(
+            @NonNull final PromptFlowState promptFlowState,
+            final boolean triggeredByConfigChange) {
+
         this.promptFlowState = promptFlowState;
 
         started = promptFlowState != PromptFlowState.INITIALIZED;
 
         switch (promptFlowState) {
             case QUERYING_USER_OPINION:
-                promptView.queryUserOpinion();
+                promptView.queryUserOpinion(triggeredByConfigChange);
                 break;
             case REQUESTING_POSITIVE_FEEDBACK:
                 promptView.requestPositiveFeedback();
@@ -169,10 +176,10 @@ public final class PromptPresenter implements IPromptPresenter {
                 promptView.requestCriticalFeedback();
                 break;
             case THANKING_USER:
-                promptView.thankUser();
+                promptView.thankUser(triggeredByConfigChange);
                 break;
             case DISMISSED:
-                promptView.dismiss();
+                promptView.dismiss(triggeredByConfigChange);
                 break;
             default:
                 break;

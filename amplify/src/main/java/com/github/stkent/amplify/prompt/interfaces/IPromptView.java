@@ -23,10 +23,10 @@ public interface IPromptView {
     @NonNull
     IPromptPresenter getPresenter();
 
-    void queryUserOpinion();
+    void queryUserOpinion(final boolean triggeredByConfigChange);
     void requestPositiveFeedback();
     void requestCriticalFeedback();
-    void dismiss();
+    void dismiss(final boolean triggeredByConfigChange);
 
     boolean providesThanksView();
 
@@ -34,6 +34,6 @@ public interface IPromptView {
      * <code>IPromptPresenter</code> instances should only call this method if
      * <code>providesThanksView</code> returns <code>true</code>.
      */
-    void thankUser();
+    void thankUser(final boolean triggeredByConfigChange);
 
 }
