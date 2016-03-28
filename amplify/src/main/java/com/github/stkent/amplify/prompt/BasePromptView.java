@@ -123,30 +123,25 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
             promptPresenter.notifyEventTriggered(PromptViewEvent.PROMPT_SHOWN);
         }
 
-        final T userOpinionQuestionView = getQuestionView();
-        userOpinionQuestionView.setPresenter(userOpinionQuestionPresenter);
-        userOpinionQuestionView.bind(basePromptViewConfig.getUserOpinionQuestion());
-
-        setDisplayedView(userOpinionQuestionView);
-
-        displayedQuestionView = userOpinionQuestionView;
+        displayQuestionViewIfNeeded();
+        displayedQuestionView.setPresenter(userOpinionQuestionPresenter);
+        displayedQuestionView.bind(basePromptViewConfig.getUserOpinionQuestion());
 
         displayed = true;
     }
 
     @Override
     public final void requestPositiveFeedback() {
+        displayQuestionViewIfNeeded();
         displayedQuestionView.setPresenter(feedbackQuestionPresenter);
         displayedQuestionView.bind(basePromptViewConfig.getPositiveFeedbackQuestion());
     }
 
     @Override
     public final void requestCriticalFeedback() {
-        final T criticalFeedbackQuestionView = getQuestionView();
-        criticalFeedbackQuestionView.setPresenter(feedbackQuestionPresenter);
-        criticalFeedbackQuestionView.bind(basePromptViewConfig.getCriticalFeedbackQuestion());
-
-        setDisplayedView(criticalFeedbackQuestionView);
+        displayQuestionViewIfNeeded();
+        displayedQuestionView.setPresenter(feedbackQuestionPresenter);
+        displayedQuestionView.bind(basePromptViewConfig.getCriticalFeedbackQuestion());
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -159,6 +154,7 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
         final U thanksView = getThanksView();
         thanksView.bind(basePromptViewConfig.getThanks());
 
+        clearDisplayedQuestionViewReference();
         setDisplayedView(thanksView);
     }
 
@@ -168,6 +164,7 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
             promptPresenter.notifyEventTriggered(PromptViewEvent.PROMPT_DISMISSED);
         }
 
+        clearDisplayedQuestionViewReference();
         setVisibility(GONE);
     }
 
@@ -205,6 +202,18 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
         removeAllViews();
         addView(view, new LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+    }
+
+    private void displayQuestionViewIfNeeded() {
+        if (displayedQuestionView == null) {
+            final T questionViewToDisplay = getQuestionView();
+            displayedQuestionView = questionViewToDisplay;
+            setDisplayedView(questionViewToDisplay);
+        }
+    }
+
+    private void clearDisplayedQuestionViewReference() {
+        displayedQuestionView = null;
     }
 
     @Override
