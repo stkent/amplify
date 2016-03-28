@@ -172,19 +172,19 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
     }
 
     @Override
-    public boolean providesThanksView() {
+    public final boolean providesThanksView() {
         return getThanksView() != null;
     }
 
-    public void applyBaseConfig(@NonNull final BasePromptViewConfig basePromptViewConfig) {
+    public final void applyBaseConfig(@NonNull final BasePromptViewConfig basePromptViewConfig) {
         this.basePromptViewConfig = basePromptViewConfig;
     }
 
-    public void addPromptEventListener(@NonNull final IEventListener promptEventListener) {
+    public final void addPromptEventListener(@NonNull final IEventListener promptEventListener) {
         promptPresenter.addPromptEventListener(promptEventListener);
     }
 
-    protected boolean isDisplayed() {
+    protected final boolean isDisplayed() {
         return displayed;
     }
 
