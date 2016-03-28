@@ -107,6 +107,21 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
         promptPresenter = new PromptPresenter(Amplify.getSharedInstance(), this);
     }
 
+    @Override
+    protected Parcelable onSaveInstanceState() {
+        final Parcelable superState = super.onSaveInstanceState();
+        final SavedState savedState = new SavedState(superState);
+        savedState.setPromptPresenterState(promptPresenter.generateStateBundle());
+        return savedState;
+    }
+
+    @Override
+    protected final void onRestoreInstanceState(@NonNull final Parcelable state) {
+        final SavedState savedState = (SavedState) state;
+        super.onRestoreInstanceState(savedState.getSuperState());
+        promptPresenter.restoreStateFromBundle(savedState.getPromptPresenterState());
+    }
+
     @NonNull
     @Override
     public IPromptPresenter getPresenter() {
@@ -203,6 +218,9 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
 
     private void setDisplayedView(@NonNull final View view) {
         removeAllViews();
+
+        view.setSaveEnabled(false);
+
         addView(view, new LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
     }
@@ -221,21 +239,6 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
 
     private void setDisplayed(final boolean displayed) {
         this.displayed = displayed;
-    }
-
-    @Override
-    protected Parcelable onSaveInstanceState() {
-        final Parcelable superState = super.onSaveInstanceState();
-        final SavedState savedState = new SavedState(superState);
-        savedState.setPromptPresenterState(promptPresenter.generateStateBundle());
-        return savedState;
-    }
-
-    @Override
-    protected final void onRestoreInstanceState(@NonNull final Parcelable state) {
-        final SavedState savedState = (SavedState) state;
-        super.onRestoreInstanceState(savedState.getSuperState());
-        promptPresenter.restoreStateFromBundle(savedState.getPromptPresenterState());
     }
 
     private static class SavedState extends BaseSavedState {
