@@ -112,7 +112,7 @@ public final class PromptPresenter implements IPromptPresenter {
 
     @NonNull
     @Override
-    public Bundle generateBundleContainingState() {
+    public Bundle generateStateBundle() {
         final Bundle result = new Bundle();
         result.putInt(PROMPT_FLOW_STATE_KEY, promptFlowState.ordinal());
         return result;

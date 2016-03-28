@@ -226,54 +226,54 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
     @Override
     protected Parcelable onSaveInstanceState() {
         final Parcelable superState = super.onSaveInstanceState();
-        final AugmentedSavedState augmentedSavedState = new AugmentedSavedState(superState);
-        augmentedSavedState.setAugmentedState(promptPresenter.generateBundleContainingState());
-        return augmentedSavedState;
+        final SavedState savedState = new SavedState(superState);
+        savedState.setPromptPresenterState(promptPresenter.generateStateBundle());
+        return savedState;
     }
 
     @Override
     protected final void onRestoreInstanceState(@NonNull final Parcelable state) {
-        final AugmentedSavedState augmentedSavedState = (AugmentedSavedState) state;
-        super.onRestoreInstanceState(augmentedSavedState.getSuperState());
-        promptPresenter.restoreStateFromBundle(augmentedSavedState.getAugmentedState());
+        final SavedState savedState = (SavedState) state;
+        super.onRestoreInstanceState(savedState.getSuperState());
+        promptPresenter.restoreStateFromBundle(savedState.getPromptPresenterState());
     }
 
-    private static class AugmentedSavedState extends BaseSavedState {
+    private static class SavedState extends BaseSavedState {
 
-        private Bundle augmentedState;
+        private Bundle promptPresenterState;
 
-        protected AugmentedSavedState(final Parcelable superState) {
+        protected SavedState(final Parcelable superState) {
             super(superState);
         }
 
-        protected AugmentedSavedState(final Parcel in) {
+        protected SavedState(final Parcel in) {
             super(in);
-            augmentedState = in.readBundle(getClass().getClassLoader());
+            promptPresenterState = in.readBundle(getClass().getClassLoader());
         }
 
-        private Bundle getAugmentedState() {
-            return augmentedState;
+        private Bundle getPromptPresenterState() {
+            return promptPresenterState;
         }
 
-        private void setAugmentedState(final Bundle augmentedState) {
-            this.augmentedState = augmentedState;
+        private void setPromptPresenterState(final Bundle promptPresenterState) {
+            this.promptPresenterState = promptPresenterState;
         }
 
         @Override
         public void writeToParcel(final Parcel out, final int flags) {
             super.writeToParcel(out, flags);
-            out.writeBundle(augmentedState);
+            out.writeBundle(promptPresenterState);
         }
 
-        public static final Parcelable.Creator<AugmentedSavedState> CREATOR
-                = new Parcelable.Creator<AugmentedSavedState>() {
+        public static final Parcelable.Creator<SavedState> CREATOR
+                = new Parcelable.Creator<SavedState>() {
 
-            public AugmentedSavedState createFromParcel(final Parcel in) {
-                return new AugmentedSavedState(in);
+            public SavedState createFromParcel(final Parcel in) {
+                return new SavedState(in);
             }
 
-            public AugmentedSavedState[] newArray(final int size) {
-                return new AugmentedSavedState[size];
+            public SavedState[] newArray(final int size) {
+                return new SavedState[size];
             }
 
         };

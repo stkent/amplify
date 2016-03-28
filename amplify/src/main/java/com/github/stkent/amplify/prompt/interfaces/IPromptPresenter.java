@@ -49,7 +49,7 @@ public interface IPromptPresenter extends IEventListener {
     void reportUserFeedbackAction(@NonNull final UserFeedbackAction userFeedbackAction);
 
     @NonNull
-    Bundle generateBundleContainingState();
+    Bundle generateStateBundle();
 
     void restoreStateFromBundle(final Bundle bundle);
 
