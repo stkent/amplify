@@ -111,7 +111,7 @@ public class ExampleApplication extends Application {
 ```
 
 <ol start="4">
-  <li>Call the state tracker's <code>promptIfReady</code> method when appropriate, passing in the current <code>Activity</code> and your <code>DefaultLayoutPromptView</code> instance:</li>
+  <li>Get the shared <code>Amplify</code> instance and call its <code>promptIfReady</code> method when appropriate, passing in your <code>DefaultLayoutPromptView</code> instance:</li>
 </ol>
 
 ```java
@@ -119,7 +119,7 @@ DefaultLayoutPromptView promptView = (DefaultLayoutPromptView) findViewById(R.id
 Amplify.getSharedInstance().promptIfReady(promptView);
 ```
 
-That's it! The prompt timing calculator will evaluate the default rules each time `promptIfReady` is called, and instruct the `PromptView` to automatically update its visibility based on the result. If the user chooses to interact with the prompt, the sequence of questions asked is also automatically managed by the `PromptView`. If the user decides to give feedback, _amplify_ will automatically handle opening the appropriate Google Play Store page or email client with prepopulated details.
+That's it! The prompt timing calculator will evaluate the default rules each time `promptIfReady` is called, and instruct the `PromptView` to automatically update its state based on the result. If the user chooses to interact with the prompt, the sequence of questions asked is also automatically managed. If the user decides to give feedback, _amplify_ will handle opening the appropriate Google Play Store page or email client with pre-populated details.
 
 ## Default Behavior
 
@@ -145,7 +145,7 @@ More information on how to apply your own collection of rules is available in th
 
 _amplify_ calculates prompt timing based on two types of rule.
 
-### Environment-based Rules
+### Environment-Based Rules
 
 These rules are based on the environment/device in which the embedding application is currently running. For example, they may query whether or not the current device is capable of handling a specific [`Intent`](http://developer.android.com/reference/android/content/Intent.html).
 
@@ -170,7 +170,7 @@ public class ExampleApplication extends Application {
 }
 ```
 
-### Event-based Rules
+### Event-Based Rules
 
 These rules are based on tracked events that occur within the embedding application. Different dimensions of these events can be tracked (time of first/most recent occurrence, total number of occurrences, etc.)
 
@@ -199,7 +199,7 @@ public class ExampleApplication extends Application {
 }
 ```
 
-The following events are also automatically reported to the shared `Amplify` instance whenever you use one of the `promptIfReady` methods to show your prompt:
+The following events are also automatically reported to the shared `Amplify` instance whenever you use the `promptIfReady` method to show your prompt:
 
 - prompt was shown;
 - user indicated a positive opinion of the app;
@@ -421,35 +421,39 @@ promptView.applyBaseConfig(basePromptViewConfig);
 promptView.applyConfig(customLayoutPromptViewConfig);
 ```
 
-### Listening For `IPromptView` Events
+### Listening For Prompt-Related Events
 
-It may sometimes be useful to know when the state of the `IPromptView` subclass you are using changes. For example, you may want to:
+It may sometimes be useful to know when prompt-related events occurs. For example, you may want to:
 
 - track user interactions with the prompt view using your preferred analytics suite;
 - adjust other UI elements when the prompt view is shown/hidden.
 
-To allow this, the `promptIfReady` method optionally accepts an `IEventListener<PromptViewEvent>` parameter that will receive notifications of all tracked `PromptViewEvents`. An example implementation demonstrating these use-cases is given below:
+To achieve this, pass an `IEventListener` instance to the `addPromptEventListener` method of your prompt view. An example implementation demonstrating these use-cases is given below:
 
 ```java
-Amplify.getSharedInstance().promptIfReady(promptView, new IEventListener<PromptViewEvent>() {
+DefaultLayoutPromptView promptView = (DefaultLayoutPromptView) findViewById(R.id.prompt_view);
+
+promptView.addPromptEventListener(new IEventListener() {
     @Override
-    public void notifyEventTriggered(@NonNull final PromptViewEvent event) {
-        AnalyticsTracker.notifyOfEvent(event);
+    public void notifyEventTriggered(@NonNull final IEvent event) {
+        AnalyticsTracker.reportPromptEvent(event);
     
         if (event == PromptViewEvent.PROMPT_SHOWN) {
-            relatedView.setVisibility(VISIBLE);
+            relatedView.setVisibility(View.VISIBLE);
         } else if (event == PromptViewEvent.PROMPT_DISMISSED) {
-            relatedView.setVisibility(GONE);
+            relatedView.setVisibility(View.GONE);
         }
     }
 });
+
+Amplify.getSharedInstance().promptIfReady(promptView);
 ```
 
 # Customizing
 
 ## Prompt Timing
 
-### Applying Custom Environment-based Rules
+### Applying Custom Environment-Based Rules
 
 A new custom environment-based rule can be added by implementing the `IEnvironmentBasedRule` interface and passing an instance of this implementation to the `Amplify` instance method `addEnvironmentBasedRule`:
 
@@ -486,7 +490,7 @@ Amplify.getSharedInstance().notifyEventTriggered(new MyCustomEvent());
 
 As before, the dimension of the event that will be tracked is dictated by which registration method is called.
 
-### Applying Custom Event-based Rules
+### Applying Custom Event-Based Rules
 
 A new custom event can be tracked by implementing the `IEventBasedRule<T>` interface, and registering a (default or custom) `IEvent` with this custom `IEventBasedRule` using one of the following methods:
 
@@ -500,9 +504,12 @@ The generic type `T` must be one of: `Integer`, `Long`, or `String`. The type yo
 
 ## Prompt UI
 
-To provide fully-custom views for each phase of the typical prompt flow, implement the `IPromptView` interface and pass an instance of this implementation to one of the `promptIfReady` methods. You should save the presenter injected into your custom class via the `setPresenter` method, and communicate user-driven events to the presenter within your custom view. See the `BasePromptView` for a sample implementation in which all questions are assumed to share a common view structure.
+To provide fully-custom views for each phase of the typical prompt flow, implement the `IPromptView` interface and pass an instance of this implementation to the `promptIfReady` method. Your custom class should create and save a `PromptPresenter` instance in any constructors - this presenter will be used to communicate to your prompt which state it should display. See the `BasePromptView` class for a sample implementation in which:
 
-To provide a totally custom experience in which _amplify_ does not manage the prompt/rating/feedback UI flows at all, replace any calls to `promptIfReady` with calls to `shouldPrompt`. This method will evaluate all rules and provide a boolean that indicates whether every provided rule is currently satisfied. You may then use this hook to begin your own feedback request flow.
+- all questions are assumed to share a common view structure;
+- prompt state is preserved through configuration changes.
+
+To provide a totally custom experience in which _amplify_ does not manage the prompt/rating/feedback UI flows at all, replace any calls to `promptIfReady` with calls to `shouldPrompt`. This method will evaluate all rules and provide a boolean that indicates whether every provided rule is currently satisfied. You may then use this hook to begin your own feedback request flow. If you choose this route, be aware that you are responsible for maintaining prompt state through orientation changes (if desired).
 
 # Debug Settings
 
