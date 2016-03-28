@@ -217,6 +217,7 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
 
     @Override
     protected void onRestoreInstanceState(final Parcelable state) {
+        super.onRestoreInstanceState(state);
         final AugmentedSavedState augmentedSavedState = (AugmentedSavedState) state;
         super.onRestoreInstanceState(augmentedSavedState.getSuperState());
         promptPresenter.restoreStateFromBundle(augmentedSavedState.getAugmentedState());
