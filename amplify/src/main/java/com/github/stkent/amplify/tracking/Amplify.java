@@ -23,6 +23,7 @@ import android.support.annotation.NonNull;
 
 import com.github.stkent.amplify.ILogger;
 import com.github.stkent.amplify.Logger;
+import com.github.stkent.amplify.prompt.interfaces.IPromptPresenter;
 import com.github.stkent.amplify.prompt.interfaces.IPromptView;
 import com.github.stkent.amplify.tracking.interfaces.IAppEventTimeProvider;
 import com.github.stkent.amplify.tracking.interfaces.IAppLevelEventRulesManager;
@@ -277,7 +278,9 @@ public final class Amplify implements IEventListener {
                     "Must provide email address before attempting to prompt.");
         }
 
-        if (shouldPrompt()) {
+        final IPromptPresenter promptPresenter = promptView.getPresenter();
+
+        if (!promptPresenter.isStarted() && shouldPrompt()) {
             promptView.getPresenter().start();
         }
     }

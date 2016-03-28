@@ -42,6 +42,8 @@ public final class PromptPresenter implements IPromptPresenter {
     @NonNull
     private PromptFlowState promptFlowState = DEFAULT_PROMPT_FLOW_STATE;
 
+    private boolean started;
+
     @NonNull
     private final List<IEventListener> extraEventListeners = new ArrayList<>();
 
@@ -70,6 +72,11 @@ public final class PromptPresenter implements IPromptPresenter {
     @Override
     public void start() {
         setToState(PromptFlowState.QUERYING_USER_OPINION);
+        started = true;
+    }
+
+    public boolean isStarted() {
+        return started;
     }
 
     @Override
@@ -148,6 +155,8 @@ public final class PromptPresenter implements IPromptPresenter {
 
     private void setToState(@NonNull final PromptFlowState promptFlowState) {
         this.promptFlowState = promptFlowState;
+
+        started = promptFlowState != PromptFlowState.INITIALIZED;
 
         switch (promptFlowState) {
             case QUERYING_USER_OPINION:
