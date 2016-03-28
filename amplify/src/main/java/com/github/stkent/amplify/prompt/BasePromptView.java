@@ -127,7 +127,7 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
         userOpinionQuestionView.setPresenter(userOpinionQuestionPresenter);
         userOpinionQuestionView.bind(basePromptViewConfig.getUserOpinionQuestion());
 
-        setContentView(userOpinionQuestionView);
+        setDisplayedView(userOpinionQuestionView);
 
         displayedQuestionView = userOpinionQuestionView;
 
@@ -146,7 +146,7 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
         criticalFeedbackQuestionView.setPresenter(feedbackQuestionPresenter);
         criticalFeedbackQuestionView.bind(basePromptViewConfig.getCriticalFeedbackQuestion());
 
-        setContentView(criticalFeedbackQuestionView);
+        setDisplayedView(criticalFeedbackQuestionView);
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -159,7 +159,7 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
         final U thanksView = getThanksView();
         thanksView.bind(basePromptViewConfig.getThanks());
 
-        setContentView(thanksView);
+        setDisplayedView(thanksView);
     }
 
     @Override
@@ -201,7 +201,7 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
         typedArray.recycle();
     }
 
-    private void setContentView(@NonNull final View view) {
+    private void setDisplayedView(@NonNull final View view) {
         removeAllViews();
         addView(view, new LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
