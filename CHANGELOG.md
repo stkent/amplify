@@ -1,8 +1,8 @@
 # Change Log
 
-## v1.1.1
+## v1.2.0
 
-_2016-03-23_
+_2016-03_
 
 - Subclasses of `BasePromptView` (which include the packaged `DefaultLayoutPromptView` and `CustomLayoutPromptView` classes) now properly save and restore state through orientation changes. This change induced several other structural adjustments.
 - **NOTE**: The method `Amplify.get(Context)` has been replaced by two separate methods:
