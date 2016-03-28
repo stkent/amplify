@@ -45,7 +45,6 @@ public interface IPromptPresenter extends IEventListener {
     void addPromptEventListener(@NonNull final IEventListener promptEventListener);
 
     void start();
-    boolean isStarted();
     void reportUserOpinion(@NonNull final UserOpinion userOpinion);
     void reportUserFeedbackAction(@NonNull final UserFeedbackAction userFeedbackAction);
 
