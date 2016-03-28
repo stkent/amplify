@@ -1,15 +1,14 @@
 package com.github.stkent.testapp;
 
 import android.graphics.Color;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 
 import com.github.stkent.amplify.prompt.BasePromptViewConfig;
 import com.github.stkent.amplify.prompt.CustomLayoutPromptView;
 import com.github.stkent.amplify.prompt.CustomLayoutPromptViewConfig;
 import com.github.stkent.amplify.prompt.DefaultLayoutPromptView;
 import com.github.stkent.amplify.prompt.DefaultLayoutPromptViewConfig;
-import com.github.stkent.amplify.prompt.interfaces.IPromptView;
 import com.github.stkent.amplify.tracking.Amplify;
 
 public class MainActivity extends AppCompatActivity {
@@ -21,13 +20,15 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         Amplify.getSharedInstance().promptIfReady(
-                (IPromptView) findViewById(R.id.default_layout_prompt_view_no_customization));
+                (DefaultLayoutPromptView)
+                        findViewById(R.id.default_layout_prompt_view_no_customization));
 
         Amplify.getSharedInstance().promptIfReady(
-                (IPromptView) findViewById(R.id.default_layout_prompt_view_xml_config));
+                (DefaultLayoutPromptView) findViewById(R.id.default_layout_prompt_view_xml_config));
 
         final DefaultLayoutPromptView defaultLayoutPromptView
-                = (DefaultLayoutPromptView) findViewById(R.id.default_layout_prompt_view_code_config);
+                = (DefaultLayoutPromptView)
+                        findViewById(R.id.default_layout_prompt_view_code_config);
 
         final BasePromptViewConfig baseDefaultLayoutPromptViewConfig
                 = new BasePromptViewConfig.Builder()
@@ -67,8 +68,7 @@ public class MainActivity extends AppCompatActivity {
         Amplify.getSharedInstance().promptIfReady(defaultLayoutPromptView);
 
         Amplify.getSharedInstance().promptIfReady(
-                (IPromptView) findViewById(R.id.custom_layout_prompt_view_xml_config));
-
+                (CustomLayoutPromptView) findViewById(R.id.custom_layout_prompt_view_xml_config));
 
         final CustomLayoutPromptView customLayoutPromptView
                 = (CustomLayoutPromptView) findViewById(R.id.custom_layout_prompt_view_code_config);
