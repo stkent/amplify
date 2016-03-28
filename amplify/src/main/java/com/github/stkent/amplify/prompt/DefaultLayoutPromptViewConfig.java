@@ -277,5 +277,4 @@ public final class DefaultLayoutPromptViewConfig {
     }
 
 }
-//CHECKSTYLE.ON: ParameterNumberCheck
 //@formatter:on
