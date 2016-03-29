@@ -115,8 +115,27 @@ public class ExampleApplication extends Application {
 </ol>
 
 ```java
-DefaultLayoutPromptView promptView = (DefaultLayoutPromptView) findViewById(R.id.prompt_view);
-Amplify.getSharedInstance().promptIfReady(promptView);
+public class ExampleActivity extends Activity {
+
+    @Override
+    public void onCreate(@Nullable final Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_example);
+
+        /*
+         * Be careful: don't re-prompt after a configuration change!
+         * The provided prompt view classes handle saving and restoring their state.
+         * Perform this check in onCreateView or onViewCreated if using a Fragment.
+         */
+        if (savedInstanceState == null) {
+            DefaultLayoutPromptView promptView
+                    = (DefaultLayoutPromptView) findViewById(R.id.prompt_view);
+
+            Amplify.getSharedInstance().promptIfReady(promptView);
+        }
+    }
+
+}
 ```
 
 That's it! The prompt timing calculator will evaluate the default rules each time `promptIfReady` is called, and instruct the `PromptView` to automatically update its state based on the result. If the user chooses to interact with the prompt, the sequence of questions asked is also automatically managed. If the user decides to give feedback, _amplify_ will handle opening the appropriate Google Play Store page or email client with pre-populated details.
