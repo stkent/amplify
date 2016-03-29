@@ -504,12 +504,14 @@ The generic type `T` must be one of: `Integer`, `Long`, or `String`. The type yo
 
 ## Prompt UI
 
+**Reminder: use the provided DefaultLayoutPromptView and CustomLayoutPromptView classes whenever possible for simplicity!**
+
 To provide fully-custom views for each phase of the typical prompt flow, implement the `IPromptView` interface and pass an instance of this implementation to the `promptIfReady` method. Your custom class should create and save a `PromptPresenter` instance in any constructors - this presenter will be used to communicate to your prompt which state it should display. See the `BasePromptView` class for a sample implementation in which:
 
 - all questions are assumed to share a common view structure;
-- prompt state is preserved through configuration changes.
+- prompt state is preserved through configuration changes (non-trivial!).
 
-To provide a totally custom experience in which _amplify_ does not manage the prompt/rating/feedback UI flows at all, replace any calls to `promptIfReady` with calls to `shouldPrompt`. This method will evaluate all rules and provide a boolean that indicates whether every provided rule is currently satisfied. You may then use this hook to begin your own feedback request flow. If you choose this route, be aware that you are responsible for maintaining prompt state through orientation changes (if desired).
+To provide a totally custom experience in which _amplify_ does not manage the prompt/rating/feedback UI flows at all, replace any calls to `promptIfReady` with calls to `shouldPrompt`. This method will evaluate all rules and provide a boolean that indicates whether every provided rule is currently satisfied. You may then use this hook to begin your own feedback request flow. Again, if you choose this route be aware that you are responsible for maintaining prompt state through orientation changes (if desired).
 
 # Debug Settings
 
