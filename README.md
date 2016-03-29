@@ -76,7 +76,7 @@ These components are designed to complement each other, and combining them as de
 
 ```groovy
 dependencies {
-    compile 'com.github.stkent:amplify:{latest-version}'
+    compile 'com.github.stkent:amplify:1.2.0'
 }
 ```
 
