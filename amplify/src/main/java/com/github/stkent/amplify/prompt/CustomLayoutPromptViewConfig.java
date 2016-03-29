@@ -17,6 +17,8 @@
 package com.github.stkent.amplify.prompt;
 
 import android.content.res.TypedArray;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -25,7 +27,7 @@ import android.support.annotation.StyleableRes;
 import com.github.stkent.amplify.R;
 import com.github.stkent.amplify.utils.Constants;
 
-public final class CustomLayoutPromptViewConfig {
+public final class CustomLayoutPromptViewConfig implements Parcelable {
 
     private static final int DEFAULT_LAYOUT_RES_ID_IF_UNDEFINED = Integer.MAX_VALUE;
 
@@ -87,5 +89,35 @@ public final class CustomLayoutPromptViewConfig {
     public Integer getThanksLayout() {
         return thanksLayout;
     }
+
+    // Parcelable
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeValue(this.questionLayout);
+        dest.writeValue(this.thanksLayout);
+    }
+
+    protected CustomLayoutPromptViewConfig(Parcel in) {
+        this.questionLayout = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.thanksLayout = (Integer) in.readValue(Integer.class.getClassLoader());
+    }
+
+    public static final Parcelable.Creator<CustomLayoutPromptViewConfig> CREATOR
+            = new Parcelable.Creator<CustomLayoutPromptViewConfig>() {
+
+        public CustomLayoutPromptViewConfig createFromParcel(Parcel source) {
+            return new CustomLayoutPromptViewConfig(source);
+        }
+
+        public CustomLayoutPromptViewConfig[] newArray(int size) {
+            return new CustomLayoutPromptViewConfig[size];
+        }
+    };
 
 }

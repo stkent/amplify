@@ -21,6 +21,7 @@ import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
@@ -107,24 +108,25 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
         promptPresenter = new PromptPresenter(Amplify.getSharedInstance(), this);
     }
 
+    @CallSuper
     @Override
     protected Parcelable onSaveInstanceState() {
         final Parcelable superState = super.onSaveInstanceState();
         final SavedState savedState = new SavedState(superState);
-        savedState.setPromptPresenterState(promptPresenter.generateStateBundle());
+        savedState.promptPresenterState = promptPresenter.generateStateBundle();
         return savedState;
     }
 
+    @CallSuper
     @Override
-    protected final void onRestoreInstanceState(@NonNull final Parcelable state) {
+    protected void onRestoreInstanceState(@NonNull final Parcelable state) {
         final SavedState savedState = (SavedState) state;
         super.onRestoreInstanceState(savedState.getSuperState());
-        promptPresenter.restoreStateFromBundle(savedState.getPromptPresenterState());
     }
 
     @NonNull
     @Override
-    public IPromptPresenter getPresenter() {
+    public final IPromptPresenter getPresenter() {
         return promptPresenter;
     }
 
@@ -199,6 +201,14 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
         promptPresenter.addPromptEventListener(promptEventListener);
     }
 
+    /**
+     * This method must be called by subclasses at the end of their onRestoreInstanceState
+     * implementations.
+     */
+    protected final void restorePresenterState(@NonNull final Parcelable state) {
+        promptPresenter.restoreStateFromBundle(((SavedState) state).promptPresenterState);
+    }
+
     protected final boolean isDisplayed() {
         return displayed;
     }
@@ -252,14 +262,6 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
         protected SavedState(final Parcel in) {
             super(in);
             promptPresenterState = in.readBundle(getClass().getClassLoader());
-        }
-
-        private Bundle getPromptPresenterState() {
-            return promptPresenterState;
-        }
-
-        private void setPromptPresenterState(final Bundle promptPresenterState) {
-            this.promptPresenterState = promptPresenterState;
         }
 
         @Override
