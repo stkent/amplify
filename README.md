@@ -442,7 +442,7 @@ promptView.applyConfig(customLayoutPromptViewConfig);
 
 ### Listening For Prompt-Related Events
 
-It may sometimes be useful to know when prompt-related events occurs. For example, you may want to:
+It may sometimes be useful to know when prompt-related events occur. For example, you may want to:
 
 - track user interactions with the prompt view using your preferred analytics suite;
 - adjust other UI elements when the prompt view is shown/hidden.

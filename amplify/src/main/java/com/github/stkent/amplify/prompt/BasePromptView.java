@@ -194,6 +194,11 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
     }
 
     public final void applyBaseConfig(@NonNull final BasePromptViewConfig basePromptViewConfig) {
+        if (displayed) {
+            throw new IllegalStateException(
+                    "Configuration cannot be changed after the prompt is first displayed.");
+        }
+
         this.basePromptViewConfig = basePromptViewConfig;
     }
 
@@ -203,7 +208,9 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
 
     /**
      * This method must be called by subclasses at the end of their onRestoreInstanceState
-     * implementations.
+     * implementations. This is to allow all configuration to be restored before the prompt
+     * presenter triggers a change in state, and is required because configuration changes are not
+     * allowed after a BasePromptView subclass is displayed.
      */
     protected final void restorePresenterState(@NonNull final Parcelable state) {
         promptPresenter.restoreStateFromBundle(((SavedState) state).promptPresenterState);
@@ -228,8 +235,6 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
 
     private void setDisplayedView(@NonNull final View view) {
         removeAllViews();
-
-        view.setSaveEnabled(false);
 
         addView(view, new LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));

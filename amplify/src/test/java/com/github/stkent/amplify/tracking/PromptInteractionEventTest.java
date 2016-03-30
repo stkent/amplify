@@ -53,48 +53,52 @@ public class PromptInteractionEventTest extends BaseTest {
     @Test
     public void testThatUserGavePositiveFeedbackEventHasCorrectTrackingKey() {
         // Arrange
-        final IEvent appCrashedEvent = PromptInteractionEvent.USER_GAVE_POSITIVE_FEEDBACK;
+        final IEvent userGavePositiveFeedbackEvent
+                = PromptInteractionEvent.USER_GAVE_POSITIVE_FEEDBACK;
 
         // Assert
         Assert.assertEquals(
                 "User gave positive feedback event should have correct tracking key",
-                appCrashedEvent.getTrackingKey(),
+                userGavePositiveFeedbackEvent.getTrackingKey(),
                 "USER_GAVE_POSITIVE_FEEDBACK");
     }
 
     @Test
     public void testThatUserGaveCriticalFeedbackEventHasCorrectTrackingKey() {
         // Arrange
-        final IEvent appCrashedEvent = PromptInteractionEvent.USER_GAVE_CRITICAL_FEEDBACK;
+        final IEvent userGaveCriticalFeedbackEvent
+                = PromptInteractionEvent.USER_GAVE_CRITICAL_FEEDBACK;
 
         // Assert
         Assert.assertEquals(
                 "User gave critical feedback event should have correct tracking key",
-                appCrashedEvent.getTrackingKey(),
+                userGaveCriticalFeedbackEvent.getTrackingKey(),
                 "USER_GAVE_CRITICAL_FEEDBACK");
     }
 
     @Test
     public void testThatUserDeclinedPositiveFeedbackEventHasCorrectTrackingKey() {
         // Arrange
-        final IEvent appCrashedEvent = PromptInteractionEvent.USER_DECLINED_POSITIVE_FEEDBACK;
+        final IEvent userDeclinedPositiveFeedbackEvent
+                = PromptInteractionEvent.USER_DECLINED_POSITIVE_FEEDBACK;
 
         // Assert
         Assert.assertEquals(
                 "User declined positive feedback event should have correct tracking key",
-                appCrashedEvent.getTrackingKey(),
+                userDeclinedPositiveFeedbackEvent.getTrackingKey(),
                 "USER_DECLINED_POSITIVE_FEEDBACK");
     }
 
     @Test
     public void testThatUserDeclinedCriticalFeedbackEventHasCorrectTrackingKey() {
         // Arrange
-        final IEvent appCrashedEvent = PromptInteractionEvent.USER_DECLINED_CRITICAL_FEEDBACK;
+        final IEvent userDeclinedCriticalFeedbackEvent
+                = PromptInteractionEvent.USER_DECLINED_CRITICAL_FEEDBACK;
 
         // Assert
         Assert.assertEquals(
                 "User declined critical feedback event should have correct tracking key",
-                appCrashedEvent.getTrackingKey(),
+                userDeclinedCriticalFeedbackEvent.getTrackingKey(),
                 "USER_DECLINED_CRITICAL_FEEDBACK");
     }
 
