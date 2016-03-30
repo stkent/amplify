@@ -72,11 +72,11 @@ public final class Amplify implements IEventListener {
     private String packageName;
     private String feedbackEmailAddress;
 
-    public static Amplify initialize(@NonNull final Application app) {
-        return initialize(app, new Logger());
+    public static Amplify initSharedInstance(@NonNull final Application app) {
+        return initSharedInstance(app, new Logger());
     }
 
-    public static Amplify initialize(
+    private static Amplify initSharedInstance(
             @NonNull final Application app,
             @NonNull final ILogger logger) {
 
@@ -93,7 +93,7 @@ public final class Amplify implements IEventListener {
         synchronized (Amplify.class) {
             if (sharedInstance == null) {
                 throw new IllegalStateException(
-                        "You must call initialize before calling getSharedInstance.");
+                        "You must call initSharedInstance before calling getSharedInstance.");
             }
         }
 

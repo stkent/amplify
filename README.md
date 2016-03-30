@@ -91,7 +91,7 @@ public class ExampleApplication extends Application {
     public void onCreate() {
         super.onCreate();
         
-        Amplify.initialize(this)
+        Amplify.initSharedInstance(this)
                .setFeedbackEmailAddress("someone@example.com")
                .applyAllDefaultRules();
     }
@@ -181,7 +181,7 @@ public class ExampleApplication extends Application {
     public void onCreate() {
         super.onCreate();
         
-        Amplify.initialize(this)
+        Amplify.initSharedInstance(this)
                .setFeedbackEmailAddress("someone@example.com")
                .addEnvironmentBasedRule(new GooglePlayStoreRule()); // Prompt never shown if Google Play Store not installed.
     }
@@ -208,7 +208,7 @@ public class ExampleApplication extends Application {
     public void onCreate() {
         super.onCreate();
         
-        Amplify.initialize(this)
+        Amplify.initSharedInstance(this)
                .setFeedbackEmailAddress("someone@example.com")
                .setInstallTimeCooldownDays(14)   // Prompt not shown within two weeks of initial install.
                .setLastUpdateTimeCooldownDays(7) // Prompt not shown within one week of most recent update.
@@ -257,7 +257,7 @@ public class ExampleApplication extends Application {
     public void onCreate() {
         super.onCreate();
         
-        Amplify.initialize(this)
+        Amplify.initSharedInstance(this)
                .setFeedbackEmailAddress("someone@example.com")
                .addTotalEventCountRule(PromptViewEvent.USER_GAVE_POSITIVE_FEEDBACK,
                         new MaximumCountRule(1)) // Never ask the user for feedback again if they already responded positively.
@@ -483,7 +483,7 @@ public class ExampleApplication extends Application {
     public void onCreate() {
         super.onCreate();
         
-        Amplify.initialize(this)
+        Amplify.initSharedInstance(this)
                .setFeedbackEmailAddress("someone@example.com")
                .addEnvironmentBasedRule(new MyCustomEnvironmentBasedRule());
     }
@@ -545,7 +545,7 @@ public class ExampleApplication extends Application {
     public void onCreate() {
         super.onCreate();
         
-        Amplify.initialize(this)
+        Amplify.initSharedInstance(this)
                .setFeedbackEmailAddress("someone@example.com")
                .setLogLevel(BuildConfig.DEBUG ? Logger.LogLevel.DEBUG : Logger.LogLevel.NONE);
     }
@@ -562,7 +562,7 @@ public class ExampleApplication extends Application {
     public void onCreate() {
         super.onCreate();
         
-        Amplify.initialize(this)
+        Amplify.initSharedInstance(this)
                .setFeedbackEmailAddress("someone@example.com")
                .setAlwaysShow(BuildConfig.DEBUG);
     }
@@ -579,7 +579,7 @@ public class ExampleApplication extends Application {
     public void onCreate() {
         super.onCreate();
         
-        Amplify.initialize(this)
+        Amplify.initSharedInstance(this)
                .setFeedbackEmailAddress("someone@example.com")
                .setPackageName("my.release.package.name");
     }

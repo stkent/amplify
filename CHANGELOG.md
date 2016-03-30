@@ -6,7 +6,7 @@ _2016-03_
 
 - Subclasses of `BasePromptView` (which include the packaged `DefaultLayoutPromptView` and `CustomLayoutPromptView` classes) now properly save and restore state through orientation changes. This change induced several other structural adjustments.
 - **NOTE**: The method `Amplify.get(Context)` has been replaced by two separate methods:
-	- `Amplify.initialize(Application)`, which should be called when performing initial library configuration in your custom `Application` subclass;
+	- `Amplify.initSharedInstance(Application)`, which should be called when performing initial library configuration in your custom `Application` subclass;
 	- `Amplify.getSharedInstance()`, which can be called thereafter to obtain a reference to your configured `Amplify` instance.
 - **NOTE**: The methods `Amplify.promptIfReady(Activity, IPromptView)` and `Amplify.promptIfReady(Activity, IPromptView, IEventListener<PromptViewEvent>)` have been replaced by the method `Amplify.promptIfReady(IPromptView)`. Users who wish to listen for promp-related events should now register an `IEventListener` implementation with their `PromptView` before calling `Amplify.promptIfReady`. This can be accomplished using the `BasePromptView.
 (IEventListener)` method.

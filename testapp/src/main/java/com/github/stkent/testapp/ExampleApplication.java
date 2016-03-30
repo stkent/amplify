@@ -11,7 +11,7 @@ public class ExampleApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        Amplify.initialize(this)
+        Amplify.initSharedInstance(this)
                .setLogLevel(Logger.LogLevel.DEBUG)
                .setFeedbackEmailAddress("someone@example.com")
                .setAlwaysShow(true);
