@@ -16,15 +16,12 @@
  */
 package com.github.stkent.amplify.tracking.managers;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.VisibleForTesting;
 
 import com.github.stkent.amplify.ILogger;
-import com.github.stkent.amplify.tracking.Settings;
-import com.github.stkent.amplify.utils.appinfo.IAppInfoProvider;
 import com.github.stkent.amplify.tracking.interfaces.ISettings;
+import com.github.stkent.amplify.utils.appinfo.IAppInfoProvider;
 
 public final class LastEventVersionCodeRulesManager extends BaseEventsManager<Integer> {
 
@@ -32,15 +29,6 @@ public final class LastEventVersionCodeRulesManager extends BaseEventsManager<In
     private final IAppInfoProvider appInfoProvider;
 
     public LastEventVersionCodeRulesManager(
-            @NonNull final Context appContext,
-            @NonNull final IAppInfoProvider appInfoProvider,
-            @NonNull final ILogger logger) {
-
-        this(new Settings<Integer>(appContext), appInfoProvider, logger);
-    }
-
-    @VisibleForTesting
-    protected LastEventVersionCodeRulesManager(
             @NonNull final ISettings<Integer> settings,
             @NonNull final IAppInfoProvider appInfoProvider,
             @NonNull final ILogger logger) {

@@ -16,7 +16,6 @@
  */
 package com.github.stkent.amplify.tracking;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -27,13 +26,10 @@ import java.util.Map;
 
 public final class Settings<T> implements ISettings<T> {
 
-    private static final String SHARED_PREFERENCES_NAME = "AMPLIFY_SHARED_PREFERENCES_NAME";
-
     private final SharedPreferences sharedPreferences;
 
-    public Settings(@NonNull final Context appContext) {
-        this.sharedPreferences = appContext
-                .getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
+    public Settings(@NonNull final SharedPreferences sharedPreferences) {
+        this.sharedPreferences = sharedPreferences;
     }
 
     public void writeTrackingValue(@NonNull final String trackingKey, final T value) {

@@ -24,6 +24,14 @@ public final class Constants {
     public static final String MISSING_LAYOUT_IDS_EXCEPTION_MESSAGE
             = "Provided layout does not include views with required ids.";
 
+    /**
+     * The name of the SharedPreferences instance used to store all tracked event data by default.
+     * DO NOT MODIFY! (If you do, any apps relying on the default Amplify SharedPreferences instance
+     * will have all their tracking data reset automatically when they next update the library...)
+     */
+    public static final String DEFAULT_BACKING_SHARED_PREFERENCES_NAME
+            = "AMPLIFY_SHARED_PREFERENCES_NAME";
+
     private Constants() {
         // This constructor intentionally left blank.
     }

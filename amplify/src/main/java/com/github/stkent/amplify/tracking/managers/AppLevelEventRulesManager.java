@@ -16,7 +16,6 @@
  */
 package com.github.stkent.amplify.tracking.managers;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -27,6 +26,7 @@ import com.github.stkent.amplify.tracking.interfaces.IAppLevelEventRulesManager;
 import com.github.stkent.amplify.tracking.interfaces.IEvent;
 import com.github.stkent.amplify.tracking.interfaces.IEventBasedRule;
 import com.github.stkent.amplify.tracking.interfaces.IEventsManager;
+import com.github.stkent.amplify.tracking.interfaces.ISettings;
 import com.github.stkent.amplify.tracking.rules.CooldownDaysRule;
 
 public final class AppLevelEventRulesManager implements IAppLevelEventRulesManager {
@@ -40,7 +40,7 @@ public final class AppLevelEventRulesManager implements IAppLevelEventRulesManag
     };
 
     @NonNull
-    private final Context appContext;
+    private final ISettings<Long> settings;
 
     @NonNull
     private final ILogger logger;
@@ -55,14 +55,14 @@ public final class AppLevelEventRulesManager implements IAppLevelEventRulesManag
     private IEventBasedRule<Long> lastUpdateTimeRule;
 
     @Nullable
-    private IEventsManager<Long> lastEventTimeRulesManager;
+    private IEventsManager<Long> lastAppCrashedTimeManager;
 
     public AppLevelEventRulesManager(
-            @NonNull final Context appContext,
+            @NonNull final ISettings<Long> settings,
             @NonNull final IAppEventTimeProvider appEventTimeProvider,
             @NonNull final ILogger logger) {
 
-        this.appContext = appContext;
+        this.settings = settings;
         this.appEventTimeProvider = appEventTimeProvider;
         this.logger = logger;
     }
@@ -96,8 +96,8 @@ public final class AppLevelEventRulesManager implements IAppLevelEventRulesManag
             result = result && lastUpdateResult;
         }
 
-        if (lastEventTimeRulesManager != null) {
-            result = result && lastEventTimeRulesManager.shouldAllowFeedbackPrompt();
+        if (lastAppCrashedTimeManager != null) {
+            result = result && lastAppCrashedTimeManager.shouldAllowFeedbackPrompt();
         }
 
         return result;
@@ -123,8 +123,8 @@ public final class AppLevelEventRulesManager implements IAppLevelEventRulesManag
 
     @Override
     public void setLastCrashTimeCooldownDays(final int cooldownPeriodDays) {
-        lastEventTimeRulesManager = new LastEventTimeRulesManager(appContext, logger);
-        lastEventTimeRulesManager.addEventBasedRule(
+        lastAppCrashedTimeManager = new LastEventTimeRulesManager(settings, logger);
+        lastAppCrashedTimeManager.addEventBasedRule(
                 APP_CRASHED, new CooldownDaysRule(cooldownPeriodDays));
 
         final Thread.UncaughtExceptionHandler defaultUncaughtExceptionHandler
@@ -138,8 +138,8 @@ public final class AppLevelEventRulesManager implements IAppLevelEventRulesManag
 
     @Override
     public void notifyOfCrash() {
-        if (lastEventTimeRulesManager != null) {
-            lastEventTimeRulesManager.notifyEventTriggered(APP_CRASHED);
+        if (lastAppCrashedTimeManager != null) {
+            lastAppCrashedTimeManager.notifyEventTriggered(APP_CRASHED);
         }
     }
 
