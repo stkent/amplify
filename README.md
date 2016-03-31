@@ -1,3 +1,7 @@
+<p align="center">
+	<img src="assets/logo.png" width="150px" />
+</p>
+
 # amplify
 
 Respectfully request feedback in your Android app.
