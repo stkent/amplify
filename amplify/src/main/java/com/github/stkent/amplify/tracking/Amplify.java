@@ -21,6 +21,7 @@ import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
+import android.support.annotation.VisibleForTesting;
 
 import com.github.stkent.amplify.ILogger;
 import com.github.stkent.amplify.Logger;
@@ -156,6 +157,31 @@ public final class Amplify implements IEventListener {
         this.totalEventCountRulesManager = new TotalEventCountRulesManager(
                 new Settings<Integer>(backingSharedPreferences), logger);
 
+        this.logger = logger;
+    }
+
+    @VisibleForTesting
+    protected Amplify(
+            @NonNull final IAppInfoProvider appInfoProvider,
+            @NonNull final IAppLevelEventRulesManager appLevelEventRulesManager,
+            @NonNull final IEnvironmentBasedRulesManager environmentBasedRulesManager,
+            @NonNull final ActivityReferenceManager activityReferenceManager,
+            @NonNull final IEventsManager<Long> firstEventTimeRulesManager,
+            @NonNull final IEventsManager<Long> lastEventTimeRulesManager,
+            @NonNull final IEventsManager<Integer> lastEventVersionCodeRulesManager,
+            @NonNull final IEventsManager<String> lastEventVersionNameRulesManager,
+            @NonNull final IEventsManager<Integer> totalEventCountRulesManager,
+            @NonNull final ILogger logger) {
+
+        this.appInfoProvider = appInfoProvider;
+        this.appLevelEventRulesManager = appLevelEventRulesManager;
+        this.environmentBasedRulesManager = environmentBasedRulesManager;
+        this.activityReferenceManager = activityReferenceManager;
+        this.firstEventTimeRulesManager = firstEventTimeRulesManager;
+        this.lastEventTimeRulesManager = lastEventTimeRulesManager;
+        this.lastEventVersionCodeRulesManager = lastEventVersionCodeRulesManager;
+        this.lastEventVersionNameRulesManager = lastEventVersionNameRulesManager;
+        this.totalEventCountRulesManager = totalEventCountRulesManager;
         this.logger = logger;
     }
 
