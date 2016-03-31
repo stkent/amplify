@@ -33,6 +33,7 @@ import com.github.stkent.amplify.tracking.interfaces.IEnvironmentCapabilitiesPro
 import com.github.stkent.amplify.tracking.interfaces.IEvent;
 import com.github.stkent.amplify.tracking.interfaces.IEventBasedRule;
 import com.github.stkent.amplify.tracking.interfaces.IEventListener;
+import com.github.stkent.amplify.tracking.interfaces.IEventsManager;
 import com.github.stkent.amplify.tracking.managers.AppLevelEventRulesManager;
 import com.github.stkent.amplify.tracking.managers.EnvironmentBasedRulesManager;
 import com.github.stkent.amplify.tracking.managers.FirstEventTimeRulesManager;
@@ -62,11 +63,11 @@ public final class Amplify implements IEventListener {
     private final IAppLevelEventRulesManager appLevelEventRulesManager;
     private final IEnvironmentBasedRulesManager environmentBasedRulesManager;
     private final ActivityReferenceManager activityReferenceManager;
-    private final FirstEventTimeRulesManager firstEventTimeRulesManager;
-    private final LastEventTimeRulesManager lastEventTimeRulesManager;
-    private final LastEventVersionCodeRulesManager lastEventVersionCodeRulesManager;
-    private final LastEventVersionNameRulesManager lastEventVersionNameRulesManager;
-    private final TotalEventCountRulesManager totalEventCountRulesManager;
+    private final IEventsManager<Long> firstEventTimeRulesManager;
+    private final IEventsManager<Long> lastEventTimeRulesManager;
+    private final IEventsManager<Integer> lastEventVersionCodeRulesManager;
+    private final IEventsManager<String> lastEventVersionNameRulesManager;
+    private final IEventsManager<Integer> totalEventCountRulesManager;
 
     private final ILogger logger;
 
