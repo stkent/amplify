@@ -22,13 +22,13 @@ import android.support.annotation.NonNull;
  * An abstract representation of a consuming class that is interested in receiving notifications
  * when trackable events occur.
  */
-public interface IEventListener<T extends IEvent> {
+public interface IEventListener {
 
     /**
      * Call this method to notify an implementing class that a trackable event occurred.
      *
      * @param event the event that occurred
      */
-    void notifyEventTriggered(@NonNull final T event);
+    void notifyEventTriggered(@NonNull final IEvent event);
 
 }

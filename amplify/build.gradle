@@ -8,7 +8,7 @@ buildscript {
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.6'
         classpath 'com.github.dcendents:android-maven-gradle-plugin:1.3'
         classpath 'com.noveogroup.android:check:1.2.3'
-        classpath 'com.btkelly:gnag:0.1.2'
+        classpath 'com.btkelly:gnag:0.1.4'
         classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.4.0x'
     }
 }
@@ -28,7 +28,7 @@ apply from: 'coverage.gradle'
 // Shared project metadata
 
 ext {
-    amplifyVersion = "1.1.0"
+    amplifyVersion = "1.2.0"
     amplifyWebsiteUrl = 'https://github.com/stkent/amplify'
     amplifyGitHubRepoName = 'stkent/bugshaker-android'
     amplifyVcsUrl = "https://github.com/${amplifyGitHubRepoName}.git"
@@ -204,7 +204,7 @@ task sourcesJar(type: Jar) {
 task javadoc(type: Javadoc) {
     source = android.sourceSets.main.java.srcDirs
     classpath += configurations.javadocDeps
-    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+//    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
 }
 
 task javadocJar(type: Jar, dependsOn: javadoc) {

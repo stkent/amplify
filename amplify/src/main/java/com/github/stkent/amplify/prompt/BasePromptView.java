@@ -18,6 +18,10 @@ package com.github.stkent.amplify.prompt;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
+import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
@@ -31,10 +35,13 @@ import com.github.stkent.amplify.prompt.interfaces.IPromptView;
 import com.github.stkent.amplify.prompt.interfaces.IQuestionPresenter;
 import com.github.stkent.amplify.prompt.interfaces.IQuestionView;
 import com.github.stkent.amplify.prompt.interfaces.IThanksView;
+import com.github.stkent.amplify.tracking.Amplify;
+import com.github.stkent.amplify.tracking.PromptViewEvent;
+import com.github.stkent.amplify.tracking.interfaces.IEventListener;
 
-import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
-import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
-import static com.github.stkent.amplify.prompt.interfaces.IPromptPresenter.UserOpinion.NEGATIVE;
+import static com.github.stkent.amplify.prompt.interfaces.IPromptPresenter.UserFeedbackAction.AGREED;
+import static com.github.stkent.amplify.prompt.interfaces.IPromptPresenter.UserFeedbackAction.DECLINED;
+import static com.github.stkent.amplify.prompt.interfaces.IPromptPresenter.UserOpinion.CRITICAL;
 import static com.github.stkent.amplify.prompt.interfaces.IPromptPresenter.UserOpinion.POSITIVE;
 
 abstract class BasePromptView<T extends View & IQuestionView, U extends View & IThanksView>
@@ -48,20 +55,16 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
     @Nullable
     protected abstract U getThanksView();
 
-    private T displayedQuestionView;
-
-    private boolean displayed;
-
     private final IQuestionPresenter userOpinionQuestionPresenter =
             new IQuestionPresenter() {
                 @Override
                 public void userRespondedPositively() {
-                    promptPresenter.setUserOpinion(POSITIVE);
+                    promptPresenter.reportUserOpinion(POSITIVE);
                 }
 
                 @Override
                 public void userRespondedNegatively() {
-                    promptPresenter.setUserOpinion(NEGATIVE);
+                    promptPresenter.reportUserOpinion(CRITICAL);
                 }
             };
 
@@ -69,17 +72,19 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
             new IQuestionPresenter() {
                 @Override
                 public void userRespondedPositively() {
-                    promptPresenter.userAgreedToGiveFeedback();
+                    promptPresenter.reportUserFeedbackAction(AGREED);
                 }
 
                 @Override
                 public void userRespondedNegatively() {
-                    promptPresenter.userDeclinedToGiveFeedback();
+                    promptPresenter.reportUserFeedbackAction(DECLINED);
                 }
             };
 
     private IPromptPresenter promptPresenter;
     private BasePromptViewConfig basePromptViewConfig;
+    private T displayedQuestionView;
+    private boolean displayed;
 
     BasePromptView(final Context context) {
         this(context, null);
@@ -95,75 +100,123 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
             final int defStyleAttr) {
 
         super(context, attributeSet, defStyleAttr);
-        setLayoutParams(new ViewGroup.LayoutParams(MATCH_PARENT, WRAP_CONTENT));
+        setLayoutParams(new ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
         initializeBaseConfig(attributeSet);
+
+        promptPresenter = new PromptPresenter(Amplify.getSharedInstance(), this);
+    }
+
+    @CallSuper
+    @Override
+    protected Parcelable onSaveInstanceState() {
+        final Parcelable superState = super.onSaveInstanceState();
+        final SavedState savedState = new SavedState(superState);
+        savedState.promptPresenterState = promptPresenter.generateStateBundle();
+        return savedState;
+    }
+
+    @CallSuper
+    @Override
+    protected void onRestoreInstanceState(@NonNull final Parcelable state) {
+        final SavedState savedState = (SavedState) state;
+        super.onRestoreInstanceState(savedState.getSuperState());
+    }
+
+    @NonNull
+    @Override
+    public final IPromptPresenter getPresenter() {
+        return promptPresenter;
     }
 
     @Override
-    public final void setPresenter(@NonNull final IPromptPresenter promptPresenter) {
-        this.promptPresenter = promptPresenter;
-    }
-
-    @Override
-    public final void queryUserOpinion() {
+    public final void queryUserOpinion(final boolean triggeredByConfigChange) {
         if (!isConfigured()) {
             throw new IllegalStateException("PromptView is not fully configured.");
         }
 
-        final T userOpinionQuestionView = getQuestionView();
-        userOpinionQuestionView.setPresenter(userOpinionQuestionPresenter);
-        userOpinionQuestionView.bind(basePromptViewConfig.getUserOpinionQuestion());
+        if (!triggeredByConfigChange) {
+            promptPresenter.notifyEventTriggered(PromptViewEvent.PROMPT_SHOWN);
+        }
 
-        setContentView(userOpinionQuestionView);
-
-        displayedQuestionView = userOpinionQuestionView;
-
-        displayed = true;
+        displayQuestionViewIfNeeded();
+        displayedQuestionView.setPresenter(userOpinionQuestionPresenter);
+        displayedQuestionView.bind(basePromptViewConfig.getUserOpinionQuestion());
+        setDisplayed(true);
     }
 
     @Override
     public final void requestPositiveFeedback() {
+        displayQuestionViewIfNeeded();
         displayedQuestionView.setPresenter(feedbackQuestionPresenter);
         displayedQuestionView.bind(basePromptViewConfig.getPositiveFeedbackQuestion());
+        setDisplayed(true);
     }
 
     @Override
     public final void requestCriticalFeedback() {
-        final T criticalFeedbackQuestionView = getQuestionView();
-        criticalFeedbackQuestionView.setPresenter(feedbackQuestionPresenter);
-        criticalFeedbackQuestionView.bind(basePromptViewConfig.getCriticalFeedbackQuestion());
-
-        setContentView(criticalFeedbackQuestionView);
+        displayQuestionViewIfNeeded();
+        displayedQuestionView.setPresenter(feedbackQuestionPresenter);
+        displayedQuestionView.bind(basePromptViewConfig.getCriticalFeedbackQuestion());
+        setDisplayed(true);
     }
 
     @SuppressWarnings("ConstantConditions")
     @Override
-    public final void thankUser() {
+    public final void thankUser(final boolean triggeredByConfigChange) {
+        if (!triggeredByConfigChange) {
+            promptPresenter.notifyEventTriggered(PromptViewEvent.THANKS_SHOWN);
+        }
+
         final U thanksView = getThanksView();
         thanksView.bind(basePromptViewConfig.getThanks());
 
-        setContentView(thanksView);
-
-        promptPresenter = null;
+        clearDisplayedQuestionViewReference();
+        setDisplayedView(thanksView);
+        setDisplayed(true);
     }
 
     @Override
-    public final void dismiss() {
+    public final void dismiss(final boolean triggeredByConfigChange) {
+        if (!triggeredByConfigChange) {
+            promptPresenter.notifyEventTriggered(PromptViewEvent.PROMPT_DISMISSED);
+        }
+
+        clearDisplayedQuestionViewReference();
         setVisibility(GONE);
-        promptPresenter = null;
+        setDisplayed(false);
     }
 
     @Override
-    public boolean providesThanksView() {
+    public final boolean providesThanksView() {
         return getThanksView() != null;
     }
 
-    public void applyBaseConfig(@NonNull final BasePromptViewConfig basePromptViewConfig) {
+    public final void applyBaseConfig(@NonNull final BasePromptViewConfig basePromptViewConfig) {
+        if (displayed) {
+            throw new IllegalStateException(
+                    "Configuration cannot be changed after the prompt is first displayed.");
+        }
+
         this.basePromptViewConfig = basePromptViewConfig;
     }
 
-    protected boolean isDisplayed() {
+    public final void addPromptEventListener(@NonNull final IEventListener promptEventListener) {
+        promptPresenter.addPromptEventListener(promptEventListener);
+    }
+
+    /**
+     * This method must be called by subclasses at the end of their onRestoreInstanceState
+     * implementations. This is to allow all configuration to be restored before the prompt
+     * presenter triggers a change in state, and is required because configuration changes are not
+     * allowed after a BasePromptView subclass is displayed.
+     */
+    protected final void restorePresenterState(@NonNull final Parcelable state) {
+        promptPresenter.restoreStateFromBundle(((SavedState) state).promptPresenterState);
+    }
+
+    protected final boolean isDisplayed() {
         return displayed;
     }
 
@@ -180,9 +233,60 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
         typedArray.recycle();
     }
 
-    private void setContentView(@NonNull final View view) {
+    private void setDisplayedView(@NonNull final View view) {
         removeAllViews();
-        addView(view, new LayoutParams(MATCH_PARENT, WRAP_CONTENT));
+
+        addView(view, new LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+    }
+
+    private void displayQuestionViewIfNeeded() {
+        if (displayedQuestionView == null) {
+            final T questionViewToDisplay = getQuestionView();
+            displayedQuestionView = questionViewToDisplay;
+            setDisplayedView(questionViewToDisplay);
+        }
+    }
+
+    private void clearDisplayedQuestionViewReference() {
+        displayedQuestionView = null;
+    }
+
+    private void setDisplayed(final boolean displayed) {
+        this.displayed = displayed;
+    }
+
+    private static class SavedState extends BaseSavedState {
+
+        private Bundle promptPresenterState;
+
+        protected SavedState(final Parcelable superState) {
+            super(superState);
+        }
+
+        protected SavedState(final Parcel in) {
+            super(in);
+            promptPresenterState = in.readBundle(getClass().getClassLoader());
+        }
+
+        @Override
+        public void writeToParcel(final Parcel out, final int flags) {
+            super.writeToParcel(out, flags);
+            out.writeBundle(promptPresenterState);
+        }
+
+        public static final Parcelable.Creator<SavedState> CREATOR
+                = new Parcelable.Creator<SavedState>() {
+
+            public SavedState createFromParcel(final Parcel in) {
+                return new SavedState(in);
+            }
+
+            public SavedState[] newArray(final int size) {
+                return new SavedState[size];
+            }
+
+        };
     }
 
 }

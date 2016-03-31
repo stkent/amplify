@@ -18,6 +18,8 @@ package com.github.stkent.amplify.prompt;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
@@ -62,6 +64,26 @@ public final class CustomLayoutPromptView
     }
 
     @Override
+    protected Parcelable onSaveInstanceState() {
+        final Parcelable superState = super.onSaveInstanceState();
+        final SavedState savedState = new SavedState(superState);
+        savedState.config = config;
+        return savedState;
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull final Parcelable state) {
+        final SavedState savedState = (SavedState) state;
+        final Parcelable superSavedState = savedState.getSuperState();
+
+        super.onRestoreInstanceState(superSavedState);
+
+        applyConfig(savedState.config);
+
+        restorePresenterState(superSavedState);
+    }
+
+    @Override
     protected boolean isConfigured() {
         return config.isValid();
     }
@@ -94,6 +116,40 @@ public final class CustomLayoutPromptView
         config = new CustomLayoutPromptViewConfig(typedArray);
 
         typedArray.recycle();
+    }
+
+    private static class SavedState extends BaseSavedState {
+
+        private CustomLayoutPromptViewConfig config;
+
+        protected SavedState(final Parcelable superState) {
+            super(superState);
+        }
+
+        protected SavedState(final Parcel in) {
+            super(in);
+            config = in.readParcelable(getClass().getClassLoader());
+        }
+
+        @Override
+        public void writeToParcel(final Parcel out, final int flags) {
+            super.writeToParcel(out, flags);
+            out.writeParcelable(config, flags);
+        }
+
+        public static final Parcelable.Creator<SavedState> CREATOR
+                = new Parcelable.Creator<SavedState>() {
+
+            public SavedState createFromParcel(final Parcel in) {
+                return new SavedState(in);
+            }
+
+            public SavedState[] newArray(final int size) {
+                return new SavedState[size];
+            }
+
+        };
+
     }
 
 }

@@ -20,11 +20,13 @@ import android.support.annotation.NonNull;
 
 public interface IPromptView {
 
-    void setPresenter(@NonNull final IPromptPresenter promptPresenter);
-    void queryUserOpinion();
+    @NonNull
+    IPromptPresenter getPresenter();
+
+    void queryUserOpinion(final boolean triggeredByConfigChange);
     void requestPositiveFeedback();
     void requestCriticalFeedback();
-    void dismiss();
+    void dismiss(final boolean triggeredByConfigChange);
 
     boolean providesThanksView();
 
@@ -32,6 +34,6 @@ public interface IPromptView {
      * <code>IPromptPresenter</code> instances should only call this method if
      * <code>providesThanksView</code> returns <code>true</code>.
      */
-    void thankUser();
+    void thankUser(final boolean triggeredByConfigChange);
 
 }

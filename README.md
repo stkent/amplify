@@ -76,7 +76,7 @@ These components are designed to complement each other, and combining them as de
 
 ```groovy
 dependencies {
-    compile 'com.github.stkent:amplify:{latest-version}'
+    compile 'com.github.stkent:amplify:1.2.0'
 }
 ```
 
@@ -91,7 +91,7 @@ public class ExampleApplication extends Application {
     public void onCreate() {
         super.onCreate();
         
-        Amplify.get(this)
+        Amplify.initSharedInstance(this)
                .setFeedbackEmailAddress("someone@example.com")
                .applyAllDefaultRules();
     }
@@ -111,15 +111,34 @@ public class ExampleApplication extends Application {
 ```
 
 <ol start="4">
-  <li>Call the state tracker's <code>promptIfReady</code> method when appropriate, passing in the current <code>Activity</code> and your <code>DefaultLayoutPromptView</code> instance:</li>
+  <li>Get the shared <code>Amplify</code> instance and call its <code>promptIfReady</code> method when appropriate, passing in your <code>DefaultLayoutPromptView</code> instance:</li>
 </ol>
 
 ```java
-DefaultLayoutPromptView promptView = (DefaultLayoutPromptView) findViewById(R.id.prompt_view);
-Amplify.get(context).promptIfReady(activity, promptView);
+public class ExampleActivity extends Activity {
+
+    @Override
+    public void onCreate(@Nullable final Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_example);
+
+        /*
+         * Be careful: don't re-prompt after a configuration change!
+         * The provided prompt view classes handle saving and restoring their state.
+         * Perform this check in onCreateView or onViewCreated if using a Fragment.
+         */
+        if (savedInstanceState == null) {
+            DefaultLayoutPromptView promptView
+                    = (DefaultLayoutPromptView) findViewById(R.id.prompt_view);
+
+            Amplify.getSharedInstance().promptIfReady(promptView);
+        }
+    }
+
+}
 ```
 
-That's it! The prompt timing calculator will evaluate the default rules each time `promptIfReady` is called, and instruct the `PromptView` to automatically update its visibility based on the result. If the user chooses to interact with the prompt, the sequence of questions asked is also automatically managed by the `PromptView`. If the user decides to give feedback, _amplify_ will automatically handle opening the appropriate Google Play Store page or email client with prepopulated details.
+That's it! The prompt timing calculator will evaluate the default rules each time `promptIfReady` is called, and instruct the `PromptView` to automatically update its state based on the result. If the user chooses to interact with the prompt, the sequence of questions asked is also automatically managed. If the user decides to give feedback, _amplify_ will handle opening the appropriate Google Play Store page or email client with pre-populated details.
 
 ## Default Behavior
 
@@ -131,7 +150,7 @@ The convenience method `applyAllDefaultRules` initializes the prompt timing calc
 
 - **It has been more than a week since your app last crashed.** There are much better ways to collect detailed crash information than via user feedback. We're big fans of [Fabric/Crashlytics](https://fabric.io/kits/android/crashlytics). To save users from spending time reporting crashes that we are already aware of and fixing, we avoid asking for feedback right after a crash has occurred.
 
-- **The user has never previously provided positive feedback.** We strive to constantly improve our apps' functionality and stability. If we do our job right, there's little to be gained by prompting satisfied users for feedback repeatedly. If we decide to significantly overhaul our app (either internally or externally), we will reset the prompt timing calculator to capture feedback from our entire userbase again. // TODO: link to a section that explains how to do this.
+- **The user has never previously provided positive feedback.** We strive to constantly improve our apps' functionality and stability. If we do our job right, there's little to be gained by prompting satisfied users for feedback repeatedly. If we decide to significantly overhaul our app (either internally or externally), we will reset the prompt timing calculator to capture feedback from our entire user base again. // TODO: link to a section that explains how to do this; see #106.
 
 - **The user has not provided critical feedback for this version of the application already.** Since it's unlikely that we'll be able to address any critical feedback received without releasing an update, we won't re-prompt a user who already provided insights into the current version of the app.
 
@@ -145,7 +164,7 @@ More information on how to apply your own collection of rules is available in th
 
 _amplify_ calculates prompt timing based on two types of rule.
 
-### Environment-based Rules
+### Environment-Based Rules
 
 These rules are based on the environment/device in which the embedding application is currently running. For example, they may query whether or not the current device is capable of handling a specific [`Intent`](http://developer.android.com/reference/android/content/Intent.html).
 
@@ -162,7 +181,7 @@ public class ExampleApplication extends Application {
     public void onCreate() {
         super.onCreate();
         
-        Amplify.get(this)
+        Amplify.initSharedInstance(this)
                .setFeedbackEmailAddress("someone@example.com")
                .addEnvironmentBasedRule(new GooglePlayStoreRule()); // Prompt never shown if Google Play Store not installed.
     }
@@ -170,7 +189,7 @@ public class ExampleApplication extends Application {
 }
 ```
 
-### Event-based Rules
+### Event-Based Rules
 
 These rules are based on tracked events that occur within the embedding application. Different dimensions of these events can be tracked (time of first/most recent occurrence, total number of occurrences, etc.)
 
@@ -189,7 +208,7 @@ public class ExampleApplication extends Application {
     public void onCreate() {
         super.onCreate();
         
-        Amplify.get(this)
+        Amplify.initSharedInstance(this)
                .setFeedbackEmailAddress("someone@example.com")
                .setInstallTimeCooldownDays(14)   // Prompt not shown within two weeks of initial install.
                .setLastUpdateTimeCooldownDays(7) // Prompt not shown within one week of most recent update.
@@ -199,7 +218,7 @@ public class ExampleApplication extends Application {
 }
 ```
 
-The following events are also automatically reported to the shared `Amplify` instance whenever you use one of the `promptIfReady` methods to show your prompt:
+The following events are also automatically reported to the shared `Amplify` instance whenever you use the `promptIfReady` method to show your prompt:
 
 - prompt was shown;
 - user indicated a positive opinion of the app;
@@ -238,7 +257,7 @@ public class ExampleApplication extends Application {
     public void onCreate() {
         super.onCreate();
         
-        Amplify.get(this)
+        Amplify.initSharedInstance(this)
                .setFeedbackEmailAddress("someone@example.com")
                .addTotalEventCountRule(PromptViewEvent.USER_GAVE_POSITIVE_FEEDBACK,
                         new MaximumCountRule(1)) // Never ask the user for feedback again if they already responded positively.
@@ -421,35 +440,39 @@ promptView.applyBaseConfig(basePromptViewConfig);
 promptView.applyConfig(customLayoutPromptViewConfig);
 ```
 
-### Listening For `IPromptView` Events
+### Listening For Prompt-Related Events
 
-It may sometimes be useful to know when the state of the `IPromptView` subclass you are using changes. For example, you may want to:
+It may sometimes be useful to know when prompt-related events occur. For example, you may want to:
 
 - track user interactions with the prompt view using your preferred analytics suite;
 - adjust other UI elements when the prompt view is shown/hidden.
 
-To allow this, the `promptIfReady` method optionally accepts an `IEventListener<PromptViewEvent>` parameter that will receive notifications of all tracked `PromptViewEvents`. An example implementation demonstrating these use-cases is given below:
+To achieve this, pass an `IEventListener` instance to the `addPromptEventListener` method of your prompt view. An example implementation demonstrating these use-cases is given below:
 
 ```java
-Amplify.get(this).promptIfReady(this, promptView, new IEventListener<PromptViewEvent>() {
+DefaultLayoutPromptView promptView = (DefaultLayoutPromptView) findViewById(R.id.prompt_view);
+
+promptView.addPromptEventListener(new IEventListener() {
     @Override
-    public void notifyEventTriggered(@NonNull final PromptViewEvent event) {
-        AnalyticsTracker.notifyOfEvent(event);
+    public void notifyEventTriggered(@NonNull final IEvent event) {
+        AnalyticsTracker.reportPromptEvent(event);
     
         if (event == PromptViewEvent.PROMPT_SHOWN) {
-            relatedView.setVisibility(VISIBLE);
+            relatedView.setVisibility(View.VISIBLE);
         } else if (event == PromptViewEvent.PROMPT_DISMISSED) {
-            relatedView.setVisibility(GONE);
+            relatedView.setVisibility(View.GONE);
         }
     }
 });
+
+Amplify.getSharedInstance().promptIfReady(promptView);
 ```
 
 # Customizing
 
 ## Prompt Timing
 
-### Applying Custom Environment-based Rules
+### Applying Custom Environment-Based Rules
 
 A new custom environment-based rule can be added by implementing the `IEnvironmentBasedRule` interface and passing an instance of this implementation to the `Amplify` instance method `addEnvironmentBasedRule`:
 
@@ -460,7 +483,7 @@ public class ExampleApplication extends Application {
     public void onCreate() {
         super.onCreate();
         
-        Amplify.get(this)
+        Amplify.initSharedInstance(this)
                .setFeedbackEmailAddress("someone@example.com")
                .addEnvironmentBasedRule(new MyCustomEnvironmentBasedRule());
     }
@@ -481,12 +504,12 @@ A new custom event can be tracked by implementing the `IEvent` interface, regist
 and then notifying the `Amplify` instance of occurrences of this event using the `notifyEventTriggered` method:
 
 ```java
-Amplify.get(this).notifyEventTriggered(new MyCustomEvent());
+Amplify.getSharedInstance().notifyEventTriggered(new MyCustomEvent());
 ```
 
 As before, the dimension of the event that will be tracked is dictated by which registration method is called.
 
-### Applying Custom Event-based Rules
+### Applying Custom Event-Based Rules
 
 A new custom event can be tracked by implementing the `IEventBasedRule<T>` interface, and registering a (default or custom) `IEvent` with this custom `IEventBasedRule` using one of the following methods:
 
@@ -500,9 +523,14 @@ The generic type `T` must be one of: `Integer`, `Long`, or `String`. The type yo
 
 ## Prompt UI
 
-To provide fully-custom views for each phase of the typical prompt flow, implement the `IPromptView` interface and pass an instance of this implementation to one of the `promptIfReady` methods. You should save the presenter injected into your custom class via the `setPresenter` method, and communicate user-driven events to the presenter within your custom view. See the `BasePromptView` for a sample implementation in which all questions are assumed to share a common view structure.
+**Reminder: use the provided `DefaultLayoutPromptView` and `CustomLayoutPromptView` classes whenever possible!**
 
-To provide a totally custom experience in which _amplify_ does not manage the prompt/rating/feedback UI flows at all, replace any calls to `promptIfReady` with calls to `shouldPrompt`. This method will evaluate all rules and provide a boolean that indicates whether every provided rule is currently satisfied. You may then use this hook to begin your own feedback request flow.
+To provide fully-custom views for each phase of the typical prompt flow, implement the `IPromptView` interface and pass an instance of this implementation to the `promptIfReady` method. Your custom class should create and save a `PromptPresenter` instance in any constructors - this presenter will be used to communicate to your prompt which state it should display. See the `BasePromptView` class for a sample implementation in which:
+
+- all questions are assumed to share a common view structure;
+- prompt state is preserved through configuration changes (non-trivial!).
+
+To provide a totally custom experience in which _amplify_ does not manage the prompt/rating/feedback UI flows at all, replace any calls to `promptIfReady` with calls to `shouldPrompt`. This method will evaluate all rules and provide a boolean that indicates whether every provided rule is currently satisfied. You may then use this hook to begin your own feedback request flow. Again, if you choose this route be aware that you are responsible for maintaining prompt state through orientation changes (if desired).
 
 # Debug Settings
 
@@ -517,7 +545,7 @@ public class ExampleApplication extends Application {
     public void onCreate() {
         super.onCreate();
         
-        Amplify.get(this)
+        Amplify.initSharedInstance(this)
                .setFeedbackEmailAddress("someone@example.com")
                .setLogLevel(BuildConfig.DEBUG ? Logger.LogLevel.DEBUG : Logger.LogLevel.NONE);
     }
@@ -534,7 +562,7 @@ public class ExampleApplication extends Application {
     public void onCreate() {
         super.onCreate();
         
-        Amplify.get(this)
+        Amplify.initSharedInstance(this)
                .setFeedbackEmailAddress("someone@example.com")
                .setAlwaysShow(BuildConfig.DEBUG);
     }
@@ -551,7 +579,7 @@ public class ExampleApplication extends Application {
     public void onCreate() {
         super.onCreate();
         
-        Amplify.get(this)
+        Amplify.initSharedInstance(this)
                .setFeedbackEmailAddress("someone@example.com")
                .setPackageName("my.release.package.name");
     }
