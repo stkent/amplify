@@ -523,7 +523,7 @@ The generic type `T` must be one of: `Integer`, `Long`, or `String`. The type yo
 
 ## Prompt UI
 
-**Reminder: use the provided DefaultLayoutPromptView and CustomLayoutPromptView classes whenever possible for simplicity!**
+**Reminder: use the provided `DefaultLayoutPromptView` and `CustomLayoutPromptView` classes whenever possible!**
 
 To provide fully-custom views for each phase of the typical prompt flow, implement the `IPromptView` interface and pass an instance of this implementation to the `promptIfReady` method. Your custom class should create and save a `PromptPresenter` instance in any constructors - this presenter will be used to communicate to your prompt which state it should display. See the `BasePromptView` class for a sample implementation in which:
 
