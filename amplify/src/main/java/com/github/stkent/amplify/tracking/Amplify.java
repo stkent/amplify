@@ -52,6 +52,7 @@ import com.github.stkent.amplify.utils.PlayStoreUtil;
 import com.github.stkent.amplify.utils.appinfo.AppInfoUtil;
 import com.github.stkent.amplify.utils.appinfo.IAppInfoProvider;
 
+@SuppressWarnings({"PMD.ExcessiveParameterList", "checkstyle:parameternumber"})
 public final class Amplify implements IEventListener {
 
     private static final int DEFAULT_USER_GAVE_POSITIVE_FEEDBACK_MAXIMUM_COUNT = 1;
