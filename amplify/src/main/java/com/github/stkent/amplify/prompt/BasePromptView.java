@@ -85,7 +85,6 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
     private IPromptPresenter promptPresenter;
     private BasePromptViewConfig basePromptViewConfig;
     private T displayedQuestionView;
-    private boolean displayed;
     private boolean thanksDisplayTimeExpired;
 
     BasePromptView(final Context context) {
@@ -147,7 +146,6 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
         displayQuestionViewIfNeeded();
         displayedQuestionView.setPresenter(userOpinionQuestionPresenter);
         displayedQuestionView.bind(basePromptViewConfig.getUserOpinionQuestion());
-        setDisplayed(true);
     }
 
     @Override
@@ -155,7 +153,6 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
         displayQuestionViewIfNeeded();
         displayedQuestionView.setPresenter(feedbackQuestionPresenter);
         displayedQuestionView.bind(basePromptViewConfig.getPositiveFeedbackQuestion());
-        setDisplayed(true);
     }
 
     @Override
@@ -163,7 +160,6 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
         displayQuestionViewIfNeeded();
         displayedQuestionView.setPresenter(feedbackQuestionPresenter);
         displayedQuestionView.bind(basePromptViewConfig.getCriticalFeedbackQuestion());
-        setDisplayed(true);
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -180,7 +176,6 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
             thanksView.bind(basePromptViewConfig.getThanks());
 
             setDisplayedView(thanksView);
-            setDisplayed(true);
 
             final Integer thanksDisplayTimeMs = basePromptViewConfig.getThanksDisplayTimeMs();
 
@@ -234,8 +229,7 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
         }
 
         clearDisplayedQuestionViewReference();
-        setVisibility(GONE);
-        setDisplayed(false);
+        removeAllViews();
     }
 
     @Override
@@ -244,7 +238,7 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
     }
 
     public final void applyBaseConfig(@NonNull final BasePromptViewConfig basePromptViewConfig) {
-        if (displayed) {
+        if (isDisplayed()) {
             throw new IllegalStateException(
                     "Configuration cannot be changed after the prompt is first displayed.");
         }
@@ -267,7 +261,7 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
     }
 
     protected final boolean isDisplayed() {
-        return displayed;
+        return getChildCount() > 0;
     }
 
     /**
@@ -300,10 +294,6 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
 
     private void clearDisplayedQuestionViewReference() {
         displayedQuestionView = null;
-    }
-
-    private void setDisplayed(final boolean displayed) {
-        this.displayed = displayed;
     }
 
     private static class SavedState extends BaseSavedState {
