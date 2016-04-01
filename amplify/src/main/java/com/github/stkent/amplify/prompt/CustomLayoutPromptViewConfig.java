@@ -34,6 +34,7 @@ public final class CustomLayoutPromptViewConfig implements Parcelable {
     /**
      * @return the color value for the attribute at <code>index</code>, if defined; null otherwise
      */
+    @Nullable
     private static Integer suppliedLayoutOrNull(
             @Nullable final TypedArray typedArray,
             @StyleableRes final int index) {

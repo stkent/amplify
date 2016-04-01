@@ -52,6 +52,7 @@ public final class DefaultLayoutPromptViewConfig implements Parcelable {
     /**
      * @return the color value for the attribute at <code>index</code>, if defined; null otherwise
      */
+    @Nullable
     private static Integer suppliedColorOrNull(
             @Nullable final TypedArray typedArray,
             @StyleableRes final int index) {

@@ -19,6 +19,7 @@ package com.github.stkent.amplify.prompt;
 import android.content.res.TypedArray;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.StyleableRes;
 
 import com.github.stkent.amplify.R;
 import com.github.stkent.amplify.prompt.interfaces.IQuestion;
@@ -39,20 +40,41 @@ public final class BasePromptViewConfig {
     private static final String DEFAULT_FEEDBACK_QUESTION_NEGATIVE_BUTTON_LABEL     = "Not right now";
     private static final String DEFAULT_THANKS_TITLE                                = "Thanks for your feedback!";
 
-    @Nullable private final String userOpinionQuestionTitle;
-    @Nullable private final String userOpinionQuestionSubtitle;
-    @Nullable private final String userOpinionQuestionPositiveButtonLabel;
-    @Nullable private final String userOpinionQuestionNegativeButtonLabel;
-    @Nullable private final String positiveFeedbackQuestionTitle;
-    @Nullable private final String positiveFeedbackQuestionSubtitle;
-    @Nullable private final String positiveFeedbackQuestionPositiveButtonLabel;
-    @Nullable private final String positiveFeedbackQuestionNegativeButtonLabel;
-    @Nullable private final String criticalFeedbackQuestionTitle;
-    @Nullable private final String criticalFeedbackQuestionSubtitle;
-    @Nullable private final String criticalFeedbackQuestionPositiveButtonLabel;
-    @Nullable private final String criticalFeedbackQuestionNegativeButtonLabel;
-    @Nullable private final String thanksTitle;
-    @Nullable private final String thanksSubtitle;
+    private static final int DEFAULT_INTEGER_VALUE_IF_UNDEFINED = Integer.MAX_VALUE;
+
+    /**
+     * @return the integer value for the attribute at <code>index</code>, if defined; null otherwise
+     */
+    @Nullable
+    private static Integer suppliedIntegerOrNull(
+            @Nullable final TypedArray typedArray,
+            @StyleableRes final int index) {
+
+        if (typedArray != null) {
+            final int integer
+                    = typedArray.getResourceId(index, DEFAULT_INTEGER_VALUE_IF_UNDEFINED);
+
+            return integer != DEFAULT_INTEGER_VALUE_IF_UNDEFINED ? integer : null;
+        }
+
+        return null;
+    }
+
+    @Nullable private final String  userOpinionQuestionTitle;
+    @Nullable private final String  userOpinionQuestionSubtitle;
+    @Nullable private final String  userOpinionQuestionPositiveButtonLabel;
+    @Nullable private final String  userOpinionQuestionNegativeButtonLabel;
+    @Nullable private final String  positiveFeedbackQuestionTitle;
+    @Nullable private final String  positiveFeedbackQuestionSubtitle;
+    @Nullable private final String  positiveFeedbackQuestionPositiveButtonLabel;
+    @Nullable private final String  positiveFeedbackQuestionNegativeButtonLabel;
+    @Nullable private final String  criticalFeedbackQuestionTitle;
+    @Nullable private final String  criticalFeedbackQuestionSubtitle;
+    @Nullable private final String  criticalFeedbackQuestionPositiveButtonLabel;
+    @Nullable private final String  criticalFeedbackQuestionNegativeButtonLabel;
+    @Nullable private final String  thanksTitle;
+    @Nullable private final String  thanksSubtitle;
+    @Nullable private final Integer thanksDisplayTimeMs;
 
     public BasePromptViewConfig(@NonNull final TypedArray typedArray) {
         userOpinionQuestionTitle = typedArray.getString(
@@ -95,23 +117,28 @@ public final class BasePromptViewConfig {
 
         thanksSubtitle = typedArray.getString(
                 R.styleable.BasePromptView_prompt_view_thanks_subtitle);
+
+        thanksDisplayTimeMs = suppliedIntegerOrNull(
+                typedArray,
+                R.styleable.BasePromptView_prompt_view_thanks_display_time_ms);
     }
 
     protected BasePromptViewConfig(
-            @Nullable final String userOpinionQuestionTitle,
-            @Nullable final String userOpinionQuestionPositiveButtonLabel,
-            @Nullable final String userOpinionQuestionNegativeButtonLabel,
-            @Nullable final String positiveFeedbackQuestionTitle,
-            @Nullable final String positiveFeedbackQuestionPositiveButtonLabel,
-            @Nullable final String positiveFeedbackQuestionNegativeButtonLabel,
-            @Nullable final String criticalFeedbackQuestionTitle,
-            @Nullable final String criticalFeedbackQuestionPositiveButtonLabel,
-            @Nullable final String criticalFeedbackQuestionNegativeButtonLabel,
-            @Nullable final String thanksTitle,
-            @Nullable final String userOpinionQuestionSubtitle,
-            @Nullable final String positiveFeedbackQuestionSubtitle,
-            @Nullable final String criticalFeedbackQuestionSubtitle,
-            @Nullable final String thanksSubtitle) {
+            @Nullable final String  userOpinionQuestionTitle,
+            @Nullable final String  userOpinionQuestionPositiveButtonLabel,
+            @Nullable final String  userOpinionQuestionNegativeButtonLabel,
+            @Nullable final String  positiveFeedbackQuestionTitle,
+            @Nullable final String  positiveFeedbackQuestionPositiveButtonLabel,
+            @Nullable final String  positiveFeedbackQuestionNegativeButtonLabel,
+            @Nullable final String  criticalFeedbackQuestionTitle,
+            @Nullable final String  criticalFeedbackQuestionPositiveButtonLabel,
+            @Nullable final String  criticalFeedbackQuestionNegativeButtonLabel,
+            @Nullable final String  thanksTitle,
+            @Nullable final String  userOpinionQuestionSubtitle,
+            @Nullable final String  positiveFeedbackQuestionSubtitle,
+            @Nullable final String  criticalFeedbackQuestionSubtitle,
+            @Nullable final String  thanksSubtitle,
+            @Nullable final Integer thanksDisplayTimeMs) {
 
         this.userOpinionQuestionTitle                    = userOpinionQuestionTitle;
         this.userOpinionQuestionPositiveButtonLabel      = userOpinionQuestionPositiveButtonLabel;
@@ -127,6 +154,7 @@ public final class BasePromptViewConfig {
         this.positiveFeedbackQuestionSubtitle            = positiveFeedbackQuestionSubtitle;
         this.criticalFeedbackQuestionSubtitle            = criticalFeedbackQuestionSubtitle;
         this.thanksSubtitle                              = thanksSubtitle;
+        this.thanksDisplayTimeMs                         = thanksDisplayTimeMs;
     }
 
     @NonNull
@@ -159,6 +187,11 @@ public final class BasePromptViewConfig {
     @NonNull
     public IThanks getThanks() {
         return new Thanks(getThanksTitle(), thanksSubtitle);
+    }
+
+    @Nullable
+    public Integer getThanksDisplayTimeMs() {
+        return thanksDisplayTimeMs;
     }
 
     @NonNull
@@ -228,20 +261,21 @@ public final class BasePromptViewConfig {
 
     public static final class Builder {
 
-        @Nullable private String userOpinionQuestionTitle;
-        @Nullable private String userOpinionQuestionPositiveButtonLabel;
-        @Nullable private String userOpinionQuestionNegativeButtonLabel;
-        @Nullable private String positiveFeedbackQuestionTitle;
-        @Nullable private String positiveFeedbackQuestionPositiveButtonLabel;
-        @Nullable private String positiveFeedbackQuestionNegativeButtonLabel;
-        @Nullable private String criticalFeedbackQuestionTitle;
-        @Nullable private String criticalFeedbackQuestionPositiveButtonLabel;
-        @Nullable private String criticalFeedbackQuestionNegativeButtonLabel;
-        @Nullable private String thanksTitle;
-        @Nullable private String userOpinionQuestionSubtitle;
-        @Nullable private String positiveFeedbackQuestionSubtitle;
-        @Nullable private String criticalFeedbackQuestionSubtitle;
-        @Nullable private String thanksSubtitle;
+        @Nullable private String  userOpinionQuestionTitle;
+        @Nullable private String  userOpinionQuestionPositiveButtonLabel;
+        @Nullable private String  userOpinionQuestionNegativeButtonLabel;
+        @Nullable private String  positiveFeedbackQuestionTitle;
+        @Nullable private String  positiveFeedbackQuestionPositiveButtonLabel;
+        @Nullable private String  positiveFeedbackQuestionNegativeButtonLabel;
+        @Nullable private String  criticalFeedbackQuestionTitle;
+        @Nullable private String  criticalFeedbackQuestionPositiveButtonLabel;
+        @Nullable private String  criticalFeedbackQuestionNegativeButtonLabel;
+        @Nullable private String  thanksTitle;
+        @Nullable private String  userOpinionQuestionSubtitle;
+        @Nullable private String  positiveFeedbackQuestionSubtitle;
+        @Nullable private String  criticalFeedbackQuestionSubtitle;
+        @Nullable private String  thanksSubtitle;
+        @Nullable private Integer thanksDisplayTimeMs;
 
         public Builder setUserOpinionQuestionTitle(
                 @NonNull final String userOpinionQuestionTitle) {
@@ -345,6 +379,11 @@ public final class BasePromptViewConfig {
             return this;
         }
 
+        public Builder setThanksDisplayTimeMs(final int thanksDisplayTimeMs) {
+            this.thanksDisplayTimeMs = thanksDisplayTimeMs;
+            return this;
+        }
+
         public BasePromptViewConfig build() {
             return new BasePromptViewConfig(
                 userOpinionQuestionTitle,
@@ -360,7 +399,8 @@ public final class BasePromptViewConfig {
                 userOpinionQuestionSubtitle,
                 positiveFeedbackQuestionSubtitle,
                 criticalFeedbackQuestionSubtitle,
-                thanksSubtitle);
+                thanksSubtitle,
+                thanksDisplayTimeMs);
         }
     }
 
