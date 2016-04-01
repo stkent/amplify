@@ -317,10 +317,12 @@ public final class DefaultLayoutPromptViewConfig implements Parcelable {
     public static final Parcelable.Creator<DefaultLayoutPromptViewConfig> CREATOR
             = new Parcelable.Creator<DefaultLayoutPromptViewConfig>() {
 
+        @Override
         public DefaultLayoutPromptViewConfig createFromParcel(final Parcel source) {
             return new DefaultLayoutPromptViewConfig(source);
         }
 
+        @Override
         public DefaultLayoutPromptViewConfig[] newArray(final int size) {
             return new DefaultLayoutPromptViewConfig[size];
         }
