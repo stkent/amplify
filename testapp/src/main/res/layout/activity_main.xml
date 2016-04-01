@@ -73,7 +73,8 @@
             app:prompt_view_user_opinion_question_negative_button_label="d. No"
             app:prompt_view_user_opinion_question_positive_button_label="c. Yes"
             app:prompt_view_user_opinion_question_subtitle="b. Subtitle"
-            app:prompt_view_user_opinion_question_title="a. User Opinion Title" />
+            app:prompt_view_user_opinion_question_title="a. User Opinion Title"
+            app:prompt_view_thanks_display_time_ms="2000" />
 
         <com.github.stkent.amplify.prompt.CustomLayoutPromptView
             android:id="@+id/custom_layout_prompt_view_code_config"
