@@ -127,34 +127,34 @@ public final class BasePromptViewConfig implements Parcelable {
 
     protected BasePromptViewConfig(
             @Nullable final String userOpinionQuestionTitle,
+            @Nullable final String userOpinionQuestionSubtitle,
             @Nullable final String userOpinionQuestionPositiveButtonLabel,
             @Nullable final String userOpinionQuestionNegativeButtonLabel,
             @Nullable final String positiveFeedbackQuestionTitle,
+            @Nullable final String positiveFeedbackQuestionSubtitle,
             @Nullable final String positiveFeedbackQuestionPositiveButtonLabel,
             @Nullable final String positiveFeedbackQuestionNegativeButtonLabel,
             @Nullable final String criticalFeedbackQuestionTitle,
+            @Nullable final String criticalFeedbackQuestionSubtitle,
             @Nullable final String criticalFeedbackQuestionPositiveButtonLabel,
             @Nullable final String criticalFeedbackQuestionNegativeButtonLabel,
             @Nullable final String thanksTitle,
-            @Nullable final String userOpinionQuestionSubtitle,
-            @Nullable final String positiveFeedbackQuestionSubtitle,
-            @Nullable final String criticalFeedbackQuestionSubtitle,
             @Nullable final String thanksSubtitle,
             @Nullable final Long thanksDisplayTimeMs) {
 
         this.userOpinionQuestionTitle                    = userOpinionQuestionTitle;
+        this.userOpinionQuestionSubtitle                 = userOpinionQuestionSubtitle;
         this.userOpinionQuestionPositiveButtonLabel      = userOpinionQuestionPositiveButtonLabel;
         this.userOpinionQuestionNegativeButtonLabel      = userOpinionQuestionNegativeButtonLabel;
         this.positiveFeedbackQuestionTitle               = positiveFeedbackQuestionTitle;
+        this.positiveFeedbackQuestionSubtitle            = positiveFeedbackQuestionSubtitle;
         this.positiveFeedbackQuestionPositiveButtonLabel = positiveFeedbackQuestionPositiveButtonLabel;
         this.positiveFeedbackQuestionNegativeButtonLabel = positiveFeedbackQuestionNegativeButtonLabel;
         this.criticalFeedbackQuestionTitle               = criticalFeedbackQuestionTitle;
+        this.criticalFeedbackQuestionSubtitle            = criticalFeedbackQuestionSubtitle;
         this.criticalFeedbackQuestionPositiveButtonLabel = criticalFeedbackQuestionPositiveButtonLabel;
         this.criticalFeedbackQuestionNegativeButtonLabel = criticalFeedbackQuestionNegativeButtonLabel;
         this.thanksTitle                                 = thanksTitle;
-        this.userOpinionQuestionSubtitle                 = userOpinionQuestionSubtitle;
-        this.positiveFeedbackQuestionSubtitle            = positiveFeedbackQuestionSubtitle;
-        this.criticalFeedbackQuestionSubtitle            = criticalFeedbackQuestionSubtitle;
         this.thanksSubtitle                              = thanksSubtitle;
         this.thanksDisplayTimeMs                         = thanksDisplayTimeMs;
     }
@@ -264,18 +264,18 @@ public final class BasePromptViewConfig implements Parcelable {
     public static final class Builder {
 
         @Nullable private String userOpinionQuestionTitle;
+        @Nullable private String userOpinionQuestionSubtitle;
         @Nullable private String userOpinionQuestionPositiveButtonLabel;
         @Nullable private String userOpinionQuestionNegativeButtonLabel;
         @Nullable private String positiveFeedbackQuestionTitle;
+        @Nullable private String positiveFeedbackQuestionSubtitle;
         @Nullable private String positiveFeedbackQuestionPositiveButtonLabel;
         @Nullable private String positiveFeedbackQuestionNegativeButtonLabel;
         @Nullable private String criticalFeedbackQuestionTitle;
+        @Nullable private String criticalFeedbackQuestionSubtitle;
         @Nullable private String criticalFeedbackQuestionPositiveButtonLabel;
         @Nullable private String criticalFeedbackQuestionNegativeButtonLabel;
         @Nullable private String thanksTitle;
-        @Nullable private String userOpinionQuestionSubtitle;
-        @Nullable private String positiveFeedbackQuestionSubtitle;
-        @Nullable private String criticalFeedbackQuestionSubtitle;
         @Nullable private String thanksSubtitle;
         @Nullable private Long thanksDisplayTimeMs;
 
@@ -283,6 +283,13 @@ public final class BasePromptViewConfig implements Parcelable {
                 @NonNull final String userOpinionQuestionTitle) {
 
             this.userOpinionQuestionTitle = userOpinionQuestionTitle;
+            return this;
+        }
+
+        public Builder setUserOpinionQuestionSubtitle(
+                @NonNull final String userOpinionQuestionSubtitle) {
+
+            this.userOpinionQuestionSubtitle = userOpinionQuestionSubtitle;
             return this;
         }
 
@@ -304,6 +311,13 @@ public final class BasePromptViewConfig implements Parcelable {
                 @NonNull final String positiveFeedbackQuestionTitle) {
 
             this.positiveFeedbackQuestionTitle = positiveFeedbackQuestionTitle;
+            return this;
+        }
+
+        public Builder setPositiveFeedbackQuestionSubtitle(
+                @NonNull final String positiveFeedbackQuestionSubtitle) {
+
+            this.positiveFeedbackQuestionSubtitle = positiveFeedbackQuestionSubtitle;
             return this;
         }
 
@@ -332,6 +346,13 @@ public final class BasePromptViewConfig implements Parcelable {
             return this;
         }
 
+        public Builder setCriticalFeedbackQuestionSubtitle(
+                @NonNull final String criticalFeedbackQuestionSubtitle) {
+
+            this.criticalFeedbackQuestionSubtitle = criticalFeedbackQuestionSubtitle;
+            return this;
+        }
+
         public Builder setCriticalFeedbackQuestionPositiveButtonLabel(
                 @NonNull final String criticalFeedbackQuestionPositiveButtonLabel) {
 
@@ -355,27 +376,6 @@ public final class BasePromptViewConfig implements Parcelable {
             return this;
         }
 
-        public Builder setUserOpinionQuestionSubtitle(
-                @NonNull final String userOpinionQuestionSubtitle) {
-
-            this.userOpinionQuestionSubtitle = userOpinionQuestionSubtitle;
-            return this;
-        }
-
-        public Builder setPositiveFeedbackQuestionSubtitle(
-                @NonNull final String positiveFeedbackQuestionSubtitle) {
-
-            this.positiveFeedbackQuestionSubtitle = positiveFeedbackQuestionSubtitle;
-            return this;
-        }
-
-        public Builder setCriticalFeedbackQuestionSubtitle(
-                @NonNull final String criticalFeedbackQuestionSubtitle) {
-
-            this.criticalFeedbackQuestionSubtitle = criticalFeedbackQuestionSubtitle;
-            return this;
-        }
-
         public Builder setThanksSubtitle(@NonNull final String thanksSubtitle) {
             this.thanksSubtitle = thanksSubtitle;
             return this;
@@ -388,21 +388,21 @@ public final class BasePromptViewConfig implements Parcelable {
 
         public BasePromptViewConfig build() {
             return new BasePromptViewConfig(
-                userOpinionQuestionTitle,
-                userOpinionQuestionPositiveButtonLabel,
-                userOpinionQuestionNegativeButtonLabel,
-                positiveFeedbackQuestionTitle,
-                positiveFeedbackQuestionPositiveButtonLabel,
-                positiveFeedbackQuestionNegativeButtonLabel,
-                criticalFeedbackQuestionTitle,
-                criticalFeedbackQuestionPositiveButtonLabel,
-                criticalFeedbackQuestionNegativeButtonLabel,
-                thanksTitle,
-                userOpinionQuestionSubtitle,
-                positiveFeedbackQuestionSubtitle,
-                criticalFeedbackQuestionSubtitle,
-                thanksSubtitle,
-                thanksDisplayTimeMs);
+                    userOpinionQuestionTitle,
+                    userOpinionQuestionSubtitle,
+                    userOpinionQuestionPositiveButtonLabel,
+                    userOpinionQuestionNegativeButtonLabel,
+                    positiveFeedbackQuestionTitle,
+                    positiveFeedbackQuestionSubtitle,
+                    positiveFeedbackQuestionPositiveButtonLabel,
+                    positiveFeedbackQuestionNegativeButtonLabel,
+                    criticalFeedbackQuestionTitle,
+                    criticalFeedbackQuestionSubtitle,
+                    criticalFeedbackQuestionPositiveButtonLabel,
+                    criticalFeedbackQuestionNegativeButtonLabel,
+                    thanksTitle,
+                    thanksSubtitle,
+                    thanksDisplayTimeMs);
         }
     }
 
@@ -416,18 +416,18 @@ public final class BasePromptViewConfig implements Parcelable {
     @Override
     public void writeToParcel(final Parcel dest, final int flags) {
         dest.writeValue(this.userOpinionQuestionTitle);
+        dest.writeValue(this.userOpinionQuestionSubtitle);
         dest.writeValue(this.userOpinionQuestionPositiveButtonLabel);
         dest.writeValue(this.userOpinionQuestionNegativeButtonLabel);
         dest.writeValue(this.positiveFeedbackQuestionTitle);
+        dest.writeValue(this.positiveFeedbackQuestionSubtitle);
         dest.writeValue(this.positiveFeedbackQuestionPositiveButtonLabel);
         dest.writeValue(this.positiveFeedbackQuestionNegativeButtonLabel);
         dest.writeValue(this.criticalFeedbackQuestionTitle);
+        dest.writeValue(this.criticalFeedbackQuestionSubtitle);
         dest.writeValue(this.criticalFeedbackQuestionPositiveButtonLabel);
         dest.writeValue(this.criticalFeedbackQuestionNegativeButtonLabel);
         dest.writeValue(this.thanksTitle);
-        dest.writeValue(this.userOpinionQuestionSubtitle);
-        dest.writeValue(this.positiveFeedbackQuestionSubtitle);
-        dest.writeValue(this.criticalFeedbackQuestionSubtitle);
         dest.writeValue(this.thanksSubtitle);
         dest.writeValue(this.thanksDisplayTimeMs);
     }
@@ -435,18 +435,18 @@ public final class BasePromptViewConfig implements Parcelable {
     @SuppressLint("ParcelClassLoader")
     protected BasePromptViewConfig(@NonNull final Parcel in) {
         this.userOpinionQuestionTitle = (String) in.readValue(null);
+        this.userOpinionQuestionSubtitle = (String) in.readValue(null);
         this.userOpinionQuestionPositiveButtonLabel = (String) in.readValue(null);
         this.userOpinionQuestionNegativeButtonLabel = (String) in.readValue(null);
         this.positiveFeedbackQuestionTitle = (String) in.readValue(null);
+        this.positiveFeedbackQuestionSubtitle = (String) in.readValue(null);
         this.positiveFeedbackQuestionPositiveButtonLabel = (String) in.readValue(null);
         this.positiveFeedbackQuestionNegativeButtonLabel = (String) in.readValue(null);
         this.criticalFeedbackQuestionTitle = (String) in.readValue(null);
+        this.criticalFeedbackQuestionSubtitle = (String) in.readValue(null);
         this.criticalFeedbackQuestionPositiveButtonLabel = (String) in.readValue(null);
         this.criticalFeedbackQuestionNegativeButtonLabel = (String) in.readValue(null);
         this.thanksTitle = (String) in.readValue(null);
-        this.userOpinionQuestionSubtitle = (String) in.readValue(null);
-        this.positiveFeedbackQuestionSubtitle = (String) in.readValue(null);
-        this.criticalFeedbackQuestionSubtitle = (String) in.readValue(null);
         this.thanksSubtitle = (String) in.readValue(null);
         this.thanksDisplayTimeMs = (Long) in.readValue(null);
     }
