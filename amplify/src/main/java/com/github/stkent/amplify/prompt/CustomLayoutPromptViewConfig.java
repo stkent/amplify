@@ -16,6 +16,7 @@
  */
 package com.github.stkent.amplify.prompt;
 
+import android.annotation.SuppressLint;
 import android.content.res.TypedArray;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -104,23 +105,25 @@ public final class CustomLayoutPromptViewConfig implements Parcelable {
         dest.writeValue(this.thanksLayout);
     }
 
+    @SuppressLint("ParcelClassLoader")
     protected CustomLayoutPromptViewConfig(Parcel in) {
-        this.questionLayout = (Integer) in.readValue(Integer.class.getClassLoader());
-        this.thanksLayout = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.questionLayout = (Integer) in.readValue(null);
+        this.thanksLayout = (Integer) in.readValue(null);
     }
 
     public static final Parcelable.Creator<CustomLayoutPromptViewConfig> CREATOR
             = new Parcelable.Creator<CustomLayoutPromptViewConfig>() {
 
         @Override
-        public CustomLayoutPromptViewConfig createFromParcel(Parcel source) {
-            return new CustomLayoutPromptViewConfig(source);
+        public CustomLayoutPromptViewConfig createFromParcel(final Parcel in) {
+            return new CustomLayoutPromptViewConfig(in);
         }
 
         @Override
-        public CustomLayoutPromptViewConfig[] newArray(int size) {
+        public CustomLayoutPromptViewConfig[] newArray(final int size) {
             return new CustomLayoutPromptViewConfig[size];
         }
+
     };
 
 }

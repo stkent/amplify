@@ -16,6 +16,7 @@
  */
 package com.github.stkent.amplify.prompt;
 
+import android.annotation.SuppressLint;
 import android.content.res.TypedArray;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -301,31 +302,33 @@ public final class DefaultLayoutPromptViewConfig implements Parcelable {
         dest.writeValue(this.negativeButtonBorderColor);
     }
 
+    @SuppressLint("ParcelClassLoader")
     protected DefaultLayoutPromptViewConfig(@NonNull final Parcel in) {
-        this.foregroundColor = (Integer) in.readValue(Integer.class.getClassLoader());
-        this.backgroundColor = (Integer) in.readValue(Integer.class.getClassLoader());
-        this.titleTextColor = (Integer) in.readValue(Integer.class.getClassLoader());
-        this.subtitleTextColor = (Integer) in.readValue(Integer.class.getClassLoader());
-        this.positiveButtonTextColor = (Integer) in.readValue(Integer.class.getClassLoader());
-        this.positiveButtonBackgroundColor = (Integer) in.readValue(Integer.class.getClassLoader());
-        this.positiveButtonBorderColor = (Integer) in.readValue(Integer.class.getClassLoader());
-        this.negativeButtonTextColor = (Integer) in.readValue(Integer.class.getClassLoader());
-        this.negativeButtonBackgroundColor = (Integer) in.readValue(Integer.class.getClassLoader());
-        this.negativeButtonBorderColor = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.foregroundColor = (Integer) in.readValue(null);
+        this.backgroundColor = (Integer) in.readValue(null);
+        this.titleTextColor = (Integer) in.readValue(null);
+        this.subtitleTextColor = (Integer) in.readValue(null);
+        this.positiveButtonTextColor = (Integer) in.readValue(null);
+        this.positiveButtonBackgroundColor = (Integer) in.readValue(null);
+        this.positiveButtonBorderColor = (Integer) in.readValue(null);
+        this.negativeButtonTextColor = (Integer) in.readValue(null);
+        this.negativeButtonBackgroundColor = (Integer) in.readValue(null);
+        this.negativeButtonBorderColor = (Integer) in.readValue(null);
     }
 
     public static final Parcelable.Creator<DefaultLayoutPromptViewConfig> CREATOR
             = new Parcelable.Creator<DefaultLayoutPromptViewConfig>() {
 
         @Override
-        public DefaultLayoutPromptViewConfig createFromParcel(final Parcel source) {
-            return new DefaultLayoutPromptViewConfig(source);
+        public DefaultLayoutPromptViewConfig createFromParcel(final Parcel in) {
+            return new DefaultLayoutPromptViewConfig(in);
         }
 
         @Override
         public DefaultLayoutPromptViewConfig[] newArray(final int size) {
             return new DefaultLayoutPromptViewConfig[size];
         }
+
     };
 
 }

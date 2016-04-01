@@ -16,6 +16,7 @@
  */
 package com.github.stkent.amplify.prompt;
 
+import android.annotation.SuppressLint;
 import android.content.res.TypedArray;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -415,53 +416,55 @@ public final class BasePromptViewConfig implements Parcelable {
 
     @Override
     public void writeToParcel(final Parcel dest, final int flags) {
-        dest.writeString(this.userOpinionQuestionTitle);
-        dest.writeString(this.userOpinionQuestionPositiveButtonLabel);
-        dest.writeString(this.userOpinionQuestionNegativeButtonLabel);
-        dest.writeString(this.positiveFeedbackQuestionTitle);
-        dest.writeString(this.positiveFeedbackQuestionPositiveButtonLabel);
-        dest.writeString(this.positiveFeedbackQuestionNegativeButtonLabel);
-        dest.writeString(this.criticalFeedbackQuestionTitle);
-        dest.writeString(this.criticalFeedbackQuestionPositiveButtonLabel);
-        dest.writeString(this.criticalFeedbackQuestionNegativeButtonLabel);
-        dest.writeString(this.thanksTitle);
-        dest.writeString(this.userOpinionQuestionSubtitle);
-        dest.writeString(this.positiveFeedbackQuestionSubtitle);
-        dest.writeString(this.criticalFeedbackQuestionSubtitle);
-        dest.writeString(this.thanksSubtitle);
+        dest.writeValue(this.userOpinionQuestionTitle);
+        dest.writeValue(this.userOpinionQuestionPositiveButtonLabel);
+        dest.writeValue(this.userOpinionQuestionNegativeButtonLabel);
+        dest.writeValue(this.positiveFeedbackQuestionTitle);
+        dest.writeValue(this.positiveFeedbackQuestionPositiveButtonLabel);
+        dest.writeValue(this.positiveFeedbackQuestionNegativeButtonLabel);
+        dest.writeValue(this.criticalFeedbackQuestionTitle);
+        dest.writeValue(this.criticalFeedbackQuestionPositiveButtonLabel);
+        dest.writeValue(this.criticalFeedbackQuestionNegativeButtonLabel);
+        dest.writeValue(this.thanksTitle);
+        dest.writeValue(this.userOpinionQuestionSubtitle);
+        dest.writeValue(this.positiveFeedbackQuestionSubtitle);
+        dest.writeValue(this.criticalFeedbackQuestionSubtitle);
+        dest.writeValue(this.thanksSubtitle);
         dest.writeValue(this.thanksDisplayTimeMs);
     }
 
+    @SuppressLint("ParcelClassLoader")
     protected BasePromptViewConfig(@NonNull final Parcel in) {
-        this.userOpinionQuestionTitle = in.readString();
-        this.userOpinionQuestionPositiveButtonLabel = in.readString();
-        this.userOpinionQuestionNegativeButtonLabel = in.readString();
-        this.positiveFeedbackQuestionTitle = in.readString();
-        this.positiveFeedbackQuestionPositiveButtonLabel = in.readString();
-        this.positiveFeedbackQuestionNegativeButtonLabel = in.readString();
-        this.criticalFeedbackQuestionTitle = in.readString();
-        this.criticalFeedbackQuestionPositiveButtonLabel = in.readString();
-        this.criticalFeedbackQuestionNegativeButtonLabel = in.readString();
-        this.thanksTitle = in.readString();
-        this.userOpinionQuestionSubtitle = in.readString();
-        this.positiveFeedbackQuestionSubtitle = in.readString();
-        this.criticalFeedbackQuestionSubtitle = in.readString();
-        this.thanksSubtitle = in.readString();
-        this.thanksDisplayTimeMs = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.userOpinionQuestionTitle = (String) in.readValue(null);
+        this.userOpinionQuestionPositiveButtonLabel = (String) in.readValue(null);
+        this.userOpinionQuestionNegativeButtonLabel = (String) in.readValue(null);
+        this.positiveFeedbackQuestionTitle = (String) in.readValue(null);
+        this.positiveFeedbackQuestionPositiveButtonLabel = (String) in.readValue(null);
+        this.positiveFeedbackQuestionNegativeButtonLabel = (String) in.readValue(null);
+        this.criticalFeedbackQuestionTitle = (String) in.readValue(null);
+        this.criticalFeedbackQuestionPositiveButtonLabel = (String) in.readValue(null);
+        this.criticalFeedbackQuestionNegativeButtonLabel = (String) in.readValue(null);
+        this.thanksTitle = (String) in.readValue(null);
+        this.userOpinionQuestionSubtitle = (String) in.readValue(null);
+        this.positiveFeedbackQuestionSubtitle = (String) in.readValue(null);
+        this.criticalFeedbackQuestionSubtitle = (String) in.readValue(null);
+        this.thanksSubtitle = (String) in.readValue(null);
+        this.thanksDisplayTimeMs = (Integer) in.readValue(null);
     }
 
     public static final Parcelable.Creator<BasePromptViewConfig> CREATOR
             = new Parcelable.Creator<BasePromptViewConfig>() {
 
         @Override
-        public BasePromptViewConfig createFromParcel(final Parcel source) {
-            return new BasePromptViewConfig(source);
+        public BasePromptViewConfig createFromParcel(final Parcel in) {
+            return new BasePromptViewConfig(in);
         }
 
         @Override
         public BasePromptViewConfig[] newArray(final int size) {
             return new BasePromptViewConfig[size];
         }
+
     };
 
 }
