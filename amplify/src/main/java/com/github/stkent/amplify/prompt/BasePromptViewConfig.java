@@ -49,35 +49,34 @@ public final class BasePromptViewConfig implements Parcelable {
      * @return the integer value for the attribute at <code>index</code>, if defined; null otherwise
      */
     @Nullable
-    private static Integer suppliedIntegerOrNull(
+    private static Long suppliedLongOrNull(
             @Nullable final TypedArray typedArray,
             @StyleableRes final int index) {
 
         if (typedArray != null) {
-            final int integer
-                    = typedArray.getResourceId(index, DEFAULT_INTEGER_VALUE_IF_UNDEFINED);
+            final int integer = typedArray.getInt(index, DEFAULT_INTEGER_VALUE_IF_UNDEFINED);
 
-            return integer != DEFAULT_INTEGER_VALUE_IF_UNDEFINED ? integer : null;
+            return integer != DEFAULT_INTEGER_VALUE_IF_UNDEFINED ? (long) integer : null;
         }
 
         return null;
     }
 
-    @Nullable private final String  userOpinionQuestionTitle;
-    @Nullable private final String  userOpinionQuestionSubtitle;
-    @Nullable private final String  userOpinionQuestionPositiveButtonLabel;
-    @Nullable private final String  userOpinionQuestionNegativeButtonLabel;
-    @Nullable private final String  positiveFeedbackQuestionTitle;
-    @Nullable private final String  positiveFeedbackQuestionSubtitle;
-    @Nullable private final String  positiveFeedbackQuestionPositiveButtonLabel;
-    @Nullable private final String  positiveFeedbackQuestionNegativeButtonLabel;
-    @Nullable private final String  criticalFeedbackQuestionTitle;
-    @Nullable private final String  criticalFeedbackQuestionSubtitle;
-    @Nullable private final String  criticalFeedbackQuestionPositiveButtonLabel;
-    @Nullable private final String  criticalFeedbackQuestionNegativeButtonLabel;
-    @Nullable private final String  thanksTitle;
-    @Nullable private final String  thanksSubtitle;
-    @Nullable private final Integer thanksDisplayTimeMs;
+    @Nullable private final String userOpinionQuestionTitle;
+    @Nullable private final String userOpinionQuestionSubtitle;
+    @Nullable private final String userOpinionQuestionPositiveButtonLabel;
+    @Nullable private final String userOpinionQuestionNegativeButtonLabel;
+    @Nullable private final String positiveFeedbackQuestionTitle;
+    @Nullable private final String positiveFeedbackQuestionSubtitle;
+    @Nullable private final String positiveFeedbackQuestionPositiveButtonLabel;
+    @Nullable private final String positiveFeedbackQuestionNegativeButtonLabel;
+    @Nullable private final String criticalFeedbackQuestionTitle;
+    @Nullable private final String criticalFeedbackQuestionSubtitle;
+    @Nullable private final String criticalFeedbackQuestionPositiveButtonLabel;
+    @Nullable private final String criticalFeedbackQuestionNegativeButtonLabel;
+    @Nullable private final String thanksTitle;
+    @Nullable private final String thanksSubtitle;
+    @Nullable private final Long   thanksDisplayTimeMs;
 
     public BasePromptViewConfig(@NonNull final TypedArray typedArray) {
         userOpinionQuestionTitle = typedArray.getString(
@@ -121,27 +120,27 @@ public final class BasePromptViewConfig implements Parcelable {
         thanksSubtitle = typedArray.getString(
                 R.styleable.BasePromptView_prompt_view_thanks_subtitle);
 
-        thanksDisplayTimeMs = suppliedIntegerOrNull(
+        thanksDisplayTimeMs = suppliedLongOrNull(
                 typedArray,
                 R.styleable.BasePromptView_prompt_view_thanks_display_time_ms);
     }
 
     protected BasePromptViewConfig(
-            @Nullable final String  userOpinionQuestionTitle,
-            @Nullable final String  userOpinionQuestionPositiveButtonLabel,
-            @Nullable final String  userOpinionQuestionNegativeButtonLabel,
-            @Nullable final String  positiveFeedbackQuestionTitle,
-            @Nullable final String  positiveFeedbackQuestionPositiveButtonLabel,
-            @Nullable final String  positiveFeedbackQuestionNegativeButtonLabel,
-            @Nullable final String  criticalFeedbackQuestionTitle,
-            @Nullable final String  criticalFeedbackQuestionPositiveButtonLabel,
-            @Nullable final String  criticalFeedbackQuestionNegativeButtonLabel,
-            @Nullable final String  thanksTitle,
-            @Nullable final String  userOpinionQuestionSubtitle,
-            @Nullable final String  positiveFeedbackQuestionSubtitle,
-            @Nullable final String  criticalFeedbackQuestionSubtitle,
-            @Nullable final String  thanksSubtitle,
-            @Nullable final Integer thanksDisplayTimeMs) {
+            @Nullable final String userOpinionQuestionTitle,
+            @Nullable final String userOpinionQuestionPositiveButtonLabel,
+            @Nullable final String userOpinionQuestionNegativeButtonLabel,
+            @Nullable final String positiveFeedbackQuestionTitle,
+            @Nullable final String positiveFeedbackQuestionPositiveButtonLabel,
+            @Nullable final String positiveFeedbackQuestionNegativeButtonLabel,
+            @Nullable final String criticalFeedbackQuestionTitle,
+            @Nullable final String criticalFeedbackQuestionPositiveButtonLabel,
+            @Nullable final String criticalFeedbackQuestionNegativeButtonLabel,
+            @Nullable final String thanksTitle,
+            @Nullable final String userOpinionQuestionSubtitle,
+            @Nullable final String positiveFeedbackQuestionSubtitle,
+            @Nullable final String criticalFeedbackQuestionSubtitle,
+            @Nullable final String thanksSubtitle,
+            @Nullable final Long thanksDisplayTimeMs) {
 
         this.userOpinionQuestionTitle                    = userOpinionQuestionTitle;
         this.userOpinionQuestionPositiveButtonLabel      = userOpinionQuestionPositiveButtonLabel;
@@ -193,7 +192,7 @@ public final class BasePromptViewConfig implements Parcelable {
     }
 
     @Nullable
-    public Integer getThanksDisplayTimeMs() {
+    public Long getThanksDisplayTimeMs() {
         return thanksDisplayTimeMs;
     }
 
@@ -264,21 +263,21 @@ public final class BasePromptViewConfig implements Parcelable {
 
     public static final class Builder {
 
-        @Nullable private String  userOpinionQuestionTitle;
-        @Nullable private String  userOpinionQuestionPositiveButtonLabel;
-        @Nullable private String  userOpinionQuestionNegativeButtonLabel;
-        @Nullable private String  positiveFeedbackQuestionTitle;
-        @Nullable private String  positiveFeedbackQuestionPositiveButtonLabel;
-        @Nullable private String  positiveFeedbackQuestionNegativeButtonLabel;
-        @Nullable private String  criticalFeedbackQuestionTitle;
-        @Nullable private String  criticalFeedbackQuestionPositiveButtonLabel;
-        @Nullable private String  criticalFeedbackQuestionNegativeButtonLabel;
-        @Nullable private String  thanksTitle;
-        @Nullable private String  userOpinionQuestionSubtitle;
-        @Nullable private String  positiveFeedbackQuestionSubtitle;
-        @Nullable private String  criticalFeedbackQuestionSubtitle;
-        @Nullable private String  thanksSubtitle;
-        @Nullable private Integer thanksDisplayTimeMs;
+        @Nullable private String userOpinionQuestionTitle;
+        @Nullable private String userOpinionQuestionPositiveButtonLabel;
+        @Nullable private String userOpinionQuestionNegativeButtonLabel;
+        @Nullable private String positiveFeedbackQuestionTitle;
+        @Nullable private String positiveFeedbackQuestionPositiveButtonLabel;
+        @Nullable private String positiveFeedbackQuestionNegativeButtonLabel;
+        @Nullable private String criticalFeedbackQuestionTitle;
+        @Nullable private String criticalFeedbackQuestionPositiveButtonLabel;
+        @Nullable private String criticalFeedbackQuestionNegativeButtonLabel;
+        @Nullable private String thanksTitle;
+        @Nullable private String userOpinionQuestionSubtitle;
+        @Nullable private String positiveFeedbackQuestionSubtitle;
+        @Nullable private String criticalFeedbackQuestionSubtitle;
+        @Nullable private String thanksSubtitle;
+        @Nullable private Long thanksDisplayTimeMs;
 
         public Builder setUserOpinionQuestionTitle(
                 @NonNull final String userOpinionQuestionTitle) {
@@ -382,7 +381,7 @@ public final class BasePromptViewConfig implements Parcelable {
             return this;
         }
 
-        public Builder setThanksDisplayTimeMs(final int thanksDisplayTimeMs) {
+        public Builder setThanksDisplayTimeMs(final long thanksDisplayTimeMs) {
             this.thanksDisplayTimeMs = thanksDisplayTimeMs;
             return this;
         }
@@ -449,7 +448,7 @@ public final class BasePromptViewConfig implements Parcelable {
         this.positiveFeedbackQuestionSubtitle = (String) in.readValue(null);
         this.criticalFeedbackQuestionSubtitle = (String) in.readValue(null);
         this.thanksSubtitle = (String) in.readValue(null);
-        this.thanksDisplayTimeMs = (Integer) in.readValue(null);
+        this.thanksDisplayTimeMs = (Long) in.readValue(null);
     }
 
     public static final Parcelable.Creator<BasePromptViewConfig> CREATOR

@@ -177,7 +177,7 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
 
             setDisplayedView(thanksView);
 
-            final Integer thanksDisplayTimeMs = basePromptViewConfig.getThanksDisplayTimeMs();
+            final Long thanksDisplayTimeMs = basePromptViewConfig.getThanksDisplayTimeMs();
 
             if (thanksDisplayTimeMs != null) {
                 postDelayed(new Runnable() {
