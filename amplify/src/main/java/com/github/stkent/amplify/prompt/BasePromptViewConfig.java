@@ -17,6 +17,8 @@
 package com.github.stkent.amplify.prompt;
 
 import android.content.res.TypedArray;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StyleableRes;
@@ -29,7 +31,7 @@ import static com.github.stkent.amplify.utils.StringUtils.defaultIfBlank;
 
 //@formatter:off
 @SuppressWarnings({"PMD.ExcessiveParameterList", "checkstyle:parameternumber"})
-public final class BasePromptViewConfig {
+public final class BasePromptViewConfig implements Parcelable {
 
     private static final String DEFAULT_USER_OPINION_QUESTION_TITLE                 = "Enjoying the app?";
     private static final String DEFAULT_POSITIVE_FEEDBACK_QUESTION_TITLE            = "Awesome! We'd love a Play Store review...";
@@ -403,6 +405,64 @@ public final class BasePromptViewConfig {
                 thanksDisplayTimeMs);
         }
     }
+
+    // Parcelable
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(final Parcel dest, final int flags) {
+        dest.writeString(this.userOpinionQuestionTitle);
+        dest.writeString(this.userOpinionQuestionPositiveButtonLabel);
+        dest.writeString(this.userOpinionQuestionNegativeButtonLabel);
+        dest.writeString(this.positiveFeedbackQuestionTitle);
+        dest.writeString(this.positiveFeedbackQuestionPositiveButtonLabel);
+        dest.writeString(this.positiveFeedbackQuestionNegativeButtonLabel);
+        dest.writeString(this.criticalFeedbackQuestionTitle);
+        dest.writeString(this.criticalFeedbackQuestionPositiveButtonLabel);
+        dest.writeString(this.criticalFeedbackQuestionNegativeButtonLabel);
+        dest.writeString(this.thanksTitle);
+        dest.writeString(this.userOpinionQuestionSubtitle);
+        dest.writeString(this.positiveFeedbackQuestionSubtitle);
+        dest.writeString(this.criticalFeedbackQuestionSubtitle);
+        dest.writeString(this.thanksSubtitle);
+        dest.writeValue(this.thanksDisplayTimeMs);
+    }
+
+    protected BasePromptViewConfig(@NonNull final Parcel in) {
+        this.userOpinionQuestionTitle = in.readString();
+        this.userOpinionQuestionPositiveButtonLabel = in.readString();
+        this.userOpinionQuestionNegativeButtonLabel = in.readString();
+        this.positiveFeedbackQuestionTitle = in.readString();
+        this.positiveFeedbackQuestionPositiveButtonLabel = in.readString();
+        this.positiveFeedbackQuestionNegativeButtonLabel = in.readString();
+        this.criticalFeedbackQuestionTitle = in.readString();
+        this.criticalFeedbackQuestionPositiveButtonLabel = in.readString();
+        this.criticalFeedbackQuestionNegativeButtonLabel = in.readString();
+        this.thanksTitle = in.readString();
+        this.userOpinionQuestionSubtitle = in.readString();
+        this.positiveFeedbackQuestionSubtitle = in.readString();
+        this.criticalFeedbackQuestionSubtitle = in.readString();
+        this.thanksSubtitle = in.readString();
+        this.thanksDisplayTimeMs = (Integer) in.readValue(Integer.class.getClassLoader());
+    }
+
+    public static final Parcelable.Creator<BasePromptViewConfig> CREATOR
+            = new Parcelable.Creator<BasePromptViewConfig>() {
+
+        @Override
+        public BasePromptViewConfig createFromParcel(final Parcel source) {
+            return new BasePromptViewConfig(source);
+        }
+
+        @Override
+        public BasePromptViewConfig[] newArray(final int size) {
+            return new BasePromptViewConfig[size];
+        }
+    };
 
 }
 //@formatter:on
