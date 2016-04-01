@@ -381,8 +381,8 @@ public final class BasePromptViewConfig implements Parcelable {
             return this;
         }
 
-        public Builder setThanksDisplayTimeMs(final long thanksDisplayTimeMs) {
-            this.thanksDisplayTimeMs = thanksDisplayTimeMs;
+        public Builder setThanksDisplayTimeMs(final int thanksDisplayTimeMs) {
+            this.thanksDisplayTimeMs = (long) thanksDisplayTimeMs;
             return this;
         }
 
