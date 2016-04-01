@@ -45,6 +45,7 @@ import static com.github.stkent.amplify.prompt.interfaces.IPromptPresenter.UserF
 import static com.github.stkent.amplify.prompt.interfaces.IPromptPresenter.UserOpinion.CRITICAL;
 import static com.github.stkent.amplify.prompt.interfaces.IPromptPresenter.UserOpinion.POSITIVE;
 
+@SuppressWarnings({"PMD.TooManyMethods"})
 abstract class BasePromptView<T extends View & IQuestionView, U extends View & IThanksView>
         extends FrameLayout implements IPromptView {
 
