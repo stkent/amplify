@@ -200,7 +200,10 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
 
                                     @Override
                                     public void onAnimationEnd(final Animator animation) {
-                                        removeAllViews();
+                                        hide();
+
+                                        promptPresenter.notifyEventTriggered(
+                                                PromptViewEvent.PROMPT_DISMISSED);
                                     }
 
                                     @Override
@@ -218,7 +221,7 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
                 }, thanksDisplayTimeMs);
             }
         } else {
-            removeAllViews();
+            hide();
         }
     }
 
@@ -229,7 +232,7 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
         }
 
         clearDisplayedQuestionViewReference();
-        removeAllViews();
+        hide();
     }
 
     @Override
@@ -294,6 +297,11 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
 
     private void clearDisplayedQuestionViewReference() {
         displayedQuestionView = null;
+    }
+
+    private void hide() {
+        removeAllViews();
+        setVisibility(GONE);
     }
 
     private static class SavedState extends BaseSavedState {
