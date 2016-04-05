@@ -19,7 +19,9 @@ package com.github.stkent.amplify.tracking;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
+import android.support.annotation.VisibleForTesting;
 
 import com.github.stkent.amplify.ILogger;
 import com.github.stkent.amplify.Logger;
@@ -32,6 +34,7 @@ import com.github.stkent.amplify.tracking.interfaces.IEnvironmentCapabilitiesPro
 import com.github.stkent.amplify.tracking.interfaces.IEvent;
 import com.github.stkent.amplify.tracking.interfaces.IEventBasedRule;
 import com.github.stkent.amplify.tracking.interfaces.IEventListener;
+import com.github.stkent.amplify.tracking.interfaces.IEventsManager;
 import com.github.stkent.amplify.tracking.managers.AppLevelEventRulesManager;
 import com.github.stkent.amplify.tracking.managers.EnvironmentBasedRulesManager;
 import com.github.stkent.amplify.tracking.managers.FirstEventTimeRulesManager;
@@ -43,11 +46,13 @@ import com.github.stkent.amplify.tracking.rules.GooglePlayStoreRule;
 import com.github.stkent.amplify.tracking.rules.MaximumCountRule;
 import com.github.stkent.amplify.tracking.rules.VersionNameChangedRule;
 import com.github.stkent.amplify.utils.ActivityReferenceManager;
+import com.github.stkent.amplify.utils.Constants;
 import com.github.stkent.amplify.utils.FeedbackUtil;
 import com.github.stkent.amplify.utils.PlayStoreUtil;
 import com.github.stkent.amplify.utils.appinfo.AppInfoUtil;
 import com.github.stkent.amplify.utils.appinfo.IAppInfoProvider;
 
+@SuppressWarnings({"PMD.ExcessiveParameterList", "checkstyle:parameternumber"})
 public final class Amplify implements IEventListener {
 
     private static final int DEFAULT_USER_GAVE_POSITIVE_FEEDBACK_MAXIMUM_COUNT = 1;
@@ -59,12 +64,12 @@ public final class Amplify implements IEventListener {
     private final IAppInfoProvider appInfoProvider;
     private final IAppLevelEventRulesManager appLevelEventRulesManager;
     private final IEnvironmentBasedRulesManager environmentBasedRulesManager;
-    private final FirstEventTimeRulesManager firstEventTimeRulesManager;
-    private final LastEventTimeRulesManager lastEventTimeRulesManager;
-    private final LastEventVersionCodeRulesManager lastEventVersionCodeRulesManager;
-    private final LastEventVersionNameRulesManager lastEventVersionNameRulesManager;
-    private final TotalEventCountRulesManager totalEventCountRulesManager;
     private final ActivityReferenceManager activityReferenceManager;
+    private final IEventsManager<Long> firstEventTimeRulesManager;
+    private final IEventsManager<Long> lastEventTimeRulesManager;
+    private final IEventsManager<Integer> lastEventVersionCodeRulesManager;
+    private final IEventsManager<String> lastEventVersionNameRulesManager;
+    private final IEventsManager<Integer> totalEventCountRulesManager;
 
     private final ILogger logger;
 
@@ -73,16 +78,24 @@ public final class Amplify implements IEventListener {
     private String feedbackEmailAddress;
 
     public static Amplify initSharedInstance(@NonNull final Application app) {
-        return initSharedInstance(app, new Logger());
+        return initSharedInstance(app, Constants.DEFAULT_BACKING_SHARED_PREFERENCES_NAME);
+    }
+
+    public static Amplify initSharedInstance(
+            @NonNull final Application app,
+            @NonNull final String backingSharedPreferencesName) {
+
+        return initSharedInstance(app, backingSharedPreferencesName, new Logger());
     }
 
     private static Amplify initSharedInstance(
             @NonNull final Application app,
+            @NonNull final String backingSharedPreferencesName,
             @NonNull final ILogger logger) {
 
         synchronized (Amplify.class) {
             if (sharedInstance == null) {
-                sharedInstance = new Amplify(app, logger);
+                sharedInstance = new Amplify(app, backingSharedPreferencesName, logger);
             }
         }
 
@@ -102,7 +115,11 @@ public final class Amplify implements IEventListener {
 
     // Constructors
 
-    private Amplify(@NonNull final Application app, @NonNull final ILogger logger) {
+    private Amplify(
+            @NonNull final Application app,
+            @NonNull final String backingSharedPreferencesName,
+            @NonNull final ILogger logger) {
+
         final Context appContext = app.getApplicationContext();
 
         AppInfoUtil.initialize(appContext);
@@ -114,27 +131,58 @@ public final class Amplify implements IEventListener {
         final IEnvironmentCapabilitiesProvider environmentCapabilitiesProvider
                 = new EnvironmentCapabilitiesProvider(appInfoProvider);
 
-        this.appLevelEventRulesManager
-                = new AppLevelEventRulesManager(appContext, appEventTimeProvider, logger);
+        this.activityReferenceManager = new ActivityReferenceManager();
+        app.registerActivityLifecycleCallbacks(activityReferenceManager);
 
         this.environmentBasedRulesManager
                 = new EnvironmentBasedRulesManager(environmentCapabilitiesProvider, logger);
 
-        this.firstEventTimeRulesManager = new FirstEventTimeRulesManager(appContext, logger);
+        final SharedPreferences backingSharedPreferences
+                = app.getSharedPreferences(backingSharedPreferencesName, Context.MODE_PRIVATE);
 
-        this.lastEventTimeRulesManager = new LastEventTimeRulesManager(appContext, logger);
+        this.appLevelEventRulesManager = new AppLevelEventRulesManager(
+                new Settings<Long>(backingSharedPreferences), appEventTimeProvider, logger);
 
-        this.lastEventVersionNameRulesManager
-                = new LastEventVersionNameRulesManager(appContext, appInfoProvider, logger);
+        this.firstEventTimeRulesManager = new FirstEventTimeRulesManager(
+                new Settings<Long>(backingSharedPreferences), logger);
 
-        this.lastEventVersionCodeRulesManager
-                = new LastEventVersionCodeRulesManager(appContext, appInfoProvider, logger);
+        this.lastEventTimeRulesManager = new LastEventTimeRulesManager(
+                new Settings<Long>(backingSharedPreferences), logger);
 
-        this.totalEventCountRulesManager = new TotalEventCountRulesManager(appContext, logger);
+        this.lastEventVersionNameRulesManager = new LastEventVersionNameRulesManager(
+                new Settings<String>(backingSharedPreferences), appInfoProvider, logger);
 
-        this.activityReferenceManager = new ActivityReferenceManager();
-        app.registerActivityLifecycleCallbacks(activityReferenceManager);
+        this.lastEventVersionCodeRulesManager = new LastEventVersionCodeRulesManager(
+                new Settings<Integer>(backingSharedPreferences), appInfoProvider, logger);
 
+        this.totalEventCountRulesManager = new TotalEventCountRulesManager(
+                new Settings<Integer>(backingSharedPreferences), logger);
+
+        this.logger = logger;
+    }
+
+    @VisibleForTesting
+    protected Amplify(
+            @NonNull final IAppInfoProvider appInfoProvider,
+            @NonNull final IAppLevelEventRulesManager appLevelEventRulesManager,
+            @NonNull final IEnvironmentBasedRulesManager environmentBasedRulesManager,
+            @NonNull final ActivityReferenceManager activityReferenceManager,
+            @NonNull final IEventsManager<Long> firstEventTimeRulesManager,
+            @NonNull final IEventsManager<Long> lastEventTimeRulesManager,
+            @NonNull final IEventsManager<Integer> lastEventVersionCodeRulesManager,
+            @NonNull final IEventsManager<String> lastEventVersionNameRulesManager,
+            @NonNull final IEventsManager<Integer> totalEventCountRulesManager,
+            @NonNull final ILogger logger) {
+
+        this.appInfoProvider = appInfoProvider;
+        this.appLevelEventRulesManager = appLevelEventRulesManager;
+        this.environmentBasedRulesManager = environmentBasedRulesManager;
+        this.activityReferenceManager = activityReferenceManager;
+        this.firstEventTimeRulesManager = firstEventTimeRulesManager;
+        this.lastEventTimeRulesManager = lastEventTimeRulesManager;
+        this.lastEventVersionCodeRulesManager = lastEventVersionCodeRulesManager;
+        this.lastEventVersionNameRulesManager = lastEventVersionNameRulesManager;
+        this.totalEventCountRulesManager = totalEventCountRulesManager;
         this.logger = logger;
     }
 

@@ -1,3 +1,7 @@
+<p align="center">
+	<img src="assets/logo.png" width="150px" />
+</p>
+
 # amplify
 
 Respectfully request feedback in your Android app.
@@ -19,6 +23,7 @@ Respectfully request feedback in your Android app.
   - [Prompt Timing](#prompt-timing-1)
   - [Prompt UI](#prompt-ui-1)
 - [Debug Settings](#debug-settings)
+- [Resetting](#resetting)
 - [Case Studies](#case-studies)
 - [License](#license)
 
@@ -76,7 +81,7 @@ These components are designed to complement each other, and combining them as de
 
 ```groovy
 dependencies {
-    compile 'com.github.stkent:amplify:1.2.0'
+    compile 'com.github.stkent:amplify:1.3.0'
 }
 ```
 
@@ -150,7 +155,7 @@ The convenience method `applyAllDefaultRules` initializes the prompt timing calc
 
 - **It has been more than a week since your app last crashed.** There are much better ways to collect detailed crash information than via user feedback. We're big fans of [Fabric/Crashlytics](https://fabric.io/kits/android/crashlytics). To save users from spending time reporting crashes that we are already aware of and fixing, we avoid asking for feedback right after a crash has occurred.
 
-- **The user has never previously provided positive feedback.** We strive to constantly improve our apps' functionality and stability. If we do our job right, there's little to be gained by prompting satisfied users for feedback repeatedly. If we decide to significantly overhaul our app (either internally or externally), we will reset the prompt timing calculator to capture feedback from our entire user base again. // TODO: link to a section that explains how to do this; see #106.
+- **The user has never previously provided positive feedback.** We strive to constantly improve our apps' functionality and stability. If we do our job right, there's little to be gained by prompting satisfied users for feedback repeatedly. If we decide to significantly overhaul our app (either internally or externally), we will [reset](#starting-fresh) the prompt timing calculator to capture feedback from our entire user base again.
 
 - **The user has not provided critical feedback for this version of the application already.** Since it's unlikely that we'll be able to address any critical feedback received without releasing an update, we won't re-prompt a user who already provided insights into the current version of the app.
 
@@ -582,6 +587,54 @@ public class ExampleApplication extends Application {
         Amplify.initSharedInstance(this)
                .setFeedbackEmailAddress("someone@example.com")
                .setPackageName("my.release.package.name");
+    }
+    
+}
+```
+
+# Resetting
+
+All data tracked by _amplify_ is stored in a single [`SharedPreferences`](http://developer.android.com/reference/android/content/SharedPreferences.html) instance. By default, this instance is named `"AMPLIFY_SHARED_PREFERENCES_NAME"`. However, it is possible to configure _amplify_ to use a different `SharedPreferences` instance during initialization:
+
+```java
+public class ExampleApplication extends Application {
+    
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        
+        final String sharedPrefsName = "my-custom-shared-prefs-name";
+        
+        Amplify.initSharedInstance(this, sharedPrefsName)
+               .setFeedbackEmailAddress("someone@example.com")
+               .applyAllDefaultRules();
+    }
+    
+}
+```
+
+Supplying a custom shared preferences name in this manner will effectively 'reset' the library (since the new `SharedPreferences` instance will not contain any existing tracked data). This can be useful if you release a major app update and wish to prompt _all_ your users for feedback again.
+
+The same mechanism can be used to keep debug and release data separate (this does not affect your application's end users, but can be useful during app development and testing!):
+
+```java
+public class ExampleApplication extends Application {
+    
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        
+        String sharedPrefsName;
+
+        if (BuildConfig.DEBUG) {
+            sharedPrefsName = "debug-shared-prefs-name";
+        } else {
+            sharedPrefsName = Constants.DEFAULT_BACKING_SHARED_PREFERENCES_NAME;
+        }
+
+        Amplify.initSharedInstance(this, sharedPrefsName)
+               .setFeedbackEmailAddress("someone@example.com")
+               .applyAllDefaultRules();
     }
     
 }
