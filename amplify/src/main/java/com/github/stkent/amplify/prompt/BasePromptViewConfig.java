@@ -46,7 +46,7 @@ public final class BasePromptViewConfig implements Parcelable {
     private static final int DEFAULT_INTEGER_VALUE_IF_UNDEFINED = Integer.MAX_VALUE;
 
     /**
-     * @return the integer value for the attribute at <code>index</code>, if defined; null otherwise
+     * @return the long value for the attribute at <code>index</code>, if defined; null otherwise
      */
     @Nullable
     private static Long suppliedLongOrNull(
