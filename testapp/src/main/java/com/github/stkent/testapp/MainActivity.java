@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
                             .setCriticalFeedbackQuestionNegativeButtonLabel("xii. No")
                             .setThanksTitle("xiii. Thanks Title")
                             .setThanksSubtitle("xiv. Thanks Subtitle")
+                            .setThanksDisplayTimeMs(2000)
                             .build();
 
             final DefaultLayoutPromptViewConfig defaultLayoutPromptViewConfig
@@ -91,6 +92,7 @@ public class MainActivity extends AppCompatActivity {
                             .setCriticalFeedbackQuestionNegativeButtonLabel("L. No")
                             .setThanksTitle("M. Thanks Title")
                             .setThanksSubtitle("N. Thanks Subtitle")
+                            .setThanksDisplayTimeMs(2000)
                             .build();
 
             final CustomLayoutPromptViewConfig customLayoutPromptViewConfig

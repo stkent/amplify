@@ -140,10 +140,12 @@ public final class CustomLayoutPromptView
         public static final Parcelable.Creator<SavedState> CREATOR
                 = new Parcelable.Creator<SavedState>() {
 
+            @Override
             public SavedState createFromParcel(final Parcel in) {
                 return new SavedState(in);
             }
 
+            @Override
             public SavedState[] newArray(final int size) {
                 return new SavedState[size];
             }

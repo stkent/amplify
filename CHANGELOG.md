@@ -1,5 +1,11 @@
 # Change Log
 
+## v1.4.0
+
+_2016-04-_
+
+- Subclasses of `BasePromptView` (which include the packaged `DefaultLayoutPromptView` and `CustomLayoutPromptView` classes) can now be configured to automatically fade out the displayed thanks view after a delay. The length of this delay may be specified using the xml attribute `prompt_view_thanks_display_time_ms` or by calling the method `setThanksDisplayTimeMs(int)` when building a  `BasePromptViewConfig` instance programmatically. The default behavior is for the thanks view to display indefinitely.
+
 ## v1.3.0
 
 _2016-04-_

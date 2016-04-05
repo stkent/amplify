@@ -16,6 +16,7 @@
  */
 package com.github.stkent.amplify.prompt;
 
+import android.annotation.SuppressLint;
 import android.content.res.TypedArray;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -34,6 +35,7 @@ public final class CustomLayoutPromptViewConfig implements Parcelable {
     /**
      * @return the color value for the attribute at <code>index</code>, if defined; null otherwise
      */
+    @Nullable
     private static Integer suppliedLayoutOrNull(
             @Nullable final TypedArray typedArray,
             @StyleableRes final int index) {
@@ -103,21 +105,25 @@ public final class CustomLayoutPromptViewConfig implements Parcelable {
         dest.writeValue(this.thanksLayout);
     }
 
+    @SuppressLint("ParcelClassLoader")
     protected CustomLayoutPromptViewConfig(Parcel in) {
-        this.questionLayout = (Integer) in.readValue(Integer.class.getClassLoader());
-        this.thanksLayout = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.questionLayout = (Integer) in.readValue(null);
+        this.thanksLayout = (Integer) in.readValue(null);
     }
 
     public static final Parcelable.Creator<CustomLayoutPromptViewConfig> CREATOR
             = new Parcelable.Creator<CustomLayoutPromptViewConfig>() {
 
-        public CustomLayoutPromptViewConfig createFromParcel(Parcel source) {
-            return new CustomLayoutPromptViewConfig(source);
+        @Override
+        public CustomLayoutPromptViewConfig createFromParcel(final Parcel in) {
+            return new CustomLayoutPromptViewConfig(in);
         }
 
-        public CustomLayoutPromptViewConfig[] newArray(int size) {
+        @Override
+        public CustomLayoutPromptViewConfig[] newArray(final int size) {
             return new CustomLayoutPromptViewConfig[size];
         }
+
     };
 
 }
