@@ -286,6 +286,8 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
 
         addView(view, new LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+        setVisibility(VISIBLE);
     }
 
     private void displayQuestionViewIfNeeded() {
