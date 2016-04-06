@@ -16,6 +16,7 @@
  */
 package com.github.stkent.amplify.prompt;
 
+import android.animation.Animator;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Bundle;
@@ -44,6 +45,7 @@ import static com.github.stkent.amplify.prompt.interfaces.IPromptPresenter.UserF
 import static com.github.stkent.amplify.prompt.interfaces.IPromptPresenter.UserOpinion.CRITICAL;
 import static com.github.stkent.amplify.prompt.interfaces.IPromptPresenter.UserOpinion.POSITIVE;
 
+@SuppressWarnings({"PMD.TooManyMethods"})
 abstract class BasePromptView<T extends View & IQuestionView, U extends View & IThanksView>
         extends FrameLayout implements IPromptView {
 
@@ -84,7 +86,7 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
     private IPromptPresenter promptPresenter;
     private BasePromptViewConfig basePromptViewConfig;
     private T displayedQuestionView;
-    private boolean displayed;
+    private boolean thanksDisplayTimeExpired;
 
     BasePromptView(final Context context) {
         this(context, null);
@@ -114,6 +116,7 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
         final Parcelable superState = super.onSaveInstanceState();
         final SavedState savedState = new SavedState(superState);
         savedState.promptPresenterState = promptPresenter.generateStateBundle();
+        savedState.thanksDisplayTimeExpired = thanksDisplayTimeExpired;
         return savedState;
     }
 
@@ -122,6 +125,7 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
     protected void onRestoreInstanceState(@NonNull final Parcelable state) {
         final SavedState savedState = (SavedState) state;
         super.onRestoreInstanceState(savedState.getSuperState());
+        thanksDisplayTimeExpired = savedState.thanksDisplayTimeExpired;
     }
 
     @NonNull
@@ -143,7 +147,6 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
         displayQuestionViewIfNeeded();
         displayedQuestionView.setPresenter(userOpinionQuestionPresenter);
         displayedQuestionView.bind(basePromptViewConfig.getUserOpinionQuestion());
-        setDisplayed(true);
     }
 
     @Override
@@ -151,7 +154,6 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
         displayQuestionViewIfNeeded();
         displayedQuestionView.setPresenter(feedbackQuestionPresenter);
         displayedQuestionView.bind(basePromptViewConfig.getPositiveFeedbackQuestion());
-        setDisplayed(true);
     }
 
     @Override
@@ -159,7 +161,6 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
         displayQuestionViewIfNeeded();
         displayedQuestionView.setPresenter(feedbackQuestionPresenter);
         displayedQuestionView.bind(basePromptViewConfig.getCriticalFeedbackQuestion());
-        setDisplayed(true);
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -169,12 +170,60 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
             promptPresenter.notifyEventTriggered(PromptViewEvent.THANKS_SHOWN);
         }
 
-        final U thanksView = getThanksView();
-        thanksView.bind(basePromptViewConfig.getThanks());
-
         clearDisplayedQuestionViewReference();
-        setDisplayedView(thanksView);
-        setDisplayed(true);
+
+        if (!thanksDisplayTimeExpired) {
+            final U thanksView = getThanksView();
+            thanksView.bind(basePromptViewConfig.getThanks());
+
+            setDisplayedView(thanksView);
+
+            final Long thanksDisplayTimeMs = basePromptViewConfig.getThanksDisplayTimeMs();
+
+            if (thanksDisplayTimeMs != null) {
+                postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        thanksDisplayTimeExpired = true;
+
+                        final int fadeDurationMs = getResources()
+                                .getInteger(android.R.integer.config_mediumAnimTime);
+
+                        thanksView
+                                .animate()
+                                .setDuration(fadeDurationMs)
+                                .alpha(0.0f)
+                                .setListener(new Animator.AnimatorListener() {
+                                    @Override
+                                    public void onAnimationStart(final Animator animation) {
+                                        // This method intentionally left blank
+                                    }
+
+                                    @Override
+                                    public void onAnimationEnd(final Animator animation) {
+                                        hide();
+
+                                        promptPresenter.notifyEventTriggered(
+                                                PromptViewEvent.PROMPT_DISMISSED);
+                                    }
+
+                                    @Override
+                                    public void onAnimationCancel(final Animator animation) {
+                                        // This method intentionally left blank
+                                    }
+
+                                    @Override
+                                    public void onAnimationRepeat(final Animator animation) {
+                                        // This method intentionally left blank
+                                    }
+                                })
+                                .start();
+                    }
+                }, thanksDisplayTimeMs);
+            }
+        } else {
+            hide();
+        }
     }
 
     @Override
@@ -184,8 +233,7 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
         }
 
         clearDisplayedQuestionViewReference();
-        setVisibility(GONE);
-        setDisplayed(false);
+        hide();
     }
 
     @Override
@@ -194,7 +242,7 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
     }
 
     public final void applyBaseConfig(@NonNull final BasePromptViewConfig basePromptViewConfig) {
-        if (displayed) {
+        if (isDisplayed()) {
             throw new IllegalStateException(
                     "Configuration cannot be changed after the prompt is first displayed.");
         }
@@ -217,7 +265,7 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
     }
 
     protected final boolean isDisplayed() {
-        return displayed;
+        return getChildCount() > 0;
     }
 
     /**
@@ -252,13 +300,18 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
         displayedQuestionView = null;
     }
 
-    private void setDisplayed(final boolean displayed) {
-        this.displayed = displayed;
+    private void hide() {
+        removeAllViews();
+        setVisibility(GONE);
     }
 
     private static class SavedState extends BaseSavedState {
 
+        private static final int TRUTHY_INT = 1;
+        private static final int FALSEY_INT = 0;
+
         private Bundle promptPresenterState;
+        private boolean thanksDisplayTimeExpired;
 
         protected SavedState(final Parcelable superState) {
             super(superState);
@@ -266,22 +319,26 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
 
         protected SavedState(final Parcel in) {
             super(in);
-            promptPresenterState = in.readBundle(getClass().getClassLoader());
+            this.promptPresenterState = in.readBundle(getClass().getClassLoader());
+            this.thanksDisplayTimeExpired = in.readInt() == TRUTHY_INT;
         }
 
         @Override
         public void writeToParcel(final Parcel out, final int flags) {
             super.writeToParcel(out, flags);
-            out.writeBundle(promptPresenterState);
+            out.writeBundle(this.promptPresenterState);
+            out.writeInt(this.thanksDisplayTimeExpired ? TRUTHY_INT : FALSEY_INT);
         }
 
         public static final Parcelable.Creator<SavedState> CREATOR
                 = new Parcelable.Creator<SavedState>() {
 
+            @Override
             public SavedState createFromParcel(final Parcel in) {
                 return new SavedState(in);
             }
 
+            @Override
             public SavedState[] newArray(final int size) {
                 return new SavedState[size];
             }

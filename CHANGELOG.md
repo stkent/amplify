@@ -5,6 +5,8 @@
 _2016-04-_
 
 - A new initialization method, `Amplify.initSharedInstance(Application, String)`, has been added. The second `String` parameter represents the name of the `SharedPreferences` instance that will be used to store and retrieve tracking data. `Amplify.initSharedInstance(Application)` works exactly as before, with tracking data stored in the default `SharedPreferences` instance named `"AMPLIFY_SHARED_PREFERENCES_NAME"`.
+- Subclasses of `BasePromptView` (which include the packaged `DefaultLayoutPromptView` and `CustomLayoutPromptView` classes) can now be configured to automatically fade out the displayed thanks view after a delay. The length of this delay may be specified using the xml attribute `prompt_view_thanks_display_time_ms` or by calling the method `setThanksDisplayTimeMs(int)` when building a  `BasePromptViewConfig` instance programmatically. The default behavior is for the thanks view to display indefinitely.
+- Fixed the base prompt view config not being saved/restored during configuration changes.
 
 ## v1.2.0
 

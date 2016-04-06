@@ -155,7 +155,7 @@ The convenience method `applyAllDefaultRules` initializes the prompt timing calc
 
 - **It has been more than a week since your app last crashed.** There are much better ways to collect detailed crash information than via user feedback. We're big fans of [Fabric/Crashlytics](https://fabric.io/kits/android/crashlytics). To save users from spending time reporting crashes that we are already aware of and fixing, we avoid asking for feedback right after a crash has occurred.
 
-- **The user has never previously provided positive feedback.** We strive to constantly improve our apps' functionality and stability. If we do our job right, there's little to be gained by prompting satisfied users for feedback repeatedly. If we decide to significantly overhaul our app (either internally or externally), we will [reset](#starting-fresh) the prompt timing calculator to capture feedback from our entire user base again.
+- **The user has never previously provided positive feedback.** We strive to constantly improve our apps' functionality and stability. If we do our job right, there's little to be gained by prompting satisfied users for feedback repeatedly. If we decide to significantly overhaul our app (either internally or externally), we will [reset](#resetting) the prompt timing calculator to capture feedback from our entire user base again.
 
 - **The user has not provided critical feedback for this version of the application already.** Since it's unlikely that we'll be able to address any critical feedback received without releasing an update, we won't re-prompt a user who already provided insights into the current version of the app.
 
@@ -287,7 +287,7 @@ _amplify_ provides two configurable prompt UIs. The test app associated with thi
 
 **Use this if you are happy with the basic layout of the prompt shown above, but need to customize colors or wording!**
 
-Provided by the `DefaultLayoutPromptView` class. The basic layouts of the questions and thanks presented to users of the embedding application are fixed, but the most important elements of those layouts (colors and text) are fully customizable. The full set of available xml configuration hooks is shown below (remember to use the `app` xml namespace when setting these properties!):
+Provided by the `DefaultLayoutPromptView` class. The basic layouts of the questions and thanks presented to users of the embedding application are fixed, but the most important elements of those layouts (colors and text) are fully customizable. This prompt view can also be configured to auto-dismiss the thanks view after a given delay in milliseconds. The full set of available xml configuration hooks is shown below (remember to use the `app` xml namespace when setting these properties!):
 
 ```xml
 <com.github.stkent.amplify.prompt.DefaultLayoutPromptView
@@ -317,7 +317,8 @@ Provided by the `DefaultLayoutPromptView` class. The basic layouts of the questi
     app:prompt_view_positive_button_border_color="@color/custom_positive_button_border_color"
     app:prompt_view_negative_button_text_color="@color/custom_negative_button_text_color"
     app:prompt_view_negative_button_background_color="@color/custom_negative_button_background_color"
-    app:prompt_view_negative_button_border_color="@color/custom_negative_button_border_color" />
+    app:prompt_view_negative_button_border_color="@color/custom_negative_button_border_color"
+    app:prompt_view_thanks_display_time_ms="2000" />
 ```
 
 All attributes are optional. The most important are `prompt_view_foreground_color` and `prompt_view_background_color`. All other color attributes default to one of these two colors, so most use-cases can probably be supported by setting one or both of these attributes only.
@@ -341,6 +342,7 @@ final BasePromptViewConfig basePromptViewConfig
                 .setCriticalFeedbackQuestionSubtitle("Custom Subtitle")
                 .setCriticalFeedbackQuestionPositiveButtonLabel("Custom Button Label")
                 .setCriticalFeedbackQuestionNegativeButtonLabel("Custom Button Label")
+                .setThanksDisplayTimeMs(2000)
                 .build();
 
 final DefaultLayoutPromptViewConfig defaultLayoutPromptViewConfig
@@ -365,7 +367,7 @@ promptView.applyConfig(defaultLayoutPromptViewConfig);
 
 **Use this if you need to provide a structurally different prompt layout, require custom fonts, etc.**
 
-Provided by the `CustomLayoutPromptView` class. You provide the basic layouts to use, and any customization of the default strings you require. The full set of available xml configuration hooks is shown below (remember to use the `app` xml namespace when setting these properties!):
+Provided by the `CustomLayoutPromptView` class. You provide the basic layouts to use, and any customization of the default strings you require. This prompt view can also be configured to auto-dismiss the thanks view after a given delay in milliseconds. The full set of available xml configuration hooks is shown below (remember to use the `app` xml namespace when setting these properties!):
 
 ```xml
 <com.github.stkent.amplify.prompt.CustomLayoutPromptView
@@ -387,7 +389,8 @@ Provided by the `CustomLayoutPromptView` class. You provide the basic layouts to
     app:prompt_view_critical_feedback_question_positive_button_label="Custom Button Label"
     app:prompt_view_critical_feedback_question_negative_button_label="Custom Button Label"
     app:prompt_view_thanks_title="Custom Title"
-    app:prompt_view_thanks_subtitle="Custom Subtitle" />
+    app:prompt_view_thanks_subtitle="Custom Subtitle"
+    app:prompt_view_thanks_display_time_ms="2000" />
 ```
 
 The `prompt_view_question_layout` attribute is **required** and subject to some additional requirements (listed below). All other attributes are optional. If `prompt_view_thanks_layout` is not provided, the prompt will automatically dismiss at the end of every flow. If it is provided, the user will see the thanks view whenever they agree to give feedback.
@@ -416,7 +419,7 @@ The layout referenced by `prompt_view_thanks_layout ` _may_ include:
 
 - A `TextView` subclass with id `amplify_subtitle_text_view`.
 
-As before, it is also possible to configure the `CustomLayoutPromptView` in code. To do so, users apply a `BasePromptViewConfig` and/or a `CustomLayoutPromptViewConfig` to the view. Below shows an example in which every possible attribute is configured this way:
+As before, it is also possible to configure the `CustomLayoutPromptView` in code. To do so, users apply a `CustomLayoutPromptViewConfig`, and optionally a `BasePromptViewConfig`, to the view. Below shows an example in which every possible attribute is configured this way:
 
 ```java
 CustomLayoutPromptView promptView = (CustomLayoutPromptView) findViewById(R.id.prompt_view);
@@ -435,6 +438,7 @@ final BasePromptViewConfig basePromptViewConfig
                 .setCriticalFeedbackQuestionSubtitle("Custom Subtitle")
                 .setCriticalFeedbackQuestionPositiveButtonLabel("Custom Button Label")
                 .setCriticalFeedbackQuestionNegativeButtonLabel("Custom Button Label")
+                .setThanksDisplayTimeMs(2000)
                 .build();
 
 final CustomLayoutPromptViewConfig customLayoutPromptViewConfig
