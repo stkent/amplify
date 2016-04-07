@@ -19,6 +19,7 @@ package com.github.stkent.amplify.prompt;
 import com.github.stkent.amplify.helpers.BaseTest;
 import com.github.stkent.amplify.prompt.interfaces.IPromptPresenter;
 import com.github.stkent.amplify.prompt.interfaces.IPromptView;
+import com.github.stkent.amplify.tracking.interfaces.IEvent;
 import com.github.stkent.amplify.tracking.interfaces.IEventListener;
 
 import org.junit.Test;
@@ -27,7 +28,9 @@ import org.mockito.Mock;
 
 import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class PromptPresenterTest extends BaseTest {
 
@@ -50,7 +53,9 @@ public class PromptPresenterTest extends BaseTest {
         promptPresenter.start();
 
         // Assert
-        verify(mockPromptView).queryUserOpinion(anyBoolean());
+        final InOrder inOrder = inOrder(mockPromptView);
+        inOrder.verify(mockPromptView).queryUserOpinion(anyBoolean());
+        inOrder.verifyNoMoreInteractions();
     }
 
     @Test
@@ -73,6 +78,117 @@ public class PromptPresenterTest extends BaseTest {
         final InOrder inOrder = inOrder(mockPromptView);
         inOrder.verify(mockPromptView).requestCriticalFeedback();
         inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void testThatPresenterInstructsPromptViewToShowProvidedThanksViewWhenUserAgreesToGivePositiveFeedback() {
+        // Arrange
+        when(mockPromptView.providesThanksView()).thenReturn(true);
+
+        // Act
+        promptPresenter.reportUserOpinion(IPromptPresenter.UserOpinion.POSITIVE);
+        promptPresenter.reportUserFeedbackAction(IPromptPresenter.UserFeedbackAction.AGREED);
+
+        // Assert
+        final InOrder inOrder = inOrder(mockPromptView);
+        inOrder.verify(mockPromptView).thankUser(anyBoolean());
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void testThatPresenterInstructsPromptViewToDismissWhenUserAgreesToGivePositiveFeedbackAndNoThanksViewProvided() {
+        // Arrange
+        when(mockPromptView.providesThanksView()).thenReturn(false);
+
+        // Act
+        promptPresenter.reportUserOpinion(IPromptPresenter.UserOpinion.POSITIVE);
+        promptPresenter.reportUserFeedbackAction(IPromptPresenter.UserFeedbackAction.AGREED);
+
+        // Assert
+        final InOrder inOrder = inOrder(mockPromptView);
+        inOrder.verify(mockPromptView).dismiss(anyBoolean());
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void testThatPresenterInstructsPromptViewToDismissWhenUserDeclinesToGivePositiveFeedback() {
+        // Act
+        promptPresenter.reportUserOpinion(IPromptPresenter.UserOpinion.POSITIVE);
+        promptPresenter.reportUserFeedbackAction(IPromptPresenter.UserFeedbackAction.DECLINED);
+
+        // Assert
+        final InOrder inOrder = inOrder(mockPromptView);
+        inOrder.verify(mockPromptView).dismiss(anyBoolean());
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void testThatPresenterInstructsPromptViewToShowProvidedThanksViewWhenUserAgreesToGiveCriticalFeedback() {
+        // Arrange
+        when(mockPromptView.providesThanksView()).thenReturn(true);
+
+        // Act
+        promptPresenter.reportUserOpinion(IPromptPresenter.UserOpinion.CRITICAL);
+        promptPresenter.reportUserFeedbackAction(IPromptPresenter.UserFeedbackAction.AGREED);
+
+        // Assert
+        final InOrder inOrder = inOrder(mockPromptView);
+        inOrder.verify(mockPromptView).thankUser(anyBoolean());
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void testThatPresenterInstructsPromptViewToDismissWhenUserAgreesToGiveCriticalFeedbackAndNoThanksViewProvided() {
+        // Arrange
+        when(mockPromptView.providesThanksView()).thenReturn(false);
+
+        // Act
+        promptPresenter.reportUserOpinion(IPromptPresenter.UserOpinion.CRITICAL);
+        promptPresenter.reportUserFeedbackAction(IPromptPresenter.UserFeedbackAction.AGREED);
+
+        // Assert
+        final InOrder inOrder = inOrder(mockPromptView);
+        inOrder.verify(mockPromptView).dismiss(anyBoolean());
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void testThatPresenterInstructsPromptViewToDismissWhenUserDeclinesToGiveCriticalFeedback() {
+        // Act
+        promptPresenter.reportUserOpinion(IPromptPresenter.UserOpinion.CRITICAL);
+        promptPresenter.reportUserFeedbackAction(IPromptPresenter.UserFeedbackAction.DECLINED);
+
+        // Assert
+        final InOrder inOrder = inOrder(mockPromptView);
+        inOrder.verify(mockPromptView).dismiss(anyBoolean());
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void testThatPromptPresenterPassesReceivedEventsToInjectedEventListener() {
+        // Arrange
+        final IEvent mockEvent = mock(IEvent.class);
+
+        // Act
+        promptPresenter.notifyEventTriggered(mockEvent);
+
+        // Assert
+        verify(mockEventListener).notifyEventTriggered(mockEvent);
+    }
+
+    @Test
+    public void testThatPromptPresenterPassesReceivedEventsToExtraEventListeners() {
+        // Arrange
+        final IEventListener extraMockEventListener = mock(IEventListener.class);
+        promptPresenter.addPromptEventListener(extraMockEventListener);
+
+        final IEvent mockEvent = mock(IEvent.class);
+
+        // Act
+        promptPresenter.notifyEventTriggered(mockEvent);
+
+        // Assert
+        verify(extraMockEventListener).notifyEventTriggered(mockEvent);
     }
 
 }
