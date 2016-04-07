@@ -22,7 +22,9 @@ import com.github.stkent.amplify.prompt.interfaces.IPromptView;
 import com.github.stkent.amplify.tracking.interfaces.IEvent;
 import com.github.stkent.amplify.tracking.interfaces.IEventListener;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 
@@ -41,6 +43,9 @@ public class PromptPresenterTest extends BaseTest {
 
     @Mock
     private IPromptView mockPromptView;
+
+    @Rule
+    public ExpectedException exception = ExpectedException.none();
 
     @Override
     public void localSetUp() {
@@ -78,6 +83,19 @@ public class PromptPresenterTest extends BaseTest {
         final InOrder inOrder = inOrder(mockPromptView);
         inOrder.verify(mockPromptView).requestCriticalFeedback();
         inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void testThatPresenterThrowsCorrectExceptionIfUserFeedbackActionIsSuppliedBeforeUserOpinion() {
+        // Arrange
+        final IPromptPresenter.UserFeedbackAction anyValidUserFeedbackAction
+                = IPromptPresenter.UserFeedbackAction.AGREED;
+
+        exception.expect(IllegalStateException.class);
+        exception.expectMessage("User opinion must be set before this method is called.");
+
+        // Act
+        promptPresenter.reportUserFeedbackAction(anyValidUserFeedbackAction);
     }
 
     @Test
