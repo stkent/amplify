@@ -27,13 +27,12 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+@SuppressWarnings("ConstantConditions")
+@SuppressLint("Assert")
 public class StringUtilsTest extends BaseTest {
 
-    private static final String SUPPRESS_ASSERT = "Assert";
-    private static final String SUPPRESS_CONSTANT_CONDITIONS = "ConstantConditions";
     private static final String DEFAULT_STRING = "any other string";
 
-    @SuppressLint(SUPPRESS_ASSERT)
     @Test
     public void testThatDefaultIfBlankReturnsPrimaryStringIfItContainsAtLeastOneNonWhitespaceCharacter() {
         // Arrange
@@ -50,7 +49,6 @@ public class StringUtilsTest extends BaseTest {
                 sanitizedString);
     }
 
-    @SuppressLint(SUPPRESS_ASSERT)
     @Test
     public void testThatDefaultIfBlankReturnsDefaultStringIfPrimaryStringIsWhitespaceOnly() {
         // Arrange
@@ -67,7 +65,6 @@ public class StringUtilsTest extends BaseTest {
                 sanitizedString);
     }
 
-    @SuppressLint(SUPPRESS_ASSERT)
     @Test
     public void testThatDefaultIfBlankReturnsDefaultStringIfPrimaryStringIsEmpty() {
         // Arrange
@@ -84,7 +81,6 @@ public class StringUtilsTest extends BaseTest {
                 sanitizedString);
     }
 
-    @SuppressLint(SUPPRESS_ASSERT)
     @Test
     public void testThatDefaultIfBlankReturnsDefaultStringIfPrimaryStringIsNull() {
         // Arrange
@@ -100,8 +96,6 @@ public class StringUtilsTest extends BaseTest {
                 DEFAULT_STRING, sanitizedString);
     }
 
-    @SuppressLint(SUPPRESS_ASSERT)
-    @SuppressWarnings(SUPPRESS_CONSTANT_CONDITIONS)
     @Test
     public void testThatIsBlankReturnsTrueIfStringIsNull() {
         // Arrange
@@ -116,8 +110,6 @@ public class StringUtilsTest extends BaseTest {
                 isBlank);
     }
 
-    @SuppressLint(SUPPRESS_ASSERT)
-    @SuppressWarnings(SUPPRESS_CONSTANT_CONDITIONS)
     @Test
     public void testThatIsBlankReturnsTrueIfStringIsEmpty() {
         // Arrange
@@ -132,8 +124,6 @@ public class StringUtilsTest extends BaseTest {
                 isBlank);
     }
 
-    @SuppressLint(SUPPRESS_ASSERT)
-    @SuppressWarnings(SUPPRESS_CONSTANT_CONDITIONS)
     @Test
     public void testThatIsBlankReturnsTrueIfStringIsWhitespaceOnly() {
         // Arrange
@@ -148,8 +138,6 @@ public class StringUtilsTest extends BaseTest {
                 isBlank);
     }
 
-    @SuppressLint(SUPPRESS_ASSERT)
-    @SuppressWarnings(SUPPRESS_CONSTANT_CONDITIONS)
     @Test
     public void testThatIsBlankReturnsFalseIfStringContainsAtLeastOneNonWhitespaceCharacter() {
         // Arrange
