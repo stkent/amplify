@@ -74,7 +74,7 @@ public final class CustomLayoutPromptView
     @Override
     protected void onRestoreInstanceState(@NonNull final Parcelable state) {
         final SavedState savedState = (SavedState) state;
-        final Parcelable superSavedState = savedState.getSuperState();
+        final Parcelable superSavedState = savedState.superState;
 
         super.onRestoreInstanceState(superSavedState);
 
@@ -118,7 +118,7 @@ public final class CustomLayoutPromptView
         typedArray.recycle();
     }
 
-    private static class SavedState extends BaseSavedState {
+    private static class SavedState extends BasePromptView.SavedState {
 
         private CustomLayoutPromptViewConfig config;
 
