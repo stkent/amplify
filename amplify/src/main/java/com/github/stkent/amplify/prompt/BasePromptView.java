@@ -1,13 +1,13 @@
 /**
  * Copyright 2015 Stuart Kent
- *
+ * <p/>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.
- *
+ * <p/>
  * You may obtain a copy of the License at
- *
+ * <p/>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -124,7 +124,7 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
     @Override
     protected void onRestoreInstanceState(@NonNull final Parcelable state) {
         final SavedState savedState = (SavedState) state;
-        super.onRestoreInstanceState(savedState.getSuperState());
+        super.onRestoreInstanceState(savedState.superState);
         thanksDisplayTimeExpired = savedState.thanksDisplayTimeExpired;
     }
 
@@ -307,20 +307,23 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
         setVisibility(GONE);
     }
 
-    private static class SavedState extends BaseSavedState {
+    protected static class SavedState extends BaseSavedState {
 
         private static final int TRUTHY_INT = 1;
         private static final int FALSEY_INT = 0;
 
+        protected final Parcelable superState;
         private Bundle promptPresenterState;
         private boolean thanksDisplayTimeExpired;
 
         protected SavedState(final Parcelable superState) {
-            super(superState);
+            super(EMPTY_STATE);
+            this.superState = superState;
         }
 
         protected SavedState(final Parcel in) {
             super(in);
+            this.superState = in.readParcelable(SavedState.class.getClassLoader());
             this.promptPresenterState = in.readBundle(getClass().getClassLoader());
             this.thanksDisplayTimeExpired = in.readInt() == TRUTHY_INT;
         }
@@ -328,6 +331,7 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
         @Override
         public void writeToParcel(final Parcel out, final int flags) {
             super.writeToParcel(out, flags);
+            out.writeParcelable(superState, flags);
             out.writeBundle(this.promptPresenterState);
             out.writeInt(this.thanksDisplayTimeExpired ? TRUTHY_INT : FALSEY_INT);
         }

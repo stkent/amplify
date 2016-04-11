@@ -1,13 +1,13 @@
 /**
  * Copyright 2015 Stuart Kent
- *
+ * <p/>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.
- *
+ * <p/>
  * You may obtain a copy of the License at
- *
+ * <p/>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -73,9 +73,9 @@ public final class DefaultLayoutPromptView
     @Override
     protected void onRestoreInstanceState(@NonNull final Parcelable state) {
         final SavedState savedState = (SavedState) state;
-        final Parcelable superSavedState = savedState.getSuperState();
+        final Parcelable superSavedState = savedState.superState;
 
-        super.onRestoreInstanceState(savedState.getSuperState());
+        super.onRestoreInstanceState(superSavedState);
 
         applyConfig(savedState.config);
 
@@ -114,7 +114,7 @@ public final class DefaultLayoutPromptView
         typedArray.recycle();
     }
 
-    private static class SavedState extends BaseSavedState {
+    private static class SavedState extends BasePromptView.SavedState {
 
         private DefaultLayoutPromptViewConfig config;
 
