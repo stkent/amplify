@@ -25,6 +25,7 @@ import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -137,6 +138,16 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
 
             thanksDisplayTimeExpired = savedState.getBoolean(THANKS_DISPLAY_TIME_EXPIRED_KEY);
         }
+    }
+
+    @Override
+    protected void dispatchSaveInstanceState(final SparseArray<Parcelable> container) {
+        super.dispatchFreezeSelfOnly(container);
+    }
+
+    @Override
+    protected void dispatchRestoreInstanceState(final SparseArray<Parcelable> container) {
+        super.dispatchThawSelfOnly(container);
     }
 
     @NonNull
