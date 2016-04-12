@@ -51,6 +51,6 @@ public interface IPromptPresenter extends IEventListener {
     @NonNull
     Bundle generateStateBundle();
 
-    void restoreStateFromBundle(final Bundle bundle);
+    void restoreStateFromBundle(@NonNull final Bundle bundle);
 
 }

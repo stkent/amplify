@@ -20,7 +20,6 @@ import android.animation.Animator;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Bundle;
-import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
@@ -48,6 +47,11 @@ import static com.github.stkent.amplify.prompt.interfaces.IPromptPresenter.UserO
 @SuppressWarnings({"PMD.TooManyMethods"})
 abstract class BasePromptView<T extends View & IQuestionView, U extends View & IThanksView>
         extends FrameLayout implements IPromptView {
+
+    protected static final String SUPER_STATE_KEY = "SUPER_STATE_KEY";
+    private static final String THANKS_DISPLAY_TIME_EXPIRED_KEY = "THANKS_DISPLAY_TIME_EXPIRED_KEY";
+    private static final String PROMPT_PRESENTER_STATE_BUNDLE_KEY
+            = "PROMPT_PRESENTER_STATE_BUNDLE_KEY";
 
     protected abstract boolean isConfigured();
 
@@ -114,18 +118,25 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
     @Override
     protected Parcelable onSaveInstanceState() {
         final Parcelable superState = super.onSaveInstanceState();
-        final SavedState savedState = new SavedState(superState);
-        savedState.promptPresenterState = promptPresenter.generateStateBundle();
-        savedState.thanksDisplayTimeExpired = thanksDisplayTimeExpired;
-        return savedState;
+
+        final Bundle result = new Bundle();
+        result.putParcelable(SUPER_STATE_KEY, superState);
+        result.putBoolean(THANKS_DISPLAY_TIME_EXPIRED_KEY, thanksDisplayTimeExpired);
+        result.putBundle(PROMPT_PRESENTER_STATE_BUNDLE_KEY, promptPresenter.generateStateBundle());
+        return result;
     }
 
     @CallSuper
     @Override
-    protected void onRestoreInstanceState(@NonNull final Parcelable state) {
-        final SavedState savedState = (SavedState) state;
-        super.onRestoreInstanceState(savedState.getSuperState());
-        thanksDisplayTimeExpired = savedState.thanksDisplayTimeExpired;
+    protected void onRestoreInstanceState(@Nullable final Parcelable state) {
+        final Bundle savedState = (Bundle) state;
+
+        if (savedState != null) {
+            final Parcelable superSavedState = savedState.getParcelable(SUPER_STATE_KEY);
+            super.onRestoreInstanceState(superSavedState);
+
+            thanksDisplayTimeExpired = savedState.getBoolean(THANKS_DISPLAY_TIME_EXPIRED_KEY);
+        }
     }
 
     @NonNull
@@ -257,11 +268,19 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
     /**
      * This method must be called by subclasses at the end of their onRestoreInstanceState
      * implementations. This is to allow all configuration to be restored before the prompt
-     * presenter triggers a change in state, and is required because configuration changes are not
-     * allowed after a BasePromptView subclass is displayed.
+     * presenter triggers a change in state, and is required because config changes are not allowed
+     * after a BasePromptView subclass is displayed.
      */
-    protected final void restorePresenterState(@NonNull final Parcelable state) {
-        promptPresenter.restoreStateFromBundle(((SavedState) state).promptPresenterState);
+    protected final void restorePresenterState(@Nullable final Parcelable state) {
+        final Bundle bundle = (Bundle) state;
+
+        if (bundle != null) {
+            final Bundle promptPresenterState = bundle.getBundle(PROMPT_PRESENTER_STATE_BUNDLE_KEY);
+
+            if (promptPresenterState != null) {
+                promptPresenter.restoreStateFromBundle(promptPresenterState);
+            }
+        }
     }
 
     protected final boolean isDisplayed() {
@@ -305,47 +324,6 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
     private void hide() {
         removeAllViews();
         setVisibility(GONE);
-    }
-
-    private static class SavedState extends BaseSavedState {
-
-        private static final int TRUTHY_INT = 1;
-        private static final int FALSEY_INT = 0;
-
-        private Bundle promptPresenterState;
-        private boolean thanksDisplayTimeExpired;
-
-        protected SavedState(final Parcelable superState) {
-            super(superState);
-        }
-
-        protected SavedState(final Parcel in) {
-            super(in);
-            this.promptPresenterState = in.readBundle(getClass().getClassLoader());
-            this.thanksDisplayTimeExpired = in.readInt() == TRUTHY_INT;
-        }
-
-        @Override
-        public void writeToParcel(final Parcel out, final int flags) {
-            super.writeToParcel(out, flags);
-            out.writeBundle(this.promptPresenterState);
-            out.writeInt(this.thanksDisplayTimeExpired ? TRUTHY_INT : FALSEY_INT);
-        }
-
-        public static final Parcelable.Creator<SavedState> CREATOR
-                = new Parcelable.Creator<SavedState>() {
-
-            @Override
-            public SavedState createFromParcel(final Parcel in) {
-                return new SavedState(in);
-            }
-
-            @Override
-            public SavedState[] newArray(final int size) {
-                return new SavedState[size];
-            }
-
-        };
     }
 
 }
