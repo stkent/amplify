@@ -49,7 +49,7 @@ _amplify_ focuses on helping Android developers prompt their users for feedback 
 
 # Library Structure
 
-_amplify_ consists of two main components:
+_amplify_ consists of two main elements:
 
 - A **prompt timing calculator**, represented by the `Amplify` class, responsible for:
 
@@ -57,7 +57,7 @@ _amplify_ consists of two main components:
 
     - tracking occurrences of significant events and evaluating rules based on these events to determine appropriate times to ask for feedback (we occasionally refer to this portion of the library as the **event-tracking engine**);
 
-- A custom **inline feedback prompt**, represented by the `PromptView` class, that guides users through the flow depicted below to determine the appropriate outlet for their feedback:
+- Customizable **inline feedback prompts**, represented by the `DefaultLayoutPromptView` and `CustomLayoutPromptView` classes, that guide users through the flow depicted below to determine the appropriate outlet for their feedback:
 
 <br />
 
