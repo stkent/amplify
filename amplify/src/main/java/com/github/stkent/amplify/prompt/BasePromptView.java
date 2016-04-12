@@ -25,6 +25,7 @@ import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -50,6 +51,7 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
 
     protected static final String SUPER_STATE_KEY = "SUPER_STATE_KEY";
     private static final String THANKS_DISPLAY_TIME_EXPIRED_KEY = "THANKS_DISPLAY_TIME_EXPIRED_KEY";
+    private static final String BASE_PROMPT_VIEW_CONFIG_KEY = "BASE_PROMPT_VIEW_CONFIG_KEY";
     private static final String PROMPT_PRESENTER_STATE_BUNDLE_KEY
             = "PROMPT_PRESENTER_STATE_BUNDLE_KEY";
 
@@ -121,6 +123,7 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
 
         final Bundle result = new Bundle();
         result.putParcelable(SUPER_STATE_KEY, superState);
+        result.putParcelable(BASE_PROMPT_VIEW_CONFIG_KEY, basePromptViewConfig);
         result.putBoolean(THANKS_DISPLAY_TIME_EXPIRED_KEY, thanksDisplayTimeExpired);
         result.putBundle(PROMPT_PRESENTER_STATE_BUNDLE_KEY, promptPresenter.generateStateBundle());
         return result;
@@ -135,8 +138,25 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
             final Parcelable superSavedState = savedState.getParcelable(SUPER_STATE_KEY);
             super.onRestoreInstanceState(superSavedState);
 
+            final BasePromptViewConfig config
+                    = savedState.getParcelable(BASE_PROMPT_VIEW_CONFIG_KEY);
+
+            if (config != null) {
+                applyBaseConfig(config);
+            }
+
             thanksDisplayTimeExpired = savedState.getBoolean(THANKS_DISPLAY_TIME_EXPIRED_KEY);
         }
+    }
+
+    @Override
+    protected void dispatchSaveInstanceState(final SparseArray<Parcelable> container) {
+        super.dispatchFreezeSelfOnly(container);
+    }
+
+    @Override
+    protected void dispatchRestoreInstanceState(final SparseArray<Parcelable> container) {
+        super.dispatchThawSelfOnly(container);
     }
 
     @NonNull
