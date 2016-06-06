@@ -113,7 +113,9 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
 
         initializeBaseConfig(attributeSet);
 
-        promptPresenter = new PromptPresenter(Amplify.getSharedInstance(), this);
+        if (!isInEditMode()) {
+            promptPresenter = new PromptPresenter(Amplify.getSharedInstance(), this);
+        }
     }
 
     @CallSuper
