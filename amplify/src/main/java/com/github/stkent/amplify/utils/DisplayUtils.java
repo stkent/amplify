@@ -21,16 +21,30 @@ import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.util.DisplayMetrics;
 
+import static java.lang.Math.max;
+import static java.lang.Math.round;
+
 public final class DisplayUtils {
 
     // From http://stackoverflow.com/a/9563438/2911458 with modifications
-    public static float dpToPx(
+    public static int dpToPx(
             @NonNull final Context context,
-            final float dp) {
+            final int dp) {
+
+        if (dp < 0) {
+            throw new IllegalStateException("Dimension must be > 0.");
+        }
+
+        if (dp == 0) {
+            return 0;
+        }
 
         final Resources resources = context.getResources();
         final DisplayMetrics displayMetrics = resources.getDisplayMetrics();
-        return dp * ((float) displayMetrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
+        final float floatResult
+                = dp * ((float) displayMetrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
+
+        return max(1, round(floatResult));
     }
 
     private DisplayUtils() {
