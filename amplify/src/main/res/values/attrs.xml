@@ -48,6 +48,7 @@
         <attr format="color" name="prompt_view_negative_button_text_color" />
         <attr format="color" name="prompt_view_negative_button_background_color" />
         <attr format="color" name="prompt_view_negative_button_border_color" />
+        <attr format="dimension" name="prompt_view_text_size" />
     </declare-styleable>
 
     <declare-styleable name="CustomLayoutPromptView">

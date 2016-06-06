@@ -27,6 +27,7 @@ import android.graphics.drawable.shapes.RectShape;
 import android.os.Build;
 import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.TextView;
 
@@ -67,12 +68,21 @@ final class DefaultLayoutQuestionView extends CustomLayoutQuestionView {
 
         setQuoteButtonUnquoteTextColor(getPositiveButton(), config.getPositiveButtonTextColor());
         setQuoteButtonUnquoteTextColor(getNegativeButton(), config.getNegativeButtonTextColor());
+
+        final Integer customTextSizePx = config.getCustomTextSizePx();
+
+        if (customTextSizePx != null) {
+            getTitleTextView().setTextSize(TypedValue.COMPLEX_UNIT_PX, customTextSizePx);
+            getSubtitleTextView().setTextSize(TypedValue.COMPLEX_UNIT_PX, customTextSizePx);
+            setQuoteButtonUnquoteTextSize(getPositiveButton(), customTextSizePx);
+            setQuoteButtonUnquoteTextSize(getNegativeButton(), customTextSizePx);
+        }
     }
 
     /**
      * We are defensive here, because it's not uncommon to make "buttons" out of UI components like
-     * FrameLayouts, say. If we can't cast to a TextView to obtain a setText method, the button text
-     * will be left unchanged from the original layout.
+     * FrameLayouts, say. If we can't cast to a TextView to obtain a setTextColor method, the button
+     * text color will be left unchanged.
      *
      * @param quoteButtonUnquote the "button" whose text color we wish to set
      * @param color the color we wish to apply
@@ -83,6 +93,23 @@ final class DefaultLayoutQuestionView extends CustomLayoutQuestionView {
 
         if (quoteButtonUnquote instanceof TextView) {
             ((TextView) quoteButtonUnquote).setTextColor(color);
+        }
+    }
+
+    /**
+     * We are defensive here, because it's not uncommon to make "buttons" out of UI components like
+     * FrameLayouts, say. If we can't cast to a TextView to obtain a setText method, the button text
+     * size will be left unchanged.
+     *
+     * @param quoteButtonUnquote the "button" whose text color we wish to set
+     * @param textSize the text size we wish to apply, in pixels
+     */
+    private void setQuoteButtonUnquoteTextSize(
+            @NonNull final View quoteButtonUnquote,
+            @ColorInt final int textSize) {
+
+        if (quoteButtonUnquote instanceof TextView) {
+            ((TextView) quoteButtonUnquote).setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
         }
     }
 

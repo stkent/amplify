@@ -26,7 +26,8 @@ public class MainActivity extends AppCompatActivity {
                             findViewById(R.id.default_layout_prompt_view_no_customization));
 
             Amplify.getSharedInstance().promptIfReady(
-                    (DefaultLayoutPromptView) findViewById(R.id.default_layout_prompt_view_xml_config));
+                    (DefaultLayoutPromptView) findViewById(
+                            R.id.default_layout_prompt_view_xml_config));
 
             final DefaultLayoutPromptView defaultLayoutPromptView
                     = (DefaultLayoutPromptView)
@@ -63,6 +64,8 @@ public class MainActivity extends AppCompatActivity {
                             .setNegativeButtonTextColor(Color.parseColor("#FFFF00"))
                             .setNegativeButtonBackgroundColor(Color.parseColor("#FF0000"))
                             .setNegativeButtonBorderColor(Color.parseColor("#999999"))
+                            .setCustomTextSizePx(getResources()
+                                    .getDimensionPixelSize(R.dimen.prompt_view_text_size_large))
                             .build();
 
             defaultLayoutPromptView.applyBaseConfig(baseDefaultLayoutPromptViewConfig);
@@ -71,10 +74,12 @@ public class MainActivity extends AppCompatActivity {
             Amplify.getSharedInstance().promptIfReady(defaultLayoutPromptView);
 
             Amplify.getSharedInstance().promptIfReady(
-                    (CustomLayoutPromptView) findViewById(R.id.custom_layout_prompt_view_xml_config));
+                    (CustomLayoutPromptView) findViewById(
+                            R.id.custom_layout_prompt_view_xml_config));
 
             final CustomLayoutPromptView customLayoutPromptView
-                    = (CustomLayoutPromptView) findViewById(R.id.custom_layout_prompt_view_code_config);
+                    = (CustomLayoutPromptView) findViewById(
+                            R.id.custom_layout_prompt_view_code_config);
 
             final BasePromptViewConfig baseCustomLayoutPromptViewConfig
                     = new BasePromptViewConfig.Builder()

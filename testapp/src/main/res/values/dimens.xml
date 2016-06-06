@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="prompt_view_text_size_large">22sp</dimen>
+</resources>
