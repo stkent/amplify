@@ -64,7 +64,7 @@ final class DefaultLayoutQuestionView extends CustomLayoutQuestionView {
         setQuoteButtonUnquoteTextColor(getPositiveButton(), config.getPositiveButtonTextColor());
         setQuoteButtonUnquoteTextColor(getNegativeButton(), config.getNegativeButtonTextColor());
 
-        configureTextSizes(config, subtitleTextView);
+        configureTextSizes(config);
         configureButtonBackgrounds(context, config);
     }
 
@@ -85,17 +85,19 @@ final class DefaultLayoutQuestionView extends CustomLayoutQuestionView {
         }
     }
 
-    private void configureTextSizes(
-            @NonNull final DefaultLayoutPromptViewConfig config,
-            @NonNull final TextView subtitleTextView) {
-
+    private void configureTextSizes(@NonNull final DefaultLayoutPromptViewConfig config) {
         final Integer customTextSizePx = config.getCustomTextSizePx();
 
         if (customTextSizePx != null) {
             getTitleTextView().setTextSize(TypedValue.COMPLEX_UNIT_PX, customTextSizePx);
-            subtitleTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, customTextSizePx);
             setQuoteButtonUnquoteTextSize(getPositiveButton(), customTextSizePx);
             setQuoteButtonUnquoteTextSize(getNegativeButton(), customTextSizePx);
+
+            final TextView subtitleTextView = getSubtitleTextView();
+
+            if (subtitleTextView != null) {
+                subtitleTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, customTextSizePx);
+            }
         }
     }
 
