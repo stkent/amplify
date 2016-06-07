@@ -124,13 +124,13 @@ final class DefaultLayoutQuestionView extends CustomLayoutQuestionView {
 
         final Integer actualButtonBorderWidthPx
                 = customDimensionOrDefault(
-                customButtonBorderWidthPx,
-                DisplayUtils.dpToPx(context, DEFAULT_BUTTON_BORDER_WIDTH_DP));
+                        customButtonBorderWidthPx,
+                        DisplayUtils.dpToPx(context, DEFAULT_BUTTON_BORDER_WIDTH_DP));
 
         final Integer actualButtonCornerRadiusPx
                 = customDimensionOrDefault(
-                customButtonCornerRadiusPx,
-                DEFAULT_BUTTON_CORNER_RADIUS_PX);
+                        customButtonCornerRadiusPx,
+                        DEFAULT_BUTTON_CORNER_RADIUS_PX);
 
         setButtonViewBackground(
                 getPositiveButton(),
