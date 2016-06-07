@@ -19,7 +19,7 @@ package com.github.stkent.amplify.tracking.managers;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.github.stkent.amplify.ILogger;
+import com.github.stkent.amplify.tracking.Amplify;
 import com.github.stkent.amplify.tracking.AmplifyExceptionHandler;
 import com.github.stkent.amplify.tracking.interfaces.IAppEventTimeProvider;
 import com.github.stkent.amplify.tracking.interfaces.IAppLevelEventRulesManager;
@@ -43,9 +43,6 @@ public final class AppLevelEventRulesManager implements IAppLevelEventRulesManag
     private final ISettings<Long> settings;
 
     @NonNull
-    private final ILogger logger;
-
-    @NonNull
     private final IAppEventTimeProvider appEventTimeProvider;
 
     @Nullable
@@ -59,12 +56,10 @@ public final class AppLevelEventRulesManager implements IAppLevelEventRulesManag
 
     public AppLevelEventRulesManager(
             @NonNull final ISettings<Long> settings,
-            @NonNull final IAppEventTimeProvider appEventTimeProvider,
-            @NonNull final ILogger logger) {
+            @NonNull final IAppEventTimeProvider appEventTimeProvider) {
 
         this.settings = settings;
         this.appEventTimeProvider = appEventTimeProvider;
-        this.logger = logger;
     }
 
     @Override
@@ -78,7 +73,7 @@ public final class AppLevelEventRulesManager implements IAppLevelEventRulesManag
             boolean installResult = installTimeRule.shouldAllowFeedbackPrompt(installTime);
 
             if (!installResult) {
-                logger.d("Blocking prompt based on install time");
+                Amplify.getLogger().d("Blocking prompt based on install time");
             }
 
             result = installResult;
@@ -90,7 +85,7 @@ public final class AppLevelEventRulesManager implements IAppLevelEventRulesManag
             boolean lastUpdateResult = lastUpdateTimeRule.shouldAllowFeedbackPrompt(lastUpdateTime);
 
             if (!lastUpdateResult) {
-                logger.d("Blocking prompt based on last update time");
+                Amplify.getLogger().d("Blocking prompt based on last update time");
             }
 
             result = result && lastUpdateResult;
@@ -109,7 +104,8 @@ public final class AppLevelEventRulesManager implements IAppLevelEventRulesManag
 
         // This log message is morally correct, but technically misleading (we do not explicitly
         // track an IEvent implementation called APP_INSTALLED).
-        logger.d("Registered " + installTimeRule.getDescription() + " for event APP_INSTALLED");
+        Amplify.getLogger().d(
+                "Registered " + installTimeRule.getDescription() + " for event APP_INSTALLED");
     }
 
     @Override
@@ -118,12 +114,13 @@ public final class AppLevelEventRulesManager implements IAppLevelEventRulesManag
 
         // This log message is morally correct, but technically misleading (we do not explicitly
         // track an IEvent implementation called APP_UPDATED).
-        logger.d("Registered " + lastUpdateTimeRule.getDescription() + " for event APP_UPDATED");
+        Amplify.getLogger().d(
+                "Registered " + lastUpdateTimeRule.getDescription() + " for event APP_UPDATED");
     }
 
     @Override
     public void setLastCrashTimeCooldownDays(final int cooldownPeriodDays) {
-        lastAppCrashedTimeManager = new LastEventTimeRulesManager(settings, logger);
+        lastAppCrashedTimeManager = new LastEventTimeRulesManager(settings);
         lastAppCrashedTimeManager.addEventBasedRule(
                 APP_CRASHED, new CooldownDaysRule(cooldownPeriodDays));
 

@@ -22,7 +22,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.NonNull;
 
-import com.github.stkent.amplify.ILogger;
+import com.github.stkent.amplify.tracking.Amplify;
 import com.github.stkent.amplify.tracking.interfaces.IAppFeedbackDataProvider;
 import com.github.stkent.amplify.tracking.interfaces.IEnvironmentCapabilitiesProvider;
 
@@ -37,26 +37,23 @@ public final class FeedbackUtil {
 
     private final IAppFeedbackDataProvider appFeedbackDataProvider;
     private final IEnvironmentCapabilitiesProvider environmentCapabilitiesProvider;
-    private final ILogger logger;
     private final String feedbackEmailAddress;
 
     public FeedbackUtil(
             @NonNull final IAppFeedbackDataProvider appFeedbackDataProvider,
             @NonNull final IEnvironmentCapabilitiesProvider environmentCapabilitiesProvider,
-            @NonNull final String feedbackEmailAddress,
-            @NonNull final ILogger logger) {
+            @NonNull final String feedbackEmailAddress) {
 
         this.appFeedbackDataProvider = appFeedbackDataProvider;
         this.environmentCapabilitiesProvider = environmentCapabilitiesProvider;
         this.feedbackEmailAddress = feedbackEmailAddress;
-        this.logger = logger;
     }
 
     public void showFeedbackEmailChooser(@NonNull final Activity activity) {
         final Intent feedbackEmailIntent = getFeedbackEmailIntent();
 
         if (!environmentCapabilitiesProvider.canHandleIntent(feedbackEmailIntent)) {
-            logger.e("Unable to present email client chooser.");
+            Amplify.getLogger().e("Unable to present email client chooser.");
             return;
         }
 

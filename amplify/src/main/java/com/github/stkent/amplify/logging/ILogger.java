@@ -14,21 +14,14 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package com.github.stkent.amplify;
+package com.github.stkent.amplify.logging;
 
 import android.support.annotation.NonNull;
 
 /**
- * An abstract representation of a logging class with customizable output
- * verbosity.
+ * An abstract representation of a logger with debug and error log levels.
  */
 public interface ILogger {
-
-    /**
-     * @param logLevel the most verbose log message type that should be
-     *        displayed
-     */
-    void setLogLevel(@NonNull final Logger.LogLevel logLevel);
 
     /**
      * Record a log message with level Logger.LogLevel.DEBUG.

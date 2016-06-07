@@ -18,7 +18,7 @@ package com.github.stkent.amplify.tracking.managers;
 
 import android.support.annotation.NonNull;
 
-import com.github.stkent.amplify.ILogger;
+import com.github.stkent.amplify.tracking.Amplify;
 import com.github.stkent.amplify.tracking.interfaces.IEnvironmentBasedRule;
 import com.github.stkent.amplify.tracking.interfaces.IEnvironmentBasedRulesManager;
 import com.github.stkent.amplify.tracking.interfaces.IEnvironmentCapabilitiesProvider;
@@ -32,17 +32,12 @@ public final class EnvironmentBasedRulesManager implements IEnvironmentBasedRule
     private final IEnvironmentCapabilitiesProvider environmentCapabilitiesProvider;
 
     @NonNull
-    private final ILogger logger;
-
-    @NonNull
     private final List<IEnvironmentBasedRule> environmentBasedRules = new ArrayList<>();
 
     public EnvironmentBasedRulesManager(
-            @NonNull final IEnvironmentCapabilitiesProvider environmentCapabilitiesProvider,
-            @NonNull final ILogger logger) {
+            @NonNull final IEnvironmentCapabilitiesProvider environmentCapabilitiesProvider) {
 
         this.environmentCapabilitiesProvider = environmentCapabilitiesProvider;
-        this.logger = logger;
     }
 
     @Override
@@ -54,7 +49,9 @@ public final class EnvironmentBasedRulesManager implements IEnvironmentBasedRule
     public boolean shouldAllowFeedbackPrompt() {
         for (final IEnvironmentBasedRule rule : environmentBasedRules) {
             if (!rule.shouldAllowFeedbackPrompt(environmentCapabilitiesProvider)) {
-                logger.d("Blocking feedback because of environment based rule: " + rule);
+                Amplify.getLogger().d(
+                        "Blocking feedback because of environment based rule: " + rule);
+
                 return false;
             }
         }

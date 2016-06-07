@@ -19,16 +19,12 @@ package com.github.stkent.amplify.tracking.managers;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.github.stkent.amplify.ILogger;
 import com.github.stkent.amplify.tracking.interfaces.ISettings;
 
 public final class TotalEventCountRulesManager extends BaseEventsManager<Integer> {
 
-    public TotalEventCountRulesManager(
-            @NonNull final ISettings<Integer> settings,
-            @NonNull final ILogger logger) {
-
-        super(settings, logger);
+    public TotalEventCountRulesManager(@NonNull final ISettings<Integer> settings) {
+        super(settings);
     }
 
     @NonNull

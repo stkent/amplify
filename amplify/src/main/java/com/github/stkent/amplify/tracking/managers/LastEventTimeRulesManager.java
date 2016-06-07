@@ -19,7 +19,6 @@ package com.github.stkent.amplify.tracking.managers;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.github.stkent.amplify.ILogger;
 import com.github.stkent.amplify.tracking.interfaces.ISettings;
 import com.github.stkent.amplify.utils.time.SystemTimeUtil;
 
@@ -27,11 +26,8 @@ import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 public final class LastEventTimeRulesManager extends BaseEventsManager<Long> {
 
-    public LastEventTimeRulesManager(
-            @NonNull final ISettings<Long> settings,
-            @NonNull final ILogger logger) {
-
-        super(settings, logger);
+    public LastEventTimeRulesManager(@NonNull final ISettings<Long> settings) {
+        super(settings);
     }
 
     @NonNull

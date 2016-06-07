@@ -23,8 +23,8 @@ import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 
-import com.github.stkent.amplify.ILogger;
-import com.github.stkent.amplify.Logger;
+import com.github.stkent.amplify.logging.ILogger;
+import com.github.stkent.amplify.logging.NoOpLogger;
 import com.github.stkent.amplify.prompt.interfaces.IPromptView;
 import com.github.stkent.amplify.tracking.interfaces.IAppEventTimeProvider;
 import com.github.stkent.amplify.tracking.interfaces.IAppLevelEventRulesManager;
@@ -59,43 +59,36 @@ public final class Amplify implements IEventListener {
     private static final int DEFAULT_LAST_UPDATE_TIME_COOLDOWN_DAYS = 7;
     private static final int DEFAULT_LAST_CRASH_TIME_COOLDOWN_DAYS = 7;
 
+    // Begin logging
+
+    @NonNull
+    private static ILogger sharedLogger = new NoOpLogger();
+
+    @NonNull
+    public static ILogger getLogger() {
+        return sharedLogger;
+    }
+
+    public static void setLogger(@NonNull final ILogger logger) {
+        sharedLogger = logger;
+    }
+
+    // End logging
+    // Begin shared instance
+
     private static Amplify sharedInstance;
-
-    private final IAppInfoProvider appInfoProvider;
-    private final IAppLevelEventRulesManager appLevelEventRulesManager;
-    private final IEnvironmentBasedRulesManager environmentBasedRulesManager;
-    private final ActivityReferenceManager activityReferenceManager;
-    private final IEventsManager<Long> firstEventTimeRulesManager;
-    private final IEventsManager<Long> lastEventTimeRulesManager;
-    private final IEventsManager<Integer> lastEventVersionCodeRulesManager;
-    private final IEventsManager<String> lastEventVersionNameRulesManager;
-    private final IEventsManager<Integer> totalEventCountRulesManager;
-
-    private final ILogger logger;
-
-    private boolean alwaysShow;
-    private String packageName;
-    private String feedbackEmailAddress;
 
     public static Amplify initSharedInstance(@NonNull final Application app) {
         return initSharedInstance(app, Constants.DEFAULT_BACKING_SHARED_PREFERENCES_NAME);
     }
 
-    public static Amplify initSharedInstance(
+    private static Amplify initSharedInstance(
             @NonNull final Application app,
             @NonNull final String backingSharedPreferencesName) {
 
-        return initSharedInstance(app, backingSharedPreferencesName, new Logger());
-    }
-
-    private static Amplify initSharedInstance(
-            @NonNull final Application app,
-            @NonNull final String backingSharedPreferencesName,
-            @NonNull final ILogger logger) {
-
         synchronized (Amplify.class) {
             if (sharedInstance == null) {
-                sharedInstance = new Amplify(app, backingSharedPreferencesName, logger);
+                sharedInstance = new Amplify(app, backingSharedPreferencesName);
             }
         }
 
@@ -113,12 +106,29 @@ public final class Amplify implements IEventListener {
         return sharedInstance;
     }
 
-    // Constructors
+    // End shared instance
+    // Begin instance fields
+
+    private final IAppInfoProvider appInfoProvider;
+    private final IAppLevelEventRulesManager appLevelEventRulesManager;
+    private final IEnvironmentBasedRulesManager environmentBasedRulesManager;
+    private final ActivityReferenceManager activityReferenceManager;
+    private final IEventsManager<Long> firstEventTimeRulesManager;
+    private final IEventsManager<Long> lastEventTimeRulesManager;
+    private final IEventsManager<Integer> lastEventVersionCodeRulesManager;
+    private final IEventsManager<String> lastEventVersionNameRulesManager;
+    private final IEventsManager<Integer> totalEventCountRulesManager;
+
+    private boolean alwaysShow;
+    private String packageName;
+    private String feedbackEmailAddress;
+
+    // End instance fields
+    // Begin constructors
 
     private Amplify(
             @NonNull final Application app,
-            @NonNull final String backingSharedPreferencesName,
-            @NonNull final ILogger logger) {
+            @NonNull final String backingSharedPreferencesName) {
 
         final Context appContext = app.getApplicationContext();
 
@@ -135,30 +145,28 @@ public final class Amplify implements IEventListener {
         app.registerActivityLifecycleCallbacks(activityReferenceManager);
 
         this.environmentBasedRulesManager
-                = new EnvironmentBasedRulesManager(environmentCapabilitiesProvider, logger);
+                = new EnvironmentBasedRulesManager(environmentCapabilitiesProvider);
 
         final SharedPreferences backingSharedPreferences
                 = app.getSharedPreferences(backingSharedPreferencesName, Context.MODE_PRIVATE);
 
         this.appLevelEventRulesManager = new AppLevelEventRulesManager(
-                new Settings<Long>(backingSharedPreferences), appEventTimeProvider, logger);
+                new Settings<Long>(backingSharedPreferences), appEventTimeProvider);
 
         this.firstEventTimeRulesManager = new FirstEventTimeRulesManager(
-                new Settings<Long>(backingSharedPreferences), logger);
+                new Settings<Long>(backingSharedPreferences));
 
         this.lastEventTimeRulesManager = new LastEventTimeRulesManager(
-                new Settings<Long>(backingSharedPreferences), logger);
+                new Settings<Long>(backingSharedPreferences));
 
         this.lastEventVersionNameRulesManager = new LastEventVersionNameRulesManager(
-                new Settings<String>(backingSharedPreferences), appInfoProvider, logger);
+                new Settings<String>(backingSharedPreferences), appInfoProvider);
 
         this.lastEventVersionCodeRulesManager = new LastEventVersionCodeRulesManager(
-                new Settings<Integer>(backingSharedPreferences), appInfoProvider, logger);
+                new Settings<Integer>(backingSharedPreferences), appInfoProvider);
 
         this.totalEventCountRulesManager = new TotalEventCountRulesManager(
-                new Settings<Integer>(backingSharedPreferences), logger);
-
-        this.logger = logger;
+                new Settings<Integer>(backingSharedPreferences));
     }
 
     @VisibleForTesting
@@ -171,8 +179,7 @@ public final class Amplify implements IEventListener {
             @NonNull final IEventsManager<Long> lastEventTimeRulesManager,
             @NonNull final IEventsManager<Integer> lastEventVersionCodeRulesManager,
             @NonNull final IEventsManager<String> lastEventVersionNameRulesManager,
-            @NonNull final IEventsManager<Integer> totalEventCountRulesManager,
-            @NonNull final ILogger logger) {
+            @NonNull final IEventsManager<Integer> totalEventCountRulesManager) {
 
         this.appInfoProvider = appInfoProvider;
         this.appLevelEventRulesManager = appLevelEventRulesManager;
@@ -183,10 +190,10 @@ public final class Amplify implements IEventListener {
         this.lastEventVersionCodeRulesManager = lastEventVersionCodeRulesManager;
         this.lastEventVersionNameRulesManager = lastEventVersionNameRulesManager;
         this.totalEventCountRulesManager = totalEventCountRulesManager;
-        this.logger = logger;
     }
 
-    // Configuration methods
+    // End constructors
+    // Begin configuration methods
 
     public Amplify setFeedbackEmailAddress(@NonNull final String feedbackEmailAddress) {
         this.feedbackEmailAddress = feedbackEmailAddress;
@@ -268,12 +275,8 @@ public final class Amplify implements IEventListener {
         return this;
     }
 
-    // Debug configuration methods
-
-    public Amplify setLogLevel(@NonNull final Logger.LogLevel logLevel) {
-        logger.setLogLevel(logLevel);
-        return this;
-    }
+    // End configuration methods
+    // Begin debug configuration methods
 
     public Amplify setAlwaysShow(final boolean alwaysShow) {
         this.alwaysShow = alwaysShow;
@@ -285,11 +288,12 @@ public final class Amplify implements IEventListener {
         return this;
     }
 
-    // Update methods
+    // End debug configuration methods
+    // Begin update methods
 
     @Override
     public void notifyEventTriggered(@NonNull final IEvent event) {
-        logger.d(event.getTrackingKey() + " event triggered");
+        sharedLogger.d(event.getTrackingKey() + " event triggered");
         totalEventCountRulesManager.notifyEventTriggered(event);
         firstEventTimeRulesManager.notifyEventTriggered(event);
         lastEventTimeRulesManager.notifyEventTriggered(event);
@@ -309,15 +313,15 @@ public final class Amplify implements IEventListener {
                 final FeedbackUtil feedbackUtil = new FeedbackUtil(
                         new AppFeedbackDataProvider(appInfoProvider),
                         new EnvironmentCapabilitiesProvider(appInfoProvider),
-                        feedbackEmailAddress,
-                        logger);
+                        feedbackEmailAddress);
 
                 feedbackUtil.showFeedbackEmailChooser(activity);
             }
         }
     }
 
-    // Query methods
+    // End update methods
+    // Begin query methods
 
     public void promptIfReady(@NonNull final IPromptView promptView) {
         if (feedbackEmailAddress == null) {
@@ -340,5 +344,7 @@ public final class Amplify implements IEventListener {
                 & lastEventVersionCodeRulesManager.shouldAllowFeedbackPrompt()
                 & lastEventVersionNameRulesManager.shouldAllowFeedbackPrompt());
     }
+
+    // End query methods
 
 }
