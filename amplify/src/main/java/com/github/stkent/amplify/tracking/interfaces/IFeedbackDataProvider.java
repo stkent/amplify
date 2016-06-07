@@ -22,7 +22,7 @@ import android.support.annotation.NonNull;
  * An abstract representation of a class that provides the (necessary and nice-to-have) data for
  * receiving critical feedback from the user.
  */
-public interface IAppFeedbackDataProvider {
+public interface IFeedbackDataProvider {
 
     /**
      * @return the human-readable name of the current device
@@ -32,7 +32,7 @@ public interface IAppFeedbackDataProvider {
 
     /**
      * @return the current version string of the application in which this library is embedded,
-     *         or a sensible default if this cannot be determined
+     *         formatted for display, or a sensible default if this cannot be determined
      */
     @NonNull
     String getVersionDisplayString();
@@ -42,5 +42,12 @@ public interface IAppFeedbackDataProvider {
      */
     @NonNull
     CharSequence getAppNameString();
+
+    /**
+     * @return the version number and API level of the Android operating system running on the
+     *         current device, formatted for display
+     */
+    @NonNull
+    String getAndroidOsVersionDisplayString();
 
 }

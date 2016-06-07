@@ -19,7 +19,6 @@ package com.github.stkent.amplify.tracking.managers;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.github.stkent.amplify.ILogger;
 import com.github.stkent.amplify.tracking.interfaces.ISettings;
 import com.github.stkent.amplify.utils.appinfo.IAppInfoProvider;
 
@@ -30,10 +29,9 @@ public final class LastEventVersionCodeRulesManager extends BaseEventsManager<In
 
     public LastEventVersionCodeRulesManager(
             @NonNull final ISettings<Integer> settings,
-            @NonNull final IAppInfoProvider appInfoProvider,
-            @NonNull final ILogger logger) {
+            @NonNull final IAppInfoProvider appInfoProvider) {
 
-        super(settings, logger);
+        super(settings);
         this.appInfoProvider = appInfoProvider;
     }
 

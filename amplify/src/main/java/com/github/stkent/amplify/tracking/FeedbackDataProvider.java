@@ -20,16 +20,16 @@ import android.content.pm.PackageInfo;
 import android.os.Build;
 import android.support.annotation.NonNull;
 
-import com.github.stkent.amplify.tracking.interfaces.IAppFeedbackDataProvider;
+import com.github.stkent.amplify.tracking.interfaces.IFeedbackDataProvider;
 import com.github.stkent.amplify.utils.appinfo.IAppInfoProvider;
 import com.github.stkent.amplify.utils.StringUtils;
 
-public final class AppFeedbackDataProvider implements IAppFeedbackDataProvider {
+public final class FeedbackDataProvider implements IFeedbackDataProvider {
 
     @NonNull
     private final IAppInfoProvider appInfoProvider;
 
-    public AppFeedbackDataProvider(@NonNull final IAppInfoProvider appInfoProvider) {
+    public FeedbackDataProvider(@NonNull final IAppInfoProvider appInfoProvider) {
         this.appInfoProvider = appInfoProvider;
     }
 
@@ -64,6 +64,11 @@ public final class AppFeedbackDataProvider implements IAppFeedbackDataProvider {
     @Override
     public CharSequence getAppNameString() {
         return appInfoProvider.getApplicationInfo().loadLabel(appInfoProvider.getPackageManager());
+    }
+
+    @NonNull
+    public String getAndroidOsVersionDisplayString() {
+        return String.format("%s (%s)", Build.VERSION.RELEASE, Build.VERSION.SDK_INT);
     }
 
 }

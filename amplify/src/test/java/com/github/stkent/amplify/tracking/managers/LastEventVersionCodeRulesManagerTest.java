@@ -21,12 +21,11 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.support.annotation.NonNull;
 
-import com.github.stkent.amplify.ILogger;
 import com.github.stkent.amplify.helpers.BaseTest;
 import com.github.stkent.amplify.helpers.FakeSettings;
-import com.github.stkent.amplify.utils.appinfo.IAppInfoProvider;
 import com.github.stkent.amplify.tracking.interfaces.IEvent;
 import com.github.stkent.amplify.tracking.interfaces.IEventBasedRule;
+import com.github.stkent.amplify.utils.appinfo.IAppInfoProvider;
 
 import org.junit.Test;
 import org.mockito.Mock;
@@ -42,8 +41,6 @@ public class LastEventVersionCodeRulesManagerTest extends BaseTest {
     private FakeSettings<Integer> fakeSettings;
 
     @Mock
-    private ILogger mockLogger;
-    @Mock
     private IAppInfoProvider mockAppInfoProvider;
     @Mock
     private IEvent mockEvent;
@@ -55,7 +52,7 @@ public class LastEventVersionCodeRulesManagerTest extends BaseTest {
         fakeSettings = new FakeSettings<>();
 
         lastEventVersionCodeRulesManager
-                = new LastEventVersionCodeRulesManager(fakeSettings, mockAppInfoProvider, mockLogger);
+                = new LastEventVersionCodeRulesManager(fakeSettings, mockAppInfoProvider);
 
         when(mockEvent.getTrackingKey()).thenReturn(DEFAULT_MOCK_EVENT_TRACKING_KEY);
         lastEventVersionCodeRulesManager.addEventBasedRule(mockEvent, mockEventBasedRule);

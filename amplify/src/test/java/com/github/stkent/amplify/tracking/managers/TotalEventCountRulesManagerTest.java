@@ -19,11 +19,10 @@ package com.github.stkent.amplify.tracking.managers;
 import android.annotation.SuppressLint;
 import android.support.annotation.NonNull;
 
-import com.github.stkent.amplify.ILogger;
 import com.github.stkent.amplify.helpers.BaseTest;
 import com.github.stkent.amplify.helpers.FakeSettings;
-import com.github.stkent.amplify.tracking.interfaces.IEventBasedRule;
 import com.github.stkent.amplify.tracking.interfaces.IEvent;
+import com.github.stkent.amplify.tracking.interfaces.IEventBasedRule;
 
 import org.junit.Test;
 import org.mockito.Mock;
@@ -39,8 +38,6 @@ public class TotalEventCountRulesManagerTest extends BaseTest {
     private FakeSettings<Integer> fakeSettings;
 
     @Mock
-    private ILogger mockLogger;
-    @Mock
     private IEvent mockEvent;
     @Mock
     private IEventBasedRule<Integer> mockRule;
@@ -49,7 +46,7 @@ public class TotalEventCountRulesManagerTest extends BaseTest {
     public void localSetUp() {
         fakeSettings = new FakeSettings<>();
 
-        totalEventCountRulesManager = new TotalEventCountRulesManager(fakeSettings, mockLogger);
+        totalEventCountRulesManager = new TotalEventCountRulesManager(fakeSettings);
 
         when(mockEvent.getTrackingKey()).thenReturn(DEFAULT_MOCK_EVENT_TRACKING_KEY);
         totalEventCountRulesManager.addEventBasedRule(mockEvent, mockRule);
