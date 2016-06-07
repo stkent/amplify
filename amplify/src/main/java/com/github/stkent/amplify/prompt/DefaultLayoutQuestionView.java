@@ -104,7 +104,7 @@ final class DefaultLayoutQuestionView extends CustomLayoutQuestionView {
      * FrameLayouts, say. If we can't cast to a TextView to obtain a setText method, the button text
      * size will be left unchanged.
      *
-     * @param quoteButtonUnquote the "button" whose text color we wish to set
+     * @param quoteButtonUnquote the "button" whose text size we wish to set
      * @param textSize the text size we wish to apply, in pixels
      */
     private void setQuoteButtonUnquoteTextSize(

@@ -146,7 +146,7 @@ class CustomLayoutQuestionView extends FrameLayout implements IQuestionView {
      * FrameLayouts, say. If we can't cast to a TextView to obtain a setText method, the button text
      * will be left unchanged.
      *
-     * @param quoteButtonUnquote the "button" whose text color we wish to set
+     * @param quoteButtonUnquote the "button" whose text we wish to set
      * @param text the text we wish to apply
      */
     private void setQuoteButtonUnquoteText(
