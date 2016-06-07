@@ -590,8 +590,7 @@ public class ExampleApplication extends Application {
         Amplify.setLogger(new AndroidLogger());
         
         Amplify.initSharedInstance(this)
-               .setFeedbackEmailAddress("someone@example.com")
-               .setAlwaysShow(BuildConfig.DEBUG);
+               .setFeedbackEmailAddress("someone@example.com");
     }
     
 }
