@@ -46,7 +46,9 @@
             app:prompt_view_user_opinion_question_subtitle="2. User Opinion Subtitle"
             app:prompt_view_user_opinion_question_title="1. User Opinion Title"
             app:prompt_view_thanks_display_time_ms="2000"
-            app:prompt_view_text_size="@dimen/prompt_view_text_size_large" />
+            app:prompt_view_text_size="@dimen/prompt_view_text_size_large"
+            app:prompt_view_button_border_width="@dimen/prompt_view_button_border_width"
+            app:prompt_view_button_corner_radius="@dimen/prompt_view_button_corner_radius" />
 
         <com.github.stkent.amplify.prompt.DefaultLayoutPromptView
             android:id="@+id/default_layout_prompt_view_code_config"

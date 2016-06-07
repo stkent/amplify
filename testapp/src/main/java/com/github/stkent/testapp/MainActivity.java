@@ -66,6 +66,10 @@ public class MainActivity extends AppCompatActivity {
                             .setNegativeButtonBorderColor(Color.parseColor("#999999"))
                             .setCustomTextSizePx(getResources()
                                     .getDimensionPixelSize(R.dimen.prompt_view_text_size_large))
+                            .setButtonBorderWidthPx(getResources()
+                                    .getDimensionPixelSize(R.dimen.prompt_view_button_border_width))
+                            .setButtonCornerRadiusPx(getResources()
+                                    .getDimensionPixelSize(R.dimen.prompt_view_button_corner_radius))
                             .build();
 
             defaultLayoutPromptView.applyBaseConfig(baseDefaultLayoutPromptViewConfig);
