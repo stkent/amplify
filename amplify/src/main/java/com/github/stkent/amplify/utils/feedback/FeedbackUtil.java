@@ -19,32 +19,27 @@ package com.github.stkent.amplify.utils.feedback;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
 import android.support.annotation.NonNull;
 
 import com.github.stkent.amplify.tracking.Amplify;
-import com.github.stkent.amplify.tracking.interfaces.IAppFeedbackDataProvider;
 import com.github.stkent.amplify.tracking.interfaces.IEnvironmentCapabilitiesProvider;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-import java.util.TimeZone;
+import com.github.stkent.amplify.tracking.interfaces.IFeedbackDataProvider;
 
 public final class FeedbackUtil {
 
-    private static final String DEFAULT_EMAIL_SUBJECT_LINE_SUFFIX = " Android App Feedback";
-
-    private final IAppFeedbackDataProvider appFeedbackDataProvider;
+    private final IFeedbackDataProvider feedbackDataProvider;
+    private final IEmailContentProvider emailContentProvider;
     private final IEnvironmentCapabilitiesProvider environmentCapabilitiesProvider;
     private final String feedbackEmailAddress;
 
     public FeedbackUtil(
-            @NonNull final IAppFeedbackDataProvider appFeedbackDataProvider,
+            @NonNull final IFeedbackDataProvider feedbackDataProvider,
+            @NonNull final IEmailContentProvider emailContentProvider,
             @NonNull final IEnvironmentCapabilitiesProvider environmentCapabilitiesProvider,
             @NonNull final String feedbackEmailAddress) {
 
-        this.appFeedbackDataProvider = appFeedbackDataProvider;
+        this.feedbackDataProvider = feedbackDataProvider;
+        this.emailContentProvider = emailContentProvider;
         this.environmentCapabilitiesProvider = environmentCapabilitiesProvider;
         this.feedbackEmailAddress = feedbackEmailAddress;
     }
@@ -68,43 +63,13 @@ public final class FeedbackUtil {
         final Intent result = new Intent(Intent.ACTION_SENDTO);
         result.setData(Uri.parse("mailto:"));
         result.putExtra(Intent.EXTRA_EMAIL, new String[]{feedbackEmailAddress});
-        result.putExtra(Intent.EXTRA_SUBJECT, getEmailSubjectLine());
-        result.putExtra(Intent.EXTRA_TEXT, getAppInfoString());
+        result.putExtra(Intent.EXTRA_SUBJECT,
+                emailContentProvider.getEmailSubjectLine(feedbackDataProvider));
+
+        result.putExtra(Intent.EXTRA_TEXT,
+                emailContentProvider.getInitialEmailBody(feedbackDataProvider));
+
         return result;
-    }
-
-    @NonNull
-    private String getEmailSubjectLine() {
-        return appFeedbackDataProvider.getAppNameString() + DEFAULT_EMAIL_SUBJECT_LINE_SUFFIX;
-    }
-
-    @NonNull
-    private String getAppInfoString() {
-        return    "My Device: " + appFeedbackDataProvider.getDeviceName()
-                + "\n"
-                + "App Version: " + appFeedbackDataProvider.getVersionDisplayString()
-                + "\n"
-                + "Android Version: " + getAndroidOsVersionDisplayString()
-                + "\n"
-                + "Time Stamp: " + getCurrentUtcTimeStringForDate(new Date())
-                + "\n"
-                + "---------------------"
-                + "\n\n";
-    }
-
-    @NonNull
-    private String getAndroidOsVersionDisplayString() {
-        return String.format("%s (%s)", Build.VERSION.RELEASE, Build.VERSION.SDK_INT);
-    }
-
-    @NonNull
-    private String getCurrentUtcTimeStringForDate(final Date date) {
-        final SimpleDateFormat simpleDateFormat
-                = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss z", Locale.getDefault());
-
-        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-
-        return simpleDateFormat.format(date);
     }
 
 }

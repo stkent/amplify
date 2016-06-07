@@ -22,7 +22,10 @@ Respectfully request feedback in your Android app.
 - [Customizing](#customizing)
   - [Prompt Timing](#prompt-timing-1)
   - [Prompt UI](#prompt-ui-1)
-- [Debug Settings](#debug-settings)
+  - [Feedback Emails](#feedback-emails)
+- [Debug Builds](#debug-builds)
+  - [Logging](#logging)
+  - [Debug Settings](#debug-settings)
 - [Resetting](#resetting)
 - [Case Studies](#case-studies)
 - [License](#license)
@@ -281,7 +284,7 @@ _amplify_ provides two configurable prompt UIs. The test app associated with thi
 
 | Test app UI; use me to explore!  |
 |----------------------------------|
-| <img src="https://raw.githubusercontent.com/stkent/amplify/master/assets/testapp.png" /> |
+| <img src="https://raw.githubusercontent.com/stkent/amplify/master/assets/testapp.png" width="50%" /> |
 
 ### Default Layout
 
@@ -550,9 +553,32 @@ To provide fully-custom views for each phase of the typical prompt flow, impleme
 
 To provide a totally custom experience in which _amplify_ does not manage the prompt/rating/feedback UI flows at all, replace any calls to `promptIfReady` with calls to `shouldPrompt`. This method will evaluate all rules and provide a boolean that indicates whether every provided rule is currently satisfied. You may then use this hook to begin your own feedback request flow. Again, if you choose this route be aware that you are responsible for maintaining prompt state through orientation changes (if desired).
 
-# Logging
+## Feedback Emails
 
-By default, logging is disabled. To enable it, call `Amplify.setLogger` before initializing the shared `Amplify` instance. The provided `AndroidLogger` class will be an appropriate choice for most users. If you instead wish to route _amplify_ logs into an existing logging framework, you may supply your own implementation of the `ILogger` interface here instead.
+To customize the subject line and pre-filled body of critical feedback emails, pass an implementation of the `IEmailContentProvider` interface to the `Amplify` instance method `setFeedbackEmailContentProvider`:
+
+```java
+public class ExampleApplication extends Application {
+    
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        
+        Amplify.initSharedInstance(this)
+               .setFeedbackEmailAddress("someone@example.com")
+               .setFeedbackEmailContentProvider(new CustomEmailContentProvider());
+    }
+    
+}
+```
+
+# Debug Builds
+
+The delayed nature of _amplify_ prompts can make it hard to test effectively when integrated. We provide the following capabilities to help with this.
+
+## Logging
+
+By default, logging is disabled. To enable it, call the static method `Amplify.setLogger` _before_ initializing the shared `Amplify` instance. The provided `AndroidLogger` class will be an appropriate choice for most users. If you instead wish to route _amplify_ logs into an existing logging framework, you may supply your own implementation of the `ILogger` interface here instead.
 
 ```java
 public class ExampleApplication extends Application {
@@ -571,9 +597,7 @@ public class ExampleApplication extends Application {
 }
 ```
 
-# Debug Settings
-
-The delayed nature of _amplify_ prompts can make it hard to test effectively when integrated. We provide the following debug configuration methods to help with this:
+## Debug Settings
 
 - `setAlwaysShow(final boolean alwaysShow)`: if `alwaysShow` is true, this forces the prompt to show every time. This is useful while tweaking prompt UI. Example usage in debug builds only:
 

@@ -47,10 +47,12 @@ import com.github.stkent.amplify.tracking.rules.MaximumCountRule;
 import com.github.stkent.amplify.tracking.rules.VersionNameChangedRule;
 import com.github.stkent.amplify.utils.ActivityReferenceManager;
 import com.github.stkent.amplify.utils.Constants;
-import com.github.stkent.amplify.utils.feedback.FeedbackUtil;
 import com.github.stkent.amplify.utils.PlayStoreUtil;
 import com.github.stkent.amplify.utils.appinfo.AppInfoUtil;
 import com.github.stkent.amplify.utils.appinfo.IAppInfoProvider;
+import com.github.stkent.amplify.utils.feedback.DefaultEmailContentProvider;
+import com.github.stkent.amplify.utils.feedback.FeedbackUtil;
+import com.github.stkent.amplify.utils.feedback.IEmailContentProvider;
 
 @SuppressWarnings({"PMD.ExcessiveParameterList", "checkstyle:parameternumber"})
 public final class Amplify implements IEventListener {
@@ -61,10 +63,8 @@ public final class Amplify implements IEventListener {
 
     // Begin logging
 
-    @NonNull
     private static ILogger sharedLogger = new NoOpLogger();
 
-    @NonNull
     public static ILogger getLogger() {
         return sharedLogger;
     }
@@ -122,6 +122,7 @@ public final class Amplify implements IEventListener {
     private boolean alwaysShow;
     private String packageName;
     private String feedbackEmailAddress;
+    private IEmailContentProvider emailContentProvider = new DefaultEmailContentProvider();
 
     // End instance fields
     // Begin constructors
@@ -197,6 +198,13 @@ public final class Amplify implements IEventListener {
 
     public Amplify setFeedbackEmailAddress(@NonNull final String feedbackEmailAddress) {
         this.feedbackEmailAddress = feedbackEmailAddress;
+        return this;
+    }
+
+    public Amplify setFeedbackEmailContentProvider(
+            @NonNull final IEmailContentProvider emailContentProvider) {
+
+        this.emailContentProvider = emailContentProvider;
         return this;
     }
 
@@ -311,7 +319,8 @@ public final class Amplify implements IEventListener {
 
             if (activity != null) {
                 final FeedbackUtil feedbackUtil = new FeedbackUtil(
-                        new AppFeedbackDataProvider(appInfoProvider),
+                        new FeedbackDataProvider(appInfoProvider),
+                        emailContentProvider,
                         new EnvironmentCapabilitiesProvider(appInfoProvider),
                         feedbackEmailAddress);
 
