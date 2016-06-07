@@ -1,5 +1,12 @@
 # Change Log
 
+## v1.5.0
+
+_2016-06-07_
+
+- **NOTE**: The method `Amplify.setLogLevel(LogLevel)` has been removed. Logging is now enabled by calling `Amplify.setLogger(ILogger)` before any other configuration occurs.
+- The subject line and pre-filled body for critical feedback emails can now be customized.
+
 ## v1.4.0
 
 _2016-06-06_
