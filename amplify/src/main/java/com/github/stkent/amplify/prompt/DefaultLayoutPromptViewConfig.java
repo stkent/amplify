@@ -38,6 +38,7 @@ public final class DefaultLayoutPromptViewConfig implements Parcelable {
     private static final int DEFAULT_BACKGROUND_COLOR = 0xFF3C5A96;
 
     private static final int DEFAULT_GET_COLOR_VALUE_IF_UNDEFINED = Integer.MAX_VALUE;
+    private static final int DEFAULT_GET_DIMENSION_VALUE_IF_UNDEFINED = Integer.MAX_VALUE;
 
     /**
      * @return <code>primaryColor</code> if it is non-null; <code>defaultColor</code> otherwise
@@ -66,6 +67,28 @@ public final class DefaultLayoutPromptViewConfig implements Parcelable {
         return null;
     }
 
+    /**
+     * @return the dimension in px defined for the attribute at <code>index</code>, if defined; null
+     * otherwise
+     */
+    @Nullable
+    private static Integer suppliedDimensionOrNull(
+            @Nullable final TypedArray typedArray,
+            @StyleableRes final int index) {
+
+        if (typedArray != null) {
+            final int dimensionPixelSize = typedArray.getDimensionPixelSize(
+                    index,
+                    DEFAULT_GET_DIMENSION_VALUE_IF_UNDEFINED);
+
+            return dimensionPixelSize != DEFAULT_GET_DIMENSION_VALUE_IF_UNDEFINED
+                    ? dimensionPixelSize
+                    : null;
+        }
+
+        return null;
+    }
+
     @Nullable private final Integer foregroundColor;
     @Nullable private final Integer backgroundColor;
     @Nullable private final Integer titleTextColor;
@@ -76,6 +99,9 @@ public final class DefaultLayoutPromptViewConfig implements Parcelable {
     @Nullable private final Integer negativeButtonTextColor;
     @Nullable private final Integer negativeButtonBackgroundColor;
     @Nullable private final Integer negativeButtonBorderColor;
+    @Nullable private final Integer customTextSizePx;
+    @Nullable private final Integer customButtonBorderWidthPx;
+    @Nullable private final Integer customButtonCornerRadiusPx;
 
     public DefaultLayoutPromptViewConfig(@Nullable final TypedArray typedArray) {
         foregroundColor = suppliedColorOrNull(
@@ -117,6 +143,18 @@ public final class DefaultLayoutPromptViewConfig implements Parcelable {
         negativeButtonBorderColor = suppliedColorOrNull(
                 typedArray,
                 R.styleable.DefaultLayoutPromptView_prompt_view_negative_button_border_color);
+
+        customTextSizePx = suppliedDimensionOrNull(
+                typedArray,
+                R.styleable.DefaultLayoutPromptView_prompt_view_text_size);
+
+        customButtonBorderWidthPx = suppliedDimensionOrNull(
+                typedArray,
+                R.styleable.DefaultLayoutPromptView_prompt_view_button_border_width);
+
+        customButtonCornerRadiusPx = suppliedDimensionOrNull(
+                typedArray,
+                R.styleable.DefaultLayoutPromptView_prompt_view_button_corner_radius);
     }
 
     protected DefaultLayoutPromptViewConfig(
@@ -129,7 +167,10 @@ public final class DefaultLayoutPromptViewConfig implements Parcelable {
             @Nullable final Integer positiveButtonBorderColor,
             @Nullable final Integer negativeButtonTextColor,
             @Nullable final Integer negativeButtonBackgroundColor,
-            @Nullable final Integer negativeButtonBorderColor) {
+            @Nullable final Integer negativeButtonBorderColor,
+            @Nullable final Integer customTextSizePx,
+            @Nullable final Integer customButtonBorderWidthPx,
+            @Nullable final Integer customButtonCornerRadiusPx) {
 
         this.foregroundColor               = foregroundColor;
         this.backgroundColor               = backgroundColor;
@@ -141,6 +182,9 @@ public final class DefaultLayoutPromptViewConfig implements Parcelable {
         this.negativeButtonTextColor       = negativeButtonTextColor;
         this.negativeButtonBackgroundColor = negativeButtonBackgroundColor;
         this.negativeButtonBorderColor     = negativeButtonBorderColor;
+        this.customTextSizePx              = customTextSizePx;
+        this.customButtonBorderWidthPx     = customButtonBorderWidthPx;
+        this.customButtonCornerRadiusPx    = customButtonCornerRadiusPx;
     }
 
     @ColorInt
@@ -188,6 +232,21 @@ public final class DefaultLayoutPromptViewConfig implements Parcelable {
         return defaultIfNull(negativeButtonBorderColor, getForegroundColor());
     }
 
+    @Nullable
+    public Integer getCustomTextSizePx() {
+        return customTextSizePx;
+    }
+
+    @Nullable
+    public Integer getCustomButtonBorderWidthPx() {
+        return customButtonBorderWidthPx;
+    }
+
+    @Nullable
+    public Integer getCustomButtonCornerRadiusPx() {
+        return customButtonCornerRadiusPx;
+    }
+
     @ColorInt
     private int getForegroundColor() {
         return defaultIfNull(foregroundColor, DEFAULT_FOREGROUND_COLOR);
@@ -210,6 +269,9 @@ public final class DefaultLayoutPromptViewConfig implements Parcelable {
         @Nullable private Integer negativeButtonTextColor;
         @Nullable private Integer negativeButtonBackgroundColor;
         @Nullable private Integer negativeButtonBorderColor;
+        @Nullable private Integer customTextSizePx;
+        @Nullable private Integer customButtonBorderWidthPx;
+        @Nullable private Integer customButtonCornerRadiusPx;
 
         public Builder setForegroundColor(@ColorInt final int foregroundColor) {
             this.foregroundColor = foregroundColor;
@@ -265,6 +327,21 @@ public final class DefaultLayoutPromptViewConfig implements Parcelable {
             return this;
         }
 
+        public Builder setCustomTextSizePx(final int customTextSizePx) {
+            this.customTextSizePx = customTextSizePx;
+            return this;
+        }
+
+        public Builder setButtonBorderWidthPx(final int customButtonBorderWidthPx) {
+            this.customButtonBorderWidthPx = customButtonBorderWidthPx;
+            return this;
+        }
+
+        public Builder setButtonCornerRadiusPx(final int customButtonCornerRadiusPx) {
+            this.customButtonCornerRadiusPx = customButtonCornerRadiusPx;
+            return this;
+        }
+
         public DefaultLayoutPromptViewConfig build() {
             return new DefaultLayoutPromptViewConfig(
                     foregroundColor,
@@ -276,7 +353,10 @@ public final class DefaultLayoutPromptViewConfig implements Parcelable {
                     positiveButtonBorderColor,
                     negativeButtonTextColor,
                     negativeButtonBackgroundColor,
-                    negativeButtonBorderColor);
+                    negativeButtonBorderColor,
+                    customTextSizePx,
+                    customButtonBorderWidthPx,
+                    customButtonCornerRadiusPx);
         }
 
     }
@@ -300,6 +380,9 @@ public final class DefaultLayoutPromptViewConfig implements Parcelable {
         dest.writeValue(this.negativeButtonTextColor);
         dest.writeValue(this.negativeButtonBackgroundColor);
         dest.writeValue(this.negativeButtonBorderColor);
+        dest.writeValue(this.customTextSizePx);
+        dest.writeValue(this.customButtonBorderWidthPx);
+        dest.writeValue(this.customButtonCornerRadiusPx);
     }
 
     @SuppressLint("ParcelClassLoader")
@@ -314,6 +397,9 @@ public final class DefaultLayoutPromptViewConfig implements Parcelable {
         this.negativeButtonTextColor = (Integer) in.readValue(null);
         this.negativeButtonBackgroundColor = (Integer) in.readValue(null);
         this.negativeButtonBorderColor = (Integer) in.readValue(null);
+        this.customTextSizePx = (Integer) in.readValue(null);
+        this.customButtonBorderWidthPx = (Integer) in.readValue(null);
+        this.customButtonCornerRadiusPx = (Integer) in.readValue(null);
     }
 
     public static final Parcelable.Creator<DefaultLayoutPromptViewConfig> CREATOR

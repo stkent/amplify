@@ -106,13 +106,8 @@ class CustomLayoutQuestionView extends FrameLayout implements IQuestionView {
     public void bind(@NonNull final IQuestion question) {
         titleTextView.setText(question.getTitle());
 
-        if (positiveButton instanceof TextView) {
-            ((TextView) positiveButton).setText(question.getPositiveButtonLabel());
-        }
-
-        if (negativeButton instanceof TextView) {
-            ((TextView) negativeButton).setText(question.getNegativeButtonLabel());
-        }
+        setQuoteButtonUnquoteText(positiveButton, question.getPositiveButtonLabel());
+        setQuoteButtonUnquoteText(negativeButton, question.getNegativeButtonLabel());
 
         final String subtitle = question.getSubTitle();
 
@@ -145,4 +140,22 @@ class CustomLayoutQuestionView extends FrameLayout implements IQuestionView {
     protected View getNegativeButton() {
         return negativeButton;
     }
+
+    /**
+     * We are defensive here, because it's not uncommon to make "buttons" out of UI components like
+     * FrameLayouts, say. If we can't cast to a TextView to obtain a setText method, the button text
+     * will be left unchanged.
+     *
+     * @param quoteButtonUnquote the "button" whose text we wish to set
+     * @param text the text we wish to apply
+     */
+    private void setQuoteButtonUnquoteText(
+            @NonNull final View quoteButtonUnquote,
+            @NonNull final String text) {
+
+        if (quoteButtonUnquote instanceof TextView) {
+            ((TextView) quoteButtonUnquote).setText(text);
+        }
+    }
+
 }

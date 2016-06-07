@@ -81,7 +81,7 @@ These components are designed to complement each other, and combining them as de
 
 ```groovy
 dependencies {
-    compile 'com.github.stkent:amplify:1.3.1'
+    compile 'com.github.stkent:amplify:1.4.0'
 }
 ```
 
@@ -318,7 +318,10 @@ Provided by the `DefaultLayoutPromptView` class. The basic layouts of the questi
     app:prompt_view_negative_button_text_color="@color/custom_negative_button_text_color"
     app:prompt_view_negative_button_background_color="@color/custom_negative_button_background_color"
     app:prompt_view_negative_button_border_color="@color/custom_negative_button_border_color"
-    app:prompt_view_thanks_display_time_ms="2000" />
+    app:prompt_view_thanks_display_time_ms="2000"
+    app:prompt_view_text_size="@dimen/prompt_view_text_size_large"
+    app:prompt_view_button_border_width="@dimen/prompt_view_button_border_width"
+    app:prompt_view_button_corner_radius="@dimen/prompt_view_button_corner_radius" />
 ```
 
 All attributes are optional. The most important are `prompt_view_foreground_color` and `prompt_view_background_color`. All other color attributes default to one of these two colors, so most use-cases can probably be supported by setting one or both of these attributes only.
@@ -329,35 +332,41 @@ It is also possible to configure this layout in code. To do so, users apply a `B
 DefaultLayoutPromptView promptView = (DefaultLayoutPromptView) findViewById(R.id.prompt_view);
 
 final BasePromptViewConfig basePromptViewConfig
-        = new BasePromptViewConfig.Builder()
-                .setUserOpinionQuestionTitle("Custom Title")
-                .setUserOpinionQuestionSubtitle("Custom Subtitle")
-                .setUserOpinionQuestionPositiveButtonLabel("Custom Button Label")
-                .setUserOpinionQuestionNegativeButtonLabel("Custom Button Label")
-                .setPositiveFeedbackQuestionTitle("Custom Title")
-                .setPositiveFeedbackQuestionSubtitle("Custom Subtitle")
-                .setPositiveFeedbackQuestionPositiveButtonLabel("Custom Button Label")
-                .setPositiveFeedbackQuestionNegativeButtonLabel("Custom Button Label")
-                .setCriticalFeedbackQuestionTitle("Custom Title")
-                .setCriticalFeedbackQuestionSubtitle("Custom Subtitle")
-                .setCriticalFeedbackQuestionPositiveButtonLabel("Custom Button Label")
-                .setCriticalFeedbackQuestionNegativeButtonLabel("Custom Button Label")
-                .setThanksDisplayTimeMs(2000)
-                .build();
+    = new BasePromptViewConfig.Builder()
+        .setUserOpinionQuestionTitle("Custom Title")
+        .setUserOpinionQuestionSubtitle("Custom Subtitle")
+        .setUserOpinionQuestionPositiveButtonLabel("Custom Button Label")
+        .setUserOpinionQuestionNegativeButtonLabel("Custom Button Label")
+        .setPositiveFeedbackQuestionTitle("Custom Title")
+        .setPositiveFeedbackQuestionSubtitle("Custom Subtitle")
+        .setPositiveFeedbackQuestionPositiveButtonLabel("Custom Button Label")
+        .setPositiveFeedbackQuestionNegativeButtonLabel("Custom Button Label")
+        .setCriticalFeedbackQuestionTitle("Custom Title")
+        .setCriticalFeedbackQuestionSubtitle("Custom Subtitle")
+        .setCriticalFeedbackQuestionPositiveButtonLabel("Custom Button Label")
+        .setCriticalFeedbackQuestionNegativeButtonLabel("Custom Button Label")
+        .setThanksDisplayTimeMs(2000)
+        .build();
 
 final DefaultLayoutPromptViewConfig defaultLayoutPromptViewConfig
-        = new DefaultLayoutPromptViewConfig.Builder()
-                .setForegroundColor(Color.parseColor("#FF0000"))
-                .setBackgroundColor(Color.parseColor("#FF9900"))
-                .setTitleTextColor(Color.parseColor("#33FF00"))
-                .setSubtitleTextColor(Color.parseColor("#00FFFF"))
-                .setPositiveButtonTextColor(Color.parseColor("#CC00FF"))
-                .setPositiveButtonBackgroundColor(Color.parseColor("#3300FF"))
-                .setPositiveButtonBorderColor(Color.parseColor("#0066FF"))
-                .setNegativeButtonTextColor(Color.parseColor("#FFFF00"))
-                .setNegativeButtonBackgroundColor(Color.parseColor("#FF0000"))
-                .setNegativeButtonBorderColor(Color.parseColor("#999999"))
-                .build();
+    = new DefaultLayoutPromptViewConfig.Builder()
+        .setForegroundColor(Color.parseColor("#FF0000"))
+        .setBackgroundColor(Color.parseColor("#FF9900"))
+        .setTitleTextColor(Color.parseColor("#33FF00"))
+        .setSubtitleTextColor(Color.parseColor("#00FFFF"))
+        .setPositiveButtonTextColor(Color.parseColor("#CC00FF"))
+        .setPositiveButtonBackgroundColor(Color.parseColor("#3300FF"))
+        .setPositiveButtonBorderColor(Color.parseColor("#0066FF"))
+        .setNegativeButtonTextColor(Color.parseColor("#FFFF00"))
+        .setNegativeButtonBackgroundColor(Color.parseColor("#FF0000"))
+        .setNegativeButtonBorderColor(Color.parseColor("#999999"))
+        .setCustomTextSizePx(getResources()
+            .getDimensionPixelSize(R.dimen.prompt_view_text_size_large))
+        .setButtonBorderWidthPx(getResources()
+            .getDimensionPixelSize(R.dimen.prompt_view_button_border_width))
+        .setButtonCornerRadiusPx(getResources()
+            .getDimensionPixelSize(R.dimen.prompt_view_button_corner_radius))
+        .build();
 
 promptView.applyBaseConfig(basePromptViewConfig);
 promptView.applyConfig(defaultLayoutPromptViewConfig);
@@ -425,25 +434,25 @@ As before, it is also possible to configure the `CustomLayoutPromptView` in code
 CustomLayoutPromptView promptView = (CustomLayoutPromptView) findViewById(R.id.prompt_view);
 
 final BasePromptViewConfig basePromptViewConfig
-        = new BasePromptViewConfig.Builder()
-                .setUserOpinionQuestionTitle("Custom Title")
-                .setUserOpinionQuestionSubtitle("Custom Subtitle")
-                .setUserOpinionQuestionPositiveButtonLabel("Custom Button Label")
-                .setUserOpinionQuestionNegativeButtonLabel("Custom Button Label")
-                .setPositiveFeedbackQuestionTitle("Custom Title")
-                .setPositiveFeedbackQuestionSubtitle("Custom Subtitle")
-                .setPositiveFeedbackQuestionPositiveButtonLabel("Custom Button Label")
-                .setPositiveFeedbackQuestionNegativeButtonLabel("Custom Button Label")
-                .setCriticalFeedbackQuestionTitle("Custom Title")
-                .setCriticalFeedbackQuestionSubtitle("Custom Subtitle")
-                .setCriticalFeedbackQuestionPositiveButtonLabel("Custom Button Label")
-                .setCriticalFeedbackQuestionNegativeButtonLabel("Custom Button Label")
-                .setThanksDisplayTimeMs(2000)
-                .build();
+    = new BasePromptViewConfig.Builder()
+        .setUserOpinionQuestionTitle("Custom Title")
+        .setUserOpinionQuestionSubtitle("Custom Subtitle")
+        .setUserOpinionQuestionPositiveButtonLabel("Custom Button Label")
+        .setUserOpinionQuestionNegativeButtonLabel("Custom Button Label")
+        .setPositiveFeedbackQuestionTitle("Custom Title")
+        .setPositiveFeedbackQuestionSubtitle("Custom Subtitle")
+        .setPositiveFeedbackQuestionPositiveButtonLabel("Custom Button Label")
+        .setPositiveFeedbackQuestionNegativeButtonLabel("Custom Button Label")
+        .setCriticalFeedbackQuestionTitle("Custom Title")
+        .setCriticalFeedbackQuestionSubtitle("Custom Subtitle")
+        .setCriticalFeedbackQuestionPositiveButtonLabel("Custom Button Label")
+        .setCriticalFeedbackQuestionNegativeButtonLabel("Custom Button Label")
+        .setThanksDisplayTimeMs(2000)
+        .build();
 
 final CustomLayoutPromptViewConfig customLayoutPromptViewConfig
-        = new CustomLayoutPromptViewConfig(
-                R.layout.custom_question_view, R.layout.custom_thanks_view);
+    = new CustomLayoutPromptViewConfig(
+        R.layout.custom_question_view, R.layout.custom_thanks_view);
 
 promptView.applyBaseConfig(basePromptViewConfig);
 promptView.applyConfig(customLayoutPromptViewConfig);
