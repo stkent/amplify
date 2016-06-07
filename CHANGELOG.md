@@ -6,9 +6,9 @@ _2016-06-06_
 
 - Prompt views being rendered by Android Studio's Layout Editor Preview no longer cause an `IllegalStateException` (issue #152);
 - Users can now customize more attributes of the `DefaultLayoutPromptView` in both xml and code:
-   - Text size;
-	- Button border width;
-	- Button corner radius.
+  - Text size;
+  - Button border width;
+  - Button corner radius.
 
 ## v1.3.1
 
