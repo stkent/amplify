@@ -14,7 +14,7 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package com.github.stkent.amplify.utils;
+package com.github.stkent.amplify.utils.feedback;
 
 import android.app.Activity;
 import android.content.Intent;

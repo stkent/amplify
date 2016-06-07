@@ -47,7 +47,7 @@ import com.github.stkent.amplify.tracking.rules.MaximumCountRule;
 import com.github.stkent.amplify.tracking.rules.VersionNameChangedRule;
 import com.github.stkent.amplify.utils.ActivityReferenceManager;
 import com.github.stkent.amplify.utils.Constants;
-import com.github.stkent.amplify.utils.FeedbackUtil;
+import com.github.stkent.amplify.utils.feedback.FeedbackUtil;
 import com.github.stkent.amplify.utils.PlayStoreUtil;
 import com.github.stkent.amplify.utils.appinfo.AppInfoUtil;
 import com.github.stkent.amplify.utils.appinfo.IAppInfoProvider;
