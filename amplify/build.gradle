@@ -89,7 +89,7 @@ gnag {
     failOnError true
 
     github {
-        repoName 'stkent/amplify'
+        repoName libraryGitHubRepoName
     }
 
     checkstyle {
