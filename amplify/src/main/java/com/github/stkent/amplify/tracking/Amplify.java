@@ -124,10 +124,7 @@ public final class Amplify implements IEventListener {
     // End instance fields
     // Begin constructors
 
-    private Amplify(
-            @NonNull final Application app,
-            @NonNull final String backingSharedPreferencesName) {
-
+    private Amplify(@NonNull final Application app, @NonNull final String backingSharedPreferencesName) {
         final Context appContext = app.getApplicationContext();
 
         AppInfoUtil.initialize(appContext);
