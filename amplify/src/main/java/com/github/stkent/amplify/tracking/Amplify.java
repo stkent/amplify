@@ -23,6 +23,7 @@ import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 
+import com.github.stkent.amplify.feedback.IFeedbackCollector;
 import com.github.stkent.amplify.logging.ILogger;
 import com.github.stkent.amplify.logging.NoOpLogger;
 import com.github.stkent.amplify.prompt.interfaces.IPromptView;
@@ -47,12 +48,9 @@ import com.github.stkent.amplify.tracking.rules.MaximumCountRule;
 import com.github.stkent.amplify.tracking.rules.VersionNameChangedRule;
 import com.github.stkent.amplify.utils.ActivityReferenceManager;
 import com.github.stkent.amplify.utils.Constants;
-import com.github.stkent.amplify.utils.PlayStoreUtil;
 import com.github.stkent.amplify.utils.appinfo.AppInfoUtil;
 import com.github.stkent.amplify.utils.appinfo.IAppInfoProvider;
 import com.github.stkent.amplify.utils.feedback.DefaultEmailContentProvider;
-import com.github.stkent.amplify.utils.feedback.FeedbackUtil;
-import com.github.stkent.amplify.utils.feedback.IEmailContentProvider;
 
 @SuppressWarnings({"PMD.ExcessiveParameterList", "checkstyle:parameternumber"})
 public final class Amplify implements IEventListener {
@@ -120,9 +118,8 @@ public final class Amplify implements IEventListener {
     private final IEventsManager<Integer> totalEventCountRulesManager;
 
     private boolean alwaysShow;
-    private String packageName;
-    private String feedbackEmailAddress;
-    private IEmailContentProvider emailContentProvider = new DefaultEmailContentProvider();
+    private IFeedbackCollector positiveFeedbackCollector;
+    private IFeedbackCollector criticalFeedbackCollector;
 
     // End instance fields
     // Begin constructors
@@ -196,15 +193,13 @@ public final class Amplify implements IEventListener {
     // End constructors
     // Begin configuration methods
 
-    public Amplify setFeedbackEmailAddress(@NonNull final String feedbackEmailAddress) {
-        this.feedbackEmailAddress = feedbackEmailAddress;
+    public Amplify setPositiveFeedbackCollector(@NonNull final IFeedbackCollector feedbackCollector) {
+        positiveFeedbackCollector = feedbackCollector;
         return this;
     }
 
-    public Amplify setFeedbackEmailContentProvider(
-            @NonNull final IEmailContentProvider emailContentProvider) {
-
-        this.emailContentProvider = emailContentProvider;
+    public Amplify setCriticalFeedbackCollector(@NonNull final IFeedbackCollector feedbackCollector) {
+        criticalFeedbackCollector = feedbackCollector;
         return this;
     }
 
@@ -291,11 +286,6 @@ public final class Amplify implements IEventListener {
         return this;
     }
 
-    public Amplify setPackageName(@NonNull final String packageName) {
-        this.packageName = packageName;
-        return this;
-    }
-
     // End debug configuration methods
     // Begin update methods
 
@@ -312,19 +302,13 @@ public final class Amplify implements IEventListener {
             final Activity activity = activityReferenceManager.getValidatedActivity();
 
             if (activity != null) {
-                PlayStoreUtil.openPlayStoreToRate(activity, packageName);
+                positiveFeedbackCollector.collectFeedback(activity, appInfoProvider, new DefaultEmailContentProvider());
             }
         } else if (event == PromptInteractionEvent.USER_GAVE_CRITICAL_FEEDBACK) {
             final Activity activity = activityReferenceManager.getValidatedActivity();
 
             if (activity != null) {
-                final FeedbackUtil feedbackUtil = new FeedbackUtil(
-                        new FeedbackDataProvider(appInfoProvider),
-                        emailContentProvider,
-                        new EnvironmentCapabilitiesProvider(appInfoProvider),
-                        feedbackEmailAddress);
-
-                feedbackUtil.showFeedbackEmailChooser(activity);
+                criticalFeedbackCollector.collectFeedback(activity, appInfoProvider, new DefaultEmailContentProvider());
             }
         }
     }
@@ -333,9 +317,8 @@ public final class Amplify implements IEventListener {
     // Begin query methods
 
     public void promptIfReady(@NonNull final IPromptView promptView) {
-        if (feedbackEmailAddress == null) {
-            throw new IllegalStateException(
-                    "Must provide email address before attempting to prompt.");
+        if (!isConfigured()) {
+            throw new IllegalStateException("Must finish configuration before attempting to prompt.");
         }
 
         if (shouldPrompt()) {
@@ -355,5 +338,9 @@ public final class Amplify implements IEventListener {
     }
 
     // End query methods
+
+    private boolean isConfigured() {
+        return positiveFeedbackCollector != null && criticalFeedbackCollector != null;
+    }
 
 }
