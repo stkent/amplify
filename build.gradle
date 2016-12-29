@@ -17,3 +17,5 @@ allprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+
+ext.supportLibraryVersion = "25.1.0"
