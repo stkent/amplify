@@ -21,6 +21,9 @@ import android.support.annotation.NonNull;
 
 public interface IFeedbackCollector {
 
+    /**
+     * @return true to indicate that feedback collection has been started successfully; false otherwise.
+     */
     boolean collectFeedback(@NonNull Activity currentActivity);
 
 }

@@ -253,23 +253,25 @@ public final class Amplify implements IEventListener {
         if (event == USER_GAVE_POSITIVE_FEEDBACK) {
             final Activity activity = activityReferenceManager.getValidatedActivity();
 
-            if (activity != null) {
-                for (final IFeedbackCollector positiveFeedbackCollector : positiveFeedbackCollectors) {
-                    final boolean feedbackCollected = positiveFeedbackCollector.collectFeedback(activity);
-                    if (feedbackCollected) {
-                        return;
-                    }
+            if (activity == null) {
+                return;
+            }
+
+            for (final IFeedbackCollector positiveFeedbackCollector : positiveFeedbackCollectors) {
+                if (positiveFeedbackCollector.collectFeedback(activity)) {
+                    return;
                 }
             }
         } else if (event == USER_GAVE_CRITICAL_FEEDBACK) {
             final Activity activity = activityReferenceManager.getValidatedActivity();
 
-            if (activity != null) {
-                for (final IFeedbackCollector criticalFeedbackCollector : criticalFeedbackCollectors) {
-                    final boolean feedbackCollected = criticalFeedbackCollector.collectFeedback(activity);
-                    if (feedbackCollected) {
-                        return;
-                    }
+            if (activity == null) {
+                return;
+            }
+
+            for (final IFeedbackCollector criticalFeedbackCollector : criticalFeedbackCollectors) {
+                if (criticalFeedbackCollector.collectFeedback(activity)) {
+                    return;
                 }
             }
         }
