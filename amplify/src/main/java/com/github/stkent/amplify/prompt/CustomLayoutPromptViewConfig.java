@@ -36,18 +36,9 @@ public final class CustomLayoutPromptViewConfig implements Parcelable {
      * @return the color value for the attribute at <code>index</code>, if defined; null otherwise
      */
     @Nullable
-    private static Integer suppliedLayoutOrNull(
-            @Nullable final TypedArray typedArray,
-            @StyleableRes final int index) {
-
-        if (typedArray != null) {
-            final int layoutResourceId
-                    = typedArray.getResourceId(index, DEFAULT_LAYOUT_RES_ID_IF_UNDEFINED);
-
-            return layoutResourceId != DEFAULT_LAYOUT_RES_ID_IF_UNDEFINED ? layoutResourceId : null;
-        }
-
-        return null;
+    private static Integer suppliedLayoutOrNull(@NonNull final TypedArray typedArray, @StyleableRes final int index) {
+        final int layoutResourceId = typedArray.getResourceId(index, DEFAULT_LAYOUT_RES_ID_IF_UNDEFINED);
+        return layoutResourceId != DEFAULT_LAYOUT_RES_ID_IF_UNDEFINED ? layoutResourceId : null;
     }
 
     @Nullable
@@ -57,13 +48,11 @@ public final class CustomLayoutPromptViewConfig implements Parcelable {
     private final Integer thanksLayout;
 
     public CustomLayoutPromptViewConfig(@NonNull final TypedArray typedArray) {
-        this.questionLayout = suppliedLayoutOrNull(
-                typedArray,
-                R.styleable.CustomLayoutPromptView_prompt_view_question_layout);
+        this.questionLayout =
+                suppliedLayoutOrNull(typedArray, R.styleable.CustomLayoutPromptView_prompt_view_question_layout);
 
-        this.thanksLayout = suppliedLayoutOrNull(
-                typedArray,
-                R.styleable.CustomLayoutPromptView_prompt_view_thanks_layout);
+        this.thanksLayout =
+                suppliedLayoutOrNull(typedArray, R.styleable.CustomLayoutPromptView_prompt_view_thanks_layout);
     }
 
     public CustomLayoutPromptViewConfig(

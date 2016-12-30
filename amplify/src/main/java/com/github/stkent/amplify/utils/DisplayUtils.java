@@ -48,7 +48,7 @@ public final class DisplayUtils {
     }
 
     private DisplayUtils() {
-
+        // This constructor intentionally left blank.
     }
 
 }

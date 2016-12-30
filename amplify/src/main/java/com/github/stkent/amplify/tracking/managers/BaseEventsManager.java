@@ -36,6 +36,7 @@ public abstract class BaseEventsManager<T> implements IEventsManager<T> {
     private static final String AMPLIFY_TRACKING_KEY_PREFIX = "AMPLIFY_";
 
     private final ISettings<T> settings;
+
     private final ConcurrentHashMap<IEvent, List<IEventBasedRule<T>>> internalMap;
 
     @NonNull

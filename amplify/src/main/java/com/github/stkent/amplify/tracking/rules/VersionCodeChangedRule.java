@@ -16,12 +16,27 @@
  */
 package com.github.stkent.amplify.tracking.rules;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.VisibleForTesting;
 
+import com.github.stkent.amplify.App;
 import com.github.stkent.amplify.tracking.interfaces.IEventBasedRule;
-import com.github.stkent.amplify.utils.appinfo.AppInfoUtil;
+
+import static android.support.annotation.VisibleForTesting.PRIVATE;
 
 public final class VersionCodeChangedRule implements IEventBasedRule<Integer> {
+
+    private final int appVersionCode;
+
+    public VersionCodeChangedRule(@NonNull final Context context) {
+        this(new App(context).getVersionCode());
+    }
+
+    @VisibleForTesting(otherwise = PRIVATE)
+    /* package-private */ VersionCodeChangedRule(final int appVersionCode) {
+        this.appVersionCode = appVersionCode;
+    }
 
     @Override
     public boolean shouldAllowFeedbackPromptByDefault() {
@@ -30,19 +45,13 @@ public final class VersionCodeChangedRule implements IEventBasedRule<Integer> {
 
     @Override
     public boolean shouldAllowFeedbackPrompt(@NonNull final Integer cachedEventValue) {
-        return cachedEventValue < getCurrentAppVersionCode();
+        return cachedEventValue < appVersionCode;
     }
 
     @NonNull
     @Override
     public String getDescription() {
-        return "VersionCodeChangedRule with current app version code " + getCurrentAppVersionCode();
-    }
-
-    private int getCurrentAppVersionCode() {
-        // We access the singleton AppInfoProvider instance statically here to make it possible for
-        // library consumers to create new VersionCodeChangedRule instances easily!
-        return AppInfoUtil.getSharedAppInfoProvider().getPackageInfo().versionCode;
+        return "VersionCodeChangedRule with current app version code " + appVersionCode;
     }
 
 }

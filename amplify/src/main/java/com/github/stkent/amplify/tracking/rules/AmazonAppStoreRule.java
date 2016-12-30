@@ -14,18 +14,28 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package com.github.stkent.amplify.utils.feedback;
+package com.github.stkent.amplify.tracking.rules;
 
 import android.support.annotation.NonNull;
 
-import com.github.stkent.amplify.tracking.interfaces.IFeedbackDataProvider;
+import com.github.stkent.amplify.IEnvironment;
+import com.github.stkent.amplify.tracking.interfaces.IEnvironmentBasedRule;
 
-public interface IEmailContentProvider {
+/**
+ * An implementation of {@code IEnvironmentBasedRule} that verifies whether or not the Amazon App Store is installed on
+ * the current device.
+ */
+public final class AmazonAppStoreRule implements IEnvironmentBasedRule {
+
+    @Override
+    public boolean shouldAllowFeedbackPrompt(@NonNull final IEnvironment environment) {
+        return environment.isAmazonAppStoreInstalled();
+    }
 
     @NonNull
-    String getEmailSubjectLine(@NonNull final IFeedbackDataProvider feedbackDataProvider);
-
-    @NonNull
-    String getInitialEmailBody(@NonNull final IFeedbackDataProvider feedbackDataProvider);
+    @Override
+    public String getDescription() {
+        return "AmazonAppStoreRule";
+    }
 
 }

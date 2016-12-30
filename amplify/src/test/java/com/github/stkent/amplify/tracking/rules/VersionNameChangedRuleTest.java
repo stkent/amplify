@@ -17,45 +17,25 @@
 package com.github.stkent.amplify.tracking.rules;
 
 import android.annotation.SuppressLint;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager.NameNotFoundException;
 
 import com.github.stkent.amplify.helpers.BaseTest;
-import com.github.stkent.amplify.utils.appinfo.AppInfoUtil;
-import com.github.stkent.amplify.utils.appinfo.IAppInfoProvider;
 
 import org.junit.Test;
-import org.mockito.Mock;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.when;
 
 public class VersionNameChangedRuleTest extends BaseTest {
-
-    private VersionNameChangedRule versionNameChangedRule;
-
-    @SuppressWarnings("FieldCanBeLocal")
-    private PackageInfo fakePackageInfo;
-
-    @Mock
-    private IAppInfoProvider mockAppInfoProvider;
-
-    @Override
-    public void localSetUp() {
-        versionNameChangedRule = new VersionNameChangedRule();
-
-        fakePackageInfo = new PackageInfo();
-        when(mockAppInfoProvider.getPackageInfo()).thenReturn(fakePackageInfo);
-        AppInfoUtil.setSharedAppInfoProvider(mockAppInfoProvider);
-    }
 
     @SuppressWarnings("ConstantConditions")
     @Test
     public void testThatRuleAllowsPromptIfEventHasNeverOccurred() {
+        // Arrange
+        final String fakeCurrentVersionName = "any string";
+        final VersionNameChangedRule versionNameChangedRule = new VersionNameChangedRule(fakeCurrentVersionName);
+
         // Act
-        final boolean ruleShouldAllowFeedbackPrompt
-                = versionNameChangedRule.shouldAllowFeedbackPromptByDefault();
+        final boolean ruleShouldAllowFeedbackPrompt = versionNameChangedRule.shouldAllowFeedbackPromptByDefault();
 
         // Assert
         assertTrue(
@@ -65,18 +45,15 @@ public class VersionNameChangedRuleTest extends BaseTest {
 
     @SuppressWarnings("UnnecessaryLocalVariable")
     @Test
-    public void testThatRuleBlocksPromptIfAppVersionNameHasNotChanged()
-            throws NameNotFoundException {
-
+    public void testThatRuleBlocksPromptIfAppVersionNameHasNotChanged() {
         // Arrange
         final String fakeCachedVersionName = "any string";
         final String fakeCurrentVersionName = fakeCachedVersionName;
-
-        fakePackageInfo.versionName = fakeCachedVersionName;
+        final VersionNameChangedRule versionNameChangedRule = new VersionNameChangedRule(fakeCurrentVersionName);
 
         // Act
         final boolean ruleShouldAllowFeedbackPrompt =
-                versionNameChangedRule.shouldAllowFeedbackPrompt(fakeCurrentVersionName);
+                versionNameChangedRule.shouldAllowFeedbackPrompt(fakeCachedVersionName);
 
         // Assert
         assertFalse(
@@ -85,15 +62,14 @@ public class VersionNameChangedRuleTest extends BaseTest {
     }
 
     @SuppressLint("Assert")
-    @SuppressWarnings("ConstantConditions")
     @Test
-    public void testThatRuleAllowsPromptIfAppVersionNameHasChanged() throws NameNotFoundException {
+    public void testThatRuleAllowsPromptIfAppVersionNameHasChanged() {
         // Arrange
         final String fakeCachedVersionName = "any string";
         final String fakeCurrentVersionName = "any other string";
         assert !fakeCachedVersionName.equals(fakeCurrentVersionName);
 
-        fakePackageInfo.versionName = fakeCurrentVersionName;
+        final VersionNameChangedRule versionNameChangedRule = new VersionNameChangedRule(fakeCurrentVersionName);
 
         // Act
         final boolean ruleShouldAllowFeedbackPrompt =

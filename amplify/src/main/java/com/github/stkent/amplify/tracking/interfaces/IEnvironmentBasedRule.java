@@ -18,6 +18,8 @@ package com.github.stkent.amplify.tracking.interfaces;
 
 import android.support.annotation.NonNull;
 
+import com.github.stkent.amplify.IEnvironment;
+
 /**
  * An abstract representation of a prompt timing rule that depends on the environment in which the
  * embedding application is running.
@@ -27,12 +29,11 @@ public interface IEnvironmentBasedRule extends IRule {
     /**
      * Call to determine whether this rule allows us to prompt the user for feedback at this time.
      *
-     * @param environmentInfoProvider provides relevant information about the environment in which
+     * @param environment provides relevant information about the environment in which
      *        the embedding application is currently running
      * @return true if this rule is satisfied and should allow the feedback prompt to be shown;
      *         false otherwise
      */
-    boolean shouldAllowFeedbackPrompt(
-            @NonNull final IEnvironmentCapabilitiesProvider environmentInfoProvider);
+    boolean shouldAllowFeedbackPrompt(@NonNull final IEnvironment environment);
 
 }

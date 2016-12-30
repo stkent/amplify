@@ -14,21 +14,23 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package com.github.stkent.amplify.tracking;
+package com.github.stkent.amplify;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.os.Build;
 import android.support.annotation.NonNull;
-
-import com.github.stkent.amplify.utils.appinfo.IAppInfoProvider;
-import com.github.stkent.amplify.tracking.interfaces.IEnvironmentCapabilitiesProvider;
+import android.support.annotation.Nullable;
 
 import java.util.List;
 
 import static android.content.pm.PackageManager.GET_ACTIVITIES;
+import static android.content.pm.PackageManager.MATCH_DEFAULT_ONLY;
 
-public final class EnvironmentCapabilitiesProvider implements IEnvironmentCapabilitiesProvider {
+public final class Environment implements IEnvironment {
 
     /**
      * Package name for the Google Play Store. Value can be verified here:
@@ -36,16 +38,37 @@ public final class EnvironmentCapabilitiesProvider implements IEnvironmentCapabi
      */
     private static final String GOOGLE_PLAY_STORE_PACKAGE_NAME = "com.android.vending";
 
-    @NonNull
-    private final IAppInfoProvider appInfoProvider;
+    /**
+     * Package name for the Amazon App Store.
+     */
+    private static final String AMAZON_APP_STORE_PACKAGE_NAME = "com.amazon.venezia";
 
-    public EnvironmentCapabilitiesProvider(@NonNull final IAppInfoProvider appInfoProvider) {
-        this.appInfoProvider = appInfoProvider;
+    @NonNull
+    private final Context appContext;
+
+    public Environment(@NonNull final Context context) {
+        this.appContext = context.getApplicationContext();
+    }
+
+    @NonNull
+    @Override
+    public String getAndroidVersionName() {
+        return Build.VERSION.RELEASE;
+    }
+
+    @Override
+    public int getAndroidVersionCode() {
+        return Build.VERSION.SDK_INT;
     }
 
     @Override
     public boolean isAppInstalled(@NonNull final String packageName) {
-        return appInfoProvider.getPackageInfo(packageName, GET_ACTIVITIES) != null;
+        return getPackageInfo(packageName, GET_ACTIVITIES) != null;
+    }
+
+    @Override
+    public boolean isAmazonAppStoreInstalled() {
+        return isAppInstalled(AMAZON_APP_STORE_PACKAGE_NAME);
     }
 
     @Override
@@ -57,10 +80,22 @@ public final class EnvironmentCapabilitiesProvider implements IEnvironmentCapabi
 
     @Override
     public boolean canHandleIntent(@NonNull final Intent intent) {
-        final List<ResolveInfo> resolveInfoList = appInfoProvider.getPackageManager()
-                .queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
+        final List<ResolveInfo> resolveInfoList = appContext
+                .getPackageManager()
+                .queryIntentActivities(intent, MATCH_DEFAULT_ONLY);
 
         return !resolveInfoList.isEmpty();
+    }
+
+    @Nullable
+    private PackageInfo getPackageInfo(@NonNull final String packageName, final int flags) {
+        final PackageManager packageManager = appContext.getPackageManager();
+
+        try {
+            return packageManager.getPackageInfo(packageName, flags);
+        } catch (final PackageManager.NameNotFoundException ignored) {
+            return null;
+        }
     }
 
 }

@@ -44,10 +44,7 @@ public final class DefaultLayoutPromptViewConfig implements Parcelable {
      * @return <code>primaryColor</code> if it is non-null; <code>defaultColor</code> otherwise
      */
     @ColorInt
-    private static int defaultIfNull(
-            @Nullable final Integer primaryColor,
-            @ColorInt final int defaultColor) {
-
+    private static int defaultIfNull(@Nullable final Integer primaryColor, @ColorInt final int defaultColor) {
         return primaryColor != null ? primaryColor : defaultColor;
     }
 
@@ -55,38 +52,18 @@ public final class DefaultLayoutPromptViewConfig implements Parcelable {
      * @return the color value for the attribute at <code>index</code>, if defined; null otherwise
      */
     @Nullable
-    private static Integer suppliedColorOrNull(
-            @Nullable final TypedArray typedArray,
-            @StyleableRes final int index) {
-
-        if (typedArray != null) {
-            final int color = typedArray.getColor(index, DEFAULT_GET_COLOR_VALUE_IF_UNDEFINED);
-            return color != DEFAULT_GET_COLOR_VALUE_IF_UNDEFINED ? color : null;
-        }
-
-        return null;
+    private static Integer suppliedColorOrNull(@NonNull final TypedArray typedArray, @StyleableRes final int index) {
+        final int color = typedArray.getColor(index, DEFAULT_GET_COLOR_VALUE_IF_UNDEFINED);
+        return color != DEFAULT_GET_COLOR_VALUE_IF_UNDEFINED ? color : null;
     }
 
     /**
-     * @return the dimension in px defined for the attribute at <code>index</code>, if defined; null
-     * otherwise
+     * @return the dimension in px defined for the attribute at <code>index</code>, if defined; null otherwise
      */
     @Nullable
-    private static Integer suppliedDimensionOrNull(
-            @Nullable final TypedArray typedArray,
-            @StyleableRes final int index) {
-
-        if (typedArray != null) {
-            final int dimensionPixelSize = typedArray.getDimensionPixelSize(
-                    index,
-                    DEFAULT_GET_DIMENSION_VALUE_IF_UNDEFINED);
-
-            return dimensionPixelSize != DEFAULT_GET_DIMENSION_VALUE_IF_UNDEFINED
-                    ? dimensionPixelSize
-                    : null;
-        }
-
-        return null;
+    private static Integer suppliedDimensionOrNull(@NonNull final TypedArray typedArray, @StyleableRes final int index) {
+        final int dimensionPixelSize = typedArray.getDimensionPixelSize(index, DEFAULT_GET_DIMENSION_VALUE_IF_UNDEFINED);
+        return dimensionPixelSize != DEFAULT_GET_DIMENSION_VALUE_IF_UNDEFINED ? dimensionPixelSize : null;
     }
 
     @Nullable private final Integer foregroundColor;
@@ -103,7 +80,7 @@ public final class DefaultLayoutPromptViewConfig implements Parcelable {
     @Nullable private final Integer customButtonBorderWidthPx;
     @Nullable private final Integer customButtonCornerRadiusPx;
 
-    public DefaultLayoutPromptViewConfig(@Nullable final TypedArray typedArray) {
+    public DefaultLayoutPromptViewConfig(@NonNull final TypedArray typedArray) {
         foregroundColor = suppliedColorOrNull(
                 typedArray,
                 R.styleable.DefaultLayoutPromptView_prompt_view_foreground_color);
@@ -298,9 +275,7 @@ public final class DefaultLayoutPromptViewConfig implements Parcelable {
             return this;
         }
 
-        public Builder setPositiveButtonBackgroundColor(
-                @ColorInt final int positiveButtonBackgroundColor) {
-
+        public Builder setPositiveButtonBackgroundColor(@ColorInt final int positiveButtonBackgroundColor) {
             this.positiveButtonBackgroundColor = positiveButtonBackgroundColor;
             return this;
         }
@@ -315,9 +290,7 @@ public final class DefaultLayoutPromptViewConfig implements Parcelable {
             return this;
         }
 
-        public Builder setNegativeButtonBackgroundColor(
-                @ColorInt final int negativeButtonBackgroundColor) {
-
+        public Builder setNegativeButtonBackgroundColor(@ColorInt final int negativeButtonBackgroundColor) {
             this.negativeButtonBackgroundColor = negativeButtonBackgroundColor;
             return this;
         }

@@ -25,47 +25,34 @@ import android.support.annotation.NonNull;
 
 import static android.content.Intent.ACTION_VIEW;
 
-public final class GooglePlayStoreFeedbackCollector implements IFeedbackCollector {
+public final class AmazonAppStoreFeedbackCollector implements IFeedbackCollector {
 
-    private static final String ANDROID_MARKET_URI_PREFIX = "market://details?id=";
-
-    private static final String GOOGLE_PLAY_STORE_URI_PREFIX = "https://play.google.com/store/apps/details?id=";
+    private static final String AMAZON_APP_STORE_URI_PREFIX = "http://www.amazon.com/gp/mas/dl/android?p=";
 
     @NonNull
-    private static Uri getAndroidMarketUri(@NonNull final String packageName) {
-        return Uri.parse(ANDROID_MARKET_URI_PREFIX + packageName);
-    }
-
-    @NonNull
-    private static Uri getGooglePlayStoreUri(@NonNull final String packageName) {
-        return Uri.parse(GOOGLE_PLAY_STORE_URI_PREFIX + packageName);
+    private static Uri getAmazonAppStoreUri(@NonNull final String packageName) {
+        return Uri.parse(AMAZON_APP_STORE_URI_PREFIX + packageName);
     }
 
     @NonNull
     private final String packageName;
 
-    public GooglePlayStoreFeedbackCollector(@NonNull final Context context) {
+    public AmazonAppStoreFeedbackCollector(@NonNull final Context context) {
         this(context.getPackageName());
     }
 
-    public GooglePlayStoreFeedbackCollector(@NonNull final String packageName) {
+    public AmazonAppStoreFeedbackCollector(@NonNull final String packageName) {
         this.packageName = packageName;
     }
 
     @Override
     public boolean collectFeedback(@NonNull final Activity currentActivity) {
         try {
-            currentActivity.startActivity(new Intent(ACTION_VIEW, getAndroidMarketUri(packageName)));
+            currentActivity.startActivity(new Intent(ACTION_VIEW, getAmazonAppStoreUri(packageName)));
             currentActivity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             return true;
-        } catch (final ActivityNotFoundException ignored) {
-            try {
-                currentActivity.startActivity(new Intent(ACTION_VIEW, getGooglePlayStoreUri(packageName)));
-                currentActivity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                return true;
-            } catch (final ActivityNotFoundException ignored2) {
-                return false;
-            }
+        } catch (final ActivityNotFoundException ignored2) {
+            return false;
         }
     }
 

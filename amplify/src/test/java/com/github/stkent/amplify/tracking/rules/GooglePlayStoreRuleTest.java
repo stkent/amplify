@@ -16,8 +16,8 @@
  */
 package com.github.stkent.amplify.tracking.rules;
 
+import com.github.stkent.amplify.IEnvironment;
 import com.github.stkent.amplify.helpers.BaseTest;
-import com.github.stkent.amplify.tracking.interfaces.IEnvironmentCapabilitiesProvider;
 
 import org.junit.Test;
 import org.mockito.Mock;
@@ -31,7 +31,7 @@ public class GooglePlayStoreRuleTest extends BaseTest {
     private GooglePlayStoreRule googlePlayStoreRule;
 
     @Mock
-    private IEnvironmentCapabilitiesProvider mockEnvironmentInfoProvider;
+    private IEnvironment environment;
 
     @Override
     public void localSetUp() {
@@ -41,31 +41,25 @@ public class GooglePlayStoreRuleTest extends BaseTest {
     @Test
     public void testThatEnvironmentRuleIsSatisfiedIfGooglePlayStoreIsInstalledOnDevice() {
         // Arrange
-       when(mockEnvironmentInfoProvider.isGooglePlayStoreInstalled()).thenReturn(true);
+        when(environment.isGooglePlayStoreInstalled()).thenReturn(true);
 
         // Act
-        final boolean isEnvironmentRuleSatisfied =
-                googlePlayStoreRule.shouldAllowFeedbackPrompt(mockEnvironmentInfoProvider);
+        final boolean isEnvironmentRuleSatisfied = googlePlayStoreRule.shouldAllowFeedbackPrompt(environment);
 
         // Assert
-        assertTrue(
-                "Environment based rule should be satisfied",
-                isEnvironmentRuleSatisfied);
+        assertTrue("Environment based rule should be satisfied", isEnvironmentRuleSatisfied);
     }
 
     @Test
     public void testThatEnvironmentRuleIsNotSatisfiedIfGooglePlayStoreIsNotInstalledOnDevice() {
         // Arrange
-        when(mockEnvironmentInfoProvider.isGooglePlayStoreInstalled()).thenReturn(false);
+        when(environment.isGooglePlayStoreInstalled()).thenReturn(false);
 
         // Act
-        final boolean isEnvironmentRuleSatisfied =
-                googlePlayStoreRule.shouldAllowFeedbackPrompt(mockEnvironmentInfoProvider);
+        final boolean isEnvironmentRuleSatisfied = googlePlayStoreRule.shouldAllowFeedbackPrompt(environment);
 
         // Assert
-        assertFalse(
-                "Environment based rule should not be satisfied",
-                isEnvironmentRuleSatisfied);
+        assertFalse("Environment based rule should not be satisfied", isEnvironmentRuleSatisfied);
     }
 
 }

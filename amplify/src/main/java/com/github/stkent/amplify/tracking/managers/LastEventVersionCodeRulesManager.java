@@ -19,20 +19,17 @@ package com.github.stkent.amplify.tracking.managers;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.github.stkent.amplify.IApp;
 import com.github.stkent.amplify.tracking.interfaces.ISettings;
-import com.github.stkent.amplify.utils.appinfo.IAppInfoProvider;
 
 public final class LastEventVersionCodeRulesManager extends BaseEventsManager<Integer> {
 
     @NonNull
-    private final IAppInfoProvider appInfoProvider;
+    private final IApp app;
 
-    public LastEventVersionCodeRulesManager(
-            @NonNull final ISettings<Integer> settings,
-            @NonNull final IAppInfoProvider appInfoProvider) {
-
+    public LastEventVersionCodeRulesManager(@NonNull final ISettings<Integer> settings, @NonNull final IApp app) {
         super(settings);
-        this.appInfoProvider = appInfoProvider;
+        this.app = app;
     }
 
     @NonNull
@@ -50,7 +47,7 @@ public final class LastEventVersionCodeRulesManager extends BaseEventsManager<In
     @NonNull
     @Override
     public Integer getUpdatedTrackingValue(@Nullable final Integer cachedTrackingValue) {
-        return appInfoProvider.getPackageInfo().versionCode;
+        return app.getVersionCode();
     }
 
 }

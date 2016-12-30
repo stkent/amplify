@@ -23,10 +23,6 @@ import java.util.Locale;
 
 public final class StringUtils {
 
-    private StringUtils() {
-
-    }
-
     public static String capitalizeFully(@Nullable final String string) {
         if (isBlank(string)) {
             return string;
@@ -104,6 +100,10 @@ public final class StringUtils {
             @NonNull final String defaultString) {
 
         return StringUtils.isNotBlank(primaryString) ? primaryString : defaultString;
+    }
+
+    private StringUtils() {
+        // This constructor intentionally left blank.
     }
 
 }

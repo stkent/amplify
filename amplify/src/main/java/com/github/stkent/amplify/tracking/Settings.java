@@ -33,9 +33,7 @@ public final class Settings<T> implements ISettings<T> {
     }
 
     public void writeTrackingValue(@NonNull final String trackingKey, final T value) {
-
-        // todo: do we need sync locking around this access?
-        SharedPreferences.Editor editor = sharedPreferences.edit();
+        final SharedPreferences.Editor editor = sharedPreferences.edit();
 
         if (value.getClass().equals(String.class)) {
             editor.putString(trackingKey, (String) value);
@@ -52,7 +50,6 @@ public final class Settings<T> implements ISettings<T> {
                     "Event value must be one of String, Boolean, Long, Integer or Float");
         }
 
-        // todo: is it alright that this is asynchronous?
         editor.apply();
     }
 
@@ -60,7 +57,7 @@ public final class Settings<T> implements ISettings<T> {
     public T readTrackingValue(@NonNull final String trackingKey) {
         final Map<String, ?> map = sharedPreferences.getAll();
 
-        for (Map.Entry<String, ?> entry : map.entrySet()) {
+        for (final Map.Entry<String, ?> entry : map.entrySet()) {
             if (entry.getKey().equals(trackingKey)) {
                 return (T) entry.getValue();
             }
