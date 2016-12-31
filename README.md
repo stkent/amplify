@@ -8,6 +8,16 @@ Respectfully request feedback in your Android app.
 
 <a href="https://travis-ci.org/stkent/amplify"><img src="https://travis-ci.org/stkent/amplify.svg" /></a> <a href="https://bintray.com/stkent/android-libraries/amplify/"><img src="https://img.shields.io/bintray/v/stkent/android-libraries/amplify.svg" /></a> <a href="http://www.detroitlabs.com/"><img src="https://img.shields.io/badge/Sponsor-Detroit%20Labs-000000.svg" /></a> [![Coverage Status](https://coveralls.io/repos/github/stkent/amplify/badge.svg?branch=master)](https://coveralls.io/github/stkent/amplify?branch=master) [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-amplify-green.svg?style=true)](https://android-arsenal.com/details/1/3290)
 
+# Development Status: Dormant
+
+- Not currently under active development.
+- Active development may resume in the future.
+- Bug reports will be triaged and fixed. No guarantees are made regarding fix timelines.
+- Feature requests will be triaged. No guarantees are made regarding acceptance or implementation timelines.
+- Pull requests from external contributors are not currently being accepted.
+
+# Guide
+
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
