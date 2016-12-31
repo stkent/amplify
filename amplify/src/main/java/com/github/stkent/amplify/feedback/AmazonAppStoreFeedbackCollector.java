@@ -51,7 +51,7 @@ public final class AmazonAppStoreFeedbackCollector implements IFeedbackCollector
             currentActivity.startActivity(new Intent(ACTION_VIEW, getAmazonAppStoreUri(packageName)));
             currentActivity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             return true;
-        } catch (final ActivityNotFoundException ignored2) {
+        } catch (final ActivityNotFoundException ignored) {
             return false;
         }
     }
