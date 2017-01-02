@@ -1,5 +1,11 @@
 # Change Log
 
+## v1.5.1
+
+_2017-01-02_
+
+- Fix crash that could occur when restoring saved prompt view state.
+
 ## v1.5.0
 
 _2016-06-07_
