@@ -31,8 +31,7 @@ public final class CustomLayoutPromptView
         extends BasePromptView<CustomLayoutQuestionView, CustomLayoutThanksView>
         implements IPromptView {
 
-    private static final String CUSTOM_LAYOUT_PROMPT_VIEW_CONFIG_KEY
-            = "CUSTOM_LAYOUT_PROMPT_VIEW_CONFIG_KEY";
+    private static final String CUSTOM_LAYOUT_PROMPT_VIEW_CONFIG_KEY = "CUSTOM_LAYOUT_PROMPT_VIEW_CONFIG_KEY";
 
     // NonNull
     private CustomLayoutPromptViewConfig config;
@@ -41,10 +40,7 @@ public final class CustomLayoutPromptView
         this(context, null);
     }
 
-    public CustomLayoutPromptView(
-            final Context context,
-            @Nullable final AttributeSet attributeSet) {
-
+    public CustomLayoutPromptView(final Context context, @Nullable final AttributeSet attributeSet) {
         this(context, attributeSet, 0);
     }
 
@@ -59,8 +55,7 @@ public final class CustomLayoutPromptView
 
     public void applyConfig(@NonNull final CustomLayoutPromptViewConfig config) {
         if (isDisplayed()) {
-            throw new IllegalStateException(
-                    "Configuration cannot be changed after the prompt is first displayed.");
+            throw new IllegalStateException("Configuration cannot be changed after the prompt is first displayed.");
         }
 
         this.config = config;
@@ -88,7 +83,7 @@ public final class CustomLayoutPromptView
                     = savedState.getParcelable(CUSTOM_LAYOUT_PROMPT_VIEW_CONFIG_KEY);
 
             if (config != null) {
-                applyConfig(config);
+                this.config = config;
             }
 
             restorePresenterState(superSavedState);
@@ -117,11 +112,12 @@ public final class CustomLayoutPromptView
     }
 
     /**
-     * Note: <code>Theme.obtainStyledAttributes</code> accepts a null <code>AttributeSet</code>; see
-     * documentation of that method for confirmation.
+     * Note: <code>Theme.obtainStyledAttributes</code> accepts a null <code>AttributeSet</code>; see documentation of
+     * that method for confirmation.
      */
     private void init(@Nullable final AttributeSet attributeSet) {
-        final TypedArray typedArray = getContext().getTheme()
+        final TypedArray typedArray = getContext()
+                .getTheme()
                 .obtainStyledAttributes(attributeSet, R.styleable.CustomLayoutPromptView, 0, 0);
 
         // todo: does obtainStyledAttributes ever return null? if not, can update this constructor.
