@@ -31,8 +31,7 @@ public final class DefaultLayoutPromptView
         extends BasePromptView<DefaultLayoutQuestionView, DefaultLayoutThanksView>
         implements IPromptView {
 
-    private static final String DEFAULT_LAYOUT_PROMPT_VIEW_CONFIG_KEY
-            = "DEFAULT_LAYOUT_PROMPT_VIEW_CONFIG_KEY";
+    private static final String DEFAULT_LAYOUT_PROMPT_VIEW_CONFIG_KEY = "DEFAULT_LAYOUT_PROMPT_VIEW_CONFIG_KEY";
 
     // NonNull
     private DefaultLayoutPromptViewConfig config;
@@ -41,10 +40,7 @@ public final class DefaultLayoutPromptView
         this(context, null);
     }
 
-    public DefaultLayoutPromptView(
-            final Context context,
-            @Nullable final AttributeSet attributeSet) {
-
+    public DefaultLayoutPromptView(final Context context, @Nullable final AttributeSet attributeSet) {
         this(context, attributeSet, 0);
     }
 
@@ -59,8 +55,7 @@ public final class DefaultLayoutPromptView
 
     public void applyConfig(@NonNull final DefaultLayoutPromptViewConfig config) {
         if (isDisplayed()) {
-            throw new IllegalStateException(
-                    "Configuration cannot be changed after the prompt is first displayed.");
+            throw new IllegalStateException("Configuration cannot be changed after the prompt is first displayed.");
         }
 
         this.config = config;
@@ -84,11 +79,10 @@ public final class DefaultLayoutPromptView
             final Parcelable superSavedState = savedState.getParcelable(SUPER_STATE_KEY);
             super.onRestoreInstanceState(superSavedState);
 
-            final DefaultLayoutPromptViewConfig config
-                    = savedState.getParcelable(DEFAULT_LAYOUT_PROMPT_VIEW_CONFIG_KEY);
+            final DefaultLayoutPromptViewConfig config = savedState.getParcelable(DEFAULT_LAYOUT_PROMPT_VIEW_CONFIG_KEY);
 
             if (config != null) {
-                applyConfig(config);
+                this.config = config;
             }
 
             restorePresenterState(superSavedState);
@@ -114,11 +108,12 @@ public final class DefaultLayoutPromptView
     }
 
     /**
-     * Note: <code>Theme.obtainStyledAttributes</code> accepts a null <code>AttributeSet</code>; see
-     * documentation of that method for confirmation.
+     * Note: <code>Theme.obtainStyledAttributes</code> accepts a null <code>AttributeSet</code>; see documentation of
+     * that method for confirmation.
      */
     private void init(@Nullable final AttributeSet attributeSet) {
-        final TypedArray typedArray = getContext().getTheme()
+        final TypedArray typedArray = getContext()
+                .getTheme()
                 .obtainStyledAttributes(attributeSet, R.styleable.DefaultLayoutPromptView, 0, 0);
 
         // todo: does obtainStyledAttributes ever return null? if not, can update this constructor.

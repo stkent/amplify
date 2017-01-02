@@ -102,11 +102,7 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
         this(context, attributeSet, 0);
     }
 
-    BasePromptView(
-            final Context context,
-            @Nullable final AttributeSet attributeSet,
-            final int defStyleAttr) {
-
+    BasePromptView(final Context context, @Nullable final AttributeSet attributeSet, final int defStyleAttr) {
         super(context, attributeSet, defStyleAttr);
         setLayoutParams(new ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -140,11 +136,10 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
             final Parcelable superSavedState = savedState.getParcelable(SUPER_STATE_KEY);
             super.onRestoreInstanceState(superSavedState);
 
-            final BasePromptViewConfig config
-                    = savedState.getParcelable(BASE_PROMPT_VIEW_CONFIG_KEY);
+            final BasePromptViewConfig config = savedState.getParcelable(BASE_PROMPT_VIEW_CONFIG_KEY);
 
             if (config != null) {
-                applyBaseConfig(config);
+                basePromptViewConfig = config;
             }
 
             thanksDisplayTimeExpired = savedState.getBoolean(THANKS_DISPLAY_TIME_EXPIRED_KEY);
@@ -276,8 +271,7 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
 
     public final void applyBaseConfig(@NonNull final BasePromptViewConfig basePromptViewConfig) {
         if (isDisplayed()) {
-            throw new IllegalStateException(
-                    "Configuration cannot be changed after the prompt is first displayed.");
+            throw new IllegalStateException("Configuration cannot be changed after the prompt is first displayed.");
         }
 
         this.basePromptViewConfig = basePromptViewConfig;
