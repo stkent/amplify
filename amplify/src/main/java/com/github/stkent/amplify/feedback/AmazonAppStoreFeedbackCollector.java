@@ -25,13 +25,21 @@ import android.support.annotation.NonNull;
 
 import static android.content.Intent.ACTION_VIEW;
 
+// Source: https://developer.amazon.com/public/apis/earn/in-app-purchasing/docs-v2/deep-linking-to-the-amazon-client
 public final class AmazonAppStoreFeedbackCollector implements IFeedbackCollector {
 
-    private static final String AMAZON_APP_STORE_URI_PREFIX = "http://www.amazon.com/gp/mas/dl/android?p=";
+    private static final String AMAZON_APP_STORE_URL_PREFIX = "amzn://apps/android?p=";
+
+    private static final String AMAZON_RETAIL_WEBSITE_URL_PREFIX = "http://www.amazon.com/gp/mas/dl/android?p=";
 
     @NonNull
-    private static Uri getAmazonAppStoreUri(@NonNull final String packageName) {
-        return Uri.parse(AMAZON_APP_STORE_URI_PREFIX + packageName);
+    private static Uri getAmazonAppStoreUrl(@NonNull final String packageName) {
+        return Uri.parse(AMAZON_APP_STORE_URL_PREFIX + packageName);
+    }
+
+    @NonNull
+    private static Uri getAmazonRetailWebsiteUrl(@NonNull final String packageName) {
+        return Uri.parse(AMAZON_RETAIL_WEBSITE_URL_PREFIX + packageName);
     }
 
     @NonNull
@@ -48,11 +56,17 @@ public final class AmazonAppStoreFeedbackCollector implements IFeedbackCollector
     @Override
     public boolean collectFeedback(@NonNull final Activity currentActivity) {
         try {
-            currentActivity.startActivity(new Intent(ACTION_VIEW, getAmazonAppStoreUri(packageName)));
+            currentActivity.startActivity(new Intent(ACTION_VIEW, getAmazonAppStoreUrl(packageName)));
             currentActivity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             return true;
         } catch (final ActivityNotFoundException ignored) {
-            return false;
+            try {
+                currentActivity.startActivity(new Intent(ACTION_VIEW, getAmazonRetailWebsiteUrl(packageName)));
+                currentActivity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                return true;
+            } catch (final ActivityNotFoundException ignored2) {
+                return false;
+            }
         }
     }
 
