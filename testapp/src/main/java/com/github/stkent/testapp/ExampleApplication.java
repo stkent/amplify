@@ -2,7 +2,6 @@ package com.github.stkent.testapp;
 
 import android.app.Application;
 
-import com.github.stkent.amplify.feedback.AmazonAppStoreFeedbackCollector;
 import com.github.stkent.amplify.feedback.DefaultEmailFeedbackCollector;
 import com.github.stkent.amplify.feedback.GooglePlayStoreFeedbackCollector;
 import com.github.stkent.amplify.logging.AndroidLogger;
@@ -20,7 +19,6 @@ public class ExampleApplication extends Application {
 
         Amplify.initSharedInstance(this)
                .setPositiveFeedbackCollectors(
-                       new AmazonAppStoreFeedbackCollector(releasePackageName),
                        new GooglePlayStoreFeedbackCollector(releasePackageName))
                .setCriticalFeedbackCollectors(
                        new DefaultEmailFeedbackCollector(this, "someone@example.com"))
