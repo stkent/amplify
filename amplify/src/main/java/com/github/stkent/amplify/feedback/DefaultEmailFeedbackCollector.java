@@ -30,14 +30,12 @@ public class DefaultEmailFeedbackCollector extends BaseEmailFeedbackCollector {
         super(context, recipients);
     }
 
-    @SuppressWarnings("CallToSimpleGetterFromWithinClass")
     @NonNull
     @Override
     protected String getSubjectLine() {
         return getApp().getName() + " Android App Feedback";
     }
 
-    @SuppressWarnings("CallToSimpleGetterFromWithinClass")
     @NonNull
     @Override
     protected String getBody() {
@@ -60,7 +58,7 @@ public class DefaultEmailFeedbackCollector extends BaseEmailFeedbackCollector {
     }
 
     @NonNull
-    protected String getCurrentUtcTimeStringForDate(final Date date) {
+    private String getCurrentUtcTimeStringForDate(final Date date) {
         final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss z", Locale.getDefault());
         simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
         return simpleDateFormat.format(date);
