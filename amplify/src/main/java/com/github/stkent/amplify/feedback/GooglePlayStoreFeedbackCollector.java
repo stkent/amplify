@@ -43,7 +43,7 @@ public final class GooglePlayStoreFeedbackCollector implements IFeedbackCollecto
     }
 
     @Override
-    public boolean collectFeedback(@NonNull final Activity currentActivity) {
+    public boolean tryCollectingFeedback(@NonNull final Activity currentActivity) {
         try {
             currentActivity.startActivity(new Intent(ACTION_VIEW, getAndroidMarketUri()));
             currentActivity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);

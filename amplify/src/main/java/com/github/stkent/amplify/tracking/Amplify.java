@@ -258,7 +258,7 @@ public final class Amplify implements IEventListener {
             }
 
             for (final IFeedbackCollector positiveFeedbackCollector : positiveFeedbackCollectors) {
-                if (positiveFeedbackCollector.collectFeedback(activity)) {
+                if (positiveFeedbackCollector.tryCollectingFeedback(activity)) {
                     return;
                 }
             }
@@ -270,7 +270,7 @@ public final class Amplify implements IEventListener {
             }
 
             for (final IFeedbackCollector criticalFeedbackCollector : criticalFeedbackCollectors) {
-                if (criticalFeedbackCollector.collectFeedback(activity)) {
+                if (criticalFeedbackCollector.tryCollectingFeedback(activity)) {
                     return;
                 }
             }

@@ -48,7 +48,7 @@ public abstract class BaseEmailFeedbackCollector implements IFeedbackCollector {
     }
 
     @Override
-    public boolean collectFeedback(@NonNull final Activity currentActivity) {
+    public boolean tryCollectingFeedback(@NonNull final Activity currentActivity) {
         final Intent emailIntent = getEmailIntent();
 
         if (!environment.canHandleIntent(emailIntent)) {

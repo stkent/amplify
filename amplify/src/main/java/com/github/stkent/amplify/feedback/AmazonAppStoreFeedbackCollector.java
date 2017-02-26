@@ -44,7 +44,7 @@ public final class AmazonAppStoreFeedbackCollector implements IFeedbackCollector
     }
 
     @Override
-    public boolean collectFeedback(@NonNull final Activity currentActivity) {
+    public boolean tryCollectingFeedback(@NonNull final Activity currentActivity) {
         try {
             currentActivity.startActivity(new Intent(ACTION_VIEW, getAmazonAppStoreUrl()));
             currentActivity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
