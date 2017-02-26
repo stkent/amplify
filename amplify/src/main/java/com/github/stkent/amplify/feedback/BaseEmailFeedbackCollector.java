@@ -73,17 +73,17 @@ public abstract class BaseEmailFeedbackCollector implements IFeedbackCollector {
     }
 
     @NonNull
-    protected IApp getApp() {
+    protected final IApp getApp() {
         return app;
     }
 
     @NonNull
-    protected IEnvironment getEnvironment() {
+    protected final IEnvironment getEnvironment() {
         return environment;
     }
 
     @NonNull
-    protected IDevice getDevice() {
+    protected final IDevice getDevice() {
         return device;
     }
 
