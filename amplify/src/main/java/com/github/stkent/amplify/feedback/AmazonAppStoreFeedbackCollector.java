@@ -23,6 +23,9 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.github.stkent.amplify.IApp;
+import com.github.stkent.amplify.IDevice;
+import com.github.stkent.amplify.IEnvironment;
 import com.github.stkent.amplify.utils.StringUtils;
 
 import static android.content.Intent.ACTION_VIEW;
@@ -46,7 +49,12 @@ public final class AmazonAppStoreFeedbackCollector implements IFeedbackCollector
     }
 
     @Override
-    public boolean tryCollectingFeedback(@NonNull final Activity currentActivity) {
+    public boolean tryCollectingFeedback(
+            @NonNull final Activity currentActivity,
+            @NonNull final IApp app,
+            @NonNull final IEnvironment environment,
+            @NonNull final IDevice device) {
+
         final String packageName = StringUtils.defaultIfBlank(overridePackageName, currentActivity.getPackageName());
 
         try {

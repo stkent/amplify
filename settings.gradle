@@ -1,1 +1,1 @@
-include ':amplify', ':testapp'
+include ':amplify', ':app'
