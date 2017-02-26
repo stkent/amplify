@@ -32,16 +32,6 @@ public final class GooglePlayStoreFeedbackCollector implements IFeedbackCollecto
     private static final String GOOGLE_PLAY_STORE_URI_PREFIX = "https://play.google.com/store/apps/details?id=";
 
     @NonNull
-    private static Uri getAndroidMarketUri(@NonNull final String packageName) {
-        return Uri.parse(ANDROID_MARKET_URI_PREFIX + packageName);
-    }
-
-    @NonNull
-    private static Uri getGooglePlayStoreUri(@NonNull final String packageName) {
-        return Uri.parse(GOOGLE_PLAY_STORE_URI_PREFIX + packageName);
-    }
-
-    @NonNull
     private final String packageName;
 
     public GooglePlayStoreFeedbackCollector(@NonNull final Context context) {
@@ -55,18 +45,28 @@ public final class GooglePlayStoreFeedbackCollector implements IFeedbackCollecto
     @Override
     public boolean collectFeedback(@NonNull final Activity currentActivity) {
         try {
-            currentActivity.startActivity(new Intent(ACTION_VIEW, getAndroidMarketUri(packageName)));
+            currentActivity.startActivity(new Intent(ACTION_VIEW, getAndroidMarketUri()));
             currentActivity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             return true;
         } catch (final ActivityNotFoundException ignored) {
             try {
-                currentActivity.startActivity(new Intent(ACTION_VIEW, getGooglePlayStoreUri(packageName)));
+                currentActivity.startActivity(new Intent(ACTION_VIEW, getGooglePlayStoreUri()));
                 currentActivity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                 return true;
             } catch (final ActivityNotFoundException ignored2) {
                 return false;
             }
         }
+    }
+
+    @NonNull
+    private Uri getAndroidMarketUri() {
+        return Uri.parse(ANDROID_MARKET_URI_PREFIX + packageName);
+    }
+
+    @NonNull
+    private Uri getGooglePlayStoreUri() {
+        return Uri.parse(GOOGLE_PLAY_STORE_URI_PREFIX + packageName);
     }
 
 }
