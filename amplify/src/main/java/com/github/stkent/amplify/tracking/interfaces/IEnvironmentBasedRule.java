@@ -29,10 +29,9 @@ public interface IEnvironmentBasedRule extends IRule {
     /**
      * Call to determine whether this rule allows us to prompt the user for feedback at this time.
      *
-     * @param environment provides relevant information about the environment in which
-     *        the embedding application is currently running
-     * @return true if this rule is satisfied and should allow the feedback prompt to be shown;
-     *         false otherwise
+     * @param environment provides relevant information about the environment in which the embedding application is
+     *                    currently running
+     * @return true if this rule is satisfied and should allow the feedback prompt to be shown; false otherwise
      */
     boolean shouldAllowFeedbackPrompt(@NonNull final IEnvironment environment);
 

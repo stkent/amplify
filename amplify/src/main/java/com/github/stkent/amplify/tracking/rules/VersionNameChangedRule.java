@@ -35,7 +35,7 @@ public final class VersionNameChangedRule implements IEventBasedRule<String> {
     }
 
     @VisibleForTesting(otherwise = PRIVATE)
-    /* package-private */ VersionNameChangedRule(@NonNull final String appVersionName) {
+    /* default */ VersionNameChangedRule(@NonNull final String appVersionName) {
         this.appVersionName = appVersionName;
     }
 

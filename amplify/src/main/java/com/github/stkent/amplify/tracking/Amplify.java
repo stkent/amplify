@@ -131,12 +131,10 @@ public final class Amplify implements IEventListener {
         application.registerActivityLifecycleCallbacks(activityReferenceManager);
 
         final IEnvironment environment = new Environment(application);
+        environmentBasedRulesManager = new EnvironmentBasedRulesManager(environment);
 
-        this.environmentBasedRulesManager = new EnvironmentBasedRulesManager(environment);
-
-        final SharedPreferences sharedPrefs = application.getSharedPreferences(sharedPrefsName, MODE_PRIVATE);
         final IApp app = new App(application);
-
+        final SharedPreferences sharedPrefs = application.getSharedPreferences(sharedPrefsName, MODE_PRIVATE);
         appLevelEventRulesManager = new AppLevelEventRulesManager(new Settings<Long>(sharedPrefs), app);
         firstEventTimeRulesManager = new FirstEventTimeRulesManager(new Settings<Long>(sharedPrefs));
         lastEventTimeRulesManager = new LastEventTimeRulesManager(new Settings<Long>(sharedPrefs));

@@ -34,7 +34,7 @@ public final class VersionCodeChangedRule implements IEventBasedRule<Integer> {
     }
 
     @VisibleForTesting(otherwise = PRIVATE)
-    /* package-private */ VersionCodeChangedRule(final int appVersionCode) {
+    /* default */ VersionCodeChangedRule(final int appVersionCode) {
         this.appVersionCode = appVersionCode;
     }
 
