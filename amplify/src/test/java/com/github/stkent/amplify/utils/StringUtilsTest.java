@@ -23,9 +23,6 @@ import com.github.stkent.amplify.helpers.BaseTest;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
 @SuppressWarnings("ConstantConditions")
 @SuppressLint("Assert")
@@ -94,111 +91,6 @@ public class StringUtilsTest extends BaseTest {
         assertEquals(
                 "defaultIfBlank should have returned the default string",
                 DEFAULT_STRING, sanitizedString);
-    }
-
-    @Test
-    public void testThatIsBlankReturnsTrueIfStringIsNull() {
-        // Arrange
-        final String nullString = null;
-
-        // Act
-        final Boolean isBlank = StringUtils.isBlank(nullString);
-
-        // Assert
-        assertTrue(
-                "isBlank should have returned true",
-                isBlank);
-    }
-
-    @Test
-    public void testThatIsBlankReturnsTrueIfStringIsEmpty() {
-        // Arrange
-        final String emptyString = "";
-
-        // Act
-        final Boolean isBlank = StringUtils.isBlank(emptyString);
-
-        // Assert
-        assertTrue(
-                "isBlank should have returned true",
-                isBlank);
-    }
-
-    @Test
-    public void testThatIsBlankReturnsTrueIfStringIsWhitespaceOnly() {
-        // Arrange
-        final String whitespaceOnlyString = "   ";
-
-        // Act
-        final Boolean isBlank = StringUtils.isBlank(whitespaceOnlyString);
-
-        // Assert
-        assertTrue(
-                "isBlank should have returned true",
-                isBlank);
-    }
-
-    @Test
-    public void testThatIsBlankReturnsFalseIfStringContainsAtLeastOneNonWhitespaceCharacter() {
-        // Arrange
-        final String nullString = "any string containing at least one non-whitespace character";
-
-        // Act
-        final Boolean isBlank = StringUtils.isBlank(nullString);
-
-        // Assert
-        assertFalse(
-                "isBlank should have returned false",
-                isBlank);
-    }
-
-    @Test
-    public void testThatCapitalizeOnlyFirstCharacterCaseIsChangedOnMixedCase() {
-        // Arrange
-        final String testString = "hElLO";
-        final String expectedString = "HElLO";
-
-        // Act
-        final String modifiedString = StringUtils.capitalize(testString);
-
-        // Assert
-        assertEquals(
-                "Only the first letter case should have been changed",
-                expectedString,
-                modifiedString);
-
-    }
-
-    @Test
-    public void testThatCapitalizeOnlyFirstCharacterIsCapitalizedOnAllLowercase() {
-        // Arrange
-        final String testString = "hello";
-        final String expectedString = "Hello";
-
-        // Act
-        final String modifiedString = StringUtils.capitalize(testString);
-
-        // Assert
-        assertEquals(
-                "The first letter of the string should have been capitalized",
-                expectedString,
-                modifiedString);
-
-    }
-
-    @Test
-    public void testThatCapitalizeNullReturnsNull() {
-        // Arrange
-        final String testString = null;
-
-        // Act
-        final String modifiedString = StringUtils.capitalize(testString);
-
-        // Assert
-        assertNull(
-                "Modified string should be null as null was passed in",
-                modifiedString);
-
     }
 
 }

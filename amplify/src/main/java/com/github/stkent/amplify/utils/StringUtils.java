@@ -19,50 +19,21 @@ package com.github.stkent.amplify.utils;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import java.util.Locale;
-
 public final class StringUtils {
 
-    public static String capitalizeFully(@Nullable final String string) {
-        if (isBlank(string)) {
-            return string;
-        }
-
-        return capitalize(string.toLowerCase(Locale.getDefault()));
-    }
-
     /**
-     * Capitalizes a String changing the first letter to title case.
-     *
-     * @param string the String to capitalize, may be null
-     * @return the String with the first letter capitalized or null
+     * @return <code>primaryString</code> if it is not blank (i.e. non-null, non-empty, and not pure whitespace);
+     *         <code>defaultString</code> otherwise
      */
-    @Nullable
-    public static String capitalize(@Nullable final String string) {
-        if (isBlank(string)) {
-            return string;
-        }
-
-        final char firstChar = string.charAt(0);
-        final char newChar = Character.toUpperCase(firstChar);
-        if (firstChar == newChar) {
-            return string;
-        }
-
-        int strLen = string.length();
-
-        char[] newChars = new char[strLen];
-        newChars[0] = newChar;
-        string.getChars(1, strLen, newChars, 1);
-
-        return String.valueOf(newChars);
+    @NonNull
+    public static String defaultIfBlank(@Nullable final String primaryString, @NonNull final String defaultString) {
+        return isBlank(primaryString) ? defaultString : primaryString;
     }
-
 
     /**
      * @return true if <code>charSequence</code> is null, empty, or whitespace; false otherwise
      */
-    public static boolean isBlank(@Nullable final CharSequence charSequence) {
+    private static boolean isBlank(@Nullable final CharSequence charSequence) {
         if (charSequence == null) {
             return true;
         }
@@ -80,26 +51,6 @@ public final class StringUtils {
         }
 
         return true;
-    }
-
-    /**
-     * @return true if <code>charSequence</code> is non-null, non-empty, and not pure whitespace;
-     *         false otherwise
-     */
-    public static boolean isNotBlank(@Nullable final CharSequence charSequence) {
-        return !isBlank(charSequence);
-    }
-
-    /**
-     * @return <code>primaryString</code> if it is not blank (i.e. non-null, non-empty, and not pure
-     *         whitespace); <code>defaultString</code> otherwise
-     */
-    @NonNull
-    public static String defaultIfBlank(
-            @Nullable final String primaryString,
-            @NonNull final String defaultString) {
-
-        return StringUtils.isNotBlank(primaryString) ? primaryString : defaultString;
     }
 
     private StringUtils() {
