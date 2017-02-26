@@ -8,14 +8,6 @@ Respectfully request feedback in your Android app.
 
 <a href="https://travis-ci.org/stkent/amplify"><img src="https://travis-ci.org/stkent/amplify.svg" /></a> <a href="https://bintray.com/stkent/android-libraries/amplify/"><img src="https://img.shields.io/bintray/v/stkent/android-libraries/amplify.svg" /></a> <a href="http://www.detroitlabs.com/"><img src="https://img.shields.io/badge/Sponsor-Detroit%20Labs-000000.svg" /></a> [![Coverage Status](https://coveralls.io/repos/github/stkent/amplify/badge.svg?branch=master)](https://coveralls.io/github/stkent/amplify?branch=master) [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-amplify-green.svg?style=true)](https://android-arsenal.com/details/1/3290)
 
-# Development Status: Dormant
-
-- Not currently under active development.
-- Active development may resume in the future.
-- Bug reports will be triaged and fixed. No guarantees are made regarding fix timelines.
-- Feature requests will be triaged. No guarantees are made regarding acceptance or implementation timelines.
-- Pull requests from external contributors are not currently being accepted.
-
 # Guide
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
@@ -41,6 +33,14 @@ Respectfully request feedback in your Android app.
 - [License](#license)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+# Development Status: Dormant
+
+- Not currently under active development.
+- Active development may resume in the future.
+- Bug reports will be triaged and fixed. No guarantees are made regarding fix timelines.
+- Feature requests will be triaged. No guarantees are made regarding acceptance or implementation timelines.
+- Pull requests from external contributors are not currently being accepted.
 
 # Introduction
 
@@ -94,7 +94,7 @@ These components are designed to complement each other, and combining them as de
 
 ```groovy
 dependencies {
-    compile 'com.github.stkent:amplify:1.5.0'
+    compile 'com.github.stkent:amplify:2.0.0'
 }
 ```
 
@@ -110,7 +110,10 @@ public class ExampleApplication extends Application {
         super.onCreate();
         
         Amplify.initSharedInstance(this)
-               .setFeedbackEmailAddress("someone@example.com")
+               .setPositiveFeedbackCollectors(
+                       new GooglePlayStoreFeedbackCollector(releasePackageName))
+               .setCriticalFeedbackCollectors(
+                       new DefaultEmailFeedbackCollector(this, "someone@example.com"))
                .applyAllDefaultRules();
     }
     
@@ -189,6 +192,7 @@ These rules are based on the environment/device in which the embedding applicati
 _amplify_ is packaged with the following environment-based rules:
 
 - `GooglePlayStoreRule`: verifies whether or not the Google Play Store is installed on the current device.
+- `AmazonAppStoreRule`: verifies whether or not the Amazon App Store is installed on the current device.
 
 Environment-based rules can be applied by calling the `addEnvironmentBasedRule` method when configuring your `Amplify` instance. For example:
 
@@ -200,7 +204,10 @@ public class ExampleApplication extends Application {
         super.onCreate();
         
         Amplify.initSharedInstance(this)
-               .setFeedbackEmailAddress("someone@example.com")
+               .setPositiveFeedbackCollectors(
+                       new GooglePlayStoreFeedbackCollector(releasePackageName))
+               .setCriticalFeedbackCollectors(
+                       new DefaultEmailFeedbackCollector(this, "someone@example.com"))
                .addEnvironmentBasedRule(new GooglePlayStoreRule()); // Prompt never shown if Google Play Store not installed.
     }
     
@@ -227,7 +234,10 @@ public class ExampleApplication extends Application {
         super.onCreate();
         
         Amplify.initSharedInstance(this)
-               .setFeedbackEmailAddress("someone@example.com")
+               .setPositiveFeedbackCollectors(
+                       new GooglePlayStoreFeedbackCollector(releasePackageName))
+               .setCriticalFeedbackCollectors(
+                       new DefaultEmailFeedbackCollector(this, "someone@example.com"))
                .setInstallTimeCooldownDays(14)   // Prompt not shown within two weeks of initial install.
                .setLastUpdateTimeCooldownDays(7) // Prompt not shown within one week of most recent update.
                .setLastCrashTimeCooldownDays(7); // Prompt not shown within one week of most recent crash.
@@ -276,7 +286,10 @@ public class ExampleApplication extends Application {
         super.onCreate();
         
         Amplify.initSharedInstance(this)
-               .setFeedbackEmailAddress("someone@example.com")
+               .setPositiveFeedbackCollectors(
+                       new GooglePlayStoreFeedbackCollector(releasePackageName))
+               .setCriticalFeedbackCollectors(
+                       new DefaultEmailFeedbackCollector(this, "someone@example.com"))
                .addTotalEventCountRule(PromptViewEvent.USER_GAVE_POSITIVE_FEEDBACK,
                         new MaximumCountRule(1)) // Never ask the user for feedback again if they already responded positively.
     }
@@ -515,7 +528,10 @@ public class ExampleApplication extends Application {
         super.onCreate();
         
         Amplify.initSharedInstance(this)
-               .setFeedbackEmailAddress("someone@example.com")
+               .setPositiveFeedbackCollectors(
+                       new GooglePlayStoreFeedbackCollector(releasePackageName))
+               .setCriticalFeedbackCollectors(
+                       new DefaultEmailFeedbackCollector(this, "someone@example.com"))
                .addEnvironmentBasedRule(new MyCustomEnvironmentBasedRule());
     }
     
@@ -565,6 +581,8 @@ To provide a totally custom experience in which _amplify_ does not manage the pr
 
 ## Feedback Emails
 
+// fixme: update this
+
 To customize the subject line and pre-filled body of critical feedback emails, pass an implementation of the `IEmailContentProvider` interface to the `Amplify` instance method `setFeedbackEmailContentProvider`:
 
 ```java
@@ -575,7 +593,10 @@ public class ExampleApplication extends Application {
         super.onCreate();
         
         Amplify.initSharedInstance(this)
-               .setFeedbackEmailAddress("someone@example.com")
+               .setPositiveFeedbackCollectors(
+                       new GooglePlayStoreFeedbackCollector(releasePackageName))
+               .setCriticalFeedbackCollectors(
+                       new CustomEmailFeedbackCollector(this, "someone@example.com"))
                .setFeedbackEmailContentProvider(new CustomEmailContentProvider());
     }
     
@@ -600,7 +621,10 @@ public class ExampleApplication extends Application {
         Amplify.setLogger(new AndroidLogger());
         
         Amplify.initSharedInstance(this)
-               .setFeedbackEmailAddress("someone@example.com");
+               .setPositiveFeedbackCollectors(
+                       new GooglePlayStoreFeedbackCollector(releasePackageName))
+               .setCriticalFeedbackCollectors(
+                       new DefaultEmailFeedbackCollector(this, "someone@example.com"));
     }
     
 }
@@ -618,7 +642,10 @@ public class ExampleApplication extends Application {
         super.onCreate();
         
         Amplify.initSharedInstance(this)
-               .setFeedbackEmailAddress("someone@example.com")
+               .setPositiveFeedbackCollectors(
+                       new GooglePlayStoreFeedbackCollector(releasePackageName))
+               .setCriticalFeedbackCollectors(
+                       new DefaultEmailFeedbackCollector(this, "someone@example.com"))
                .setAlwaysShow(BuildConfig.DEBUG);
     }
     
@@ -635,7 +662,10 @@ public class ExampleApplication extends Application {
         super.onCreate();
         
         Amplify.initSharedInstance(this)
-               .setFeedbackEmailAddress("someone@example.com")
+               .setPositiveFeedbackCollectors(
+                       new GooglePlayStoreFeedbackCollector(releasePackageName))
+               .setCriticalFeedbackCollectors(
+                       new DefaultEmailFeedbackCollector(this, "someone@example.com"))
                .setPackageName("my.release.package.name");
     }
     
@@ -656,7 +686,10 @@ public class ExampleApplication extends Application {
         final String sharedPrefsName = "my-custom-shared-prefs-name";
         
         Amplify.initSharedInstance(this, sharedPrefsName)
-               .setFeedbackEmailAddress("someone@example.com")
+               .setPositiveFeedbackCollectors(
+                       new GooglePlayStoreFeedbackCollector(releasePackageName))
+               .setCriticalFeedbackCollectors(
+                       new DefaultEmailFeedbackCollector(this, "someone@example.com"))
                .applyAllDefaultRules();
     }
     
@@ -683,7 +716,10 @@ public class ExampleApplication extends Application {
         }
 
         Amplify.initSharedInstance(this, sharedPrefsName)
-               .setFeedbackEmailAddress("someone@example.com")
+               .setPositiveFeedbackCollectors(
+                       new GooglePlayStoreFeedbackCollector(releasePackageName))
+               .setCriticalFeedbackCollectors(
+                       new DefaultEmailFeedbackCollector(this, "someone@example.com"))
                .applyAllDefaultRules();
     }
     
