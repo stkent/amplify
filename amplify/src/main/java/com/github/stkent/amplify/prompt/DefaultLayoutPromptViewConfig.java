@@ -23,6 +23,7 @@ import android.os.Parcelable;
 import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.Px;
 import android.support.annotation.StyleableRes;
 
 import com.github.stkent.amplify.R;
@@ -38,7 +39,7 @@ public final class DefaultLayoutPromptViewConfig implements Parcelable {
     private static final int DEFAULT_BACKGROUND_COLOR = 0xFF3C5A96;
 
     private static final int DEFAULT_GET_COLOR_VALUE_IF_UNDEFINED = Integer.MAX_VALUE;
-    private static final int DEFAULT_GET_DIMENSION_VALUE_IF_UNDEFINED = Integer.MAX_VALUE;
+    private static final int DEFAULT_DIMENSION_VALUE_IF_UNDEFINED = Integer.MAX_VALUE;
 
     /**
      * @return <code>primaryColor</code> if it is non-null; <code>defaultColor</code> otherwise
@@ -61,9 +62,15 @@ public final class DefaultLayoutPromptViewConfig implements Parcelable {
      * @return the dimension in px defined for the attribute at <code>index</code>, if defined; null otherwise
      */
     @Nullable
-    private static Integer suppliedDimensionOrNull(@NonNull final TypedArray typedArray, @StyleableRes final int index) {
-        final int dimensionPixelSize = typedArray.getDimensionPixelSize(index, DEFAULT_GET_DIMENSION_VALUE_IF_UNDEFINED);
-        return dimensionPixelSize != DEFAULT_GET_DIMENSION_VALUE_IF_UNDEFINED ? dimensionPixelSize : null;
+    @Px
+    private static Integer suppliedDimensionOrNull(
+            @NonNull final TypedArray typedArray,
+            @StyleableRes final int index) {
+
+        final int dimensionPixelSize = typedArray.getDimensionPixelSize(index, DEFAULT_DIMENSION_VALUE_IF_UNDEFINED);
+
+        //noinspection ResourceType
+        return dimensionPixelSize != DEFAULT_DIMENSION_VALUE_IF_UNDEFINED ? dimensionPixelSize : null;
     }
 
     @Nullable private final Integer foregroundColor;
@@ -210,16 +217,19 @@ public final class DefaultLayoutPromptViewConfig implements Parcelable {
     }
 
     @Nullable
+    @Px
     public Integer getCustomTextSizePx() {
         return customTextSizePx;
     }
 
     @Nullable
+    @Px
     public Integer getCustomButtonBorderWidthPx() {
         return customButtonBorderWidthPx;
     }
 
     @Nullable
+    @Px
     public Integer getCustomButtonCornerRadiusPx() {
         return customButtonCornerRadiusPx;
     }
@@ -300,17 +310,17 @@ public final class DefaultLayoutPromptViewConfig implements Parcelable {
             return this;
         }
 
-        public Builder setCustomTextSizePx(final int customTextSizePx) {
+        public Builder setCustomTextSizePx(@Px final int customTextSizePx) {
             this.customTextSizePx = customTextSizePx;
             return this;
         }
 
-        public Builder setButtonBorderWidthPx(final int customButtonBorderWidthPx) {
+        public Builder setButtonBorderWidthPx(@Px final int customButtonBorderWidthPx) {
             this.customButtonBorderWidthPx = customButtonBorderWidthPx;
             return this;
         }
 
-        public Builder setButtonCornerRadiusPx(final int customButtonCornerRadiusPx) {
+        public Builder setButtonCornerRadiusPx(@Px final int customButtonCornerRadiusPx) {
             this.customButtonCornerRadiusPx = customButtonCornerRadiusPx;
             return this;
         }

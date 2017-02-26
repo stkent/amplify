@@ -18,19 +18,21 @@ package com.github.stkent.amplify.utils;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.support.annotation.Dimension;
 import android.support.annotation.NonNull;
+import android.support.annotation.Px;
 import android.util.DisplayMetrics;
 
+import static android.support.annotation.Dimension.DP;
+import static android.util.DisplayMetrics.DENSITY_DEFAULT;
 import static java.lang.Math.max;
 import static java.lang.Math.round;
 
 public final class DisplayUtils {
 
     // From http://stackoverflow.com/a/9563438/2911458 with modifications
-    public static int dpToPx(
-            @NonNull final Context context,
-            final int dp) {
-
+    @Px
+    public static int dpToPx(@NonNull final Context context, @Dimension(unit = DP) final int dp) {
         if (dp < 0) {
             throw new IllegalStateException("Dimension must be > 0.");
         }
