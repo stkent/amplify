@@ -43,8 +43,7 @@ public final class DisplayUtils {
 
         final Resources resources = context.getResources();
         final DisplayMetrics displayMetrics = resources.getDisplayMetrics();
-        final float floatResult
-                = dp * ((float) displayMetrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
+        final float floatResult = dp * ((float) displayMetrics.densityDpi / DENSITY_DEFAULT);
 
         return max(1, round(floatResult));
     }

@@ -90,14 +90,14 @@ public final class CustomLayoutPromptViewConfig implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeValue(this.questionLayout);
-        dest.writeValue(this.thanksLayout);
+        dest.writeValue(questionLayout);
+        dest.writeValue(thanksLayout);
     }
 
     @SuppressLint("ParcelClassLoader")
     protected CustomLayoutPromptViewConfig(Parcel in) {
-        this.questionLayout = (Integer) in.readValue(null);
-        this.thanksLayout = (Integer) in.readValue(null);
+        questionLayout = (Integer) in.readValue(null);
+        thanksLayout = (Integer) in.readValue(null);
     }
 
     public static final Parcelable.Creator<CustomLayoutPromptViewConfig> CREATOR

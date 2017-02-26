@@ -353,36 +353,36 @@ public final class DefaultLayoutPromptViewConfig implements Parcelable {
 
     @Override
     public void writeToParcel(final Parcel dest, final int flags) {
-        dest.writeValue(this.foregroundColor);
-        dest.writeValue(this.backgroundColor);
-        dest.writeValue(this.titleTextColor);
-        dest.writeValue(this.subtitleTextColor);
-        dest.writeValue(this.positiveButtonTextColor);
-        dest.writeValue(this.positiveButtonBackgroundColor);
-        dest.writeValue(this.positiveButtonBorderColor);
-        dest.writeValue(this.negativeButtonTextColor);
-        dest.writeValue(this.negativeButtonBackgroundColor);
-        dest.writeValue(this.negativeButtonBorderColor);
-        dest.writeValue(this.customTextSizePx);
-        dest.writeValue(this.customButtonBorderWidthPx);
-        dest.writeValue(this.customButtonCornerRadiusPx);
+        dest.writeValue(foregroundColor);
+        dest.writeValue(backgroundColor);
+        dest.writeValue(titleTextColor);
+        dest.writeValue(subtitleTextColor);
+        dest.writeValue(positiveButtonTextColor);
+        dest.writeValue(positiveButtonBackgroundColor);
+        dest.writeValue(positiveButtonBorderColor);
+        dest.writeValue(negativeButtonTextColor);
+        dest.writeValue(negativeButtonBackgroundColor);
+        dest.writeValue(negativeButtonBorderColor);
+        dest.writeValue(customTextSizePx);
+        dest.writeValue(customButtonBorderWidthPx);
+        dest.writeValue(customButtonCornerRadiusPx);
     }
 
     @SuppressLint("ParcelClassLoader")
     protected DefaultLayoutPromptViewConfig(@NonNull final Parcel in) {
-        this.foregroundColor = (Integer) in.readValue(null);
-        this.backgroundColor = (Integer) in.readValue(null);
-        this.titleTextColor = (Integer) in.readValue(null);
-        this.subtitleTextColor = (Integer) in.readValue(null);
-        this.positiveButtonTextColor = (Integer) in.readValue(null);
-        this.positiveButtonBackgroundColor = (Integer) in.readValue(null);
-        this.positiveButtonBorderColor = (Integer) in.readValue(null);
-        this.negativeButtonTextColor = (Integer) in.readValue(null);
-        this.negativeButtonBackgroundColor = (Integer) in.readValue(null);
-        this.negativeButtonBorderColor = (Integer) in.readValue(null);
-        this.customTextSizePx = (Integer) in.readValue(null);
-        this.customButtonBorderWidthPx = (Integer) in.readValue(null);
-        this.customButtonCornerRadiusPx = (Integer) in.readValue(null);
+        foregroundColor = (Integer) in.readValue(null);
+        backgroundColor = (Integer) in.readValue(null);
+        titleTextColor = (Integer) in.readValue(null);
+        subtitleTextColor = (Integer) in.readValue(null);
+        positiveButtonTextColor = (Integer) in.readValue(null);
+        positiveButtonBackgroundColor = (Integer) in.readValue(null);
+        positiveButtonBorderColor = (Integer) in.readValue(null);
+        negativeButtonTextColor = (Integer) in.readValue(null);
+        negativeButtonBackgroundColor = (Integer) in.readValue(null);
+        negativeButtonBorderColor = (Integer) in.readValue(null);
+        customTextSizePx = (Integer) in.readValue(null);
+        customButtonBorderWidthPx = (Integer) in.readValue(null);
+        customButtonCornerRadiusPx = (Integer) in.readValue(null);
     }
 
     public static final Parcelable.Creator<DefaultLayoutPromptViewConfig> CREATOR

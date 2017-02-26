@@ -415,40 +415,40 @@ public final class BasePromptViewConfig implements Parcelable {
 
     @Override
     public void writeToParcel(final Parcel dest, final int flags) {
-        dest.writeValue(this.userOpinionQuestionTitle);
-        dest.writeValue(this.userOpinionQuestionSubtitle);
-        dest.writeValue(this.userOpinionQuestionPositiveButtonLabel);
-        dest.writeValue(this.userOpinionQuestionNegativeButtonLabel);
-        dest.writeValue(this.positiveFeedbackQuestionTitle);
-        dest.writeValue(this.positiveFeedbackQuestionSubtitle);
-        dest.writeValue(this.positiveFeedbackQuestionPositiveButtonLabel);
-        dest.writeValue(this.positiveFeedbackQuestionNegativeButtonLabel);
-        dest.writeValue(this.criticalFeedbackQuestionTitle);
-        dest.writeValue(this.criticalFeedbackQuestionSubtitle);
-        dest.writeValue(this.criticalFeedbackQuestionPositiveButtonLabel);
-        dest.writeValue(this.criticalFeedbackQuestionNegativeButtonLabel);
-        dest.writeValue(this.thanksTitle);
-        dest.writeValue(this.thanksSubtitle);
-        dest.writeValue(this.thanksDisplayTimeMs);
+        dest.writeValue(userOpinionQuestionTitle);
+        dest.writeValue(userOpinionQuestionSubtitle);
+        dest.writeValue(userOpinionQuestionPositiveButtonLabel);
+        dest.writeValue(userOpinionQuestionNegativeButtonLabel);
+        dest.writeValue(positiveFeedbackQuestionTitle);
+        dest.writeValue(positiveFeedbackQuestionSubtitle);
+        dest.writeValue(positiveFeedbackQuestionPositiveButtonLabel);
+        dest.writeValue(positiveFeedbackQuestionNegativeButtonLabel);
+        dest.writeValue(criticalFeedbackQuestionTitle);
+        dest.writeValue(criticalFeedbackQuestionSubtitle);
+        dest.writeValue(criticalFeedbackQuestionPositiveButtonLabel);
+        dest.writeValue(criticalFeedbackQuestionNegativeButtonLabel);
+        dest.writeValue(thanksTitle);
+        dest.writeValue(thanksSubtitle);
+        dest.writeValue(thanksDisplayTimeMs);
     }
 
     @SuppressLint("ParcelClassLoader")
     protected BasePromptViewConfig(@NonNull final Parcel in) {
-        this.userOpinionQuestionTitle = (String) in.readValue(null);
-        this.userOpinionQuestionSubtitle = (String) in.readValue(null);
-        this.userOpinionQuestionPositiveButtonLabel = (String) in.readValue(null);
-        this.userOpinionQuestionNegativeButtonLabel = (String) in.readValue(null);
-        this.positiveFeedbackQuestionTitle = (String) in.readValue(null);
-        this.positiveFeedbackQuestionSubtitle = (String) in.readValue(null);
-        this.positiveFeedbackQuestionPositiveButtonLabel = (String) in.readValue(null);
-        this.positiveFeedbackQuestionNegativeButtonLabel = (String) in.readValue(null);
-        this.criticalFeedbackQuestionTitle = (String) in.readValue(null);
-        this.criticalFeedbackQuestionSubtitle = (String) in.readValue(null);
-        this.criticalFeedbackQuestionPositiveButtonLabel = (String) in.readValue(null);
-        this.criticalFeedbackQuestionNegativeButtonLabel = (String) in.readValue(null);
-        this.thanksTitle = (String) in.readValue(null);
-        this.thanksSubtitle = (String) in.readValue(null);
-        this.thanksDisplayTimeMs = (Long) in.readValue(null);
+        userOpinionQuestionTitle = (String) in.readValue(null);
+        userOpinionQuestionSubtitle = (String) in.readValue(null);
+        userOpinionQuestionPositiveButtonLabel = (String) in.readValue(null);
+        userOpinionQuestionNegativeButtonLabel = (String) in.readValue(null);
+        positiveFeedbackQuestionTitle = (String) in.readValue(null);
+        positiveFeedbackQuestionSubtitle = (String) in.readValue(null);
+        positiveFeedbackQuestionPositiveButtonLabel = (String) in.readValue(null);
+        positiveFeedbackQuestionNegativeButtonLabel = (String) in.readValue(null);
+        criticalFeedbackQuestionTitle = (String) in.readValue(null);
+        criticalFeedbackQuestionSubtitle = (String) in.readValue(null);
+        criticalFeedbackQuestionPositiveButtonLabel = (String) in.readValue(null);
+        criticalFeedbackQuestionNegativeButtonLabel = (String) in.readValue(null);
+        thanksTitle = (String) in.readValue(null);
+        thanksSubtitle = (String) in.readValue(null);
+        thanksDisplayTimeMs = (Long) in.readValue(null);
     }
 
     public static final Parcelable.Creator<BasePromptViewConfig> CREATOR

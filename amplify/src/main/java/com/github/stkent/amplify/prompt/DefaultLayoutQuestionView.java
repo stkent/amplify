@@ -119,7 +119,10 @@ final class DefaultLayoutQuestionView extends CustomLayoutQuestionView {
         }
     }
 
-    private void configureButtonBackgrounds(final Context context, @NonNull final DefaultLayoutPromptViewConfig config) {
+    private void configureButtonBackgrounds(
+            final Context context,
+            @NonNull final DefaultLayoutPromptViewConfig config) {
+
         final Integer customButtonBorderWidthPx = config.getCustomButtonBorderWidthPx();
         final Integer customButtonCornerRadiusPx = config.getCustomButtonCornerRadiusPx();
 
