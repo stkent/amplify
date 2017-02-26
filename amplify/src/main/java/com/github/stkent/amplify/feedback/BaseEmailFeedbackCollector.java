@@ -22,7 +22,11 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 
+import com.github.stkent.amplify.App;
+import com.github.stkent.amplify.Device;
 import com.github.stkent.amplify.Environment;
+import com.github.stkent.amplify.IApp;
+import com.github.stkent.amplify.IDevice;
 import com.github.stkent.amplify.IEnvironment;
 import com.github.stkent.amplify.tracking.Amplify;
 
@@ -37,13 +41,21 @@ public abstract class BaseEmailFeedbackCollector implements IFeedbackCollector {
     protected abstract String getBody();
 
     @NonNull
+    private final IApp app;
+
+    @NonNull
     private final IEnvironment environment;
+
+    @NonNull
+    private final IDevice device;
 
     @NonNull
     private final String[] recipients;
 
     public BaseEmailFeedbackCollector(@NonNull final Context context, @NonNull final String... recipients) {
+        this.app = new App(context);
         this.environment = new Environment(context);
+        this.device = new Device(context);
         this.recipients = recipients;
     }
 
@@ -61,8 +73,18 @@ public abstract class BaseEmailFeedbackCollector implements IFeedbackCollector {
     }
 
     @NonNull
+    protected IApp getApp() {
+        return app;
+    }
+
+    @NonNull
     protected IEnvironment getEnvironment() {
         return environment;
+    }
+
+    @NonNull
+    protected IDevice getDevice() {
+        return device;
     }
 
     @NonNull

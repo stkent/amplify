@@ -19,11 +19,6 @@ package com.github.stkent.amplify.feedback;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
-import com.github.stkent.amplify.App;
-import com.github.stkent.amplify.Device;
-import com.github.stkent.amplify.IApp;
-import com.github.stkent.amplify.IDevice;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -31,16 +26,8 @@ import java.util.TimeZone;
 
 public class DefaultEmailFeedbackCollector extends BaseEmailFeedbackCollector {
 
-    @NonNull
-    private final IApp app;
-
-    @NonNull
-    private final IDevice device;
-
     public DefaultEmailFeedbackCollector(@NonNull final Context context, @NonNull final String... recipients) {
         super(context, recipients);
-        this.app = new App(context);
-        this.device = new Device(context);
     }
 
     @SuppressWarnings("CallToSimpleGetterFromWithinClass")
@@ -59,35 +46,17 @@ public class DefaultEmailFeedbackCollector extends BaseEmailFeedbackCollector {
 
         final String appVersionString = String.format("%s (%s)", getApp().getVersionName(), getApp().getVersionCode());
 
-        return    "Time Stamp: " + getCurrentUtcTimeStringForDate(new Date())
-                + "\n"
-                + "App Version: " + appVersionString
-                + "\n"
-                + "Android Version: " + androidVersionString
-                + "\n"
-                + "Device Manufacturer: " + getDevice().getManufacturer()
-                + "\n"
-                + "Device Model: " + getDevice().getModel()
-                + "\n"
-                + "Display Resolution: " + getDevice().getResolution()
-                + "\n"
-                + "Display Density (Actual): " + getDevice().getActualDensity()
-                + "\n"
-                + "Display Density (Bucket) " + getDevice().getDensityBucket()
-                + "\n"
+        // @formatter:off
+        return    "Time Stamp: " + getCurrentUtcTimeStringForDate(new Date()) + "\n"
+                + "App Version: " + appVersionString + "\n"
+                + "Android Version: " + androidVersionString + "\n"
+                + "Device Manufacturer: " + getDevice().getManufacturer() + "\n"
+                + "Device Model: " + getDevice().getModel() + "\n"
+                + "Display Resolution: " + getDevice().getResolution() + "\n"
+                + "Display Density (Actual): " + getDevice().getActualDensity() + "\n"
+                + "Display Density (Bucket) " + getDevice().getDensityBucket() + "\n"
                 + "---------------------\n\n";
-    }
-
-    @SuppressWarnings("unused")
-    @NonNull
-    protected IApp getApp() {
-        return app;
-    }
-
-    @SuppressWarnings("unused")
-    @NonNull
-    protected IDevice getDevice() {
-        return device;
+        // @formatter:on
     }
 
     @NonNull
