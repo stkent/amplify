@@ -33,15 +33,15 @@ import static android.content.pm.PackageManager.MATCH_DEFAULT_ONLY;
 public final class Environment implements IEnvironment {
 
     /**
+     * Package name for the Amazon App Store.
+     */
+    private static final String AMAZON_APP_STORE_PACKAGE_NAME = "com.amazon.venezia";
+
+    /**
      * Package name for the Google Play Store. Value can be verified here:
      * https://developers.google.com/android/reference/com/google/android/gms/common/GooglePlayServicesUtil.html#GOOGLE_PLAY_STORE_PACKAGE
      */
     private static final String GOOGLE_PLAY_STORE_PACKAGE_NAME = "com.android.vending";
-
-    /**
-     * Package name for the Amazon App Store.
-     */
-    private static final String AMAZON_APP_STORE_PACKAGE_NAME = "com.amazon.venezia";
 
     @NonNull
     private final Context appContext;
@@ -73,8 +73,10 @@ public final class Environment implements IEnvironment {
 
     @Override
     public boolean isGooglePlayStoreInstalled() {
-        // Note that we do not need to worry about differentiating between Android Market and the
-        // Google Play Store because the Android Market is only available on phones running 3.0-3.2.
+        /*
+         * Note that we do not need to worry about differentiating between the Android Market and the Google Play Store
+         * because the Android Market is only available on phones running 3.0-3.2.
+         */
         return isAppInstalled(GOOGLE_PLAY_STORE_PACKAGE_NAME);
     }
 
