@@ -22,6 +22,7 @@ Respectfully request feedback in your Android app.
 - [Configuring](#configuring)
   - [Prompt Timing](#prompt-timing)
   - [Prompt UI](#prompt-ui)
+  - [Feedback Collection](#feedback-collection)
 - [Customizing](#customizing)
   - [Prompt Timing](#prompt-timing-1)
   - [Prompt UI](#prompt-ui-1)
@@ -29,7 +30,7 @@ Respectfully request feedback in your Android app.
 - [Debug Builds](#debug-builds)
   - [Logging](#logging)
   - [Package Name Override](#package-name-override)
-  - [Debug Settings](#debug-settings)
+  - [Visibility](#visibility)
 - [Resetting](#resetting)
 - [Case Studies](#case-studies)
 - [License](#license)
@@ -303,7 +304,7 @@ _amplify_ provides two configurable prompt UIs. The test app associated with thi
 
 | Test app UI; use me to explore!  |
 |----------------------------------|
-| <img src="https://raw.githubusercontent.com/stkent/amplify/master/assets/testapp.png" width="50%" /> |
+| <img src="https://raw.githubusercontent.com/stkent/amplify/master/assets/app.png" width="50%" /> |
 
 ### Default Layout
 
