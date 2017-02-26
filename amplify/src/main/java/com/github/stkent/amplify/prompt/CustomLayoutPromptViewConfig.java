@@ -36,15 +36,20 @@ public final class CustomLayoutPromptViewConfig implements Parcelable {
      * @return the color value for the attribute at <code>index</code>, if defined; null otherwise
      */
     @Nullable
+    @LayoutRes
     private static Integer suppliedLayoutOrNull(@NonNull final TypedArray typedArray, @StyleableRes final int index) {
         final int layoutResourceId = typedArray.getResourceId(index, DEFAULT_LAYOUT_RES_ID_IF_UNDEFINED);
+
+        //noinspection ResourceType
         return layoutResourceId != DEFAULT_LAYOUT_RES_ID_IF_UNDEFINED ? layoutResourceId : null;
     }
 
     @Nullable
+    @LayoutRes
     private final Integer questionLayout;
 
     @Nullable
+    @LayoutRes
     private final Integer thanksLayout;
 
     public CustomLayoutPromptViewConfig(@NonNull final TypedArray typedArray) {
