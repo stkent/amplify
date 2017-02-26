@@ -1,5 +1,16 @@
 # Change Log
 
+## v2.0.0
+
+_2017-02-26_
+
+- [Added] Ability to specify feedback collection methods via `Amplify.setPositiveFeedbackCollectors` and `Amplify.setCriticalFeedbackCollectors`. Prior to this release, positive feedback was always collected via the Google Play Store, and critical feedback via email. This expanded functionality replaces the more limited functionality previously offered by `Amplify.setFeedbackEmailAddress`, `Amplify.setFeedbackEmailContentProvider`, and `Amplify.setPackageName` and those methods have therefore been removed.
+- [Added] Ability to specify multiple feedback collection methods in priority order. If the highest priority collector is unable to collect feedback on the current device, the next highest priority collector is tried, etc.
+- [Added] Built-in support for collecting feedback via the Amazon App Store. See the new `AmazonAppStoreFeedbackCollector` class.
+- [Changed] Default feedback email template now includes more information about the user device.
+- [Changed] Tweaked the example app to make it feel like it belongs to this project (new name and icon!).
+- [Internal] Simplified internal models and updated them to be more representative of the problem space rather than of the solution space. This internal restructuring was significant, but not much should leak into consumer code. If you notice any changes not captured in this CHANGELOG entry that have affected your consumption of the library, please open an issue that describes the change and its impact.
+
 ## v1.5.1
 
 _2017-01-02_
