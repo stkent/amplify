@@ -18,10 +18,8 @@ public class ExampleApplication extends Application {
         final String releasePackageName = "com.github.stkent.testapp";
 
         Amplify.initSharedInstance(this)
-               .setPositiveFeedbackCollectors(
-                       new GooglePlayStoreFeedbackCollector(releasePackageName))
-               .setCriticalFeedbackCollectors(
-                       new DefaultEmailFeedbackCollector(this, "someone@example.com"))
+               .setPositiveFeedbackCollectors(new GooglePlayStoreFeedbackCollector(releasePackageName))
+               .setCriticalFeedbackCollectors(new DefaultEmailFeedbackCollector("someone@example.com"))
                .setAlwaysShow(true);
     }
 

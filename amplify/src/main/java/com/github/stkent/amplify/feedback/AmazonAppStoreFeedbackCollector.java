@@ -18,10 +18,12 @@ package com.github.stkent.amplify.feedback;
 
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
+import com.github.stkent.amplify.utils.StringUtils;
 
 import static android.content.Intent.ACTION_VIEW;
 
@@ -32,26 +34,28 @@ public final class AmazonAppStoreFeedbackCollector implements IFeedbackCollector
 
     private static final String AMAZON_RETAIL_WEBSITE_URL_PREFIX = "http://www.amazon.com/gp/mas/dl/android?p=";
 
-    @NonNull
-    private final String packageName;
+    @Nullable
+    private final String overridePackageName;
 
-    public AmazonAppStoreFeedbackCollector(@NonNull final Context context) {
-        this(context.getPackageName());
+    public AmazonAppStoreFeedbackCollector() {
+        this.overridePackageName = null;
     }
 
-    public AmazonAppStoreFeedbackCollector(@NonNull final String packageName) {
-        this.packageName = packageName;
+    public AmazonAppStoreFeedbackCollector(@NonNull final String overridePackageName) {
+        this.overridePackageName = overridePackageName;
     }
 
     @Override
     public boolean tryCollectingFeedback(@NonNull final Activity currentActivity) {
+        final String packageName = StringUtils.defaultIfBlank(overridePackageName, currentActivity.getPackageName());
+
         try {
-            currentActivity.startActivity(new Intent(ACTION_VIEW, getAmazonAppStoreUrl()));
+            currentActivity.startActivity(new Intent(ACTION_VIEW, getAmazonAppStoreUrl(packageName)));
             currentActivity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             return true;
         } catch (final ActivityNotFoundException ignored) {
             try {
-                currentActivity.startActivity(new Intent(ACTION_VIEW, getAmazonRetailWebsiteUrl()));
+                currentActivity.startActivity(new Intent(ACTION_VIEW, getAmazonRetailWebsiteUrl(packageName)));
                 currentActivity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                 return true;
             } catch (final ActivityNotFoundException ignored2) {
@@ -61,12 +65,12 @@ public final class AmazonAppStoreFeedbackCollector implements IFeedbackCollector
     }
 
     @NonNull
-    private Uri getAmazonAppStoreUrl() {
+    private Uri getAmazonAppStoreUrl(@NonNull final String packageName) {
         return Uri.parse(AMAZON_APP_STORE_URL_PREFIX + packageName);
     }
 
     @NonNull
-    private Uri getAmazonRetailWebsiteUrl() {
+    private Uri getAmazonRetailWebsiteUrl(@NonNull final String packageName) {
         return Uri.parse(AMAZON_RETAIL_WEBSITE_URL_PREFIX + packageName);
     }
 

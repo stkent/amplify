@@ -16,8 +16,11 @@
  */
 package com.github.stkent.amplify.feedback;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
+
+import com.github.stkent.amplify.IApp;
+import com.github.stkent.amplify.IDevice;
+import com.github.stkent.amplify.IEnvironment;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -26,33 +29,41 @@ import java.util.TimeZone;
 
 public class DefaultEmailFeedbackCollector extends BaseEmailFeedbackCollector {
 
-    public DefaultEmailFeedbackCollector(@NonNull final Context context, @NonNull final String... recipients) {
-        super(context, recipients);
+    public DefaultEmailFeedbackCollector(@NonNull final String... recipients) {
+        super(recipients);
     }
 
     @NonNull
     @Override
-    protected String getSubjectLine() {
-        return getApp().getName() + " Android App Feedback";
+    protected String getSubjectLine(
+            @NonNull final IApp app,
+            @NonNull final IEnvironment environment,
+            @NonNull final IDevice device) {
+
+        return app.getName() + " Android App Feedback";
     }
 
     @NonNull
     @Override
-    protected String getBody() {
+    protected String getBody(
+            @NonNull final IApp app,
+            @NonNull final IEnvironment environment,
+            @NonNull final IDevice device) {
+
         final String androidVersionString = String.format(
-                "%s (%s)", getEnvironment().getAndroidVersionName(), getEnvironment().getAndroidVersionCode());
+                "%s (%s)", environment.getAndroidVersionName(), environment.getAndroidVersionCode());
 
-        final String appVersionString = String.format("%s (%s)", getApp().getVersionName(), getApp().getVersionCode());
+        final String appVersionString = String.format("%s (%s)", app.getVersionName(), app.getVersionCode());
 
         // @formatter:off
         return    "Time Stamp: " + getCurrentUtcTimeStringForDate(new Date()) + "\n"
                 + "App Version: " + appVersionString + "\n"
                 + "Android Version: " + androidVersionString + "\n"
-                + "Device Manufacturer: " + getDevice().getManufacturer() + "\n"
-                + "Device Model: " + getDevice().getModel() + "\n"
-                + "Display Resolution: " + getDevice().getResolution() + "\n"
-                + "Display Density (Actual): " + getDevice().getActualDensity() + "\n"
-                + "Display Density (Bucket) " + getDevice().getDensityBucket() + "\n"
+                + "Device Manufacturer: " + device.getManufacturer() + "\n"
+                + "Device Model: " + device.getModel() + "\n"
+                + "Display Resolution: " + device.getResolution() + "\n"
+                + "Display Density (Actual): " + device.getActualDensity() + "\n"
+                + "Display Density (Bucket) " + device.getDensityBucket() + "\n"
                 + "---------------------\n\n";
         // @formatter:on
     }

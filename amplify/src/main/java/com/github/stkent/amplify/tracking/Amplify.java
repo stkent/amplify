@@ -16,6 +16,7 @@
  */
 package com.github.stkent.amplify.tracking;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
@@ -23,6 +24,7 @@ import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 
 import com.github.stkent.amplify.App;
+import com.github.stkent.amplify.Device;
 import com.github.stkent.amplify.Environment;
 import com.github.stkent.amplify.IApp;
 import com.github.stkent.amplify.IEnvironment;
@@ -78,6 +80,7 @@ public final class Amplify implements IEventListener {
     // End logging
     // Begin shared instance
 
+    @SuppressLint("StaticFieldLeak") // We're holding the application context; that's not a problem.
     private static Amplify sharedInstance;
 
     public static Amplify initSharedInstance(@NonNull final Application application) {
@@ -110,9 +113,10 @@ public final class Amplify implements IEventListener {
     // End shared instance
     // Begin instance fields
 
-    private final IAppLevelEventRulesManager appLevelEventRulesManager;
-    private final IEnvironmentBasedRulesManager environmentBasedRulesManager;
+    private final Context applicationContext;
     private final ActivityReferenceManager activityReferenceManager;
+    private final IEnvironmentBasedRulesManager environmentBasedRulesManager;
+    private final IAppLevelEventRulesManager appLevelEventRulesManager;
     private final IEventsManager<Long> firstEventTimeRulesManager;
     private final IEventsManager<Long> lastEventTimeRulesManager;
     private final IEventsManager<Integer> lastEventVersionCodeRulesManager;
@@ -127,6 +131,8 @@ public final class Amplify implements IEventListener {
     // Begin constructors
 
     private Amplify(@NonNull final Application application, @NonNull final String sharedPrefsName) {
+        applicationContext = application;
+
         activityReferenceManager = new ActivityReferenceManager();
         application.registerActivityLifecycleCallbacks(activityReferenceManager);
 
@@ -156,16 +162,19 @@ public final class Amplify implements IEventListener {
         return this;
     }
 
-    public Amplify applyAllDefaultRules(@NonNull final Context context) {
+    public Amplify applyAllDefaultRules() {
         return this
                 .addEnvironmentBasedRule(new GooglePlayStoreRule())
                 .setLastUpdateTimeCooldownDays(DEFAULT_LAST_UPDATE_TIME_COOLDOWN_DAYS)
                 .setLastCrashTimeCooldownDays(DEFAULT_LAST_CRASH_TIME_COOLDOWN_DAYS)
                 .addTotalEventCountRule(USER_GAVE_POSITIVE_FEEDBACK,
                         new MaximumCountRule(DEFAULT_USER_GAVE_POSITIVE_FEEDBACK_MAXIMUM_COUNT))
-                .addLastEventVersionNameRule(USER_GAVE_CRITICAL_FEEDBACK, new VersionNameChangedRule(context))
-                .addLastEventVersionNameRule(USER_DECLINED_CRITICAL_FEEDBACK, new VersionNameChangedRule(context))
-                .addLastEventVersionNameRule(USER_DECLINED_POSITIVE_FEEDBACK, new VersionNameChangedRule(context));
+                .addLastEventVersionNameRule(USER_GAVE_CRITICAL_FEEDBACK,
+                        new VersionNameChangedRule(applicationContext))
+                .addLastEventVersionNameRule(USER_DECLINED_CRITICAL_FEEDBACK,
+                        new VersionNameChangedRule(applicationContext))
+                .addLastEventVersionNameRule(USER_DECLINED_POSITIVE_FEEDBACK,
+                        new VersionNameChangedRule(applicationContext));
     }
 
     public Amplify addEnvironmentBasedRule(@NonNull final IEnvironmentBasedRule rule) {
@@ -256,7 +265,12 @@ public final class Amplify implements IEventListener {
             }
 
             for (final IFeedbackCollector positiveFeedbackCollector : positiveFeedbackCollectors) {
-                if (positiveFeedbackCollector.tryCollectingFeedback(activity)) {
+                if (positiveFeedbackCollector.tryCollectingFeedback(
+                        activity,
+                        new App(applicationContext),
+                        new Environment(applicationContext),
+                        new Device(applicationContext))) {
+
                     return;
                 }
             }
@@ -268,7 +282,12 @@ public final class Amplify implements IEventListener {
             }
 
             for (final IFeedbackCollector criticalFeedbackCollector : criticalFeedbackCollectors) {
-                if (criticalFeedbackCollector.tryCollectingFeedback(activity)) {
+                if (criticalFeedbackCollector.tryCollectingFeedback(
+                        activity,
+                        new App(applicationContext),
+                        new Environment(applicationContext),
+                        new Device(applicationContext))) {
+
                     return;
                 }
             }

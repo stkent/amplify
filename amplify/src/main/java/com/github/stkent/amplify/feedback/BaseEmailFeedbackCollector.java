@@ -17,14 +17,10 @@
 package com.github.stkent.amplify.feedback;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 
-import com.github.stkent.amplify.App;
-import com.github.stkent.amplify.Device;
-import com.github.stkent.amplify.Environment;
 import com.github.stkent.amplify.IApp;
 import com.github.stkent.amplify.IDevice;
 import com.github.stkent.amplify.IEnvironment;
@@ -35,33 +31,32 @@ import static android.content.Intent.ACTION_SENDTO;
 public abstract class BaseEmailFeedbackCollector implements IFeedbackCollector {
 
     @NonNull
-    protected abstract String getSubjectLine();
+    protected abstract String getSubjectLine(
+            @NonNull final IApp app,
+            @NonNull final IEnvironment environment,
+            @NonNull final IDevice device);
 
     @NonNull
-    protected abstract String getBody();
-
-    @NonNull
-    private final IApp app;
-
-    @NonNull
-    private final IEnvironment environment;
-
-    @NonNull
-    private final IDevice device;
+    protected abstract String getBody(
+            @NonNull final IApp app,
+            @NonNull final IEnvironment environment,
+            @NonNull final IDevice device);
 
     @NonNull
     private final String[] recipients;
 
-    public BaseEmailFeedbackCollector(@NonNull final Context context, @NonNull final String... recipients) {
-        this.app = new App(context);
-        this.environment = new Environment(context);
-        this.device = new Device(context);
+    public BaseEmailFeedbackCollector(@NonNull final String... recipients) {
         this.recipients = recipients;
     }
 
     @Override
-    public boolean tryCollectingFeedback(@NonNull final Activity currentActivity) {
-        final Intent emailIntent = getEmailIntent();
+    public boolean tryCollectingFeedback(
+            @NonNull final Activity currentActivity,
+            @NonNull final IApp app,
+            @NonNull final IEnvironment environment,
+            @NonNull final IDevice device) {
+
+        final Intent emailIntent = getEmailIntent(app, environment, device);
 
         if (!environment.canHandleIntent(emailIntent)) {
             Amplify.getLogger().e("Unable to present email client chooser.");
@@ -73,27 +68,16 @@ public abstract class BaseEmailFeedbackCollector implements IFeedbackCollector {
     }
 
     @NonNull
-    protected final IApp getApp() {
-        return app;
-    }
+    private Intent getEmailIntent(
+            @NonNull final IApp app,
+            @NonNull final IEnvironment environment,
+            @NonNull final IDevice device) {
 
-    @NonNull
-    protected final IEnvironment getEnvironment() {
-        return environment;
-    }
-
-    @NonNull
-    protected final IDevice getDevice() {
-        return device;
-    }
-
-    @NonNull
-    private Intent getEmailIntent() {
         final Intent result = new Intent(ACTION_SENDTO);
         result.setData(Uri.parse("mailto:"));
         result.putExtra(Intent.EXTRA_EMAIL, recipients);
-        result.putExtra(Intent.EXTRA_SUBJECT, getSubjectLine());
-        result.putExtra(Intent.EXTRA_TEXT, getBody());
+        result.putExtra(Intent.EXTRA_SUBJECT, getSubjectLine(app, environment, device));
+        result.putExtra(Intent.EXTRA_TEXT, getBody(app, environment, device));
         return result;
     }
 
