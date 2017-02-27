@@ -39,7 +39,7 @@ Respectfully request feedback in your Android app.
 
 # Development Status
 
-**Dormant**
+**Maintained**
 
 - Not currently under active development.
 - Active development may resume in the future.
