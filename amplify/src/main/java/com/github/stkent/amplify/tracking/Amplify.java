@@ -16,21 +16,25 @@
  */
 package com.github.stkent.amplify.tracking;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
-import android.support.annotation.VisibleForTesting;
 
+import com.github.stkent.amplify.App;
+import com.github.stkent.amplify.Device;
+import com.github.stkent.amplify.Environment;
+import com.github.stkent.amplify.IApp;
+import com.github.stkent.amplify.IEnvironment;
+import com.github.stkent.amplify.feedback.IFeedbackCollector;
 import com.github.stkent.amplify.logging.ILogger;
 import com.github.stkent.amplify.logging.NoOpLogger;
 import com.github.stkent.amplify.prompt.interfaces.IPromptView;
-import com.github.stkent.amplify.tracking.interfaces.IAppEventTimeProvider;
 import com.github.stkent.amplify.tracking.interfaces.IAppLevelEventRulesManager;
 import com.github.stkent.amplify.tracking.interfaces.IEnvironmentBasedRule;
 import com.github.stkent.amplify.tracking.interfaces.IEnvironmentBasedRulesManager;
-import com.github.stkent.amplify.tracking.interfaces.IEnvironmentCapabilitiesProvider;
 import com.github.stkent.amplify.tracking.interfaces.IEvent;
 import com.github.stkent.amplify.tracking.interfaces.IEventBasedRule;
 import com.github.stkent.amplify.tracking.interfaces.IEventListener;
@@ -47,12 +51,12 @@ import com.github.stkent.amplify.tracking.rules.MaximumCountRule;
 import com.github.stkent.amplify.tracking.rules.VersionNameChangedRule;
 import com.github.stkent.amplify.utils.ActivityReferenceManager;
 import com.github.stkent.amplify.utils.Constants;
-import com.github.stkent.amplify.utils.PlayStoreUtil;
-import com.github.stkent.amplify.utils.appinfo.AppInfoUtil;
-import com.github.stkent.amplify.utils.appinfo.IAppInfoProvider;
-import com.github.stkent.amplify.utils.feedback.DefaultEmailContentProvider;
-import com.github.stkent.amplify.utils.feedback.FeedbackUtil;
-import com.github.stkent.amplify.utils.feedback.IEmailContentProvider;
+
+import static android.content.Context.MODE_PRIVATE;
+import static com.github.stkent.amplify.tracking.PromptInteractionEvent.USER_DECLINED_CRITICAL_FEEDBACK;
+import static com.github.stkent.amplify.tracking.PromptInteractionEvent.USER_DECLINED_POSITIVE_FEEDBACK;
+import static com.github.stkent.amplify.tracking.PromptInteractionEvent.USER_GAVE_CRITICAL_FEEDBACK;
+import static com.github.stkent.amplify.tracking.PromptInteractionEvent.USER_GAVE_POSITIVE_FEEDBACK;
 
 @SuppressWarnings({"PMD.ExcessiveParameterList", "checkstyle:parameternumber"})
 public final class Amplify implements IEventListener {
@@ -76,19 +80,20 @@ public final class Amplify implements IEventListener {
     // End logging
     // Begin shared instance
 
+    @SuppressLint("StaticFieldLeak") // We're holding the application context; that's not a problem.
     private static Amplify sharedInstance;
 
-    public static Amplify initSharedInstance(@NonNull final Application app) {
-        return initSharedInstance(app, Constants.DEFAULT_BACKING_SHARED_PREFERENCES_NAME);
+    public static Amplify initSharedInstance(@NonNull final Application application) {
+        return initSharedInstance(application, Constants.DEFAULT_BACKING_SHARED_PREFERENCES_NAME);
     }
 
     private static Amplify initSharedInstance(
-            @NonNull final Application app,
+            @NonNull final Application application,
             @NonNull final String backingSharedPreferencesName) {
 
         synchronized (Amplify.class) {
             if (sharedInstance == null) {
-                sharedInstance = new Amplify(app, backingSharedPreferencesName);
+                sharedInstance = new Amplify(application, backingSharedPreferencesName);
             }
         }
 
@@ -98,8 +103,7 @@ public final class Amplify implements IEventListener {
     public static Amplify getSharedInstance() {
         synchronized (Amplify.class) {
             if (sharedInstance == null) {
-                throw new IllegalStateException(
-                        "You must call initSharedInstance before calling getSharedInstance.");
+                throw new IllegalStateException("You must call initSharedInstance before calling getSharedInstance.");
             }
         }
 
@@ -109,10 +113,10 @@ public final class Amplify implements IEventListener {
     // End shared instance
     // Begin instance fields
 
-    private final IAppInfoProvider appInfoProvider;
-    private final IAppLevelEventRulesManager appLevelEventRulesManager;
-    private final IEnvironmentBasedRulesManager environmentBasedRulesManager;
+    private final Context applicationContext;
     private final ActivityReferenceManager activityReferenceManager;
+    private final IEnvironmentBasedRulesManager environmentBasedRulesManager;
+    private final IAppLevelEventRulesManager appLevelEventRulesManager;
     private final IEventsManager<Long> firstEventTimeRulesManager;
     private final IEventsManager<Long> lastEventTimeRulesManager;
     private final IEventsManager<Integer> lastEventVersionCodeRulesManager;
@@ -120,91 +124,41 @@ public final class Amplify implements IEventListener {
     private final IEventsManager<Integer> totalEventCountRulesManager;
 
     private boolean alwaysShow;
-    private String packageName;
-    private String feedbackEmailAddress;
-    private IEmailContentProvider emailContentProvider = new DefaultEmailContentProvider();
+    private IFeedbackCollector[] positiveFeedbackCollectors;
+    private IFeedbackCollector[] criticalFeedbackCollectors;
 
     // End instance fields
     // Begin constructors
 
-    private Amplify(
-            @NonNull final Application app,
-            @NonNull final String backingSharedPreferencesName) {
+    private Amplify(@NonNull final Application application, @NonNull final String sharedPrefsName) {
+        applicationContext = application;
 
-        final Context appContext = app.getApplicationContext();
+        activityReferenceManager = new ActivityReferenceManager();
+        application.registerActivityLifecycleCallbacks(activityReferenceManager);
 
-        AppInfoUtil.initialize(appContext);
-        this.appInfoProvider = AppInfoUtil.getSharedAppInfoProvider();
+        final IEnvironment environment = new Environment(application);
+        environmentBasedRulesManager = new EnvironmentBasedRulesManager(environment);
 
-        final IAppEventTimeProvider appEventTimeProvider
-                = new AppEventTimeProvider(appInfoProvider);
-
-        final IEnvironmentCapabilitiesProvider environmentCapabilitiesProvider
-                = new EnvironmentCapabilitiesProvider(appInfoProvider);
-
-        this.activityReferenceManager = new ActivityReferenceManager();
-        app.registerActivityLifecycleCallbacks(activityReferenceManager);
-
-        this.environmentBasedRulesManager
-                = new EnvironmentBasedRulesManager(environmentCapabilitiesProvider);
-
-        final SharedPreferences backingSharedPreferences
-                = app.getSharedPreferences(backingSharedPreferencesName, Context.MODE_PRIVATE);
-
-        this.appLevelEventRulesManager = new AppLevelEventRulesManager(
-                new Settings<Long>(backingSharedPreferences), appEventTimeProvider);
-
-        this.firstEventTimeRulesManager = new FirstEventTimeRulesManager(
-                new Settings<Long>(backingSharedPreferences));
-
-        this.lastEventTimeRulesManager = new LastEventTimeRulesManager(
-                new Settings<Long>(backingSharedPreferences));
-
-        this.lastEventVersionNameRulesManager = new LastEventVersionNameRulesManager(
-                new Settings<String>(backingSharedPreferences), appInfoProvider);
-
-        this.lastEventVersionCodeRulesManager = new LastEventVersionCodeRulesManager(
-                new Settings<Integer>(backingSharedPreferences), appInfoProvider);
-
-        this.totalEventCountRulesManager = new TotalEventCountRulesManager(
-                new Settings<Integer>(backingSharedPreferences));
-    }
-
-    @VisibleForTesting
-    protected Amplify(
-            @NonNull final IAppInfoProvider appInfoProvider,
-            @NonNull final IAppLevelEventRulesManager appLevelEventRulesManager,
-            @NonNull final IEnvironmentBasedRulesManager environmentBasedRulesManager,
-            @NonNull final ActivityReferenceManager activityReferenceManager,
-            @NonNull final IEventsManager<Long> firstEventTimeRulesManager,
-            @NonNull final IEventsManager<Long> lastEventTimeRulesManager,
-            @NonNull final IEventsManager<Integer> lastEventVersionCodeRulesManager,
-            @NonNull final IEventsManager<String> lastEventVersionNameRulesManager,
-            @NonNull final IEventsManager<Integer> totalEventCountRulesManager) {
-
-        this.appInfoProvider = appInfoProvider;
-        this.appLevelEventRulesManager = appLevelEventRulesManager;
-        this.environmentBasedRulesManager = environmentBasedRulesManager;
-        this.activityReferenceManager = activityReferenceManager;
-        this.firstEventTimeRulesManager = firstEventTimeRulesManager;
-        this.lastEventTimeRulesManager = lastEventTimeRulesManager;
-        this.lastEventVersionCodeRulesManager = lastEventVersionCodeRulesManager;
-        this.lastEventVersionNameRulesManager = lastEventVersionNameRulesManager;
-        this.totalEventCountRulesManager = totalEventCountRulesManager;
+        final IApp app = new App(application);
+        final SharedPreferences sharedPrefs = application.getSharedPreferences(sharedPrefsName, MODE_PRIVATE);
+        appLevelEventRulesManager = new AppLevelEventRulesManager(new Settings<Long>(sharedPrefs), app);
+        firstEventTimeRulesManager = new FirstEventTimeRulesManager(new Settings<Long>(sharedPrefs));
+        lastEventTimeRulesManager = new LastEventTimeRulesManager(new Settings<Long>(sharedPrefs));
+        lastEventVersionNameRulesManager = new LastEventVersionNameRulesManager(new Settings<String>(sharedPrefs), app);
+        lastEventVersionCodeRulesManager = new LastEventVersionCodeRulesManager(new Settings<Integer>(sharedPrefs), app);
+        totalEventCountRulesManager = new TotalEventCountRulesManager(new Settings<Integer>(sharedPrefs));
     }
 
     // End constructors
     // Begin configuration methods
 
-    public Amplify setFeedbackEmailAddress(@NonNull final String feedbackEmailAddress) {
-        this.feedbackEmailAddress = feedbackEmailAddress;
+    public Amplify setPositiveFeedbackCollectors(@NonNull final IFeedbackCollector... feedbackCollectors) {
+        positiveFeedbackCollectors = feedbackCollectors;
         return this;
     }
 
-    public Amplify setFeedbackEmailContentProvider(
-            @NonNull final IEmailContentProvider emailContentProvider) {
-
-        this.emailContentProvider = emailContentProvider;
+    public Amplify setCriticalFeedbackCollectors(@NonNull final IFeedbackCollector... feedbackCollectors) {
+        criticalFeedbackCollectors = feedbackCollectors;
         return this;
     }
 
@@ -213,14 +167,14 @@ public final class Amplify implements IEventListener {
                 .addEnvironmentBasedRule(new GooglePlayStoreRule())
                 .setLastUpdateTimeCooldownDays(DEFAULT_LAST_UPDATE_TIME_COOLDOWN_DAYS)
                 .setLastCrashTimeCooldownDays(DEFAULT_LAST_CRASH_TIME_COOLDOWN_DAYS)
-                .addTotalEventCountRule(PromptInteractionEvent.USER_GAVE_POSITIVE_FEEDBACK,
+                .addTotalEventCountRule(USER_GAVE_POSITIVE_FEEDBACK,
                         new MaximumCountRule(DEFAULT_USER_GAVE_POSITIVE_FEEDBACK_MAXIMUM_COUNT))
-                .addLastEventVersionNameRule(PromptInteractionEvent.USER_GAVE_CRITICAL_FEEDBACK,
-                        new VersionNameChangedRule())
-                .addLastEventVersionNameRule(PromptInteractionEvent.USER_DECLINED_CRITICAL_FEEDBACK,
-                        new VersionNameChangedRule())
-                .addLastEventVersionNameRule(PromptInteractionEvent.USER_DECLINED_POSITIVE_FEEDBACK,
-                        new VersionNameChangedRule());
+                .addLastEventVersionNameRule(USER_GAVE_CRITICAL_FEEDBACK,
+                        new VersionNameChangedRule(applicationContext))
+                .addLastEventVersionNameRule(USER_DECLINED_CRITICAL_FEEDBACK,
+                        new VersionNameChangedRule(applicationContext))
+                .addLastEventVersionNameRule(USER_DECLINED_POSITIVE_FEEDBACK,
+                        new VersionNameChangedRule(applicationContext));
     }
 
     public Amplify addEnvironmentBasedRule(@NonNull final IEnvironmentBasedRule rule) {
@@ -291,11 +245,6 @@ public final class Amplify implements IEventListener {
         return this;
     }
 
-    public Amplify setPackageName(@NonNull final String packageName) {
-        this.packageName = packageName;
-        return this;
-    }
-
     // End debug configuration methods
     // Begin update methods
 
@@ -308,23 +257,39 @@ public final class Amplify implements IEventListener {
         lastEventVersionCodeRulesManager.notifyEventTriggered(event);
         lastEventVersionNameRulesManager.notifyEventTriggered(event);
 
-        if (event == PromptInteractionEvent.USER_GAVE_POSITIVE_FEEDBACK) {
+        if (event == USER_GAVE_POSITIVE_FEEDBACK) {
             final Activity activity = activityReferenceManager.getValidatedActivity();
 
-            if (activity != null) {
-                PlayStoreUtil.openPlayStoreToRate(activity, packageName);
+            if (activity == null) {
+                return;
             }
-        } else if (event == PromptInteractionEvent.USER_GAVE_CRITICAL_FEEDBACK) {
+
+            for (final IFeedbackCollector positiveFeedbackCollector : positiveFeedbackCollectors) {
+                if (positiveFeedbackCollector.tryCollectingFeedback(
+                        activity,
+                        new App(applicationContext),
+                        new Environment(applicationContext),
+                        new Device(applicationContext))) {
+
+                    return;
+                }
+            }
+        } else if (event == USER_GAVE_CRITICAL_FEEDBACK) {
             final Activity activity = activityReferenceManager.getValidatedActivity();
 
-            if (activity != null) {
-                final FeedbackUtil feedbackUtil = new FeedbackUtil(
-                        new FeedbackDataProvider(appInfoProvider),
-                        emailContentProvider,
-                        new EnvironmentCapabilitiesProvider(appInfoProvider),
-                        feedbackEmailAddress);
+            if (activity == null) {
+                return;
+            }
 
-                feedbackUtil.showFeedbackEmailChooser(activity);
+            for (final IFeedbackCollector criticalFeedbackCollector : criticalFeedbackCollectors) {
+                if (criticalFeedbackCollector.tryCollectingFeedback(
+                        activity,
+                        new App(applicationContext),
+                        new Environment(applicationContext),
+                        new Device(applicationContext))) {
+
+                    return;
+                }
             }
         }
     }
@@ -333,9 +298,8 @@ public final class Amplify implements IEventListener {
     // Begin query methods
 
     public void promptIfReady(@NonNull final IPromptView promptView) {
-        if (feedbackEmailAddress == null) {
-            throw new IllegalStateException(
-                    "Must provide email address before attempting to prompt.");
+        if (!isConfigured()) {
+            throw new IllegalStateException("Must finish configuration before attempting to prompt.");
         }
 
         if (shouldPrompt()) {
@@ -355,5 +319,9 @@ public final class Amplify implements IEventListener {
     }
 
     // End query methods
+
+    private boolean isConfigured() {
+        return positiveFeedbackCollectors != null && criticalFeedbackCollectors != null;
+    }
 
 }

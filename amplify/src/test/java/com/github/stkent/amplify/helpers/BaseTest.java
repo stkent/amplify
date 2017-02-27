@@ -16,14 +16,11 @@
  */
 package com.github.stkent.amplify.helpers;
 
-import com.github.stkent.amplify.utils.appinfo.AppInfoUtil;
-import com.github.stkent.amplify.utils.appinfo.IAppInfoProvider;
 import com.github.stkent.amplify.utils.time.RealSystemTimeProvider;
 import com.github.stkent.amplify.utils.time.SystemTimeUtil;
 
 import org.junit.After;
 import org.junit.Before;
-import org.mockito.Mock;
 
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -35,11 +32,8 @@ public class BaseTest {
     private static final RealSystemTimeProvider REAL_SYSTEM_TIME_PROVIDER = new RealSystemTimeProvider();
     private static final FakeSystemTimeProvider DEFAULT_FAKE_SYSTEM_TIME_PROVIDER = new FakeSystemTimeProvider(MARCH_18_2014_838PM_UTC);
 
-    @Mock
-    private IAppInfoProvider mockAppInfoProvider;
-
     protected BaseTest() {
-        // This constructor is intentionally empty. Nothing special is needed here.
+        // This constructor intentionally left blank.
     }
 
     protected final void setFakeCurrentTimeMillis(final long fakeCurrentTimeMillis) {
@@ -52,17 +46,15 @@ public class BaseTest {
 
         initMocks(this);
 
-        AppInfoUtil.setSharedAppInfoProvider(mockAppInfoProvider);
-
         localSetUp();
     }
 
     public void localSetUp() {
-        // no-op
+        // This method intentionally left blank.
     }
 
     protected void localTearDown() {
-        // no-op
+        // This method intentionally left blank.
     }
 
     @After

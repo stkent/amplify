@@ -2,6 +2,8 @@ package com.github.stkent.testapp;
 
 import android.app.Application;
 
+import com.github.stkent.amplify.feedback.DefaultEmailFeedbackCollector;
+import com.github.stkent.amplify.feedback.GooglePlayStoreFeedbackCollector;
 import com.github.stkent.amplify.logging.AndroidLogger;
 import com.github.stkent.amplify.tracking.Amplify;
 
@@ -13,8 +15,11 @@ public class ExampleApplication extends Application {
 
         Amplify.setLogger(new AndroidLogger());
 
+        final String releasePackageName = "com.github.stkent.testapp";
+
         Amplify.initSharedInstance(this)
-               .setFeedbackEmailAddress("someone@example.com")
+               .setPositiveFeedbackCollectors(new GooglePlayStoreFeedbackCollector(releasePackageName))
+               .setCriticalFeedbackCollectors(new DefaultEmailFeedbackCollector("someone@example.com"))
                .setAlwaysShow(true);
     }
 

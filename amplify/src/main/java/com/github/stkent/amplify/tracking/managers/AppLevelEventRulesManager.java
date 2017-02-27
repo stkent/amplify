@@ -19,9 +19,9 @@ package com.github.stkent.amplify.tracking.managers;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.github.stkent.amplify.IApp;
 import com.github.stkent.amplify.tracking.Amplify;
 import com.github.stkent.amplify.tracking.AmplifyExceptionHandler;
-import com.github.stkent.amplify.tracking.interfaces.IAppEventTimeProvider;
 import com.github.stkent.amplify.tracking.interfaces.IAppLevelEventRulesManager;
 import com.github.stkent.amplify.tracking.interfaces.IEvent;
 import com.github.stkent.amplify.tracking.interfaces.IEventBasedRule;
@@ -43,7 +43,7 @@ public final class AppLevelEventRulesManager implements IAppLevelEventRulesManag
     private final ISettings<Long> settings;
 
     @NonNull
-    private final IAppEventTimeProvider appEventTimeProvider;
+    private final IApp app;
 
     @Nullable
     private IEventBasedRule<Long> installTimeRule;
@@ -56,10 +56,10 @@ public final class AppLevelEventRulesManager implements IAppLevelEventRulesManag
 
     public AppLevelEventRulesManager(
             @NonNull final ISettings<Long> settings,
-            @NonNull final IAppEventTimeProvider appEventTimeProvider) {
+            @NonNull final IApp app) {
 
         this.settings = settings;
-        this.appEventTimeProvider = appEventTimeProvider;
+        this.app = app;
     }
 
     @Override
@@ -67,7 +67,7 @@ public final class AppLevelEventRulesManager implements IAppLevelEventRulesManag
         boolean result = true;
 
         if (installTimeRule != null) {
-            final long installTime = appEventTimeProvider.getInstallTime();
+            final long installTime = app.getInstallTime();
 
             //noinspection ConstantConditions
             boolean installResult = installTimeRule.shouldAllowFeedbackPrompt(installTime);
@@ -80,7 +80,7 @@ public final class AppLevelEventRulesManager implements IAppLevelEventRulesManag
         }
 
         if (lastUpdateTimeRule != null) {
-            final long lastUpdateTime = appEventTimeProvider.getLastUpdateTime();
+            final long lastUpdateTime = app.getLastUpdateTime();
 
             boolean lastUpdateResult = lastUpdateTimeRule.shouldAllowFeedbackPrompt(lastUpdateTime);
 

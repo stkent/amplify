@@ -17,45 +17,25 @@
 package com.github.stkent.amplify.tracking.rules;
 
 import android.annotation.SuppressLint;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager.NameNotFoundException;
 
 import com.github.stkent.amplify.helpers.BaseTest;
-import com.github.stkent.amplify.utils.appinfo.AppInfoUtil;
-import com.github.stkent.amplify.utils.appinfo.IAppInfoProvider;
 
 import org.junit.Test;
-import org.mockito.Mock;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.when;
 
 public class VersionCodeChangedRuleTest extends BaseTest {
-
-    private VersionCodeChangedRule versionCodeChangedRule;
-
-    @SuppressWarnings("FieldCanBeLocal")
-    private PackageInfo fakePackageInfo;
-
-    @Mock
-    private IAppInfoProvider mockAppInfoProvider;
-
-    @Override
-    public void localSetUp() {
-        versionCodeChangedRule = new VersionCodeChangedRule();
-
-        fakePackageInfo = new PackageInfo();
-        when(mockAppInfoProvider.getPackageInfo()).thenReturn(fakePackageInfo);
-        AppInfoUtil.setSharedAppInfoProvider(mockAppInfoProvider);
-    }
 
     @SuppressWarnings("ConstantConditions")
     @Test
     public void testThatRuleAllowsPromptIfEventHasNeverOccurred() {
+        // Arrange
+        final int fakeCurrentVersionCode = 42;
+        final VersionCodeChangedRule versionCodeChangedRule = new VersionCodeChangedRule(fakeCurrentVersionCode);
+
         // Act
-        final boolean ruleShouldAllowFeedbackPrompt
-                = versionCodeChangedRule.shouldAllowFeedbackPromptByDefault();
+        final boolean ruleShouldAllowFeedbackPrompt = versionCodeChangedRule.shouldAllowFeedbackPromptByDefault();
 
         // Assert
         assertTrue(
@@ -65,14 +45,11 @@ public class VersionCodeChangedRuleTest extends BaseTest {
 
     @SuppressWarnings("UnnecessaryLocalVariable")
     @Test
-    public void testThatRuleBlocksPromptIfAppVersionCodeHasNotChanged()
-            throws NameNotFoundException {
-
+    public void testThatRuleBlocksPromptIfAppVersionCodeHasNotChanged() {
         // Arrange
-        final int fakeCachedVersionCode = 17;
+        final int fakeCachedVersionCode = 42;
         final int fakeCurrentVersionCode = fakeCachedVersionCode;
-
-        fakePackageInfo.versionCode = fakeCachedVersionCode;
+        final VersionCodeChangedRule versionCodeChangedRule = new VersionCodeChangedRule(fakeCurrentVersionCode);
 
         // Act
         final boolean ruleShouldAllowFeedbackPrompt =
@@ -87,13 +64,13 @@ public class VersionCodeChangedRuleTest extends BaseTest {
     @SuppressLint("Assert")
     @SuppressWarnings("ConstantConditions")
     @Test
-    public void testThatRuleAllowsPromptIfAppVersionCodeHasChanged() throws NameNotFoundException {
+    public void testThatRuleAllowsPromptIfAppVersionCodeHasIncreased() {
         // Arrange
-        final int fakeCachedVersionCode = 17;
-        final int fakeCurrentVersionCode = 20;
+        final int fakeCachedVersionCode = 42;
+        final int fakeCurrentVersionCode = 69;
         assert fakeCachedVersionCode < fakeCurrentVersionCode;
 
-        fakePackageInfo.versionCode = fakeCurrentVersionCode;
+        final VersionCodeChangedRule versionCodeChangedRule = new VersionCodeChangedRule(fakeCurrentVersionCode);
 
         // Act
         final boolean ruleShouldAllowFeedbackPrompt =

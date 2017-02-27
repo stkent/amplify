@@ -18,10 +18,10 @@ package com.github.stkent.amplify.tracking.managers;
 
 import android.support.annotation.NonNull;
 
+import com.github.stkent.amplify.IEnvironment;
 import com.github.stkent.amplify.tracking.Amplify;
 import com.github.stkent.amplify.tracking.interfaces.IEnvironmentBasedRule;
 import com.github.stkent.amplify.tracking.interfaces.IEnvironmentBasedRulesManager;
-import com.github.stkent.amplify.tracking.interfaces.IEnvironmentCapabilitiesProvider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,15 +29,13 @@ import java.util.List;
 public final class EnvironmentBasedRulesManager implements IEnvironmentBasedRulesManager {
 
     @NonNull
-    private final IEnvironmentCapabilitiesProvider environmentCapabilitiesProvider;
+    private final IEnvironment environment;
 
     @NonNull
     private final List<IEnvironmentBasedRule> environmentBasedRules = new ArrayList<>();
 
-    public EnvironmentBasedRulesManager(
-            @NonNull final IEnvironmentCapabilitiesProvider environmentCapabilitiesProvider) {
-
-        this.environmentCapabilitiesProvider = environmentCapabilitiesProvider;
+    public EnvironmentBasedRulesManager(@NonNull final IEnvironment environment) {
+        this.environment = environment;
     }
 
     @Override
@@ -48,10 +46,8 @@ public final class EnvironmentBasedRulesManager implements IEnvironmentBasedRule
     @Override
     public boolean shouldAllowFeedbackPrompt() {
         for (final IEnvironmentBasedRule rule : environmentBasedRules) {
-            if (!rule.shouldAllowFeedbackPrompt(environmentCapabilitiesProvider)) {
-                Amplify.getLogger().d(
-                        "Blocking feedback because of environment based rule: " + rule);
-
+            if (!rule.shouldAllowFeedbackPrompt(environment)) {
+                Amplify.getLogger().d("Blocking feedback because of environment based rule: " + rule);
                 return false;
             }
         }

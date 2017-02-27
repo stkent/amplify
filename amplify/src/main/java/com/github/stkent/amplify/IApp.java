@@ -14,25 +14,22 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package com.github.stkent.amplify.utils.appinfo;
+package com.github.stkent.amplify;
 
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 
-public interface IAppInfoProvider {
+public interface IApp {
 
     @NonNull
-    PackageInfo getPackageInfo();
-
-    // Nullable
-    PackageInfo getPackageInfo(@NonNull final String packageName, final int flags);
+    String getName();
 
     @NonNull
-    PackageManager getPackageManager();
+    String getVersionName();
 
-    @NonNull
-    ApplicationInfo getApplicationInfo();
+    int getVersionCode();
+
+    long getInstallTime();
+
+    long getLastUpdateTime();
 
 }

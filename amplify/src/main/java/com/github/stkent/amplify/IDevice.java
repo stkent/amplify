@@ -14,22 +14,25 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package com.github.stkent.amplify.tracking.interfaces;
+package com.github.stkent.amplify;
 
-/**
- * An abstract representation of a class that provides the times at which significant
- * application-level events last occurred.
- */
-public interface IAppEventTimeProvider {
+import android.support.annotation.NonNull;
 
-    /**
-     * @return the time in milliseconds since the application was first installed
-     */
-    long getInstallTime();
+public interface IDevice {
 
-    /**
-     * @return the time in milliseconds since the applications was last updated
-     */
-    long getLastUpdateTime();
+    @NonNull
+    String getManufacturer();
+
+    @NonNull
+    String getModel();
+
+    @NonNull
+    String getResolution();
+
+    @NonNull
+    String getActualDensity();
+
+    @NonNull
+    String getDensityBucket();
 
 }

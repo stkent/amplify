@@ -28,7 +28,7 @@ import android.os.Build;
 import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.TypedValue;
+import android.support.annotation.Px;
 import android.view.View;
 import android.widget.TextView;
 
@@ -36,6 +36,7 @@ import com.github.stkent.amplify.R;
 import com.github.stkent.amplify.utils.Constants;
 import com.github.stkent.amplify.utils.DisplayUtils;
 
+import static android.util.TypedValue.COMPLEX_UNIT_PX;
 import static java.lang.Math.max;
 
 @SuppressLint("ViewConstructor")
@@ -89,14 +90,14 @@ final class DefaultLayoutQuestionView extends CustomLayoutQuestionView {
         final Integer customTextSizePx = config.getCustomTextSizePx();
 
         if (customTextSizePx != null) {
-            getTitleTextView().setTextSize(TypedValue.COMPLEX_UNIT_PX, customTextSizePx);
+            getTitleTextView().setTextSize(COMPLEX_UNIT_PX, customTextSizePx);
             setQuoteButtonUnquoteTextSize(getPositiveButton(), customTextSizePx);
             setQuoteButtonUnquoteTextSize(getNegativeButton(), customTextSizePx);
 
             final TextView subtitleTextView = getSubtitleTextView();
 
             if (subtitleTextView != null) {
-                subtitleTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, customTextSizePx);
+                subtitleTextView.setTextSize(COMPLEX_UNIT_PX, customTextSizePx);
             }
         }
     }
@@ -111,14 +112,17 @@ final class DefaultLayoutQuestionView extends CustomLayoutQuestionView {
      */
     private void setQuoteButtonUnquoteTextSize(
             @NonNull final View quoteButtonUnquote,
-            @ColorInt final int textSize) {
+            @Px final int textSize) {
 
         if (quoteButtonUnquote instanceof TextView) {
-            ((TextView) quoteButtonUnquote).setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
+            ((TextView) quoteButtonUnquote).setTextSize(COMPLEX_UNIT_PX, textSize);
         }
     }
 
-    private void configureButtonBackgrounds(final Context context, @NonNull final DefaultLayoutPromptViewConfig config) {
+    private void configureButtonBackgrounds(
+            final Context context,
+            @NonNull final DefaultLayoutPromptViewConfig config) {
+
         final Integer customButtonBorderWidthPx = config.getCustomButtonBorderWidthPx();
         final Integer customButtonCornerRadiusPx = config.getCustomButtonCornerRadiusPx();
 
@@ -147,9 +151,10 @@ final class DefaultLayoutQuestionView extends CustomLayoutQuestionView {
                 actualButtonCornerRadiusPx);
     }
 
+    @Px
     private int customDimensionOrDefault(
-            @Nullable final Integer customDimension,
-            final int defaultDimension) {
+            @Nullable @Px final Integer customDimension,
+            @Px final int defaultDimension) {
 
         return customDimension != null ? customDimension : defaultDimension;
     }
@@ -228,7 +233,7 @@ final class DefaultLayoutQuestionView extends CustomLayoutQuestionView {
     }
 
     @NonNull
-    private RoundRectShape getRoundRectShapeWithOuterCornerRadiusPx(final int rPx) {
+    private RoundRectShape getRoundRectShapeWithOuterCornerRadiusPx(@Px final int rPx) {
         return new RoundRectShape(
                 new float[] {rPx, rPx, rPx, rPx, rPx, rPx, rPx, rPx}, null, null);
     }

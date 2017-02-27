@@ -36,34 +36,28 @@ public final class CustomLayoutPromptViewConfig implements Parcelable {
      * @return the color value for the attribute at <code>index</code>, if defined; null otherwise
      */
     @Nullable
-    private static Integer suppliedLayoutOrNull(
-            @Nullable final TypedArray typedArray,
-            @StyleableRes final int index) {
+    @LayoutRes
+    private static Integer suppliedLayoutOrNull(@NonNull final TypedArray typedArray, @StyleableRes final int index) {
+        final int layoutResourceId = typedArray.getResourceId(index, DEFAULT_LAYOUT_RES_ID_IF_UNDEFINED);
 
-        if (typedArray != null) {
-            final int layoutResourceId
-                    = typedArray.getResourceId(index, DEFAULT_LAYOUT_RES_ID_IF_UNDEFINED);
-
-            return layoutResourceId != DEFAULT_LAYOUT_RES_ID_IF_UNDEFINED ? layoutResourceId : null;
-        }
-
-        return null;
+        //noinspection ResourceType
+        return layoutResourceId != DEFAULT_LAYOUT_RES_ID_IF_UNDEFINED ? layoutResourceId : null;
     }
 
     @Nullable
+    @LayoutRes
     private final Integer questionLayout;
 
     @Nullable
+    @LayoutRes
     private final Integer thanksLayout;
 
     public CustomLayoutPromptViewConfig(@NonNull final TypedArray typedArray) {
-        this.questionLayout = suppliedLayoutOrNull(
-                typedArray,
-                R.styleable.CustomLayoutPromptView_prompt_view_question_layout);
+        this.questionLayout =
+                suppliedLayoutOrNull(typedArray, R.styleable.CustomLayoutPromptView_prompt_view_question_layout);
 
-        this.thanksLayout = suppliedLayoutOrNull(
-                typedArray,
-                R.styleable.CustomLayoutPromptView_prompt_view_thanks_layout);
+        this.thanksLayout =
+                suppliedLayoutOrNull(typedArray, R.styleable.CustomLayoutPromptView_prompt_view_thanks_layout);
     }
 
     public CustomLayoutPromptViewConfig(
@@ -101,14 +95,14 @@ public final class CustomLayoutPromptViewConfig implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeValue(this.questionLayout);
-        dest.writeValue(this.thanksLayout);
+        dest.writeValue(questionLayout);
+        dest.writeValue(thanksLayout);
     }
 
     @SuppressLint("ParcelClassLoader")
     protected CustomLayoutPromptViewConfig(Parcel in) {
-        this.questionLayout = (Integer) in.readValue(null);
-        this.thanksLayout = (Integer) in.readValue(null);
+        questionLayout = (Integer) in.readValue(null);
+        thanksLayout = (Integer) in.readValue(null);
     }
 
     public static final Parcelable.Creator<CustomLayoutPromptViewConfig> CREATOR

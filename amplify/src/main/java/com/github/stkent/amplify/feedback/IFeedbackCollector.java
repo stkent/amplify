@@ -14,28 +14,24 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package com.github.stkent.amplify.tracking.rules;
+package com.github.stkent.amplify.feedback;
 
+import android.app.Activity;
 import android.support.annotation.NonNull;
 
+import com.github.stkent.amplify.IApp;
+import com.github.stkent.amplify.IDevice;
 import com.github.stkent.amplify.IEnvironment;
-import com.github.stkent.amplify.tracking.interfaces.IEnvironmentBasedRule;
 
-/**
- * An implementation of {@code IEnvironmentBasedRule} that verifies whether or not the Google Play Store is installed on
- * the current device.
- */
-public final class GooglePlayStoreRule implements IEnvironmentBasedRule {
+public interface IFeedbackCollector {
 
-    @Override
-    public boolean shouldAllowFeedbackPrompt(@NonNull final IEnvironment environment) {
-        return environment.isGooglePlayStoreInstalled();
-    }
-
-    @NonNull
-    @Override
-    public String getDescription() {
-        return "GooglePlayStoreRule";
-    }
+    /**
+     * @return true to indicate that feedback collection has been started successfully; false otherwise.
+     */
+    boolean tryCollectingFeedback(
+            @NonNull Activity currentActivity,
+            @NonNull IApp app,
+            @NonNull IEnvironment environment,
+            @NonNull IDevice device);
 
 }

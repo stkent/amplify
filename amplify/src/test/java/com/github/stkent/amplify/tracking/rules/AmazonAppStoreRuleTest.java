@@ -26,25 +26,25 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
-public class GooglePlayStoreRuleTest extends BaseTest {
+public class AmazonAppStoreRuleTest extends BaseTest {
 
-    private GooglePlayStoreRule googlePlayStoreRule;
+    private AmazonAppStoreRule amazonAppStoreRule;
 
     @Mock
     private IEnvironment environment;
 
     @Override
     public void localSetUp() {
-        googlePlayStoreRule = new GooglePlayStoreRule();
+        amazonAppStoreRule = new AmazonAppStoreRule();
     }
 
     @Test
     public void testThatEnvironmentRuleIsSatisfiedIfGooglePlayStoreIsInstalledOnDevice() {
         // Arrange
-        when(environment.isGooglePlayStoreInstalled()).thenReturn(true);
+        when(environment.isAmazonAppStoreInstalled()).thenReturn(true);
 
         // Act
-        final boolean isEnvironmentRuleSatisfied = googlePlayStoreRule.shouldAllowFeedbackPrompt(environment);
+        final boolean isEnvironmentRuleSatisfied = amazonAppStoreRule.shouldAllowFeedbackPrompt(environment);
 
         // Assert
         assertTrue("Environment based rule should be satisfied", isEnvironmentRuleSatisfied);
@@ -53,10 +53,10 @@ public class GooglePlayStoreRuleTest extends BaseTest {
     @Test
     public void testThatEnvironmentRuleIsNotSatisfiedIfGooglePlayStoreIsNotInstalledOnDevice() {
         // Arrange
-        when(environment.isGooglePlayStoreInstalled()).thenReturn(false);
+        when(environment.isAmazonAppStoreInstalled()).thenReturn(false);
 
         // Act
-        final boolean isEnvironmentRuleSatisfied = googlePlayStoreRule.shouldAllowFeedbackPrompt(environment);
+        final boolean isEnvironmentRuleSatisfied = amazonAppStoreRule.shouldAllowFeedbackPrompt(environment);
 
         // Assert
         assertFalse("Environment based rule should not be satisfied", isEnvironmentRuleSatisfied);

@@ -8,20 +8,13 @@ Respectfully request feedback in your Android app.
 
 <a href="https://travis-ci.org/stkent/amplify"><img src="https://travis-ci.org/stkent/amplify.svg" /></a> <a href="https://bintray.com/stkent/android-libraries/amplify/"><img src="https://img.shields.io/bintray/v/stkent/android-libraries/amplify.svg" /></a> <a href="http://www.detroitlabs.com/"><img src="https://img.shields.io/badge/Sponsor-Detroit%20Labs-000000.svg" /></a> [![Coverage Status](https://coveralls.io/repos/github/stkent/amplify/badge.svg?branch=master)](https://coveralls.io/github/stkent/amplify?branch=master) [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-amplify-green.svg?style=true)](https://android-arsenal.com/details/1/3290)
 
-# Development Status: Dormant
-
-- Not currently under active development.
-- Active development may resume in the future.
-- Bug reports will be triaged and fixed. No guarantees are made regarding fix timelines.
-- Feature requests will be triaged. No guarantees are made regarding acceptance or implementation timelines.
-- Pull requests from external contributors are not currently being accepted.
-
 # Guide
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 
+- [Development Status](#development-status)
 - [Introduction](#introduction)
 - [Library Structure](#library-structure)
 - [Getting Started](#getting-started)
@@ -29,18 +22,30 @@ Respectfully request feedback in your Android app.
 - [Configuring](#configuring)
   - [Prompt Timing](#prompt-timing)
   - [Prompt UI](#prompt-ui)
+  - [Feedback Collection](#feedback-collection)
 - [Customizing](#customizing)
   - [Prompt Timing](#prompt-timing-1)
   - [Prompt UI](#prompt-ui-1)
   - [Feedback Emails](#feedback-emails)
 - [Debug Builds](#debug-builds)
   - [Logging](#logging)
-  - [Debug Settings](#debug-settings)
+  - [Package Name Override](#package-name-override)
+  - [Visibility](#visibility)
 - [Resetting](#resetting)
 - [Case Studies](#case-studies)
 - [License](#license)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+# Development Status
+
+**Dormant**
+
+- Not currently under active development.
+- Active development may resume in the future.
+- Bug reports will be triaged and fixed. No guarantees are made regarding fix timelines.
+- Feature requests will be triaged. No guarantees are made regarding acceptance or implementation timelines.
+- Pull requests from external contributors are not currently being accepted.
 
 # Introduction
 
@@ -58,7 +63,7 @@ _amplify_ focuses on helping Android developers prompt their users for feedback 
 
 - **Easy to integrate.** Default prompt timing rules allow you to get up and running as quickly as possible.
 
-- **Easy to customize.** Use both built-in and custom events to create a collection of prompt timing rules. Tweak the provided inline prompt UI via xml or in code.
+- **Easy to customize.** Use both built-in and custom events to create a collection of prompt timing rules. Tweak the provided inline prompt UI via XML or in code.
 
 # Library Structure
 
@@ -94,12 +99,12 @@ These components are designed to complement each other, and combining them as de
 
 ```groovy
 dependencies {
-    compile 'com.github.stkent:amplify:1.5.0'
+    compile 'com.github.stkent:amplify:2.0.0'
 }
 ```
 
 <ol start="2">
-  <li>Initialize the shared <code>Amplify</code> instance in your custom <code><a href="http://developer.android.com/reference/android/app/Application.html">Application</a></code> subclass:</li>
+  <li>Initialize the shared <code>Amplify</code> instance in your custom <code><a href="http://developer.android.com/reference/android/app/Application.html">Application</a></code> subclass, supplying feedback collectors that determine where positive and critical feedback should be directed:</li>
 </ol>
 
 ```java
@@ -110,7 +115,8 @@ public class ExampleApplication extends Application {
         super.onCreate();
         
         Amplify.initSharedInstance(this)
-               .setFeedbackEmailAddress("someone@example.com")
+               .setPositiveFeedbackCollectors(new GooglePlayStoreFeedbackCollector())
+               .setCriticalFeedbackCollectors(new DefaultEmailFeedbackCollector("someone@example.com"))
                .applyAllDefaultRules();
     }
     
@@ -118,7 +124,7 @@ public class ExampleApplication extends Application {
 ```
 
 <ol start="3">
-  <li>Add a <code>DefaultLayoutPromptView</code> instance to all xml layouts in which you may want to prompt the user for their feedback:</li>
+  <li>Add a <code>DefaultLayoutPromptView</code> instance to all XML layouts in which you may want to prompt the user for their feedback:</li>
 </ol>
 
 ```xml
@@ -189,6 +195,7 @@ These rules are based on the environment/device in which the embedding applicati
 _amplify_ is packaged with the following environment-based rules:
 
 - `GooglePlayStoreRule`: verifies whether or not the Google Play Store is installed on the current device.
+- `AmazonAppStoreRule`: verifies whether or not the Amazon App Store is installed on the current device.
 
 Environment-based rules can be applied by calling the `addEnvironmentBasedRule` method when configuring your `Amplify` instance. For example:
 
@@ -200,7 +207,8 @@ public class ExampleApplication extends Application {
         super.onCreate();
         
         Amplify.initSharedInstance(this)
-               .setFeedbackEmailAddress("someone@example.com")
+               .setPositiveFeedbackCollectors(new GooglePlayStoreFeedbackCollector())
+               .setCriticalFeedbackCollectors(new DefaultEmailFeedbackCollector("someone@example.com"))
                .addEnvironmentBasedRule(new GooglePlayStoreRule()); // Prompt never shown if Google Play Store not installed.
     }
     
@@ -227,7 +235,8 @@ public class ExampleApplication extends Application {
         super.onCreate();
         
         Amplify.initSharedInstance(this)
-               .setFeedbackEmailAddress("someone@example.com")
+               .setPositiveFeedbackCollectors(new GooglePlayStoreFeedbackCollector())
+               .setCriticalFeedbackCollectors(new DefaultEmailFeedbackCollector("someone@example.com"))
                .setInstallTimeCooldownDays(14)   // Prompt not shown within two weeks of initial install.
                .setLastUpdateTimeCooldownDays(7) // Prompt not shown within one week of most recent update.
                .setLastCrashTimeCooldownDays(7); // Prompt not shown within one week of most recent crash.
@@ -276,7 +285,8 @@ public class ExampleApplication extends Application {
         super.onCreate();
         
         Amplify.initSharedInstance(this)
-               .setFeedbackEmailAddress("someone@example.com")
+               .setPositiveFeedbackCollectors(new GooglePlayStoreFeedbackCollector())
+               .setCriticalFeedbackCollectors(new DefaultEmailFeedbackCollector("someone@example.com"))
                .addTotalEventCountRule(PromptViewEvent.USER_GAVE_POSITIVE_FEEDBACK,
                         new MaximumCountRule(1)) // Never ask the user for feedback again if they already responded positively.
     }
@@ -289,18 +299,18 @@ public class ExampleApplication extends Application {
 _amplify_ provides two configurable prompt UIs. The test app associated with this project includes examples of these prompts with:
 
 - no custom configuration applied;
-- distinct colors and strings set on every attribute in xml;
+- distinct colors and strings set on every attribute in XML;
 - distinct colors and strings set on every attribute in code;
 
 | Test app UI; use me to explore!  |
 |----------------------------------|
-| <img src="https://raw.githubusercontent.com/stkent/amplify/master/assets/testapp.png" width="50%" /> |
+| <img src="https://raw.githubusercontent.com/stkent/amplify/master/assets/app.png" width="50%" /> |
 
 ### Default Layout
 
 **Use this if you are happy with the basic layout of the prompt shown above, but need to customize colors or wording!**
 
-Provided by the `DefaultLayoutPromptView` class. The basic layouts of the questions and thanks presented to users of the embedding application are fixed, but the most important elements of those layouts (colors and text) are fully customizable. This prompt view can also be configured to auto-dismiss the thanks view after a given delay in milliseconds. The full set of available xml configuration hooks is shown below (remember to use the `app` xml namespace when setting these properties!):
+Provided by the `DefaultLayoutPromptView` class. The basic layouts of the questions and thanks presented to users of the embedding application are fixed, but the most important elements of those layouts (colors and text) are fully customizable. This prompt view can also be configured to auto-dismiss the thanks view after a given delay in milliseconds. The full set of available XML configuration hooks is shown below (remember to use the `app` XML namespace when setting these properties!):
 
 ```xml
 <com.github.stkent.amplify.prompt.DefaultLayoutPromptView
@@ -389,7 +399,7 @@ promptView.applyConfig(defaultLayoutPromptViewConfig);
 
 **Use this if you need to provide a structurally different prompt layout, require custom fonts, etc.**
 
-Provided by the `CustomLayoutPromptView` class. You provide the basic layouts to use, and any customization of the default strings you require. This prompt view can also be configured to auto-dismiss the thanks view after a given delay in milliseconds. The full set of available xml configuration hooks is shown below (remember to use the `app` xml namespace when setting these properties!):
+Provided by the `CustomLayoutPromptView` class. You provide the basic layouts to use, and any customization of the default strings you require. This prompt view can also be configured to auto-dismiss the thanks view after a given delay in milliseconds. The full set of available XML configuration hooks is shown below (remember to use the `app` XML namespace when setting these properties!):
 
 ```xml
 <com.github.stkent.amplify.prompt.CustomLayoutPromptView
@@ -499,6 +509,34 @@ promptView.addPromptEventListener(new IEventListener() {
 Amplify.getSharedInstance().promptIfReady(promptView);
 ```
 
+## Feedback Collection
+
+The collection of both positive and critical feedback is handled by implementations of the `IFeedbackCollector` interface. _amplify_ is packaged with the following complete implementations:
+
+- `GooglePlayStoreFeedbackCollector`: collects feedback via the Google Play Store.
+- `AmazonAppStoreFeedbackCollector`: collects feedback via the Amazon App Store.
+- `DefaultEmailFeedbackCollector`: collects feedback via email. Must be passed one or more recipient email addresses when constructed.
+
+It is possible to specify more than one feedback collector for a given feedback type. For example, the code snippet below will first attempt to collect positive feedback via the Amazon App Store; if that fails (because the Amazon App Store is not available), it will automatically and invisibly fall back to collecting positive feedback via the Google Play Store:
+
+```java
+public class ExampleApplication extends Application {
+    
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        
+        Amplify.initSharedInstance(this)
+               .setPositiveFeedbackCollectors(
+                       new AmazonAppStoreFeedbackCollector(),
+                       new GooglePlayStoreFeedbackCollector())
+               .setCriticalFeedbackCollectors(new DefaultEmailFeedbackCollector("someone@example.com"))
+               .applyAllDefaultRules();
+    }
+    
+}
+```
+
 # Customizing
 
 ## Prompt Timing
@@ -515,7 +553,8 @@ public class ExampleApplication extends Application {
         super.onCreate();
         
         Amplify.initSharedInstance(this)
-               .setFeedbackEmailAddress("someone@example.com")
+               .setPositiveFeedbackCollectors(new GooglePlayStoreFeedbackCollector())
+               .setCriticalFeedbackCollectors(new DefaultEmailFeedbackCollector("someone@example.com"))
                .addEnvironmentBasedRule(new MyCustomEnvironmentBasedRule());
     }
     
@@ -565,7 +604,7 @@ To provide a totally custom experience in which _amplify_ does not manage the pr
 
 ## Feedback Emails
 
-To customize the subject line and pre-filled body of critical feedback emails, pass an implementation of the `IEmailContentProvider` interface to the `Amplify` instance method `setFeedbackEmailContentProvider`:
+To customize the feedback email template, extend either `DefaultEmailFeedbackCollector` or `BaseEmailFeedbackCollector` and implement the `getSubjectLine` and/or `getBody` methods, then pass an instance of your subclass to the shared `Amplify` instance during configuration:
 
 ```java
 public class ExampleApplication extends Application {
@@ -575,8 +614,9 @@ public class ExampleApplication extends Application {
         super.onCreate();
         
         Amplify.initSharedInstance(this)
-               .setFeedbackEmailAddress("someone@example.com")
-               .setFeedbackEmailContentProvider(new CustomEmailContentProvider());
+               .setPositiveFeedbackCollectors(new GooglePlayStoreFeedbackCollector())
+               .setCriticalFeedbackCollectors(new CustomEmailFeedbackCollector("someone@example.com"))
+               .applyAllDefaultRules();
     }
     
 }
@@ -600,15 +640,17 @@ public class ExampleApplication extends Application {
         Amplify.setLogger(new AndroidLogger());
         
         Amplify.initSharedInstance(this)
-               .setFeedbackEmailAddress("someone@example.com");
+               .setPositiveFeedbackCollectors(new GooglePlayStoreFeedbackCollector())
+               .setCriticalFeedbackCollectors(new DefaultEmailFeedbackCollector("someone@example.com"))
+               .applyAllDefaultRules();
     }
     
 }
 ```
 
-## Debug Settings
+## Package Name Override
 
-- `setAlwaysShow(final boolean alwaysShow)`: if `alwaysShow` is true, this forces the prompt to show every time. This is useful while tweaking prompt UI. Example usage in debug builds only:
+By default, the `GooglePlayStoreFeedbackCollector` and `AmazonAppStoreFeedbackCollector` will search their stores for the app whose package name matches the running application. If your app's build variants do not all share a single package name (perhaps to allow simultaneous installation), _amplify_  will fail to load the appropriate Google Play Store or Amazon App Store page in non-release builds. To fix this, pass your release build package name to the appropriate `IFeedbackCollector` instance during library initialization. For example:
 
 ```java
 public class ExampleApplication extends Application {
@@ -617,26 +659,32 @@ public class ExampleApplication extends Application {
     public void onCreate() {
         super.onCreate();
         
-        Amplify.initSharedInstance(this)
-               .setFeedbackEmailAddress("someone@example.com")
-               .setAlwaysShow(BuildConfig.DEBUG);
-    }
-    
-}
-```
-
-- `setPackageName(@NonNull final String packageName)`: if your debug and release build types do not share a package name (perhaps to allow for both build types to be installed simultaneously), the library will fail to load the appropriate Google Play Store page in debug builds. To counter this, pass your release build package name to this method during configuration. For example:
-
-```java
-public class ExampleApplication extends Application {
-    
-    @Override
-    public void onCreate() {
-        super.onCreate();
+        String releasePackageName = "my.release.package.name";
         
         Amplify.initSharedInstance(this)
-               .setFeedbackEmailAddress("someone@example.com")
+               .setPositiveFeedbackCollectors(new GooglePlayStoreFeedbackCollector(releasePackageName))
+               .setCriticalFeedbackCollectors(new DefaultEmailFeedbackCollector("someone@example.com"))
                .setPackageName("my.release.package.name");
+    }
+    
+}
+```
+
+## Visibility
+
+To force the prompt to ignore any environment or event-based rules and instead appear every time, call `setAlwaysShow(true)` when configuring the shared `Amplify` instance. For example, the code snippet below would result in the prompt appearing every time in debug builds _only_ (useful when configuring or testing the prompt):
+
+```java
+public class ExampleApplication extends Application {
+    
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        
+        Amplify.initSharedInstance(this)
+               .setPositiveFeedbackCollectors(new GooglePlayStoreFeedbackCollector())
+               .setCriticalFeedbackCollectors(new DefaultEmailFeedbackCollector("someone@example.com"))
+               .setAlwaysShow(BuildConfig.DEBUG);
     }
     
 }
@@ -653,10 +701,11 @@ public class ExampleApplication extends Application {
     public void onCreate() {
         super.onCreate();
         
-        final String sharedPrefsName = "my-custom-shared-prefs-name";
+        String sharedPrefsName = "my-custom-shared-prefs-name";
         
         Amplify.initSharedInstance(this, sharedPrefsName)
-               .setFeedbackEmailAddress("someone@example.com")
+               .setPositiveFeedbackCollectors(new GooglePlayStoreFeedbackCollector())
+               .setCriticalFeedbackCollectors(new DefaultEmailFeedbackCollector("someone@example.com"))
                .applyAllDefaultRules();
     }
     
@@ -683,7 +732,8 @@ public class ExampleApplication extends Application {
         }
 
         Amplify.initSharedInstance(this, sharedPrefsName)
-               .setFeedbackEmailAddress("someone@example.com")
+               .setPositiveFeedbackCollectors(new GooglePlayStoreFeedbackCollector())
+               .setCriticalFeedbackCollectors(new DefaultEmailFeedbackCollector("someone@example.com"))
                .applyAllDefaultRules();
     }
     
