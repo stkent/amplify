@@ -24,7 +24,7 @@ apply plugin: 'gnag'
 
 ext {
     // Library info:
-    libraryVersion = '1.5.1'
+    libraryVersion = '2.0.0'
     libraryName = 'amplify'
     libraryGroupId = 'com.github.stkent'
     libraryArtifactId = 'amplify'
