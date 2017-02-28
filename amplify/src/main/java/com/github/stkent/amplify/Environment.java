@@ -29,19 +29,10 @@ import java.util.List;
 
 import static android.content.pm.PackageManager.GET_ACTIVITIES;
 import static android.content.pm.PackageManager.MATCH_DEFAULT_ONLY;
+import static com.github.stkent.amplify.utils.Constants.AMAZON_APP_STORE_PACKAGE_NAME;
+import static com.github.stkent.amplify.utils.Constants.GOOGLE_PLAY_STORE_PACKAGE_NAME;
 
 public final class Environment implements IEnvironment {
-
-    /**
-     * Package name for the Amazon App Store.
-     */
-    private static final String AMAZON_APP_STORE_PACKAGE_NAME = "com.amazon.venezia";
-
-    /**
-     * Package name for the Google Play Store. Value can be verified here:
-     * https://developers.google.com/android/reference/com/google/android/gms/common/GooglePlayServicesUtil.html#GOOGLE_PLAY_STORE_PACKAGE
-     */
-    private static final String GOOGLE_PLAY_STORE_PACKAGE_NAME = "com.android.vending";
 
     @NonNull
     private final Context appContext;

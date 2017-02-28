@@ -32,4 +32,7 @@ public interface IApp {
 
     long getLastUpdateTime();
 
+    @NonNull
+    InstallSource getInstallSource();
+
 }
