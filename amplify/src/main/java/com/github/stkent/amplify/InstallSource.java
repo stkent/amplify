@@ -41,7 +41,7 @@ public abstract class InstallSource {
         } else if (PACKAGE_INSTALLER_PACKAGE_NAME.equalsIgnoreCase(installerPackageName)) {
             return new PackageInstallerInstallSource();
         } else if (installerPackageName != null) {
-            return new UnrecognizedInstallSource(installerPackageName);
+            return new UnrecognizedInstallSource(installerPackageName); // NOPMD: required as part of algebraic type.
         } else {
             return new UnknownInstallSource();
         }
@@ -91,6 +91,7 @@ public abstract class InstallSource {
         @NonNull
         private final String installerPackageName;
 
+        @SuppressWarnings("PMD.CallSuperInConstructor") // Super does nothing.
         private UnrecognizedInstallSource(@NonNull final String installerPackageName) {
             this.installerPackageName = installerPackageName;
         }
