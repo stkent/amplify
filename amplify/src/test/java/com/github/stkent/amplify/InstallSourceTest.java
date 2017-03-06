@@ -27,6 +27,7 @@ import com.github.stkent.amplify.helpers.BaseTest;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+
 import static org.junit.Assert.assertTrue;
 
 public class InstallSourceTest extends BaseTest {
@@ -37,8 +38,14 @@ public class InstallSourceTest extends BaseTest {
         final InstallSource installSource = InstallSource.fromInstallerPackageName("com.android.vending");
 
         // Assert
-        assertTrue(installSource instanceof GooglePlayStoreInstallSource);
-        assertEquals("Google Play Store", installSource.toString());
+        assertTrue(
+                "Package name is correctly identified as belonging to the Google Play Store",
+                installSource instanceof GooglePlayStoreInstallSource);
+
+        assertEquals(
+                "Google Play Store install source has correct description",
+                "Google Play Store",
+                installSource.toString());
     }
 
     @Test
@@ -47,8 +54,14 @@ public class InstallSourceTest extends BaseTest {
         InstallSource installSource = InstallSource.fromInstallerPackageName("com.amazon.venezia");
 
         // Assert
-        assertTrue(installSource instanceof AmazonAppStoreInstallSource);
-        assertEquals("Amazon Appstore", installSource.toString());
+        assertTrue(
+                "Package name is correctly identified as belonging to the Amazon Appstore",
+                installSource instanceof AmazonAppStoreInstallSource);
+
+        assertEquals(
+                "Amazon Appstore install source has correct description",
+                "Amazon Appstore",
+                installSource.toString());
     }
 
     @Test
@@ -57,8 +70,14 @@ public class InstallSourceTest extends BaseTest {
         final InstallSource installSource = InstallSource.fromInstallerPackageName("com.amazon.mshop.android");
 
         // Assert
-        assertTrue(installSource instanceof AmazonUndergroundInstallSource);
-        assertEquals("Amazon Underground", installSource.toString());
+        assertTrue(
+                "Package name is correctly identified as belonging to Amazon Underground",
+                installSource instanceof AmazonUndergroundInstallSource);
+
+        assertEquals(
+                "Amazon Underground install source has correct description",
+                "Amazon Underground",
+                installSource.toString());
     }
 
     @Test
@@ -67,8 +86,14 @@ public class InstallSourceTest extends BaseTest {
         final InstallSource installSource = InstallSource.fromInstallerPackageName("com.google.android.packageinstaller");
 
         // Assert
-        assertTrue(installSource instanceof PackageInstallerInstallSource);
-        assertEquals("Package Installer", installSource.toString());
+        assertTrue(
+                "Package name is correctly identified as belonging to the Android Package Installer",
+                installSource instanceof PackageInstallerInstallSource);
+
+        assertEquals(
+                "Package Installer install source has correct description",
+                "Package Installer",
+                installSource.toString());
     }
 
     @Test
@@ -80,8 +105,14 @@ public class InstallSourceTest extends BaseTest {
         final InstallSource installSource = InstallSource.fromInstallerPackageName(unrecognizedInstallerPackageName);
 
         // Assert
-        assertTrue(installSource instanceof UnrecognizedInstallSource);
-        assertEquals(unrecognizedInstallerPackageName, installSource.toString());
+        assertTrue(
+                "Non-null package name is correctly identified as an unrecognized install source",
+                installSource instanceof UnrecognizedInstallSource);
+
+        assertEquals(
+                "Unrecognized install source returns raw package name as description",
+                unrecognizedInstallerPackageName,
+                installSource.toString());
     }
 
 
@@ -91,8 +122,14 @@ public class InstallSourceTest extends BaseTest {
         final InstallSource installSource = InstallSource.fromInstallerPackageName(null);
 
         // Assert
-        assertTrue(installSource instanceof UnknownInstallSource);
-        assertEquals("Unknown", installSource.toString());
+        assertTrue(
+                "null package name is correctly identified as an unknown install source",
+                installSource instanceof UnknownInstallSource);
+
+        assertEquals(
+                "Unknown install source has correct description",
+                "Unknown",
+                installSource.toString());
     }
 
 }
