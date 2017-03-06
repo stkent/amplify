@@ -90,7 +90,8 @@ public class StringUtilsTest extends BaseTest {
         // Assert
         assertEquals(
                 "defaultIfBlank should have returned the default string",
-                DEFAULT_STRING, sanitizedString);
+                DEFAULT_STRING,
+                sanitizedString);
     }
 
 }

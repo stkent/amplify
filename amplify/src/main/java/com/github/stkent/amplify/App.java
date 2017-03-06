@@ -36,16 +36,21 @@ public final class App implements IApp {
 
     private final long lastUpdateTime;
 
+    @NonNull
+    private final InstallSource installSource;
+
     public App(@NonNull final Context context) {
         final PackageManager packageManager = context.getPackageManager();
         final ApplicationInfo applicationInfo = context.getApplicationInfo();
         final PackageInfo packageInfo = getPackageInfo(context);
+        final String installerPackageName = packageManager.getInstallerPackageName(context.getPackageName());
 
         name = applicationInfo.loadLabel(packageManager).toString();
         versionName = packageInfo.versionName;
         versionCode = packageInfo.versionCode;
         firstInstallTime = packageInfo.firstInstallTime;
         lastUpdateTime = packageInfo.lastUpdateTime;
+        installSource = InstallSource.fromInstallerPackageName(installerPackageName);
     }
 
     @NonNull
@@ -71,6 +76,12 @@ public final class App implements IApp {
     @Override
     public long getLastUpdateTime() {
         return lastUpdateTime;
+    }
+
+    @NonNull
+    @Override
+    public InstallSource getInstallSource() {
+        return installSource;
     }
 
     @NonNull

@@ -58,6 +58,7 @@ public class DefaultEmailFeedbackCollector extends BaseEmailFeedbackCollector {
         // @formatter:off
         return    "Time Stamp: " + getCurrentUtcTimeStringForDate(new Date()) + "\n"
                 + "App Version: " + appVersionString + "\n"
+                + "Install Source: " + app.getInstallSource() + "\n"
                 + "Android Version: " + androidVersionString + "\n"
                 + "Device Manufacturer: " + device.getManufacturer() + "\n"
                 + "Device Model: " + device.getModel() + "\n"
