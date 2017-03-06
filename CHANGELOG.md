@@ -1,5 +1,11 @@
 # Change Log
 
+## v2.1.0
+
+_2017-03-05_
+
+- [Added] Default email feedback template now includes application install source (Google Play Store, Amazon Appstore, etc.). This information is also exposed through the `IApp` interface.
+
 ## v2.0.0
 
 _2017-02-26_
