@@ -73,6 +73,7 @@
 
     <rule ref="rulesets/java/junit.xml">
         <exclude name="JUnitTestsShouldIncludeAssert" />
+        <exclude name="JUnitTestContainsTooManyAsserts" />
     </rule>
 
     <rule ref="rulesets/java/logging-jakarta-commons.xml">
