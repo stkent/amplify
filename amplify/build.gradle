@@ -118,6 +118,6 @@ dependencies {
     compile "com.android.support:appcompat-v7:$supportLibraryVersion"
 }
 
-apply from: 'https://raw.githubusercontent.com/stkent/JCenter/master/bintray1.6.gradle'
+apply from: 'https://raw.githubusercontent.com/stkent/JCenter/master/bintray1.7.3.gradle'
 apply from: 'https://raw.githubusercontent.com/stkent/JCenter/master/install1.3.gradle'
 apply from: 'coverage.gradle'
