@@ -13,7 +13,7 @@ buildscript {
 }
 
 plugins {
-    id "com.github.hierynomus.license" version "0.13.0"
+    id "com.github.hierynomus.license" version "0.13.1"
 }
 
 apply plugin: 'com.android.library'
@@ -45,11 +45,6 @@ ext {
 
     // Bintray categorization information:
     bintrayRepo = 'android-libraries'
-}
-
-license {
-    header = file('../Apache2License.txt')
-    strictCheck true
 }
 
 android {
@@ -120,4 +115,5 @@ dependencies {
 
 apply from: 'https://raw.githubusercontent.com/stkent/JCenter/master/bintray1.7.3.gradle'
 apply from: 'https://raw.githubusercontent.com/stkent/JCenter/master/install1.5.gradle'
+apply from: 'https://raw.githubusercontent.com/stkent/JCenter/master/license0.13.1.gradle'
 apply from: 'coverage.gradle'
