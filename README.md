@@ -93,67 +93,74 @@ These components are designed to complement each other, and combining them as de
 
 # Getting Started
 
-1. Specify <em>amplify</em> as a dependency in your <code>build.gradle</code> file:
+<ol>
+  <li>Specify <em>amplify</em> as a dependency in your <code>build.gradle</code> file:</li>
+</ol>
 
-    ```groovy
-    dependencies {
-        compile 'com.github.stkent:amplify:2.1.0'
-    }
-    ```
+```groovy
+dependencies {
+    compile 'com.github.stkent:amplify:2.1.0'
+}
+```
 
+<ol start="2">
+  <li>Initialize the shared <code>Amplify</code> instance in your custom <code><a href="http://developer.android.com/reference/android/app/Application.html">Application</a></code> subclass, supplying feedback collectors that determine where positive and critical feedback should be directed:</li>
+</ol>
 
-2. Initialize the shared <code>Amplify</code> instance in your custom [`Application`](http://developer.android.com/reference/android/app/Application.html) subclass, supplying feedback collectors that determine where positive and critical feedback should be directed:
-
-    ```java
-    public class ExampleApplication extends Application {
+```java
+public class ExampleApplication extends Application {
     
-        @Override
-        public void onCreate() {
-            super.onCreate();
-            
-            Amplify.initSharedInstance(this)
-                   .setPositiveFeedbackCollectors(new GooglePlayStoreFeedbackCollector())
-                   .setCriticalFeedbackCollectors(new DefaultEmailFeedbackCollector("someone@example.com"))
-                   .applyAllDefaultRules();
-        }
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        
+        Amplify.initSharedInstance(this)
+               .setPositiveFeedbackCollectors(new GooglePlayStoreFeedbackCollector())
+               .setCriticalFeedbackCollectors(new DefaultEmailFeedbackCollector("someone@example.com"))
+               .applyAllDefaultRules();
+    }
     
-    }
-    ```
+}
+```
 
-3. Add a `DefaultLayoutPromptView` instance to all XML layouts in which you may want to prompt the user for their feedback:
+<ol start="3">
+  <li>Add a <code>DefaultLayoutPromptView</code> instance to all XML layouts in which you may want to prompt the user for their feedback:</li>
+</ol>
 
-    ```xml
-    <com.github.stkent.amplify.prompt.DefaultLayoutPromptView
-        android:id="@+id/prompt_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-    ```
+```xml
+<com.github.stkent.amplify.prompt.DefaultLayoutPromptView
+    android:id="@+id/prompt_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" />
+```
 
-4. Get the shared `Amplify` instance and call its `promptIfReady` method when appropriate, passing in your `DefaultLayoutPromptView` instance:
+<ol start="4">
+  <li>Get the shared <code>Amplify</code> instance and call its <code>promptIfReady</code> method when appropriate, passing in your <code>DefaultLayoutPromptView</code> instance:</li>
+</ol>
 
-    ```java
-    public class ExampleActivity extends Activity {
+```java
+public class ExampleActivity extends Activity {
 
-        @Override
-        public void onCreate(@Nullable final Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            setContentView(R.layout.activity_example);
+    @Override
+    public void onCreate(@Nullable final Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_example);
 
-            /*
-             * Be careful: don't re-prompt after a configuration change!
-             * The provided prompt view classes handle saving and restoring their state.
-             * Perform this check in onCreateView or onViewCreated if using a Fragment.
-             */
-            if (savedInstanceState == null) {
-                DefaultLayoutPromptView promptView
-                        = (DefaultLayoutPromptView) findViewById(R.id.prompt_view);
+        /*
+         * Be careful: don't re-prompt after a configuration change!
+         * The provided prompt view classes handle saving and restoring their state.
+         * Perform this check in onCreateView or onViewCreated if using a Fragment.
+         */
+        if (savedInstanceState == null) {
+            DefaultLayoutPromptView promptView
+                    = (DefaultLayoutPromptView) findViewById(R.id.prompt_view);
 
-                Amplify.getSharedInstance().promptIfReady(promptView);
-            }
+            Amplify.getSharedInstance().promptIfReady(promptView);
         }
-
     }
-    ```
+
+}
+```
 
 That's it! The prompt timing calculator will evaluate the default rules each time `promptIfReady` is called, and instruct the `PromptView` to automatically update its state based on the result. If the user chooses to interact with the prompt, the sequence of questions asked is also automatically managed. If the user decides to give feedback, _amplify_ will handle opening the appropriate Google Play Store page or email client with pre-populated details.
 
