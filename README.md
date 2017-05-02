@@ -287,7 +287,7 @@ public class ExampleApplication extends Application {
         Amplify.initSharedInstance(this)
                .setPositiveFeedbackCollectors(new GooglePlayStoreFeedbackCollector())
                .setCriticalFeedbackCollectors(new DefaultEmailFeedbackCollector("someone@example.com"))
-               .addTotalEventCountRule(PromptViewEvent.USER_GAVE_POSITIVE_FEEDBACK,
+               .addTotalEventCountRule(PromptInteractionEvent.USER_GAVE_POSITIVE_FEEDBACK,
                         new MaximumCountRule(1)) // Never ask the user for feedback again if they already responded positively.
     }
     
