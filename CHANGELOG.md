@@ -1,5 +1,11 @@
 # Change Log
 
+## v2.1.1
+
+_2017-11-01_
+
+- [Fixed] Overloaded constructor provided to allow specifying an alternate `SharedPreferences` instance is now correctly marked `public`.
+
 ## v2.1.0
 
 _2017-03-05_
