@@ -58,7 +58,6 @@ import static com.github.stkent.amplify.tracking.PromptInteractionEvent.USER_DEC
 import static com.github.stkent.amplify.tracking.PromptInteractionEvent.USER_GAVE_CRITICAL_FEEDBACK;
 import static com.github.stkent.amplify.tracking.PromptInteractionEvent.USER_GAVE_POSITIVE_FEEDBACK;
 
-@SuppressWarnings({"PMD.ExcessiveParameterList", "checkstyle:parameternumber"})
 public final class Amplify implements IEventListener {
 
     private static final int DEFAULT_USER_GAVE_POSITIVE_FEEDBACK_MAXIMUM_COUNT = 1;
