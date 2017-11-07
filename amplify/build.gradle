@@ -1,5 +1,6 @@
 buildscript {
     repositories {
+        maven { url "https://plugins.gradle.org/m2/" }
         jcenter()
     }
 
@@ -7,7 +8,7 @@ buildscript {
         classpath 'com.github.ben-manes:gradle-versions-plugin:0.14.0'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
         classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5'
-        classpath 'com.btkelly:gnag:1.3.1'
+        classpath "se.bjurr.violations:violation-comments-to-github-gradle-plugin:1.31"
         classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.5.0-x'
     }
 }
@@ -20,7 +21,8 @@ apply plugin: 'com.android.library'
 apply plugin: 'com.github.ben-manes.versions'
 apply plugin: 'com.jfrog.bintray'
 apply plugin: 'com.github.dcendents.android-maven'
-apply plugin: 'gnag'
+apply plugin: 'checkstyle'
+apply plugin: "se.bjurr.violations.violation-comments-to-github-gradle-plugin"
 
 ext {
     // Library info:
@@ -80,32 +82,62 @@ android {
     }
 }
 
-gnag {
-    failOnError true
+task checkstyle(type: Checkstyle) {
+    description 'Check code standard'
+    group 'verification'
 
-    github {
-        repoName libraryGitHubRepoName
-    }
+    configFile file('./config/checkstyle.xml')
+    source 'src'
+    include '**/*.java'
+    exclude '**/gen/**'
 
-    checkstyle {
-        reporterConfig project.file('config/checkstyle.xml')
-    }
-
-    pmd {
-        enabled true
-        reporterConfig project.file('config/pmd.xml')
-    }
-
-    findbugs {
-        enabled true
-        reporterConfig project.file('config/findbugs.xml')
-    }
-
-    androidLint {
-        enabled true
-        severity 'Error'
-    }
+    classpath = files()
+    ignoreFailures = true
 }
+
+task violationCommentsToGitHub(type: se.bjurr.violations.comments.github.plugin.gradle.ViolationCommentsToGitHubTask) {
+    repositoryOwner = "stkent";
+    repositoryName = "amplify"
+    pullRequestId = System.properties['issueNumber']
+    oAuth2Token = System.properties['authToken']
+    gitHubUrl = "https://api.github.com/"
+    createCommentWithAllSingleFileComments = false
+    createSingleFileComments = true
+    commentOnlyChangedContent = false
+    minSeverity = se.bjurr.violations.lib.model.SEVERITY.INFO //ERROR, INFO, WARN
+    violations = [
+            ["FINDBUGS",   ".", ".*/findbugs/.*\\.xml\$",   "Findbugs"],
+            ["PMD",        ".", ".*/pmd/.*\\.xml\$",        "PMD"],
+            ["CHECKSTYLE", ".", ".*/checkstyle/.*\\.xml\$", "Checkstyle"]
+    ]
+}
+
+//gnag {
+//    failOnError true
+//
+//    github {
+//        repoName libraryGitHubRepoName
+//    }
+//
+//    checkstyle {
+//        reporterConfig project.file('config/checkstyle.xml')
+//    }
+//
+//    pmd {
+//        enabled true
+//        reporterConfig project.file('config/pmd.xml')
+//    }
+//
+//    findbugs {
+//        enabled true
+//        reporterConfig project.file('config/findbugs.xml')
+//    }
+//
+//    androidLint {
+//        enabled true
+//        severity 'Error'
+//    }
+//}
 
 dependencies {
     testCompile 'junit:junit:4.12'
