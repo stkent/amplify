@@ -21,6 +21,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'com.github.ben-manes.versions'
 apply plugin: 'com.jfrog.bintray'
 apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'checkstyle'
 apply plugin: "se.bjurr.violations.violation-comments-to-github-gradle-plugin"
 
 ext {
@@ -79,6 +80,19 @@ android {
             testCoverageEnabled true
         }
     }
+}
+
+task checkstyle(type: Checkstyle) {
+    description 'Check code standard'
+    group 'verification'
+
+    configFile file('./config/checkstyle.xml')
+    source 'src'
+    include '**/*.java'
+    exclude '**/gen/**'
+
+    classpath = files()
+    ignoreFailures = true
 }
 
 task violationCommentsToGitHub(type: se.bjurr.violations.comments.github.plugin.gradle.ViolationCommentsToGitHubTask) {
