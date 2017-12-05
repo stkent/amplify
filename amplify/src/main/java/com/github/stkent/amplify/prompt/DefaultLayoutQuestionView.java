@@ -169,11 +169,15 @@ final class DefaultLayoutQuestionView extends CustomLayoutQuestionView {
         final Drawable buttonBackgroundDrawable
                 = getButtonBackgroundDrawable(fillColor, borderColor, borderWidthPx, cornerRadiusPx);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+
+        if (android.os.Build.VERSION.SDK_INT <= 17) {
+            GradientDrawable gd = new GradientDrawable();
+            gd.setColor(fillColor);
+            gd.setCornerRadius(cornerRadiusPx);
+            gd.setStroke(borderWidthPx,borderColor);
+            button.setBackgroundDrawable(gd);
+        }else{
             button.setBackground(buttonBackgroundDrawable);
-        } else {
-            //noinspection deprecation
-            button.setBackgroundDrawable(buttonBackgroundDrawable);
         }
     }
 
