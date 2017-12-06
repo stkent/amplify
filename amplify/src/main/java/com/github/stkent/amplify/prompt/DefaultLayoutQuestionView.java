@@ -177,7 +177,12 @@ final class DefaultLayoutQuestionView extends CustomLayoutQuestionView {
             gd.setCornerRadius(cornerRadiusPx);
             gd.setStroke(borderWidthPx,borderColor);
             button.setBackgroundDrawable(gd);
-        }else{
+            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN) {
+                button.setBackgroundDrawable(gd);
+            }else{
+                button.setBackground(gd);
+            }
+            }else{
             button.setBackground(buttonBackgroundDrawable);
         }
     }
