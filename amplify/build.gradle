@@ -101,6 +101,10 @@ gnag {
         reporterConfig project.file('config/findbugs.xml')
     }
 
+    ktlint {
+        enabled false
+    }
+
     androidLint {
         enabled true
         severity 'Error'
