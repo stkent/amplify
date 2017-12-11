@@ -1,5 +1,11 @@
 # Change Log
 
+## v2.2.0
+
+_2017-12-11_
+
+- [Changed] Updated dependency and target versions.
+
 ## v2.1.1
 
 _2017-11-01_
