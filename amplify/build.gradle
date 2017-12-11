@@ -108,9 +108,10 @@ gnag {
 }
 
 dependencies {
+    implementation "com.android.support:appcompat-v7:$supportLibraryVersion"
+
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.mockito:mockito-core:2.8.9'
-    implementation "com.android.support:appcompat-v7:$supportLibraryVersion"
 }
 
 apply from: 'https://raw.githubusercontent.com/stkent/JCenter/master/bintray1.7.3.gradle'
