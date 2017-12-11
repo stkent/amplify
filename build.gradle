@@ -1,15 +1,17 @@
 buildscript {
     repositories {
+        google()
         jcenter()
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.0'
+        classpath 'com.android.tools.build:gradle:3.0.1'
     }
 }
 
 allprojects {
     repositories {
+        google()
         jcenter()
     }
 }
@@ -18,4 +20,4 @@ task clean(type: Delete) {
     delete rootProject.buildDir
 }
 
-ext.supportLibraryVersion = "25.2.0"
+ext.supportLibraryVersion = "27.0.2"
