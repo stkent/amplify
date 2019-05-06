@@ -1,5 +1,11 @@
 # Change Log
 
+## v2.2.1
+
+_2019-05-06_
+
+- [Fixed] Updated internal map to support calling `notifyEventTriggered` with different instances of a single event type.
+
 ## v2.2.0
 
 _2017-12-11_
