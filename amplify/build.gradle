@@ -5,7 +5,7 @@ buildscript {
 
     dependencies {
         classpath 'com.github.ben-manes:gradle-versions-plugin:0.17.0'
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
         classpath 'com.github.dcendents:android-maven-gradle-plugin:2.0'
         classpath 'com.btkelly:gnag:2.3.0'
         classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.5.0-x'
@@ -113,7 +113,7 @@ dependencies {
     testImplementation 'org.mockito:mockito-core:2.13.0'
 }
 
-apply from: 'https://raw.githubusercontent.com/stkent/JCenter/master/bintray1.7.3.gradle'
+apply from: 'https://raw.githubusercontent.com/stkent/JCenter/master/bintray1.8.4.gradle'
 apply from: 'https://raw.githubusercontent.com/stkent/JCenter/master/install1.5.gradle'
 apply from: 'https://raw.githubusercontent.com/stkent/JCenter/master/license0.13.1.gradle'
 apply from: 'coverage.gradle'
