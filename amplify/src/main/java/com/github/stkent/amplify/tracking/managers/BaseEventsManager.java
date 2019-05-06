@@ -37,7 +37,7 @@ public abstract class BaseEventsManager<T> implements IEventsManager<T> {
 
     private final ISettings<T> settings;
 
-    private final ConcurrentHashMap<IEvent, List<IEventBasedRule<T>>> internalMap;
+    private final ConcurrentHashMap<String, List<IEventBasedRule<T>>> internalMap;
 
     @NonNull
     protected abstract String getTrackedEventDimensionDescription();
@@ -71,36 +71,43 @@ public abstract class BaseEventsManager<T> implements IEventsManager<T> {
             @NonNull final IEvent event,
             @NonNull final IEventBasedRule<T> rule) {
 
-        if (!isTrackingEvent(event)) {
-            internalMap.put(event, new ArrayList<IEventBasedRule<T>>());
+        final String eventTrackingKey = event.getTrackingKey();
+
+        if (!isTrackingEvent(eventTrackingKey)) {
+            internalMap.put(eventTrackingKey, new ArrayList<IEventBasedRule<T>>());
         }
 
-        internalMap.get(event).add(rule);
+        //noinspection ConstantConditions
+        internalMap.get(eventTrackingKey).add(rule);
 
         Amplify.getLogger().d(
-                "Registered " + rule.getDescription() + " for event " + event.getTrackingKey());
+                "Registered " + rule.getDescription() + " for event " + eventTrackingKey);
     }
 
     @Override
     public void notifyEventTriggered(@NonNull final IEvent event) {
-        if (isTrackingEvent(event)) {
-            final T cachedTrackingValue = getCachedTrackingValue(event);
+        final String eventTrackingKey = event.getTrackingKey();
+
+        if (isTrackingEvent(eventTrackingKey)) {
+            final T cachedTrackingValue = getCachedTrackingValue(eventTrackingKey);
             final T updatedTrackingValue = getUpdatedTrackingValue(cachedTrackingValue);
 
             if (cachedTrackingValue == null) {
                 Amplify.getLogger().d(
                         "Setting " + getTrackedEventDimensionDescription().toLowerCase(Locale.US)
-                      + " of " + event.getTrackingKey()
+                      + " of " + eventTrackingKey
                       + " event to " + updatedTrackingValue);
             } else if (!updatedTrackingValue.equals(cachedTrackingValue)) {
                 Amplify.getLogger().d(
                         "Updating " + getTrackedEventDimensionDescription().toLowerCase(Locale.US)
-                      + " of " + event.getTrackingKey()
+                      + " of " + eventTrackingKey
                       + " event from " + cachedTrackingValue
                       + " to " + updatedTrackingValue);
             }
 
-            settings.writeTrackingValue(getTrackingKey(event), updatedTrackingValue);
+            settings.writeTrackingValue(
+                    getPersistenceTrackingKey(eventTrackingKey),
+                    updatedTrackingValue);
         }
     }
 
@@ -108,20 +115,20 @@ public abstract class BaseEventsManager<T> implements IEventsManager<T> {
     public boolean shouldAllowFeedbackPrompt() {
         boolean result = true;
 
-        for (final Map.Entry<IEvent, List<IEventBasedRule<T>>> rules : internalMap.entrySet()) {
-            final IEvent event = rules.getKey();
+        for (final Map.Entry<String, List<IEventBasedRule<T>>> rules : internalMap.entrySet()) {
+            final String eventTrackingKey = rules.getKey();
 
             for (final IEventBasedRule<T> rule : rules.getValue()) {
-                final T cachedEventValue = getCachedTrackingValue(event);
+                final T cachedEventValue = getCachedTrackingValue(eventTrackingKey);
 
                 if (cachedEventValue != null) {
                     Amplify.getLogger().d(
-                            event.getTrackingKey()
+                            eventTrackingKey
                           + " event "
                           + getEventTrackingStatusStringSuffix(cachedEventValue));
 
                     if (!rule.shouldAllowFeedbackPrompt(cachedEventValue)) {
-                        logPromptBlockedMessage(rule, event);
+                        logPromptBlockedMessage(rule, eventTrackingKey);
                         result = false;
                     }
                 } else {
@@ -129,11 +136,11 @@ public abstract class BaseEventsManager<T> implements IEventsManager<T> {
                             "No tracked value for "
                           + getTrackedEventDimensionDescription().toLowerCase(Locale.US)
                           + " of "
-                          + event.getTrackingKey()
+                          + eventTrackingKey
                           + " event");
 
                     if (!rule.shouldAllowFeedbackPromptByDefault()) {
-                        logPromptBlockedMessage(rule, event);
+                        logPromptBlockedMessage(rule, eventTrackingKey);
                         result = false;
                     }
                 }
@@ -143,13 +150,13 @@ public abstract class BaseEventsManager<T> implements IEventsManager<T> {
         return result;
     }
 
-    private boolean isTrackingEvent(@NonNull final IEvent event) {
-        return internalMap.containsKey(event);
+    private boolean isTrackingEvent(@NonNull final String eventTrackingKey) {
+        return internalMap.containsKey(eventTrackingKey);
     }
 
-    private String getTrackingKey(@NonNull final IEvent event) {
+    private String getPersistenceTrackingKey(@NonNull final String eventTrackingKey) {
         return AMPLIFY_TRACKING_KEY_PREFIX
-                + event.getTrackingKey()
+                + eventTrackingKey
                 + "_"
                 + getTrackingKeySuffix().toUpperCase(Locale.US);
     }
@@ -166,17 +173,17 @@ public abstract class BaseEventsManager<T> implements IEventsManager<T> {
     }
 
     @Nullable
-    private T getCachedTrackingValue(@NonNull final IEvent event) {
-        return settings.readTrackingValue(getTrackingKey(event));
+    private T getCachedTrackingValue(@NonNull final String eventTrackingKey) {
+        return settings.readTrackingValue(getPersistenceTrackingKey(eventTrackingKey));
     }
 
     private void logPromptBlockedMessage(
             @NonNull final IEventBasedRule<T> rule,
-            @NonNull final IEvent event) {
+            @NonNull final String eventTrackingKey) {
 
         Amplify.getLogger().d(
                 "Blocking feedback because of " + rule.getDescription()
-              + " associated with " + event.getTrackingKey() + " event");
+              + " associated with " + eventTrackingKey + " event");
     }
 
 }
