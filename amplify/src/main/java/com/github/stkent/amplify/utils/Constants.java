@@ -16,6 +16,7 @@
  */
 package com.github.stkent.amplify.utils;
 
+@SuppressWarnings("PMD.ClassNamingConventions")
 public final class Constants {
 
     /**

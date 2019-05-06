@@ -46,7 +46,7 @@ final class DefaultLayoutQuestionView extends CustomLayoutQuestionView {
     private static final int DEFAULT_BUTTON_BORDER_WIDTH_DP = 1;
     private static final int DEFAULT_BUTTON_CORNER_RADIUS_PX = 0;
 
-    DefaultLayoutQuestionView(
+    /* default */ DefaultLayoutQuestionView(
             final Context context,
             @NonNull final DefaultLayoutPromptViewConfig config) {
 

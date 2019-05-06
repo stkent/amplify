@@ -51,7 +51,7 @@ public abstract class BaseEventsManager<T> implements IEventsManager<T> {
      */
     @NonNull
     protected abstract String getEventTrackingStatusStringSuffix(
-            @NonNull final T cachedEventValue);
+            @NonNull T cachedEventValue);
 
     /**
      * @param cachedEventValue the existing cached value associated with the tracked event; null if
@@ -59,7 +59,7 @@ public abstract class BaseEventsManager<T> implements IEventsManager<T> {
      * @return a new value to replace the existing value in the cache
      */
     @NonNull
-    protected abstract T getUpdatedTrackingValue(@Nullable final T cachedEventValue);
+    protected abstract T getUpdatedTrackingValue(@Nullable T cachedEventValue);
 
     protected BaseEventsManager(@NonNull final ISettings<T> settings) {
         this.settings = settings;
@@ -151,7 +151,7 @@ public abstract class BaseEventsManager<T> implements IEventsManager<T> {
         return AMPLIFY_TRACKING_KEY_PREFIX
                 + event.getTrackingKey()
                 + "_"
-                + getTrackingKeySuffix().toUpperCase();
+                + getTrackingKeySuffix().toUpperCase(Locale.US);
     }
 
     /**

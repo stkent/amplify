@@ -20,6 +20,6 @@ import android.support.annotation.NonNull;
 
 public interface IThanksView {
 
-    void bind(@NonNull final IThanks thanks);
+    void bind(@NonNull IThanks thanks);
 
 }

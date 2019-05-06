@@ -52,13 +52,15 @@ import com.github.stkent.amplify.tracking.rules.VersionNameChangedRule;
 import com.github.stkent.amplify.utils.ActivityReferenceManager;
 import com.github.stkent.amplify.utils.Constants;
 
+import java.util.Arrays;
+
 import static android.content.Context.MODE_PRIVATE;
 import static com.github.stkent.amplify.tracking.PromptInteractionEvent.USER_DECLINED_CRITICAL_FEEDBACK;
 import static com.github.stkent.amplify.tracking.PromptInteractionEvent.USER_DECLINED_POSITIVE_FEEDBACK;
 import static com.github.stkent.amplify.tracking.PromptInteractionEvent.USER_GAVE_CRITICAL_FEEDBACK;
 import static com.github.stkent.amplify.tracking.PromptInteractionEvent.USER_GAVE_POSITIVE_FEEDBACK;
 
-@SuppressWarnings({"PMD.ExcessiveParameterList", "checkstyle:parameternumber"})
+@SuppressWarnings({"PMD.ExcessiveParameterList", "PMD.CyclomaticComplexity", "checkstyle:parameternumber"})
 public final class Amplify implements IEventListener {
 
     private static final int DEFAULT_USER_GAVE_POSITIVE_FEEDBACK_MAXIMUM_COUNT = 1;
@@ -153,12 +155,12 @@ public final class Amplify implements IEventListener {
     // Begin configuration methods
 
     public Amplify setPositiveFeedbackCollectors(@NonNull final IFeedbackCollector... feedbackCollectors) {
-        positiveFeedbackCollectors = feedbackCollectors;
+        positiveFeedbackCollectors = Arrays.copyOf(feedbackCollectors, feedbackCollectors.length);
         return this;
     }
 
     public Amplify setCriticalFeedbackCollectors(@NonNull final IFeedbackCollector... feedbackCollectors) {
-        criticalFeedbackCollectors = feedbackCollectors;
+        criticalFeedbackCollectors = Arrays.copyOf(feedbackCollectors, feedbackCollectors.length);
         return this;
     }
 

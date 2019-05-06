@@ -26,27 +26,29 @@ import com.github.stkent.amplify.IDevice;
 import com.github.stkent.amplify.IEnvironment;
 import com.github.stkent.amplify.tracking.Amplify;
 
+import java.util.Arrays;
+
 import static android.content.Intent.ACTION_SENDTO;
 
 public abstract class BaseEmailFeedbackCollector implements IFeedbackCollector {
 
     @NonNull
     protected abstract String getSubjectLine(
-            @NonNull final IApp app,
-            @NonNull final IEnvironment environment,
-            @NonNull final IDevice device);
+            @NonNull IApp app,
+            @NonNull IEnvironment environment,
+            @NonNull IDevice device);
 
     @NonNull
     protected abstract String getBody(
-            @NonNull final IApp app,
-            @NonNull final IEnvironment environment,
-            @NonNull final IDevice device);
+            @NonNull IApp app,
+            @NonNull IEnvironment environment,
+            @NonNull IDevice device);
 
     @NonNull
     private final String[] recipients;
 
     public BaseEmailFeedbackCollector(@NonNull final String... recipients) {
-        this.recipients = recipients;
+        this.recipients = Arrays.copyOf(recipients, recipients.length);
     }
 
     @Override

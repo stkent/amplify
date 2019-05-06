@@ -33,7 +33,7 @@ public interface ISettings<T> {
      * @param trackingKey the key with which to associate the new value
      * @param value the new value to be persisted
      */
-    void writeTrackingValue(@NonNull final String trackingKey, final T value);
+    void writeTrackingValue(@NonNull String trackingKey, T value);
 
     /**
      * Retrieve a value (if it exists) from persistent storage.
@@ -42,6 +42,6 @@ public interface ISettings<T> {
      * @return the persisted value, if it exists; null otherwise
      */
     @Nullable
-    T readTrackingValue(@NonNull final String trackingKey);
+    T readTrackingValue(@NonNull String trackingKey);
 
 }

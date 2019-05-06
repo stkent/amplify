@@ -27,7 +27,7 @@ public interface IAppLevelEventRulesManager extends IRulesManager {
      * @param cooldownPeriodDays the number of days that must pass after the application is first
      *                           installed before the user can be prompted
      */
-    void setInstallTimeCooldownDays(final int cooldownPeriodDays);
+    void setInstallTimeCooldownDays(int cooldownPeriodDays);
 
     /**
      * Set a new cooldown duration for application updates.
@@ -35,7 +35,7 @@ public interface IAppLevelEventRulesManager extends IRulesManager {
      * @param cooldownPeriodDays the number of days that must pass after the application is
      *                           updated before the user can be prompted
      */
-    void setLastUpdateTimeCooldownDays(final int cooldownPeriodDays);
+    void setLastUpdateTimeCooldownDays(int cooldownPeriodDays);
 
     /**
      * Set a new cooldown duration for application crashes.
@@ -43,7 +43,7 @@ public interface IAppLevelEventRulesManager extends IRulesManager {
      * @param cooldownPeriodDays the number of days that must pass after the application crashes
      *                           before the user can be prompted
      */
-    void setLastCrashTimeCooldownDays(final int cooldownPeriodDays);
+    void setLastCrashTimeCooldownDays(int cooldownPeriodDays);
 
     /**
      * Notifies the implementing class that the application has crashed.

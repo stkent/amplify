@@ -42,15 +42,15 @@ public interface IPromptPresenter extends IEventListener {
         DISMISSED
     }
 
-    void addPromptEventListener(@NonNull final IEventListener promptEventListener);
+    void addPromptEventListener(@NonNull IEventListener promptEventListener);
 
     void start();
-    void reportUserOpinion(@NonNull final UserOpinion userOpinion);
-    void reportUserFeedbackAction(@NonNull final UserFeedbackAction userFeedbackAction);
+    void reportUserOpinion(@NonNull UserOpinion userOpinion);
+    void reportUserFeedbackAction(@NonNull UserFeedbackAction userFeedbackAction);
 
     @NonNull
     Bundle generateStateBundle();
 
-    void restoreStateFromBundle(@NonNull final Bundle bundle);
+    void restoreStateFromBundle(@NonNull Bundle bundle);
 
 }

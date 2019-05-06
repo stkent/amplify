@@ -7,7 +7,7 @@ buildscript {
         classpath 'com.github.ben-manes:gradle-versions-plugin:0.17.0'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
         classpath 'com.github.dcendents:android-maven-gradle-plugin:2.0'
-        classpath 'com.btkelly:gnag:2.0.0'
+        classpath 'com.btkelly:gnag:2.3.0'
         classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.5.0-x'
     }
 }
@@ -48,12 +48,11 @@ ext {
 }
 
 android {
-    compileSdkVersion 27
-    buildToolsVersion "27.0.2"
+    compileSdkVersion 28
 
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion 27
+        targetSdkVersion 28
         versionCode 1
         versionName libraryVersion
     }
@@ -88,6 +87,7 @@ gnag {
     }
 
     checkstyle {
+        enabled true
         reporterConfig project.file('config/checkstyle.xml')
     }
 
@@ -96,14 +96,9 @@ gnag {
         reporterConfig project.file('config/pmd.xml')
     }
 
-    findbugs {
-        enabled true
-        reporterConfig project.file('config/findbugs.xml')
-    }
-
-    ktlint {
-        enabled false
-    }
+    findbugs { enabled false }
+    ktlint   { enabled false }
+    detekt   { enabled false }
 
     androidLint {
         enabled true

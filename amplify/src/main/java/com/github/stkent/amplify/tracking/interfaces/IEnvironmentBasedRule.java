@@ -33,6 +33,6 @@ public interface IEnvironmentBasedRule extends IRule {
      *                    currently running
      * @return true if this rule is satisfied and should allow the feedback prompt to be shown; false otherwise
      */
-    boolean shouldAllowFeedbackPrompt(@NonNull final IEnvironment environment);
+    boolean shouldAllowFeedbackPrompt(@NonNull IEnvironment environment);
 
 }
