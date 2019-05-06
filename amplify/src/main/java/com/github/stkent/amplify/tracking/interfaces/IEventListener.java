@@ -29,6 +29,6 @@ public interface IEventListener {
      *
      * @param event the event that occurred
      */
-    void notifyEventTriggered(@NonNull final IEvent event);
+    void notifyEventTriggered(@NonNull IEvent event);
 
 }

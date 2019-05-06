@@ -28,13 +28,13 @@ public interface ILogger {
      *
      * @param message the message to be logged
      */
-    void d(@NonNull final String message);
+    void d(@NonNull String message);
 
     /**
      * Record a log message with level Logger.LogLevel.ERROR.
      *
      * @param message the message to be logged
      */
-    void e(@NonNull final String message);
+    void e(@NonNull String message);
 
 }

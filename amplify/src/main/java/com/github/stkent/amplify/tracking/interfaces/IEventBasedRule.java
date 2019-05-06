@@ -40,7 +40,7 @@ public interface IEventBasedRule<T> extends IRule {
      * @return true if this rule is satisfied and should allow the feedback prompt to be shown;
      *         false otherwise
      */
-    boolean shouldAllowFeedbackPrompt(@NonNull final T cachedEventValue);
+    boolean shouldAllowFeedbackPrompt(@NonNull T cachedEventValue);
 
 
 }

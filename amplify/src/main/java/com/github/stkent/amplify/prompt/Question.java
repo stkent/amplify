@@ -35,7 +35,7 @@ final class Question implements IQuestion {
     @NonNull
     private final String negativeButtonLabel;
 
-    Question(
+    /* default */ Question(
             @NonNull  final String title,
             @Nullable final String subTitle,
             @NonNull  final String positiveButtonLabel,

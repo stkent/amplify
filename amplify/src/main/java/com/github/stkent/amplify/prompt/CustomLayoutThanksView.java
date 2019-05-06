@@ -39,7 +39,7 @@ class CustomLayoutThanksView extends FrameLayout implements IThanksView {
     @Nullable
     private final TextView subtitleTextView;
 
-    CustomLayoutThanksView(
+    /* default */ CustomLayoutThanksView(
             final Context context,
             @LayoutRes final int layoutRes) {
 

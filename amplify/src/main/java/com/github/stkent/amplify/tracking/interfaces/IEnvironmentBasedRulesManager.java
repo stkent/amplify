@@ -29,6 +29,6 @@ public interface IEnvironmentBasedRulesManager extends IRulesManager {
      *
      * @param rule the prompt timing rule to be added
      */
-    void addEnvironmentBasedRule(@NonNull final IEnvironmentBasedRule rule);
+    void addEnvironmentBasedRule(@NonNull IEnvironmentBasedRule rule);
 
 }

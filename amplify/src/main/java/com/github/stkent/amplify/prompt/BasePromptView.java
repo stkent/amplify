@@ -94,15 +94,15 @@ abstract class BasePromptView<T extends View & IQuestionView, U extends View & I
     private T displayedQuestionView;
     private boolean thanksDisplayTimeExpired;
 
-    BasePromptView(final Context context) {
+    /* default */ BasePromptView(final Context context) {
         this(context, null);
     }
 
-    BasePromptView(final Context context, @Nullable final AttributeSet attributeSet) {
+    /* default */ BasePromptView(final Context context, @Nullable final AttributeSet attributeSet) {
         this(context, attributeSet, 0);
     }
 
-    BasePromptView(final Context context, @Nullable final AttributeSet attributeSet, final int defStyleAttr) {
+    /* default */ BasePromptView(final Context context, @Nullable final AttributeSet attributeSet, final int defStyleAttr) {
         super(context, attributeSet, defStyleAttr);
         setLayoutParams(new ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));

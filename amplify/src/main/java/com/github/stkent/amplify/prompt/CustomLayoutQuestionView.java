@@ -52,7 +52,7 @@ class CustomLayoutQuestionView extends FrameLayout implements IQuestionView {
 
     private IQuestionPresenter questionPresenter;
 
-    CustomLayoutQuestionView(
+    /* default */ CustomLayoutQuestionView(
             final Context context,
             @LayoutRes final int layoutRes) {
 

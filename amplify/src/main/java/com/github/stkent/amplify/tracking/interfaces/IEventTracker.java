@@ -32,14 +32,14 @@ public interface IEventTracker<T> {
      * @param rule the new rule to be registered, based on the corresponding IEvent
      */
     void addEventBasedRule(
-            @NonNull final IEvent event,
-            @NonNull final IEventBasedRule<T> rule);
+            @NonNull IEvent event,
+            @NonNull IEventBasedRule<T> rule);
 
     /**
      * Call this method to notify an implementing class that an event occurred.
      *
      * @param event the event that occurred
      */
-    void notifyEventTriggered(@NonNull final IEvent event);
+    void notifyEventTriggered(@NonNull IEvent event);
 
 }
