@@ -86,7 +86,7 @@ public final class Environment implements IEnvironment {
 
         try {
             return packageManager.getPackageInfo(packageName, flags);
-        } catch (final PackageManager.NameNotFoundException ignored) {
+        } catch (final Exception ignored) {
             return null;
         }
     }
