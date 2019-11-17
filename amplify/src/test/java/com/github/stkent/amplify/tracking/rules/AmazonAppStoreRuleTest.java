@@ -39,7 +39,7 @@ public class AmazonAppStoreRuleTest extends BaseTest {
     }
 
     @Test
-    public void testThatEnvironmentRuleIsSatisfiedIfGooglePlayStoreIsInstalledOnDevice() {
+    public void testThatEnvironmentRuleIsSatisfiedIfAmazonAppStoreIsInstalledOnDevice() {
         // Arrange
         when(environment.isAmazonAppStoreInstalled()).thenReturn(true);
 
@@ -51,7 +51,7 @@ public class AmazonAppStoreRuleTest extends BaseTest {
     }
 
     @Test
-    public void testThatEnvironmentRuleIsNotSatisfiedIfGooglePlayStoreIsNotInstalledOnDevice() {
+    public void testThatEnvironmentRuleIsNotSatisfiedIfAmazonAppStoreIsNotInstalledOnDevice() {
         // Arrange
         when(environment.isAmazonAppStoreInstalled()).thenReturn(false);
 
