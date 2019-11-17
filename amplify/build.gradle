@@ -6,7 +6,7 @@ buildscript {
     dependencies {
         classpath "com.github.ben-manes:gradle-versions-plugin:0.27.0"
         classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4"
-        classpath "com.github.dcendents:android-maven-gradle-plugin:2.0"
+        classpath "com.github.dcendents:android-maven-gradle-plugin:2.1"
         classpath "com.btkelly:gnag:2.4.1"
         classpath "org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.5.0-x"
     }
@@ -114,6 +114,6 @@ dependencies {
 }
 
 apply from: "https://raw.githubusercontent.com/stkent/JCenter/master/bintray1.8.4.gradle"
-apply from: "https://raw.githubusercontent.com/stkent/JCenter/master/install1.5.gradle"
+apply from: "https://raw.githubusercontent.com/stkent/JCenter/master/install2.1.gradle"
 apply from: "https://raw.githubusercontent.com/stkent/JCenter/master/license0.15.0.gradle"
 apply from: "coverage.gradle"
