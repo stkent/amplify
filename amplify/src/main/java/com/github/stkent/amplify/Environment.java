@@ -80,6 +80,7 @@ public final class Environment implements IEnvironment {
         return !resolveInfoList.isEmpty();
     }
 
+    @SuppressWarnings("PMD.AvoidCatchingGenericException")
     @Nullable
     private PackageInfo getPackageInfo(@NonNull final String packageName, final int flags) {
         final PackageManager packageManager = appContext.getPackageManager();
