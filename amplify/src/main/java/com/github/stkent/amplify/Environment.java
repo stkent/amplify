@@ -18,12 +18,10 @@ package com.github.stkent.amplify;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.os.Build;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import java.util.List;
 
@@ -52,9 +50,16 @@ public final class Environment implements IEnvironment {
         return Build.VERSION.SDK_INT;
     }
 
+    @SuppressWarnings("PMD.AvoidCatchingGenericException")
     @Override
     public boolean isAppInstalled(@NonNull final String packageName) {
-        return getPackageInfo(packageName, GET_ACTIVITIES) != null;
+        final PackageManager packageManager = appContext.getPackageManager();
+
+        try {
+            return packageManager.getPackageInfo(packageName, GET_ACTIVITIES) != null;
+        } catch (final Exception ignored) {
+            return false;
+        }
     }
 
     @Override
@@ -78,18 +83,6 @@ public final class Environment implements IEnvironment {
                 .queryIntentActivities(intent, MATCH_DEFAULT_ONLY);
 
         return !resolveInfoList.isEmpty();
-    }
-
-    @SuppressWarnings("PMD.AvoidCatchingGenericException")
-    @Nullable
-    private PackageInfo getPackageInfo(@NonNull final String packageName, final int flags) {
-        final PackageManager packageManager = appContext.getPackageManager();
-
-        try {
-            return packageManager.getPackageInfo(packageName, flags);
-        } catch (final Exception ignored) {
-            return null;
-        }
     }
 
 }
