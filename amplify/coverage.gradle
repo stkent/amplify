@@ -1,8 +1,8 @@
-apply plugin: 'jacoco'
-apply plugin: 'com.github.kt3k.coveralls'
+apply plugin: "jacoco"
+apply plugin: "com.github.kt3k.coveralls"
 
 def coverageSourceDirs = [
-    'src/main/java'
+    "src/main/java"
 ]
 
 task coverageDebugTestReport(type:JacocoReport) {
@@ -11,16 +11,16 @@ task coverageDebugTestReport(type:JacocoReport) {
     description = "Generate Jacoco coverage reports for debug build type"
 
     classDirectories = fileTree(
-        dir: 'build/intermediates/classes/debug',
-        excludes: ['**/R.class',
+        dir: "build/intermediates/classes/debug",
+        excludes: ["**/R.class",
                    '**/R$*.class',
-                   '**/BuildConfig.*',
-                   '**/Manifest*.*']
+                   "**/BuildConfig.*",
+                   "**/Manifest*.*"]
     )
 
     additionalSourceDirs = files(coverageSourceDirs)
     sourceDirectories = files(coverageSourceDirs)
-    executionData = files('build/jacoco/testDebugUnitTest.exec')
+    executionData = files("build/jacoco/testDebugUnitTest.exec")
 
     reports {
         xml.enabled = true
@@ -39,5 +39,5 @@ coveralls {
 
 tasks.coveralls {
     dependsOn "coverageDebugTestReport"
-    onlyIf { System.env.'CI' }
+    onlyIf { System.env."CI" }
 }

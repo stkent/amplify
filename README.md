@@ -99,7 +99,7 @@ These components are designed to complement each other, and combining them as de
 
 ```groovy
 dependencies {
-    implementation 'com.github.stkent:amplify:2.2.1'
+    implementation("com.github.stkent:amplify:2.2.2")
 }
 ```
 

@@ -1,4 +1,4 @@
-apply plugin: 'com.android.application'
+apply plugin: "com.android.application"
 
 android {
     compileSdkVersion 28
@@ -13,6 +13,6 @@ android {
 }
 
 dependencies {
-    implementation "com.android.support:appcompat-v7:$supportLibraryVersion"
-    implementation project(':amplify')
+    implementation("com.android.support:appcompat-v7:$supportLibraryVersion")
+    implementation(project(":amplify"))
 }

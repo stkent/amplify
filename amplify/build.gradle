@@ -4,11 +4,11 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.github.ben-manes:gradle-versions-plugin:0.17.0'
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
-        classpath 'com.github.dcendents:android-maven-gradle-plugin:2.0'
-        classpath 'com.btkelly:gnag:2.3.0'
-        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.5.0-x'
+        classpath "com.github.ben-manes:gradle-versions-plugin:0.17.0"
+        classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4"
+        classpath "com.github.dcendents:android-maven-gradle-plugin:2.0"
+        classpath "com.btkelly:gnag:2.3.0"
+        classpath "org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.5.0-x"
     }
 }
 
@@ -16,35 +16,35 @@ plugins {
     id "com.github.hierynomus.license" version "0.13.1"
 }
 
-apply plugin: 'com.android.library'
-apply plugin: 'com.github.ben-manes.versions'
-apply plugin: 'com.jfrog.bintray'
-apply plugin: 'com.github.dcendents.android-maven'
-apply plugin: 'gnag'
+apply plugin: "com.android.library"
+apply plugin: "com.github.ben-manes.versions"
+apply plugin: "com.jfrog.bintray"
+apply plugin: "com.github.dcendents.android-maven"
+apply plugin: "gnag"
 
 ext {
     // Library info:
-    libraryVersion = '2.2.1'
-    libraryName = 'amplify'
-    libraryGroupId = 'com.github.stkent'
-    libraryArtifactId = 'amplify'
-    libraryDescription = 'Respectfully request feedback in your Android app.'
-    libraryInceptionYear = '2015'
-    libraryGitHubRepoName = 'stkent/amplify'
+    libraryVersion = "2.2.2"
+    libraryName = "amplify"
+    libraryGroupId = "com.github.stkent"
+    libraryArtifactId = "amplify"
+    libraryDescription = "Respectfully request feedback in your Android app."
+    libraryInceptionYear = "2015"
+    libraryGitHubRepoName = "stkent/amplify"
     libraryGitHubUrl = "https://github.com/${libraryGitHubRepoName}"
     libraryIssueTrackerUrl = "${libraryGitHubUrl}/issues"
     libraryWebsiteUrl = libraryGitHubUrl
-    libraryLabels = ['android', 'ratings', 'feedback']
-    libraryLicenseName = 'Apache License Version 2.0'
-    libraryLicenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.html'
+    libraryLabels = ["android", "ratings", "feedback"]
+    libraryLicenseName = "Apache License Version 2.0"
+    libraryLicenseUrl = "http://www.apache.org/licenses/LICENSE-2.0.html"
 
     // Developer info:
-    developerId = 'stkent'
-    developerName = 'Stuart Kent'
-    developerEmail = 'skent.dev@gmail.com'
+    developerId = "stkent"
+    developerName = "Stuart Kent"
+    developerEmail = "skent.dev@gmail.com"
 
     // Bintray categorization information:
-    bintrayRepo = 'android-libraries'
+    bintrayRepo = "android-libraries"
 }
 
 android {
@@ -88,12 +88,12 @@ gnag {
 
     checkstyle {
         enabled true
-        reporterConfig project.file('config/checkstyle.xml')
+        reporterConfig project.file("config/checkstyle.xml")
     }
 
     pmd {
         enabled true
-        reporterConfig project.file('config/pmd.xml')
+        reporterConfig project.file("config/pmd.xml")
     }
 
     findbugs { enabled false }
@@ -102,18 +102,18 @@ gnag {
 
     androidLint {
         enabled true
-        severity 'Error'
+        severity "Error"
     }
 }
 
 dependencies {
-    implementation "com.android.support:appcompat-v7:$supportLibraryVersion"
+    implementation("com.android.support:appcompat-v7:$supportLibraryVersion")
 
-    testImplementation 'junit:junit:4.12'
-    testImplementation 'org.mockito:mockito-core:2.13.0'
+    testImplementation("junit:junit:4.12")
+    testImplementation("org.mockito:mockito-core:2.13.0")
 }
 
-apply from: 'https://raw.githubusercontent.com/stkent/JCenter/master/bintray1.8.4.gradle'
-apply from: 'https://raw.githubusercontent.com/stkent/JCenter/master/install1.5.gradle'
-apply from: 'https://raw.githubusercontent.com/stkent/JCenter/master/license0.13.1.gradle'
-apply from: 'coverage.gradle'
+apply from: "https://raw.githubusercontent.com/stkent/JCenter/master/bintray1.8.4.gradle"
+apply from: "https://raw.githubusercontent.com/stkent/JCenter/master/install1.5.gradle"
+apply from: "https://raw.githubusercontent.com/stkent/JCenter/master/license0.13.1.gradle"
+apply from: "coverage.gradle"
