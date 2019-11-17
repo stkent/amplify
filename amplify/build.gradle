@@ -110,7 +110,7 @@ dependencies {
     implementation("com.android.support:appcompat-v7:$supportLibraryVersion")
 
     testImplementation("junit:junit:4.12")
-    testImplementation("org.mockito:mockito-core:2.13.0")
+    testImplementation("org.mockito:mockito-core:2.28.2")
 }
 
 apply from: "https://raw.githubusercontent.com/stkent/JCenter/master/bintray1.8.4.gradle"
