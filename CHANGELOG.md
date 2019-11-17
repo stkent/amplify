@@ -1,5 +1,11 @@
 # Change Log
 
+## v2.2.2
+
+_2019-11-17_
+
+- [Fixed] Catch all thrown exceptions when accessing package info of review apps.
+
 ## v2.2.1
 
 _2019-05-06_
