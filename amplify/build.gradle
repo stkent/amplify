@@ -13,7 +13,7 @@ buildscript {
 }
 
 plugins {
-    id "com.github.hierynomus.license" version "0.13.1"
+    id "com.github.hierynomus.license" version "0.15.0"
 }
 
 apply plugin: "com.android.library"
@@ -115,5 +115,5 @@ dependencies {
 
 apply from: "https://raw.githubusercontent.com/stkent/JCenter/master/bintray1.8.4.gradle"
 apply from: "https://raw.githubusercontent.com/stkent/JCenter/master/install1.5.gradle"
-apply from: "https://raw.githubusercontent.com/stkent/JCenter/master/license0.13.1.gradle"
+apply from: "https://raw.githubusercontent.com/stkent/JCenter/master/license0.15.0.gradle"
 apply from: "coverage.gradle"
