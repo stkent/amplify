@@ -1,5 +1,11 @@
 # Change Log
 
+## v2.2.3
+
+_2020-08-29_
+
+- [Changed] Replace "Bummer." with "Oh no!" as default critical feedback question title.
+
 ## v2.2.2
 
 _2019-11-17_
