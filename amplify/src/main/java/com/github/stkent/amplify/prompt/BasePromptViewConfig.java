@@ -36,7 +36,7 @@ public final class BasePromptViewConfig implements Parcelable {
 
     private static final String DEFAULT_USER_OPINION_QUESTION_TITLE                 = "Enjoying the app?";
     private static final String DEFAULT_POSITIVE_FEEDBACK_QUESTION_TITLE            = "Awesome! We'd love a Play Store review...";
-    private static final String DEFAULT_CRITICAL_FEEDBACK_QUESTION_TITLE            = "Bummer. Would you like to send feedback?";
+    private static final String DEFAULT_CRITICAL_FEEDBACK_QUESTION_TITLE            = "Oh no! Would you like to send feedback?";
     private static final String DEFAULT_USER_OPINION_QUESTION_POSITIVE_BUTTON_LABEL = "Yes!";
     private static final String DEFAULT_USER_OPINION_QUESTION_NEGATIVE_BUTTON_LABEL = "No";
     private static final String DEFAULT_FEEDBACK_QUESTION_POSITIVE_BUTTON_LABEL     = "Sure thing!";
