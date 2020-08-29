@@ -25,7 +25,7 @@ android:
 
 branches:
   only:
-    - master
+    - main
     # Match semver branch names like 1.0.0, 1.0.0-rc.2, etc.:
     - /^\d+\.\d+\.\d+(?:-rc\.\d+)?$/
 
