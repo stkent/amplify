@@ -6,7 +6,7 @@
 
 Respectfully request feedback in your Android app.
 
-<a href="https://travis-ci.org/stkent/amplify"><img src="https://travis-ci.org/stkent/amplify.svg" /></a> [ ![Download](https://api.bintray.com/packages/stkent/android-libraries/amplify/images/download.svg) ](https://bintray.com/stkent/android-libraries/amplify/_latestVersion) <a href="http://www.detroitlabs.com/"><img src="https://img.shields.io/badge/Sponsor-Detroit%20Labs-000000.svg" /></a> [![Coverage Status](https://coveralls.io/repos/github/stkent/amplify/badge.svg?branch=master)](https://coveralls.io/github/stkent/amplify?branch=master) [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-amplify-green.svg?style=true)](https://android-arsenal.com/details/1/3290)
+<a href="https://travis-ci.org/stkent/amplify"><img src="https://travis-ci.org/stkent/amplify.svg" /></a> [ ![Download](https://api.bintray.com/packages/stkent/android-libraries/amplify/images/download.svg) ](https://bintray.com/stkent/android-libraries/amplify/_latestVersion) <a href="http://www.detroitlabs.com/"><img src="https://img.shields.io/badge/Sponsor-Detroit%20Labs-000000.svg" /></a> [![Coverage Status](https://coveralls.io/repos/github/stkent/amplify/badge.svg?branch=main)](https://coveralls.io/github/stkent/amplify?branch=main) [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-amplify-green.svg?style=true)](https://android-arsenal.com/details/1/3290)
 
 # Guide
 
@@ -80,12 +80,12 @@ _amplify_ consists of two main elements:
 <br />
 
 <p align="center">
-	<img src="https://raw.githubusercontent.com/stkent/amplify/master/assets/flow.png" width="60%" />
+	<img src="https://raw.githubusercontent.com/stkent/amplify/main/assets/flow.png" width="60%" />
 </p>
 
 | Positive feedback flow            | Critical feedback flow            |
 |-----------------------------------|-----------------------------------|
-| <img src="https://raw.githubusercontent.com/stkent/amplify/master/assets/positive-feedback.gif" /> | <img src="https://raw.githubusercontent.com/stkent/amplify/master/assets/critical-feedback.gif" /> |
+| <img src="https://raw.githubusercontent.com/stkent/amplify/main/assets/positive-feedback.gif" /> | <img src="https://raw.githubusercontent.com/stkent/amplify/main/assets/critical-feedback.gif" /> |
 
 <br />
 
@@ -304,7 +304,7 @@ _amplify_ provides two configurable prompt UIs. The test app associated with thi
 
 | Test app UI; use me to explore!  |
 |----------------------------------|
-| <img src="https://raw.githubusercontent.com/stkent/amplify/master/assets/app.png" width="50%" /> |
+| <img src="https://raw.githubusercontent.com/stkent/amplify/main/assets/app.png" width="50%" /> |
 
 ### Default Layout
 
@@ -746,7 +746,7 @@ Early versions of _amplify_ are integrated in apps with state-wide and national 
 
 | Styled default layout |
 |-----------------------|
-| <img src="https://raw.githubusercontent.com/stkent/amplify/master/assets/dte.png" /> |
+| <img src="https://raw.githubusercontent.com/stkent/amplify/main/assets/dte.png" /> |
 
 # License
 
